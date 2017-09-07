@@ -43,6 +43,24 @@ class AppController extends Controller
 
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
+		$this->loadComponent('Auth', [
+            'authenticate' =>[
+                'Form' => [
+                    'fields' => [
+                        'username' =>'email',
+                        'password' => 'password'
+                    ],
+                ]
+            ],
+            'loginRedirect' => [
+                'controller' => 'Users',
+                'action' => 'index'
+            ],
+            'logoutRedirect' => [
+                'controller' => 'Users',
+                'action' => 'login'
+            ],
+        ]);
 
         /*
          * Enable the following components for recommended CakePHP security settings.
