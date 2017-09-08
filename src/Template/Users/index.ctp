@@ -34,7 +34,7 @@
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                            <table class="table table-bordered table-striped table-hover js-exportable dataTable">
                                 <thead>
                                 <tr class="bg-blue-grey">
                                     <th>Tên user</th>
