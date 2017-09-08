@@ -16,7 +16,15 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-$cakeDescription = 'Media: ';
+$cakeDescription = 'Media ';
+?>
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\View\AppView $userData
+ * @var \App\View\AppView $controller
+ *
+ */
 ?>
 <!DOCTYPE html>
 <html>
@@ -35,12 +43,20 @@ $cakeDescription = 'Media: ';
             'style.min',
             'all-themes.min',
             'my_style',
+            'dataTables.bootstrap.min',
     )) ?>
     <?= $this->Html->script(array(
             'jquery.min',
             'bootstrap.min',
             'waves.min',
+            'jquery.init',
             'admin',
+            'common',
+            'jquery.dataTables',
+            'dataTables.bootstrap.min',
+            'jquery-datatable',
+            'jquery.validate',
+            'autosize.min',
 //            'demo',
     ))?>
     <?= $this->fetch('meta') ?>
@@ -84,33 +100,22 @@ $cakeDescription = 'Media: ';
             <div class="navbar-header">
                 <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
                 <a href="javascript:void(0);" class="bars"></a>
-                <a class="navbar-brand" href="widgets/../../index.html">ADMINBSB - MATERIAL DESIGN</a>
+                <a class="navbar-brand" href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>">WIFI MAKETTING</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse">
                 <ul class="nav navbar-nav navbar-right">
-                    <!-- Call Search -->
-                    <li><a href="javascript:void(0);" class="js-search" data-close="true"><i class="material-icons">search</i></a></li>
-                    <!-- #END# Call Search -->
-                    <!-- Notifications -->
-                    <li class="dropdown">
-                        <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                            <i class="material-icons">notifications</i>
-                            <span class="label-count">7</span>
-                        </a>
+                    <li>
+                        <a href="javascript:void(0);" ><?php echo $userData['email'];?></a>
                     </li>
-                    <!-- #END# Notifications -->
+                    <li >
+                        <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "logout"]); ?>" ><span>Logout</span></a>
+                    </li>
                     <!-- Tasks -->
                     <li class="dropdown">
                         <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
                             <i class="material-icons">flag</i>
                             <span class="label-count">9</span>
                         </a>
-                        <ul class="dropdown-menu">
-                            <li class="header">TASKS</li>
-                            <li class="body">
-
-                            </li>
-                        </ul>
                     </li>
                     <!-- #END# Tasks -->
                     <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
@@ -121,363 +126,71 @@ $cakeDescription = 'Media: ';
     <section>
         <!-- Left Sidebar -->
         <aside id="leftsidebar" class="sidebar">
-            <!-- User Info -->
-            <div class="user-info">
-                <div class="image">
-                    <img src="../images/user.png" width="48" height="48" alt="User" />
-                </div>
-                <div class="info-container">
-                    <div class="name" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">John Doe</div>
-                    <div class="email">john.doe@example.com</div>
-                    <div class="btn-group user-helper-dropdown">
-                        <i class="material-icons" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">keyboard_arrow_down</i>
-                        <ul class="dropdown-menu pull-right">
-                            <li><a href="javascript:void(0);"><i class="material-icons">person</i>Profile</a></li>
-                            <li role="seperator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">group</i>Followers</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">shopping_cart</i>Sales</a></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">favorite</i>Likes</a></li>
-                            <li role="seperator" class="divider"></li>
-                            <li><a href="javascript:void(0);"><i class="material-icons">input</i>Sign Out</a></li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            <!-- #User Info -->
             <!-- Menu -->
             <div class="menu">
                 <ul class="list">
                     <li class="header">MAIN NAVIGATION</li>
-                    <li>
-                        <a href="../index.html">
-                            <i class="material-icons">home</i>
-                            <span>Home</span>
+                    <?php if ($controller == 'Users') { ?>
+                <li class="left_menu active ac">
+                <?php } else { ?>
+                    <li class="left_menu ac">
+                        <?php } ?>
+                        <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>" >
+                            <i class="material-icons">supervisor_account</i>
+                            <span>Quản lý Users</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="../pages/typography.html">
-                            <i class="material-icons">text_fields</i>
-                            <span>Typography</span>
+                    <?php if ($controller == 'Devices') { ?>
+                <li class="left_menu active ">
+                <?php } else { ?>
+                    <li class="left_menu ">
+                        <?php } ?>
+                        <a href="<?php echo $this->Url->build(["controller" => "Devices", "action" => "index"]); ?>"  class="waves-effect waves-block">
+                            <i class="material-icons">business</i>
+                            <span>Quản lý thiết bị</span>
                         </a>
                     </li>
-                    <li class="active">
-                        <a href="../pages/helper-classes.html">
-                            <i class="material-icons">layers</i>
-                            <span>Helper Classes</span>
+                    <?php
+                    if ($controller == 'CampaignGroups') { ?>
+                <li class="left_menu active ">
+                <?php } else { ?>
+                    <li class="left_menu">
+                        <?php } ?>
+                        <a href="<?php echo $this->Url->build(["controller" => "CampaignGroups", "action" => "index"]); ?>">
+                            <i class="material-icons">trending_up</i>
+                            <span>Quản lý chiến dịch</span>
                         </a>
                     </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
+                    <?php
+                    if ($controller == 'ServiceGroups') { ?>
+                <li class="left_menu active ">
+                <?php } else { ?>
+                    <li class="left_menu">
+                        <?php } ?>
+                        <a href="<?php echo $this->Url->build(["controller" => "ServiceGroups", "action" => "index"]); ?>" >
                             <i class="material-icons">widgets</i>
-                            <span>Widgets</span>
+                            <span>Quản lý nhóm dịch vụ</span>
                         </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="javascript:void(0);" class="menu-toggle">
-                                    <span>Cards</span>
-                                </a>
-                                <ul class="ml-menu">
-                                    <li>
-                                        <a href="../pages/widgets/cards/basic.html">Basic</a>
-                                    </li>
-                                    <li>
-                                        <a href="../pages/widgets/cards/colored.html">Colored</a>
-                                    </li>
-                                    <li>
-                                        <a href="../pages/widgets/cards/no-header.html">No Header</a>
-                                    </li>
-                                </ul>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="menu-toggle">
-                                    <span>Infobox</span>
-                                </a>
-                                <ul class="ml-menu">
-                                    <li>
-                                        <a href="../pages/widgets/infobox/infobox-1.html">Infobox-1</a>
-                                    </li>
-                                    <li>
-                                        <a href="../pages/widgets/infobox/infobox-2.html">Infobox-2</a>
-                                    </li>
-                                    <li>
-                                        <a href="../pages/widgets/infobox/infobox-3.html">Infobox-3</a>
-                                    </li>
-                                    <li>
-                                        <a href="../pages/widgets/infobox/infobox-4.html">Infobox-4</a>
-                                    </li>
-                                    <li>
-                                        <a href="../pages/widgets/infobox/infobox-5.html">Infobox-5</a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
                     </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">swap_calls</i>
-                            <span>User Interface (UI)</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="../pages/ui/alerts.html">Alerts</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/animations.html">Animations</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/badges.html">Badges</a>
-                            </li>
-
-                            <li>
-                                <a href="../pages/ui/breadcrumbs.html">Breadcrumbs</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/buttons.html">Buttons</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/collapse.html">Collapse</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/colors.html">Colors</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/dialogs.html">Dialogs</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/icons.html">Icons</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/labels.html">Labels</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/list-group.html">List Group</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/media-object.html">Media Object</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/modals.html">Modals</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/notifications.html">Notifications</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/pagination.html">Pagination</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/preloaders.html">Preloaders</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/progressbars.html">Progress Bars</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/range-sliders.html">Range Sliders</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/sortable-nestable.html">Sortable & Nestable</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/tabs.html">Tabs</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/thumbnails.html">Thumbnails</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/tooltips-popovers.html">Tooltips & Popovers</a>
-                            </li>
-                            <li>
-                                <a href="../pages/ui/waves.html">Waves</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">assignment</i>
-                            <span>Forms</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="../pages/forms/basic-form-elements.html">Basic Form Elements</a>
-                            </li>
-                            <li>
-                                <a href="../pages/forms/advanced-form-elements.html">Advanced Form Elements</a>
-                            </li>
-                            <li>
-                                <a href="../pages/forms/form-examples.html">Form Examples</a>
-                            </li>
-                            <li>
-                                <a href="../pages/forms/form-validation.html">Form Validation</a>
-                            </li>
-                            <li>
-                                <a href="../pages/forms/form-wizard.html">Form Wizard</a>
-                            </li>
-                            <li>
-                                <a href="../pages/forms/editors.html">Editors</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
+                    <?php if ($controller == 'Adgroups') { ?>
+                <li class="left_menu active ">
+                <?php } else { ?>
+                    <li class="left_menu ">
+                        <?php } ?>
+                        <a href="<?php echo $this->Url->build(["controller" => "Adgroups", "action" => "index"]); ?>">
                             <i class="material-icons">view_list</i>
-                            <span>Tables</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="../pages/tables/normal-tables.html">Normal Tables</a>
-                            </li>
-                            <li>
-                                <a href="../pages/tables/jquery-datatable.html">Jquery Datatables</a>
-                            </li>
-                            <li>
-                                <a href="../pages/tables/editable-table.html">Editable Tables</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">perm_media</i>
-                            <span>Medias</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="../pages/medias/image-gallery.html">Image Gallery</a>
-                            </li>
-                            <li>
-                                <a href="../pages/medias/carousel.html">Carousel</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">pie_chart</i>
-                            <span>Charts</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="../pages/charts/morris.html">Morris</a>
-                            </li>
-                            <li>
-                                <a href="../pages/charts/flot.html">Flot</a>
-                            </li>
-                            <li>
-                                <a href="../pages/charts/chartjs.html">ChartJS</a>
-                            </li>
-                            <li>
-                                <a href="../pages/charts/sparkline.html">Sparkline</a>
-                            </li>
-                            <li>
-                                <a href="../pages/charts/jquery-knob.html">Jquery Knob</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">content_copy</i>
-                            <span>Example Pages</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="../pages/examples/sign-in.html">Sign In</a>
-                            </li>
-                            <li>
-                                <a href="../pages/examples/sign-up.html">Sign Up</a>
-                            </li>
-                            <li>
-                                <a href="../pages/examples/forgot-password.html">Forgot Password</a>
-                            </li>
-                            <li>
-                                <a href="../pages/examples/blank.html">Blank Page</a>
-                            </li>
-                            <li>
-                                <a href="../pages/examples/404.html">404 - Not Found</a>
-                            </li>
-                            <li>
-                                <a href="../pages/examples/500.html">500 - Server Error</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">map</i>
-                            <span>Maps</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="../pages/maps/google.html">Google Map</a>
-                            </li>
-                            <li>
-                                <a href="../pages/maps/yandex.html">YandexMap</a>
-                            </li>
-                            <li>
-                                <a href="../pages/maps/jvectormap.html">jVectorMap</a>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);" class="menu-toggle">
-                            <i class="material-icons">trending_down</i>
-                            <span>Multi Level Menu</span>
-                        </a>
-                        <ul class="ml-menu">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <span>Menu Item</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <span>Menu Item - 2</span>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);" class="menu-toggle">
-                                    <span>Level - 2</span>
-                                </a>
-                                <ul class="ml-menu">
-                                    <li>
-                                        <a href="javascript:void(0);">
-                                            <span>Menu Item</span>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="javascript:void(0);" class="menu-toggle">
-                                            <span>Level - 3</span>
-                                        </a>
-                                        <ul class="ml-menu">
-                                            <li>
-                                                <a href="javascript:void(0);">
-                                                    <span>Level - 4</span>
-                                                </a>
-                                            </li>
-                                        </ul>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="changelogs.html">
-                            <i class="material-icons">update</i>
-                            <span>Changelogs</span>
+                            <span>Quản lý mhóm quáng cáo</span>
                         </a>
                     </li>
-                    <li class="header">LABELS</li>
-                    <li>
-                        <a href="javascript:void(0);">
-                            <i class="material-icons col-red">donut_large</i>
-                            <span>Important</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);">
-                            <i class="material-icons col-amber">donut_large</i>
-                            <span>Warning</span>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:void(0);">
-                            <i class="material-icons col-light-blue">donut_large</i>
-                            <span>Information</span>
+                    <?php
+                    if ($controller == 'Landingpages') { ?>
+                    <li class="left_menu active ">
+                        <?php } else { ?>
+                    <li class="left_menu">
+                        <?php } ?>
+                        <a href="<?php echo $this->Url->build(["controller" => "Landingpages", "action" => "index"]); ?>" >
+                            <i class="material-icons">swap_calls</i>
+                            <span>Quản lý màn hình quảng cáo</span>
                         </a>
                     </li>
                 </ul>
@@ -485,21 +198,158 @@ $cakeDescription = 'Media: ';
             <!-- #Menu -->
             <!-- Footer -->
             <div class="legal">
-                <div class="copyright">
-                    &copy; 2016 - 2017 <a href="javascript:void(0);">AdminBSB - Material Design</a>.
-                </div>
-                <div class="version">
-                    <b>Version: </b> 1.0.5
-                </div>
             </div>
             <!-- #Footer -->
         </aside>
     </section>
     <?= $this->Flash->render() ?>
-    <div class="container clearfix">
-        <?= $this->fetch('content') ?>
-    </div>
-    <footer>
-    </footer>
+    <?= $this->fetch('content') ?>
 </body>
 </html>
+<script type="application/javascript">
+    $('.left_menu a').click(function () {
+        $('.left_menu').removeClass("active");
+        $(this).parent().addClass("active");
+    });
+</script>
+<style>
+    /* cyrillic-ext */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Roboto'), local('Roboto-Regular'), url('/webroot/font_gg/ek4gzZ-GeXAPcSbHtCeQI_esZW2xOQ-xsNqO47m55DA.woff2') format('woff2');
+        unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+    }
+    /* cyrillic */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Roboto'), local('Roboto-Regular'), url('/webroot/font_gg/mErvLBYg_cXG3rLvUsKT_fesZW2xOQ-xsNqO47m55DA.woff2') format('woff2');
+        unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+    }
+    /* greek-ext */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Roboto'), local('Roboto-Regular'), url('/webroot/font_gg/-2n2p-_Y08sg57CNWQfKNvesZW2xOQ-xsNqO47m55DA.woff2') format('woff2');
+        unicode-range: U+1F00-1FFF;
+    }
+    /* greek */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Roboto'), local('Roboto-Regular'), url('/webroot/font_gg/u0TOpm082MNkS5K0Q4rhqvesZW2xOQ-xsNqO47m55DA.woff2') format('woff2');
+        unicode-range: U+0370-03FF;
+    }
+    /* vietnamese */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Roboto'), local('Roboto-Regular'), url('/webroot/font_gg/NdF9MtnOpLzo-noMoG0miPesZW2xOQ-xsNqO47m55DA.woff2') format('woff2');
+        unicode-range: U+0102-0103, U+1EA0-1EF9, U+20AB;
+    }
+    /* latin-ext */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Roboto'), local('Roboto-Regular'), url('/webroot/font_gg/Fcx7Wwv8OzT71A3E1XOAjvesZW2xOQ-xsNqO47m55DA.woff2') format('woff2');
+        unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+    }
+    /* latin */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 400;
+        src: local('Roboto'), local('Roboto-Regular'), url('/webroot/font_gg/CWB0XYA8bzo0kSThX0UTuA.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+    }
+    /* cyrillic-ext */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Roboto Bold'), local('Roboto-Bold'), url('/webroot/font_gg/77FXFjRbGzN4aCrSFhlh3hJtnKITppOI_IvcXXDNrsc.woff2') format('woff2');
+        unicode-range: U+0460-052F, U+20B4, U+2DE0-2DFF, U+A640-A69F;
+    }
+    /* cyrillic */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Roboto Bold'), local('Roboto-Bold'), url('/webroot/font_gg/isZ-wbCXNKAbnjo6_TwHThJtnKITppOI_IvcXXDNrsc.woff2') format('woff2');
+        unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+    }
+    /* greek-ext */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Roboto Bold'), local('Roboto-Bold'), url('/webroot/font_gg/UX6i4JxQDm3fVTc1CPuwqhJtnKITppOI_IvcXXDNrsc.woff2') format('woff2');
+        unicode-range: U+1F00-1FFF;
+    }
+    /* greek */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Roboto Bold'), local('Roboto-Bold'), url('/webroot/font_gg/jSN2CGVDbcVyCnfJfjSdfBJtnKITppOI_IvcXXDNrsc.woff2') format('woff2');
+        unicode-range: U+0370-03FF;
+    }
+    /* vietnamese */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Roboto Bold'), local('Roboto-Bold'), url('/webroot/font_gg/PwZc-YbIL414wB9rB1IAPRJtnKITppOI_IvcXXDNrsc.woff2') format('woff2');
+        unicode-range: U+0102-0103, U+1EA0-1EF9, U+20AB;
+    }
+    /* latin-ext */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Roboto Bold'), local('Roboto-Bold'), url('/webroot/font_gg/97uahxiqZRoncBaCEI3aWxJtnKITppOI_IvcXXDNrsc.woff2') format('woff2');
+        unicode-range: U+0100-024F, U+1E00-1EFF, U+20A0-20AB, U+20AD-20CF, U+2C60-2C7F, U+A720-A7FF;
+    }
+    /* latin */
+    @font-face {
+        font-family: 'Roboto';
+        font-style: normal;
+        font-weight: 700;
+        src: local('Roboto Bold'), local('Roboto-Bold'), url('/webroot/font_gg/d-6IYplOFocCacKzxwXSOFtXRa8TVwTICgirnJhmVJw.woff2') format('woff2');
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2212, U+2215;
+    }
+
+
+
+
+    /* fallback */
+    @font-face {
+        font-family: 'Material Icons';
+        font-style: normal;
+        font-weight: 400;
+        src: url('/webroot/fonts/2fcrYFNaTjcS6g4U3t-Y5ZjZjT5FdEJ140U2DJYC3mY.woff2') format('woff2');
+    }
+
+    .material-icons {
+        font-family: 'Material Icons';
+        font-weight: normal;
+        font-style: normal;
+        font-size: 24px;
+        line-height: 1;
+        letter-spacing: normal;
+        text-transform: none;
+        display: inline-block;
+        white-space: nowrap;
+        word-wrap: normal;
+        direction: ltr;
+        -webkit-font-feature-settings: 'liga';
+        -webkit-font-smoothing: antialiased;
+    }
+</style>

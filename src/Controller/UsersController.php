@@ -166,4 +166,15 @@ class UsersController extends AppController
         }
         $this->set(compact('user'));
     }
+
+    /**
+     * logout method
+     *
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+    public function logout()
+    {
+        return $this->redirect($this->Auth->logout());
+    }
 }
