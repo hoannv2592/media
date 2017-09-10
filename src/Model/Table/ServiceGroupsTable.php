@@ -48,32 +48,32 @@ class ServiceGroupsTable extends Table
         ]);
     }
 
-    /**
-     * Default validation rules.
-     *
-     * @param \Cake\Validation\Validator $validator Validator instance.
-     * @return \Cake\Validation\Validator
-     */
-    public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->scalar('name')
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
-
-        $validator
-            ->scalar('description')
-            ->requirePresence('description', 'create')
-            ->notEmpty('description');
-
-        $validator
-            ->requirePresence('delete_flag', 'create')
-            ->notEmpty('delete_flag');
-
-        return $validator;
-    }
+//    /**
+//     * Default validation rules.
+//     *
+//     * @param \Cake\Validation\Validator $validator Validator instance.
+//     * @return \Cake\Validation\Validator
+//     */
+//    public function validationDefault(Validator $validator)
+//    {
+//        $validator
+//            ->integer('id')
+//            ->allowEmpty('id', 'create');
+//
+//        $validator
+//            ->scalar('name')
+//            ->requirePresence('name', 'create')
+//            ->notEmpty('name');
+//
+//        $validator
+//            ->scalar('description')
+//            ->requirePresence('description', 'create')
+//            ->notEmpty('description');
+//
+//        $validator
+//            ->requirePresence('delete_flag', 'create')
+//            ->notEmpty('delete_flag');
+//
+//        return $validator;
+//    }
 }

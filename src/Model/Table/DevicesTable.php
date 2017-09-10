@@ -38,22 +38,12 @@ class DevicesTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->addBehavior('Timestamp', [
-            'events' => [
-                'Model.beforeSave' => [
-                    'created' => 'new',
-                    'updated' => 'always',
-                ],
-                'Users.afterLogin' => [
-                    'lastLogin' => 'always'
-                ]
-            ]
-        ]);
+        $this->addBehavior('Timestamp');
 
-//        $this->belongsTo('Users', [
-//            'foreignKey' => 'user_id',
-//            'joinType' => 'INNER'
-//        ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**
@@ -62,19 +52,19 @@ class DevicesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->scalar('apt_key')
-            ->requirePresence('apt_key', 'create')
-            ->notEmpty('apt_key');
-
-        return $validator;
-    }
+//    public function validationDefault(Validator $validator)
+//    {
+//        $validator
+//            ->integer('id')
+//            ->allowEmpty('id', 'create');
+//
+//        $validator
+//            ->scalar('apt_key')
+//            ->requirePresence('apt_key', 'create')
+//            ->notEmpty('apt_key');
+//
+//        return $validator;
+//    }
 
     /**
      * Returns a rules checker object that will be used for validating

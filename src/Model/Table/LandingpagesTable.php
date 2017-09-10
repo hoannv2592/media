@@ -55,21 +55,21 @@ class LandingpagesTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->scalar('name')
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
-        $validator
-            ->scalar('description')
-            ->requirePresence('description', 'create')
-            ->notEmpty('description');
-
-        return $validator;
-    }
+//    public function validationDefault(Validator $validator)
+//    {
+//        $validator
+//            ->integer('id')
+//            ->allowEmpty('id', 'create');
+//
+//        $validator
+//            ->scalar('name')
+//            ->requirePresence('name', 'create')
+//            ->notEmpty('name');
+//        $validator
+//            ->scalar('description')
+//            ->requirePresence('description', 'create')
+//            ->notEmpty('description');
+//
+//        return $validator;
+//    }
 }

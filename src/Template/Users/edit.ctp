@@ -37,7 +37,7 @@
                     </div>
                     <div class="body">
                         <?php echo $this->Form->create('Users', array(
-                            'id' => 'form_advanced_validation',
+                            'id' => 'form_edit_validation',
                             'type' => 'post',
                             'url' => array('controller' => 'Users', 'action' => 'edit'.'/'. $user['id']),
                             'inputDefaults' => array(
@@ -48,25 +48,26 @@
                         ?>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="username" value="<?php echo $user['username'] ?$user['username']: ''; ?>" required>
+                                <input type="text" class="form-control" name="username" value="<?php echo $user['username'] ? $user['username']: ''; ?>" required>
                             </div>
                             <div class="help-info">Tên username</div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="email" id="email"  value="<?php echo $user['email'] ?$user['email']: ''; ?>" required>
+                                <input type="text" class="form-control" name="email" id="email"  value="<?php echo $user['email'] ? $user['email']: ''; ?>" required>
                             </div>
                             <div class="help-info">Email</div>
+                            <input type="hidden" id="email_backup"  value="<?php echo $user['email'] ? $user['email']: ''; ?>" >
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control"  name="phone" value="<?php echo $user['phone'] ?$user['phone']: ''; ?>" required>
+                                <input type="text" class="form-control"  name="phone" value="<?php echo $user['phone'] ? $user['phone']: ''; ?>" required>
                             </div>
                             <div class="help-info">Số điện thoại</div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="address" value="<?php echo $user['address'] ?$user['address']: ''; ?>" required>
+                                <input type="text" class="form-control" name="address" value="<?php echo $user['address'] ? $user['address']: ''; ?>" required>
                             </div>
                             <div class="help-info">Địa chỉ</div>
                         </div>
@@ -89,37 +90,6 @@
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <select class="form-control required" name="device_id" id="device_id">
-                                    <option disabled selected value> -- chọn thiết bị -- </option>
-                                    <?php foreach ($devices as $key => $device) {
-                                        if ($key == $user['device_id']) { ?>
-                                            <option selected="selected" value="<?php echo $key;?>"><?php echo $device; ?></option>
-                                        <?php } else { ?>
-                                            <option value="<?php echo $key;?>"><?php echo $device; ?></option>
-                                        <?php } ?>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div class="help-info"> Thiết bị</div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <select class="form-control required" name="service_group_id" id="service_group_id">
-                                    <option disabled selected value> -- chọn dịch vụ -- </option>
-                                    <?php foreach ($serviceGroups as $key => $serviceGroup) {
-                                        if ($key == $user['service_group_id']) { ?>
-                                            <option selected="selected" value="<?php echo $key;?>"><?php echo $serviceGroup ?></option>
-                                        <?php } else { ?>
-                                            <option value="<?php echo $key;?>"><?php echo $serviceGroup ?></option>
-                                        <?php }
-                                        ?>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div class="help-info">Dịch vụ</div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
                                 <select class="form-control required" name="landingpage_id" id="landingpage_id">
                                     <option disabled selected value> -- chọn landingpage -- </option>
                                     <?php foreach ($landingpages as $key => $landingpage) {
@@ -133,22 +103,6 @@
                             </div>
                             <div class="help-info"> Langding page</div>
                         </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <select class="form-control required" name="adgroup_id" id="adgroup_id">
-                                    <option disabled selected value> -- chọn nhóm quảng cáo -- </option>
-                                    <?php foreach ($adgroups as $key => $adgroup) {
-                                        if ($user['adgroup_id'] == $key) { ?>
-                                            <option selected="selected" value="<?php echo $key;?>"><?php echo $adgroup ?></option>
-                                        <?php } else { ?>
-                                            <option value="<?php echo $key;?>"><?php echo $adgroup ?></option>
-                                        <?php }
-                                        ?>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div class="help-info">Nhóm quảng cáo</div>
-                        </div>
                         <button class="btn btn-primary waves-effect" id = "submit" type="submit">CHỈNH SỬA</button>
                         <?php echo $this->Form->end(); ?>
                     </div>
@@ -157,3 +111,37 @@
         </div>
     </div>
 </section>
+<script type="application/javascript">
+    $(document).ready(function () {
+        //Advanced Form Validation
+        $('#form_edit_validation').validate({
+            onkeyup: false,
+            rules: {
+                'phone': {
+                    number : true
+                },
+                'email' : {
+                    remote: {
+                        type: 'POST',
+                        async: false,
+                        url: '/Users/isEmaiEditlExist',
+                        data: {
+                            backup_email: function () {
+                                return $('#email_backup').val();
+                            }
+                        }
+                    }
+                }
+            },
+            highlight: function (input) {
+                $(input).parents('.form-line').addClass('error');
+            },
+            unhighlight: function (input) {
+                $(input).parents('.form-line').removeClass('error');
+            },
+            errorPlacement: function (error, element) {
+                $(element).parents('.form-group').append(error);
+            }
+        });
+    });
+</script>

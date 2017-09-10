@@ -1,32 +1,110 @@
 <?php
 /**
   * @var \App\View\AppView $this
+ * @var \App\View\AppView $device
+ * @var \App\View\AppView $users
   */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Form->postLink(
-                __('Delete'),
-                ['action' => 'delete', $device->id],
-                ['confirm' => __('Are you sure you want to delete # {0}?', $device->id)]
-            )
-        ?></li>
-        <li><?= $this->Html->link(__('List Devices'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="devices form large-9 medium-8 columns content">
-    <?= $this->Form->create($device) ?>
-    <fieldset>
-        <legend><?= __('Edit Device') ?></legend>
-        <?php
-            echo $this->Form->control('apt_key');
-            echo $this->Form->control('password');
-            echo $this->Form->control('user_id', ['options' => $users]);
-        ?>
-    </fieldset>
-    <?= $this->Form->button(__('Submit')) ?>
-    <?= $this->Form->end() ?>
-</div>
+<section class="content">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <ol class="breadcrumb breadcrumb-col-pink">
+                <li>
+                    <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
+                        <i class="material-icons">home</i> Home
+                    </a>
+                </li>
+                <li class="active">
+                    <i class="material-icons">library_books</i> chỉnh sửa thiết bị
+                </li>
+            </ol>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header bg-light-blue">
+                        <h2>THÔNG TIN USERS</h2>
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">more_vert</i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <?php echo $this->Form->create('Devices', array(
+                            'id' => 'form_edit_validation',
+                            'type' => 'post',
+                            'url' => array('controller' => 'Devices', 'action' => 'edit'.'/'.$device['id']),
+                            'inputDefaults' => array(
+                                'label' => false,
+                                'div' => false
+                            ),
+                        ));
+                        ?>
+                        <input id="backup_name_dev" type="hidden" value="<?php echo isset($device['name']) ? $device['name'] :''?>">
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="name" id="name"  value="<?php echo isset($device['name']) ? $device['name'] :''?>" required>
+                            </div>
+                            <div class="help-info">Tên thiết bị</div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="apt_key" id="apt_key" value="<?php echo isset($device['apt_key']) ? $device['apt_key']:''?>" required>
+                            </div>
+                            <div class="help-info">Mã apt_key</div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <select class="form-control required" name="user_id" id="user_id">
+                                    <option disabled selected value> -- Chọn user --</option>
+                                    <?php foreach ($users as $key => $user) {
+                                        if ($device['user_id'] == $key) { ?>
+                                            <option selected="selected" value="<?php echo $key;?>"><?php echo $user ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $key;?>"><?php echo $user ?></option>
+                                        <?php } ?>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                            <div class="help-info">Chọn Users</div>
+                        </div>
+                        <button class="btn btn-primary waves-effect" id = "submit" type="submit">CHỈNH SỬA</button>
+                        <?php echo $this->Form->end(); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<script type="application/javascript">
+    $(document).ready(function () {
+        //Advanced Form Validation
+        $('#form_edit_validation').validate({
+            onkeyup: false,
+            rules: {
+                'name' : {
+                    remote: {
+                        type: 'POST',
+                        async: false,
+                        url: '/Devices/isNameEditlExist',
+                        data: {
+                            backup_name: function () {
+                                return $('#backup_name_dev').val();
+                            }
+                        }
+                    }
+                }
+            },
+            highlight: function (input) {
+                $(input).parents('.form-line').addClass('error');
+            },
+            unhighlight: function (input) {
+                $(input).parents('.form-line').removeClass('error');
+            },
+            errorPlacement: function (error, element) {
+                $(element).parents('.form-group').append(error);
+            }
+        });
+    });
+</script>

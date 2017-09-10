@@ -54,36 +54,36 @@ class CampaignGroupsTable extends Table
      * @param \Cake\Validation\Validator $validator Validator instance.
      * @return \Cake\Validation\Validator
      */
-    public function validationDefault(Validator $validator)
-    {
-        $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->scalar('name')
-            ->requirePresence('name', 'create')
-            ->notEmpty('name');
-
-        $validator
-            ->scalar('description')
-            ->requirePresence('description', 'create')
-            ->notEmpty('description');
-
-        $validator
-            ->scalar('start_date')
-            ->requirePresence('start_date', 'create')
-            ->notEmpty('start_date');
-
-        $validator
-            ->scalar('end_date')
-            ->requirePresence('end_date', 'create')
-            ->notEmpty('end_date');
-
-        $validator
-            ->requirePresence('delete_flag', 'create')
-            ->notEmpty('delete_flag');
-
-        return $validator;
-    }
+//    public function validationDefault(Validator $validator)
+//    {
+//        $validator
+//            ->integer('id')
+//            ->allowEmpty('id', 'create');
+//
+//        $validator
+//            ->scalar('name')
+//            ->requirePresence('name', 'create')
+//            ->notEmpty('name');
+//
+//        $validator
+//            ->scalar('description')
+//            ->requirePresence('description', 'create')
+//            ->notEmpty('description');
+//
+//        $validator
+//            ->scalar('start_date')
+//            ->requirePresence('start_date', 'create')
+//            ->notEmpty('start_date');
+//
+//        $validator
+//            ->scalar('end_date')
+//            ->requirePresence('end_date', 'create')
+//            ->notEmpty('end_date');
+//
+//        $validator
+//            ->requirePresence('delete_flag', 'create')
+//            ->notEmpty('delete_flag');
+//
+//        return $validator;
+//    }
 }

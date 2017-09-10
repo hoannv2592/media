@@ -168,10 +168,10 @@
                 data: { id: id },
                 success: function (response) {
                     if (response) {
-                        alert_message('Đã xóa thành công');
+//                        alert_message('Đã xóa thành công');
                         setTimeout(function(){
                             window.location.reload();
-                        }, 1000);
+                        }, 100);
                     } else {
                         alert_message('Đã có lỗi xảy ra.vui lòng thử lại');
                         return false;
@@ -181,56 +181,56 @@
         });
     });
 
-    $('.advertise').click(function () {
-        var id = $(this).attr('value');
-        $('#cname').val(id);
-        var url = "<?php echo URL_LOAD_APT; ?>";
-        $.ajax({
-            url: url,
-            type: 'POST',
-            dataType: 'json',
-            data: { id: id },
-            success: function (response) {
-                if (response) {
-                    $('#modal-02 #id').val(response.name);
-                    $('#modal-02 #name').val(response.name);
-                    $('#modal-02 #apt_key').val(response.apt_key);
-                    $('#modal-02 #pass_apt_key').val(response.pass_apt_key);
-                }
-            }
-        });
-    });
-
-    $('#form_advanced_validation').validate({
-        rules: {
-            'name': {
-                remote: {
-                    type: 'POST',
-                    async: false,
-                    url: '/Devices/isNameExistAdd',
-                    onkeyup: false
-                }
-            }
-        },
-        onkeyup: function(element, event) {
-            if ($(element).attr('name') === "name") {
-                return false; // disable onkeyup for your element named as "name"
-            } else { // else use the default on everything else
-                if ( event.which === 9 && this.elementValue( element ) === "" ) {
-                    return;
-                } else if ( element.name in this.submitted || element === this.lastElement ) {
-                    this.element( element );
-                }
-            }
-        },
-        highlight: function (input) {
-            $(input).parents('.form-line').addClass('error');
-        },
-        unhighlight: function (input) {
-            $(input).parents('.form-line').removeClass('error');
-        },
-        errorPlacement: function (error, element) {
-            $(element).parents('.form-group').append(error);
-        }
-    });
+//    $('.advertise').click(function () {
+//        var id = $(this).attr('value');
+//        $('#cname').val(id);
+//        var url = "<?php //echo URL_LOAD_APT; ?>//";
+//        $.ajax({
+//            url: url,
+//            type: 'POST',
+//            dataType: 'json',
+//            data: { id: id },
+//            success: function (response) {
+//                if (response) {
+//                    $('#modal-02 #id').val(response.name);
+//                    $('#modal-02 #name').val(response.name);
+//                    $('#modal-02 #apt_key').val(response.apt_key);
+//                    $('#modal-02 #pass_apt_key').val(response.pass_apt_key);
+//                }
+//            }
+//        });
+//    });
+//
+//    $('#form_advanced_validation').validate({
+//        rules: {
+//            'name': {
+//                remote: {
+//                    type: 'POST',
+//                    async: false,
+//                    url: '/Devices/isNameExistAdd',
+//                    onkeyup: false
+//                }
+//            }
+//        },
+//        onkeyup: function(element, event) {
+//            if ($(element).attr('name') === "name") {
+//                return false; // disable onkeyup for your element named as "name"
+//            } else { // else use the default on everything else
+//                if ( event.which === 9 && this.elementValue( element ) === "" ) {
+//                    return;
+//                } else if ( element.name in this.submitted || element === this.lastElement ) {
+//                    this.element( element );
+//                }
+//            }
+//        },
+//        highlight: function (input) {
+//            $(input).parents('.form-line').addClass('error');
+//        },
+//        unhighlight: function (input) {
+//            $(input).parents('.form-line').removeClass('error');
+//        },
+//        errorPlacement: function (error, element) {
+//            $(element).parents('.form-group').append(error);
+//        }
+//    });
 </script>

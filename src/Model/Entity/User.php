@@ -58,6 +58,12 @@ class User extends Entity
     {
         return (new DefaultPasswordHasher)->hash($password);
     }
-	
-	
+
+    const ROLE_ONE = 1;
+    const ROLE_TOW = 2;
+
+    public static $role = array(
+        User::ROLE_ONE => 'Admin',
+        User::ROLE_TOW => 'User thường'
+    );
 }

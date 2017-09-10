@@ -1,7 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
- * @var \App\Model\Entity\ServiceGroup[]|\Cake\Collection\CollectionInterface $users
+ * @var \App\Model\Entity\Users[]|\Cake\Collection\CollectionInterface $users
  */
 ?>
 <section class="content" xmlns="">
@@ -29,8 +29,7 @@
                     </div>
                     <div class="body">
                         <div class="button-demo">
-                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>"
-                               class="btn btn-primary waves-effect m-r-20">THÊM MỚI USERS</a>
+                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'add']) ?>" class="btn btn-primary waves-effect m-r-20">THÊM MỚI USERS</a>
                         </div>
 
                         <div class="table-responsive">
@@ -41,10 +40,7 @@
                                     <th>Email</th>
                                     <th>Địa chỉ</th>
                                     <th>Số điện thoại</th>
-                                    <th>Nhóm quảng cáo</th>
-                                    <th>Nhóm dịch vụ</th>
-                                    <th>Landing page</th>
-                                    <th>Thiết bị</th>
+                                    <th>Mã quảng cáo</th>
                                     <th>Ngày tạo</th>
                                     <th>Điều hướng</th>
                                 </tr>
@@ -53,18 +49,12 @@
                                 <?php foreach ($users as $key => $user) { ?>
                                     <tr>
                                         <td class="advertise font-bold col-cyan">
-                                            <a href="<?php echo $this->Url->build(['controller' => 'Users',
-                                                'action' => 'edit' . '/' . $user->id]) ?>">
-                                                <?php echo h($user->username); ?>
-                                            </a>
+                                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit' . '/' . $user->id]) ?>"><?php echo h($user->username); ?></a>
                                         </td>
                                         <td><?php echo nl2br($user->email); ?></td>
                                         <td><?php echo nl2br($user->address); ?></td>
                                         <td><?php echo nl2br($user->phone); ?></td>
-                                        <td><?php echo nl2br($user->adgroup->name); ?></td>
-                                        <td><?php echo nl2br($user->service_group->name); ?></td>
                                         <td><?php echo nl2br($user->landingpage->name); ?></td>
-                                        <td><?php echo nl2br($user->device->name); ?></td>
                                         <td><?php echo date('d/m/Y H:i', strtotime($user->created)); ?></td>
                                         <td class="delete_advertise" value="<?php echo h($user->id); ?>">
                                             <button type="button" class="btn btn-danger waves-effect"
@@ -106,12 +96,11 @@
                                 'label' => false,
                                 'div' => false
                             ),
-                            'onsubmit'=>"event.returnValue = false; return false;",
                         ));
                         ?>
                         <p>Bạn có chắc chắn muốn xóa user không? </p>
                         <div class="modal-footer">
-                            <button class="btn btn-primary waves-effect" id = "submit_delete" type="submit">XÓA CHIẾN DỊCH</button>
+                            <button class="btn btn-primary waves-effect" id = "submit_delete" type="submit">XÓA USER</button>
                             <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
                         </div>
                         <?php echo $this->Form->end(); ?>
@@ -123,7 +112,7 @@
 </div>
 <script type="application/javascript">
     $('.delete_advertise').click(function () {
-        id = $(this).attr('value');
+        var id = $(this).attr('value');
         $('#submit_delete').click(function () {
             var url = "<?php echo URL_DELETE_US; ?>";
             $.ajax({
@@ -133,10 +122,9 @@
                 data: { id: id },
                 success: function (response) {
                     if (response) {
-                        alert_message('Đã xóa thành công');
                         setTimeout(function(){
                             window.location.reload();
-                        }, 1000);
+                        }, 100);
                     } else {
                         alert_message('Đã có lỗi xảy ra.vui lòng thử lại');
                         return false;
