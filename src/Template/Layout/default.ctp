@@ -201,6 +201,11 @@ $cakeDescription = 'Media ';
             </div>
             <!-- #Footer -->
         </aside>
+<!--        <div class="navbar navbar-default navbar-fixed-bottom">-->
+<!--            <div class="container text-center top10 " id="footer">-->
+<!--                Copyright © | JVB Vietnam. All Rights Reserved-->
+<!--            </div>-->
+<!--        </div>-->
     </section>
     <?= $this->Flash->render() ?>
     <?= $this->fetch('content') ?>

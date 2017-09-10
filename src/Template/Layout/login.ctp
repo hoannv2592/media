@@ -13,7 +13,7 @@
  * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
-$cakeDescription = 'Media :';
+$cakeDescription = 'Media ';
 ?>
 <!DOCTYPE html>
 <html>

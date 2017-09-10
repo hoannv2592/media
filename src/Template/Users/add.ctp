@@ -53,7 +53,7 @@
                             <div class="help-info">Tên username</div>
                         </div>
                         <div class="form-group form-float">
-                            <div class="form-line">
+                            <div class="form-line" id="email_user">
                                 <input type="text" class="form-control" name="email" id="email"  required>
                                 <label class="form-label">Email</label>
                             </div>
@@ -144,6 +144,7 @@
 </section>
 <script type="application/javascript">
     $(document).ready(function () {
+        $("#email").parent().removeClass("focused");
         $("div.form-line").removeClass("focused");
     });
 </script>

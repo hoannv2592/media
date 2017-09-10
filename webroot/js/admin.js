@@ -441,7 +441,7 @@ $.AdminBSB.browser = {
             return '';
         }
     }
-}
+};
 //==========================================================================================================================
 
 $(function () {
@@ -454,5 +454,5 @@ $(function () {
     $.AdminBSB.select.activate();
     $.AdminBSB.search.activate();
 
-    setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 50);
+    setTimeout(function () { $('.page-loader-wrapper').fadeOut(); }, 10);
 });
