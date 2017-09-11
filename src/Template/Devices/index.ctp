@@ -53,7 +53,13 @@
                                         </td>
                                         <td><?php echo nl2br($device->apt_key); ?></td>
                                         <td><?php echo date('d/m/Y H:i', strtotime($device->created));?></td>
-                                        <td class="delete_advertise" value="<?php echo h($device->id); ?>"><button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa thiết bị</button></td>
+                                        <td class="delete_advertise" value="<?php echo h($device->id); ?>">
+
+                                            <div class="button-demo">
+                                                <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_new_advertise'. '/' . $device->id]) ?>" class="btn btn-primary waves-effect m-r-20">TẠO QUẢNG CÁO</a>
+                                            </div>
+                                            <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa thiết bị</button>
+                                        </td>
                                     </tr>
                                 <?php } ?>
                                 </tbody>

@@ -42,29 +42,28 @@
                             'url' => array('controller' => 'Users', 'action' => 'add'),
                             'inputDefaults' => array(
                                 'label' => false,
-                                'div' => false
+                                'div' => false,
                             ),
+                            'autocomplete' => "off"
                         ));
                         ?>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="username" placeholder="Tên username"
-                                       required>
-                                <!--                                <label class="form-label">Tên username</label>-->
+                                <input type="text" class="form-control" name="username" placeholder="Tên username" required>
                             </div>
                             <div class="help-info">Tên username</div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line" id="email_user">
-                                <input type="text" class="form-control" name="email" id="email" placeholder="Email"
-                                       required>
+                                <input type="text" class="form-control" name="email" id="email" placeholder="Email" required >
                             </div>
                             <div class="help-info">Email</div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <input type="password" class="form-control" id="password" name="password"
-                                       placeholder="Mật khẩu" required>
+                                       autofill="off"
+                                       placeholder="Mật khẩu" required autocomplete="off">
                             </div>
                             <div class="help-info">Mật khẩu</div>
                         </div>
@@ -90,17 +89,6 @@
                                 </select>
                             </div>
                             <div class="help-info">Loại user</div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <select class="form-control required" name="landingpage_id" id="landingpage_id">
-                                    <option disabled selected value> -- Loại quảng cáo --</option>
-                                    <?php foreach ($landingpages as $key => $landingpage) { ?>
-                                        <option value="<?php echo $key; ?>"><?php echo $landingpage ?></option>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div class="help-info">Loại quảng cáo</div>
                         </div>
                         <button class="btn btn-primary waves-effect" id="submit" type="submit">THÊM MỚI</button>
                         <?php echo $this->Form->end(); ?>
@@ -140,4 +128,41 @@
             }
         });
     });
+
+
+    (function($, window, document, undefined) {
+
+        var pluginName = 'disableAutofill';
+        var defaults = {};
+
+        function Plugin(element, options) {
+            this.element = element;
+            this.options = $.extend({}, defaults, options) ;
+
+            this._defaults = defaults;
+            this._name = pluginName;
+
+            this.initialize();
+        }
+
+        Plugin.prototype.initialize = function() {
+            var $element = $(this.element);
+            $element
+                .val($element.attr('value'))
+                .clone()
+                .removeAttr('id class required')
+                .insertBefore(this.element)
+                .hide();
+        };
+
+        $.fn[pluginName] = function(options) {
+            return this.each(function() {
+                if (!$.data(this, 'plugin_' + pluginName)) {
+                    $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
+                }
+            });
+        };
+
+    })(jQuery, window, document);
+
 </script>

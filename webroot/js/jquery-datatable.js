@@ -28,8 +28,8 @@ $(function () {
         "columns": [
             { "width": "10%" },
             { "width": "15%" },
-            { "width": "20%"},
-            { "width": "10%" },
+            { "width": "10%"},
+            { "width": "20%" },
             { "width": "10%" },
             { "width": "10%" },
             { "width": "10%" }

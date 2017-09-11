@@ -44,6 +44,7 @@ $cakeDescription = 'Media ';
         'all-themes.min',
         'my_style',
         'dataTables.bootstrap.min',
+        'sweetalert',
     )) ?>
     <?= $this->Html->script(array(
         'jquery.min',
@@ -57,7 +58,10 @@ $cakeDescription = 'Media ';
         'jquery-datatable',
         'jquery.validate',
         'autosize.min',
-        'form-validation'
+        'form-validation',
+        'jquery.steps.min',
+        'sweetalert.min',
+        'form-wizard',
     ))?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -182,8 +186,7 @@ $cakeDescription = 'Media ';
                         <span>Quản lý mhóm quáng cáo</span>
                     </a>
                 </li>
-                <?php
-                if ($controller == 'Landingpages') { ?>
+                <?php if ($controller == 'Landingpages') { ?>
                 <li class="left_menu active ">
                     <?php } else { ?>
                 <li class="left_menu">
@@ -191,6 +194,16 @@ $cakeDescription = 'Media ';
                     <a href="<?php echo $this->Url->build(["controller" => "Landingpages", "action" => "index"]); ?>" >
                         <i class="material-icons">swap_calls</i>
                         <span>Quản lý màn hình quảng cáo</span>
+                    </a>
+                </li>
+                <?php if ($controller == 'Landingpages') { ?>
+                <li class="left_menu active ">
+                    <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="javascript:void(0);" >
+                        <i class="material-icons">swap_calls</i>
+                        <span>Báo cáo</span>
                     </a>
                 </li>
             </ul>

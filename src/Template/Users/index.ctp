@@ -38,9 +38,9 @@
                                 <tr class="bg-blue-grey">
                                     <th>Tên user</th>
                                     <th>Email</th>
+                                    <th>Thiết bị</th>
                                     <th>Địa chỉ</th>
                                     <th>Số điện thoại</th>
-                                    <th>Mã quảng cáo</th>
                                     <th>Ngày tạo</th>
                                     <th>Điều hướng</th>
                                 </tr>
@@ -52,9 +52,18 @@
                                             <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit' . '/' . $user->id]) ?>"><?php echo h($user->username); ?></a>
                                         </td>
                                         <td><?php echo nl2br($user->email); ?></td>
+                                        <td>
+                                            <table class="table">
+                                                    <?php foreach ($user->devices as $device) { ?>
+                                                        <tr>
+                                                        <td><a class="font-bold" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit'.'/'.$device->id])?>"> <?php echo  $device->name ;?></a></td>
+                                                        </tr>
+                                                    <?php } ?>
+
+                                            </table>
+                                        </td>
                                         <td><?php echo nl2br($user->address); ?></td>
                                         <td><?php echo nl2br($user->phone); ?></td>
-                                        <td><?php echo nl2br($user->landingpage->name); ?></td>
                                         <td><?php echo date('d/m/Y H:i', strtotime($user->created)); ?></td>
                                         <td class="delete_advertise" value="<?php echo h($user->id); ?>">
                                             <button type="button" class="btn btn-danger waves-effect"

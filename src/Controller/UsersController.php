@@ -26,12 +26,18 @@ class UsersController extends AppController
     public function index()
     {
         $users = $this->Users->find('all',[
-            'contain'  => ['Landingpages' => function ($q) {
+            'contain'  => ['Devices' => function ($q) {
                 return $q
                     ->where([
-                        'Users.delete_flag !=' => 1
+                        'Devices.delete_flag !=' => 1
+                    ])
+                    ->select([
+                        'Devices.user_id', 'id', 'name'
                     ]);
-            }]
+            }],
+            'conditions' => [
+                'Users.delete_flag !=' => 1
+            ]
         ])->toArray();
         $this->set(compact('users'));
     }
@@ -75,12 +81,12 @@ class UsersController extends AppController
                 } else {
                     $conn->rollback();
                     $this->Flash->error(__('The user could not be saved. Please, try again.'));
-                    return $this->redirect(['action' => 'add']);
+//                    return $this->redirect(['action' => 'add']);
                 }
             } else {
                 $conn->rollback();
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
-                return $this->redirect(['action' => 'add']);
+//                return $this->redirect(['action' => 'add']);
             }
         }
         $this->set(compact('user'));

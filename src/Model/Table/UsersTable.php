@@ -42,15 +42,17 @@ class UsersTable extends Table
         $this->setPrimaryKey('id');
 
         $this->addBehavior('Timestamp');
-
+        $this->hasMany('Devices', [
+            'className' => 'Devices'
+        ]);
 //        $this->belongsTo('Adgroups', [
 //            'foreignKey' => 'adgroup_id',
 //            'joinType' => 'INNER'
 //        ]);
-        $this->belongsTo('Landingpages', [
-            'foreignKey' => 'landingpage_id',
-            'joinType' => 'INNER'
-        ]);
+//        $this->belongsTo('Landingpages', [
+//            'foreignKey' => 'landingpage_id',
+//            'joinType' => 'INNER'
+//        ]);
 //        $this->belongsTo('Devices', [
 //            'foreignKey' => 'device_id',
 //            'joinType' => 'INNER'
@@ -95,8 +97,8 @@ class UsersTable extends Table
         $rules->add($rules->isUnique(['username']));
         $rules->add($rules->isUnique(['email']));
 //        $rules->add($rules->existsIn(['adgroup_id'], 'Adgroups'));
-        $rules->add($rules->existsIn(['landingpage_id'], 'Landingpages'));
-        $rules->add($rules->existsIn(['device_id'], 'Devices'));
+//        $rules->add($rules->existsIn(['landingpage_id'], 'Landingpages'));
+//        $rules->add($rules->existsIn(['device_id'], 'Devices'));
 //        $rules->add($rules->existsIn(['service_group_id'], 'ServiceGroups'));
 
         return $rules;

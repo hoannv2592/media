@@ -243,4 +243,15 @@ class DevicesController extends AppController
             }
         }
     }
+
+    /**
+     * setNewAdvertise method
+     *
+     * @param null $id
+     * @return \Cake\Http\Response|void
+     */
+    public function setNewAdvertise($id = null)
+    {
+        $this->getAllData();
+    }
 }

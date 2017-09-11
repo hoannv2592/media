@@ -1098,7 +1098,6 @@ $.extend( $.validator, {
 
 		previousValue: function( element, method ) {
 			method = typeof method === "string" && method || "remote";
-
 			return $.data( element, "previousValue" ) || $.data( element, "previousValue", {
 				old: null,
 				valid: true,
