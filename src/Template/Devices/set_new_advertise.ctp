@@ -38,29 +38,22 @@
                     </div>
                     <div class="body">
                         <form id="wizard_with_validation" method="POST">
-                            <h3>Account Information</h3>
+                            <h3>Chọn loại quảng cáo</h3>
                             <fieldset>
+                                <label for="landingpage_id">Chọn quảng cáo</label>
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <input type="text" class="form-control" name="username" required>
-                                        <label class="form-label">Username*</label>
-                                    </div>
-                                </div>
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="password" class="form-control" name="password" id="password" required>
-                                        <label class="form-label">Password*</label>
-                                    </div>
-                                </div>
-                                <div class="form-group form-float">
-                                    <div class="form-line">
-                                        <input type="password" class="form-control" name="confirm" required>
-                                        <label class="form-label">Confirm Password*</label>
+                                        <select class="form-control required" name="landingpage_id" id="landingpage_id">
+                                            <option disabled selected value> -- Chọn quảng cáo --</option>
+                                            <?php foreach ($landingpages as $key => $landingpage) { ?>
+                                                <option value="<?php echo $key; ?>"><?php echo $landingpage ?></option>
+                                            <?php } ?>
+                                        </select>
                                     </div>
                                 </div>
                             </fieldset>
 
-                            <h3>Profile Information</h3>
+                            <h3>Cài đặt quảng cáo</h3>
                             <fieldset>
                                 <div class="form-group form-float">
                                     <div class="form-line">
@@ -95,7 +88,7 @@
                                 </div>
                             </fieldset>
 
-                            <h3>Terms & Conditions - Finish</h3>
+                            <h3>Xem demo quảng cáo của thiết bị</h3>
                             <fieldset>
                                 <input id="acceptTerms-2" name="acceptTerms" type="checkbox" required>
                                 <label for="acceptTerms-2">I agree with the Terms and Conditions.</label>

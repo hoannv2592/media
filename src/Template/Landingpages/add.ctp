@@ -13,7 +13,7 @@
                     </a>
                 </li>
                 <li class="active">
-                    <i class="material-icons">library_books</i> new landingpage
+                    <i class="material-icons">library_books</i> Tạo màn hình quảng cáo
                 </li>
             </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -40,15 +40,17 @@
                             )
                         ));
                         ?>
+                        <label for="name">Tên loại quảng cáo</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="name" placeholder="Tên loại quảng cáo" required>
+                                <input type="text" class="form-control" name="name" placeholder="Điền tên quảng cáo" required>
                             </div>
                             <div class="help-info">Tên loại quảng cáo</div>
                         </div>
+                        <label for="name">Mô tả quảng cáo</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <textarea name="description" cols="30" rows="5" class="form-control no-resize" placeholder="Mô tả quảng cáo" required></textarea>
+                                <textarea name="description" cols="30" rows="5" class="form-control no-resize" placeholder="Điền mô tả" required></textarea>
                             </div>
                             <div class="help-info">Mô tả quảng cáo</div>
                         </div>

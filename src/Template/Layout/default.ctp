@@ -141,7 +141,7 @@ $cakeDescription = 'Media ';
                     <?php } ?>
                     <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>" >
                         <i class="material-icons">supervisor_account</i>
-                        <span>Quản lý Users</span>
+                        <span>Quản lý người dùng</span>
                     </a>
                 </li>
                 <?php if ($controller == 'Devices') { ?>
@@ -154,15 +154,24 @@ $cakeDescription = 'Media ';
                         <span>Quản lý thiết bị</span>
                     </a>
                 </li>
-                <?php
-                if ($controller == 'CampaignGroups') { ?>
+                <?php if ($controller == 'Landingpages') { ?>
+            <li class="left_menu active ">
+            <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "Landingpages", "action" => "index"]); ?>" >
+                        <i class="material-icons">swap_calls</i>
+                        <span>Màn hình quảng cáo</span>
+                    </a>
+                </li>
+            <?php if ($controller == 'CampaignGroups') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
                 <li class="left_menu">
                     <?php } ?>
                     <a href="javascript:void(0);">
                         <i class="material-icons">trending_up</i>
-                        <span>Quản lý chiến dịch</span>
+                        <span>Nhóm chiến dịch</span>
                     </a>
                 </li>
                 <?php
@@ -173,7 +182,7 @@ $cakeDescription = 'Media ';
                     <?php } ?>
                     <a href="javascript:void(0);" >
                         <i class="material-icons">widgets</i>
-                        <span>Quản lý nhóm dịch vụ</span>
+                        <span>Nhóm dịch vụ</span>
                     </a>
                 </li>
                 <?php if ($controller == 'Adgroups') { ?>
@@ -183,27 +192,28 @@ $cakeDescription = 'Media ';
                     <?php } ?>
                     <a href="javascript:void(0);">
                         <i class="material-icons">view_list</i>
-                        <span>Quản lý mhóm quáng cáo</span>
+                        <span>Mhóm quáng cáo</span>
                     </a>
                 </li>
-                <?php if ($controller == 'Landingpages') { ?>
-                <li class="left_menu active ">
-                    <?php } else { ?>
-                <li class="left_menu">
-                    <?php } ?>
-                    <a href="<?php echo $this->Url->build(["controller" => "Landingpages", "action" => "index"]); ?>" >
-                        <i class="material-icons">swap_calls</i>
-                        <span>Quản lý màn hình quảng cáo</span>
-                    </a>
-                </li>
-                <?php if ($controller == 'Landingpages') { ?>
+                <?php if ($controller == 'reports') { ?>
                 <li class="left_menu active ">
                     <?php } else { ?>
                 <li class="left_menu">
                     <?php } ?>
                     <a href="javascript:void(0);" >
-                        <i class="material-icons">swap_calls</i>
+                        <i class="material-icons">present_to_all</i>
                         <span>Báo cáo</span>
+                    </a>
+                </li>
+
+                <?php if ($controller == 'import') { ?>
+                <li class="left_menu active ">
+                    <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "import", "action" => "index"]); ?>" >
+                        <i class="material-icons">file_upload</i>
+                        <span>Import data</span>
                     </a>
                 </li>
             </ul>

@@ -1,8 +1,8 @@
 <?php
 /**
-  * @var \App\View\AppView $this
-  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $devices
-  */
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $devices
+ */
 ?>
 <section class="content" xmlns="">
     <div class="container-fluid">
@@ -11,7 +11,8 @@
                 <div class="card">
                     <div class="header bg-green">
                         <h2>
-                            Quản lý thiết bị <small>Description text here...</small>
+                            Quản lý thiết bị
+                            <small>Description text here...</small>
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>
@@ -28,7 +29,8 @@
                     </div>
                     <div class="body">
                         <div class="button-demo">
-                            <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'add']) ?>" class="btn btn-primary waves-effect m-r-20">THÊM THIẾT BỊ</a>
+                            <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'add']) ?>"
+                               class="btn btn-primary waves-effect m-r-20">THÊM THIẾT BỊ</a>
                         </div>
 
                         <div class="table-responsive">
@@ -43,7 +45,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach ($devices as $key => $device) {?>
+                                <?php foreach ($devices as $key => $device) { ?>
                                     <tr>
                                         <td class="advertise font-bold col-cyan">
                                             <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . $device->id]) ?>"><?php echo h($device->name); ?></a>
@@ -52,13 +54,16 @@
                                             <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit' . '/' . $device->user->id]) ?>"><?php echo h($device->user->username); ?></a>
                                         </td>
                                         <td><?php echo nl2br($device->apt_key); ?></td>
-                                        <td><?php echo date('d/m/Y H:i', strtotime($device->created));?></td>
+                                        <td><?php echo date('d/m/Y H:i', strtotime($device->created)); ?></td>
                                         <td class="delete_advertise" value="<?php echo h($device->id); ?>">
 
                                             <div class="button-demo">
-                                                <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_new_advertise'. '/' . $device->id]) ?>" class="btn btn-primary waves-effect m-r-20">TẠO QUẢNG CÁO</a>
+<!--                                                <a href="--><?php //echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_new_advertise' . '/' . $device->id]) ?><!--"-->
+<!--                                                   class="btn btn-primary waves-effect m-r-20">TẠO QUẢNG CÁO</a>-->
                                             </div>
-                                            <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa thiết bị</button>
+                                            <button type="button" class="btn btn-danger waves-effect"
+                                                    data-toggle="modal" data-target="#modal-03">Xóa thiết bị
+                                            </button>
                                         </td>
                                     </tr>
                                 <?php } ?>

@@ -14,7 +14,7 @@
                     </a>
                 </li>
                 <li class="active">
-                    <i class="material-icons">library_books</i> Edit landingpage
+                    <i class="material-icons">library_books</i> Chỉnh sửa màn hình quảng cáo
                 </li>
             </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -41,6 +41,7 @@
                             )
                         ));
                         ?>
+                        <label for="name">Tên loại quảng cáo</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <input type="text" class="form-control" name="name" placeholder="Tên loại quảng cáo" value="<?php echo isset($landingpage->name) ? $landingpage->name: '';?>" required>
@@ -48,6 +49,7 @@
                             <div class="help-info">Tên loại quảng cáo</div>
                             <input type="hidden" id="landing_name_backup" value="<?php echo isset($landingpage->name) ? $landingpage->name: '';?>" >
                         </div>
+                        <label for="name">Mô tả quảng cáo</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <textarea name="description" cols="30" rows="5" class="form-control no-resize" placeholder="Mô tả quảng cáo" required><?php echo isset($landingpage->description) ? $landingpage->description: '';?></textarea>

@@ -21,7 +21,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header bg-light-blue">
-                        <h2>THÔNG TIN USERS</h2>
+                        <h2>THÔNG TIN THIẾT BỊ</h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
@@ -42,22 +42,25 @@
                         ));
                         ?>
                         <input id="backup_name_dev" type="hidden" value="<?php echo isset($device['name']) ? $device['name'] :''?>">
+                        <label for="name">Tên thiết bị</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <input type="text" class="form-control" name="name" id="name"  value="<?php echo isset($device['name']) ? $device['name'] :''?>" required>
                             </div>
                             <div class="help-info">Tên thiết bị</div>
                         </div>
+                        <label for="name">Mã apt_key</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <input type="text" class="form-control" name="apt_key" id="apt_key" value="<?php echo isset($device['apt_key']) ? $device['apt_key']:''?>" required>
                             </div>
                             <div class="help-info">Mã apt_key</div>
                         </div>
+                        <label for="user_id">Chọn tài khoản</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <select class="form-control required" name="user_id" id="user_id">
-                                    <option disabled selected value> -- Chọn user --</option>
+                                    <option disabled selected value> -- Chọn tài khoản --</option>
                                     <?php foreach ($users as $key => $user) {
                                         if ($device['user_id'] == $key) { ?>
                                             <option selected="selected" value="<?php echo $key;?>"><?php echo $user ?></option>

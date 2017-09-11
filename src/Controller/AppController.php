@@ -71,7 +71,7 @@ class AppController extends Controller
                 'controller' => 'Users',
                 'action' => 'login'
             ],
-            'authError' => 'Did you really think you are allowed to see that?',
+//            'authError' => 'Did you really think you are allowed to see that?',
         ]);
         $this->loadModel('Users');
         $this->loadModel('Devices');

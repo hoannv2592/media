@@ -40,30 +40,33 @@
                             ),
                         ));
                         ?>
+                        <label for="name">Tên thiết bị</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="name" id="name_device" placeholder="Tên thiết bị" required>
+                                <input type="text" class="form-control" name="name" id="name_device" placeholder="Điền tên thiết bị" required>
                                 <label class="form-label"></label>
                             </div>
                             <div class="help-info">Tên thiết bị</div>
                         </div>
+                        <label for="name">Mã apt_key</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="apt_key" placeholder="Mã apt_key" required>
+                                <input type="text" class="form-control" name="apt_key" placeholder="Điền mã apt_key" required>
                                 <label class="form-label"></label>
                             </div>
                             <div class="help-info">Mã apt_key</div>
                         </div>
+                        <label for="name">Chọn tài khoản</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <select class="form-control required" name="user_id" id="user_id">
-                                    <option disabled selected value> -- Chọn user --</option>
+                                    <option disabled selected value> -- Chọn tài khoản --</option>
                                     <?php foreach ($users as $key => $user) { ?>
                                         <option value="<?php echo $key; ?>"><?php echo $user ?></option>
                                     <?php } ?>
                                 </select>
                             </div>
-                            <div class="help-info">Chọn Users</div>
+                            <div class="help-info">Chọn tài khoản</div>
                         </div>
                         <button class="btn btn-primary waves-effect" id = "submit" type="submit">THÊM MỚI</button>
                         <?php echo $this->Form->end(); ?>
