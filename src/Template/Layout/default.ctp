@@ -206,16 +206,16 @@ $cakeDescription = 'Media ';
                     </a>
                 </li>
 
-                <?php if ($controller == 'import') { ?>
-                <li class="left_menu active ">
-                    <?php } else { ?>
-                <li class="left_menu">
-                    <?php } ?>
-                    <a href="<?php echo $this->Url->build(["controller" => "import", "action" => "index"]); ?>" >
-                        <i class="material-icons">file_upload</i>
-                        <span>Import data</span>
-                    </a>
-                </li>
+<!--                --><?php //if ($controller == 'import') { ?>
+<!--                <li class="left_menu active ">-->
+<!--                    --><?php //} else { ?>
+<!--                <li class="left_menu">-->
+<!--                    --><?php //} ?>
+<!--                    <a href="--><?php //echo $this->Url->build(["controller" => "import", "action" => "index"]); ?><!--" >-->
+<!--                        <i class="material-icons">file_upload</i>-->
+<!--                        <span>Import data</span>-->
+<!--                    </a>-->
+<!--                </li>-->
             </ul>
         </div>
         <!-- #Menu -->

@@ -88,21 +88,6 @@
                             </div>
                             <div class="help-info">Loại user</div>
                         </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <select class="form-control required" name="landingpage_id" id="landingpage_id">
-                                    <option disabled selected value> -- chọn landingpage -- </option>
-                                    <?php foreach ($landingpages as $key => $landingpage) {
-                                        if ($user['landingpage_id'] == $key) { ?>
-                                            <option selected="selected" value="<?php echo $key;?>"><?php echo $landingpage ?></option>
-                                        <?php } else { ?>
-                                            <option value="<?php echo $key;?>"><?php echo $landingpage ?></option>
-                                        <?php } ?>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                            <div class="help-info"> Langding page</div>
-                        </div>
                         <button class="btn btn-primary waves-effect" id = "submit" type="submit">CHỈNH SỬA</button>
                         <?php echo $this->Form->end(); ?>
                     </div>
