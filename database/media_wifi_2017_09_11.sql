@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50505
 File Encoding         : 65001
 
-Date: 2017-09-11 02:08:19
+Date: 2017-09-12 07:19:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -107,14 +107,14 @@ CREATE TABLE `devices` (
 -- ----------------------------
 -- Records of devices
 -- ----------------------------
-INSERT INTO `devices` VALUES ('1', 'Thiết bị 4', '12345', '123456', '0', '2017-09-04 11:46:23', '2017-09-05 16:46:08');
-INSERT INTO `devices` VALUES ('2', 'Thiết bị 2', 'xxxxxxxxxxxxxxx', '1234567890', '1', '2017-09-04 12:03:36', '2017-09-04 16:52:48');
-INSERT INTO `devices` VALUES ('3', 'Thiết bị 3', 'cdfkssaqiuy', '123456789', '0', '2017-09-04 17:05:18', '2017-09-05 16:45:47');
-INSERT INTO `devices` VALUES ('4', 'Thiết bị 2', '	04/09/2017 17:05', '123456545', '0', '2017-09-05 01:32:33', '2017-09-05 16:45:18');
-INSERT INTO `devices` VALUES ('5', 'Thiết bị 1', '12345', '2147483647', '0', '2017-09-05 02:13:43', '2017-09-06 07:23:36');
-INSERT INTO `devices` VALUES ('6', 'Thiết bị 5', 'fvmbxliek', '123456789', '0', '2017-09-05 02:16:51', '2017-09-05 16:46:39');
-INSERT INTO `devices` VALUES ('7', 'Thiết bị 10D', '12356', '3', '0', '2017-09-10 18:08:45', '2017-09-10 18:45:40');
-INSERT INTO `devices` VALUES ('8', 'Thiết bị 10D 2', 'AsAS', '2', '0', '2017-09-10 18:10:37', '2017-09-10 18:46:06');
+INSERT INTO `devices` VALUES ('1', 'Thai Restaurant Thai Thinh', '5MfTggeH5p09:09:35', '3', '0', '2017-09-11 16:32:42', '2017-09-11 16:32:42');
+INSERT INTO `devices` VALUES ('2', 'Công ty PTS', 'Darie4xF6L08:49:38', '2', '0', '2017-09-11 16:33:06', '2017-09-11 16:33:06');
+INSERT INTO `devices` VALUES ('3', 'Công ty tin học Phi Dũng', 'Ryj0FaSpM509:46:23', '2', '0', '2017-09-11 16:33:20', '2017-09-11 16:33:20');
+INSERT INTO `devices` VALUES ('4', 'Nhà Hàng ldivo', 'k3cZ4f0sOJ08:56:31', '2', '0', '2017-09-11 16:34:06', '2017-09-11 16:34:06');
+INSERT INTO `devices` VALUES ('5', 'SPa Huyền', 'ctW8VJN3Xf23:46:23', '1', '0', '2017-09-11 16:34:25', '2017-09-11 16:34:25');
+INSERT INTO `devices` VALUES ('6', 'Nhà hàng Thượng Hải', 'rISWtT8JhF09:07:33', '1', '0', '2017-09-11 16:34:43', '2017-09-11 16:34:43');
+INSERT INTO `devices` VALUES ('7', 'q3FLueFDPK10:12:42', 'q3FLueFDPK10:12:42', '1', '0', '2017-09-11 16:35:03', '2017-09-11 16:35:03');
+INSERT INTO `devices` VALUES ('8', 'Coffee HG', 'nxP9NvZ7eU09:18:04', '3', '0', '2017-09-11 16:35:24', '2017-09-11 16:35:24');
 
 -- ----------------------------
 -- Table structure for fs_banners
@@ -439,7 +439,7 @@ INSERT INTO `landingpages` VALUES ('5', 'Quảng cáo 5', '1', 'The top paramete
 INSERT INTO `landingpages` VALUES ('6', 'Quảng cáo 6', '1', 'Quảng cáo 6\r\nQuảng cáo 6\r\nQuảng cáo 6\r\nQuảng cáo 6', '2017-08-30 03:09:22', '2017-08-30 09:01:46');
 INSERT INTO `landingpages` VALUES ('7', 'Quảng cáo 1', '0', 'Quảng cáo 1\r\nQuảng cáo 1', '2017-08-30 09:03:39', '2017-09-05 16:40:32');
 INSERT INTO `landingpages` VALUES ('8', 'Quảng cáo 2', '0', 'Modal is basically a dialog box or popup window that is used to provide important information to the user or prompt user to take necessary actions before moving on', '2017-08-30 09:03:49', '2017-08-30 17:18:28');
-INSERT INTO `landingpages` VALUES ('9', 'Quảng cáo 3', '0', 'Modal is basically a dialog box or popup window that is used to provide important information to the user or prompt user to take necessary actions before moving on', '2017-08-30 09:03:56', '2017-08-30 09:03:56');
+INSERT INTO `landingpages` VALUES ('9', 'Quảng cáo 3', '0', 'Modal is basically a dialog box or popup window that is ', '2017-08-30 09:03:56', '2017-08-30 09:03:56');
 INSERT INTO `landingpages` VALUES ('10', 'Quảng cáo 4', '1', 'Modal is basically a dialog box or popup window that is used to provide important information to the user or prompt user to take necessary actions before moving on', '2017-08-30 09:04:05', '2017-08-30 09:04:48');
 INSERT INTO `landingpages` VALUES ('11', 'Quảng cáo 4', '1', 'Modal is basically a dialog box or popup window that is used to provide important information to the user or prompt user to take necessary actions before moving on', '2017-08-30 09:04:10', '2017-09-10 17:22:40');
 INSERT INTO `landingpages` VALUES ('12', 'Quảng cáo 5', '1', 'sdf', '2017-09-05 13:38:36', '2017-09-10 17:22:36');
@@ -473,7 +473,6 @@ INSERT INTO `service_groups` VALUES ('5', 'THÊM MỚI NHÓM DỊCH VỤ 2', 'TH
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int(12) NOT NULL AUTO_INCREMENT COMMENT 'table for users',
-  `status` int(2) NOT NULL,
   `username` varchar(255) NOT NULL,
   `email` varchar(255) NOT NULL,
   `password` varchar(255) NOT NULL,
@@ -481,7 +480,6 @@ CREATE TABLE `users` (
   `phone` int(12) NOT NULL,
   `address` varchar(500) CHARACTER SET utf8 NOT NULL,
   `role` tinyint(2) NOT NULL,
-  `landingpage_id` int(12) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
   PRIMARY KEY (`id`)
@@ -490,9 +488,9 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', '1', 'Dev_1', 'dev1@gmail.com', '$2y$10$RaOb4JVMdrt0THlCv1AdreZ.t4XKirOEPCcHT8efQcbR8KdEC19P6', '0', '985644301', 'Số 244A, Lê Trọng Tấn, Khương Mai, Thanh Xuân, HN', '1', '12', '2017-09-06 04:30:36', '2017-09-06 17:39:17');
-INSERT INTO `users` VALUES ('2', '1', 'Dev_2', 'dev2@gmail.com', '$2y$10$XAGPDyvlzOy21yZyWXj.5enHXMVlYE40wqqGVT/FGZq7EnzAxczja', '0', '985644120', 'Số 2 (nhà 48) Giảng Võ, Quận Đống Đa, Hà Nội', '1', '12', '2017-09-06 04:31:55', '2017-09-06 04:31:55');
-INSERT INTO `users` VALUES ('3', '1', 'Dev_3', 'dev3@gmail.com', '$2y$10$.XiTKJtVbIfnq3iCQ6bUOeeVocnmVEZjmm35jINVa2Ggo0SnP0ucG', '0', '985644301', 'Email: info@dantri.com.vn. Website: http://www.dantri.com.vn ', '2', '9', '2017-09-06 04:33:15', '2017-09-06 04:33:15');
-INSERT INTO `users` VALUES ('4', '1', 'Dev_4', 'dev4@gmail.com', '$2y$10$UnqbiRBsEfkHdW5R.A9xBOvRRmoGQtpXZb.P/eWzgvXELPbDBWCLO', '1', '985644301', 'Số 244A, Lê Trọng Tấn, Khương Mai, Thanh Xuân, HN', '1', '11', '2017-09-06 04:34:44', '2017-09-10 16:31:48');
-INSERT INTO `users` VALUES ('5', '1', 'Dev_5', 'dev5@gmail.com', '$2y$10$9psrOZgyZWoLM58gFYsEcOLQW4IAJUuo7j85t4pq1C3RP1eJcyGw.', '1', '123456258', 'VP Giao dịch: P17.1, Tòa Nhà CT2, VIMECO, Trung Hòa, Cầu Giấy, Hà Nội', '2', '12', '2017-09-06 04:48:25', '2017-09-06 18:12:00');
-INSERT INTO `users` VALUES ('6', '0', 'dev_6', 'dev6@gmail.com', '$2y$10$iHFay6cHgdiGONK4iGxjS.fMozR85MDV9yoTzEDk6TtS86e1C0D2i', '1', '985644301', 'Ha noi viet nam', '1', '12', '2017-09-10 15:54:16', '2017-09-10 16:29:39');
+INSERT INTO `users` VALUES ('1', 'Dev_1', 'dev1@gmail.com', '$2y$10$RaOb4JVMdrt0THlCv1AdreZ.t4XKirOEPCcHT8efQcbR8KdEC19P6', '0', '985644301', 'Số 244A, Lê Trọng Tấn, Khương Mai, Thanh Xuân, HN', '1', '2017-09-06 04:30:36', '2017-09-06 17:39:17');
+INSERT INTO `users` VALUES ('2', 'Dev_2', 'dev2@gmail.com', '$2y$10$XAGPDyvlzOy21yZyWXj.5enHXMVlYE40wqqGVT/FGZq7EnzAxczja', '0', '985644120', 'Số 2 (nhà 48) Giảng Võ, Quận Đống Đa, Hà Nội', '1', '2017-09-06 04:31:55', '2017-09-06 04:31:55');
+INSERT INTO `users` VALUES ('3', 'Dev_3', 'dev3@gmail.com', '$2y$10$.XiTKJtVbIfnq3iCQ6bUOeeVocnmVEZjmm35jINVa2Ggo0SnP0ucG', '0', '985644301', 'Email: info@dantri.com.vn. Website: http://www.dantri.com.vn ', '2', '2017-09-06 04:33:15', '2017-09-06 04:33:15');
+INSERT INTO `users` VALUES ('4', 'Dev_4', 'dev4@gmail.com', '$2y$10$UnqbiRBsEfkHdW5R.A9xBOvRRmoGQtpXZb.P/eWzgvXELPbDBWCLO', '1', '985644301', 'Số 244A, Lê Trọng Tấn, Khương Mai, Thanh Xuân, HN', '1', '2017-09-06 04:34:44', '2017-09-10 16:31:48');
+INSERT INTO `users` VALUES ('5', 'Dev_5', 'dev5@gmail.com', '$2y$10$9psrOZgyZWoLM58gFYsEcOLQW4IAJUuo7j85t4pq1C3RP1eJcyGw.', '1', '123456258', 'VP Giao dịch: P17.1, Tòa Nhà CT2, VIMECO, Trung Hòa, Cầu Giấy, Hà Nội', '2', '2017-09-06 04:48:25', '2017-09-06 18:12:00');
+INSERT INTO `users` VALUES ('6', 'dev_6', 'dev6@gmail.com', '$2y$10$iHFay6cHgdiGONK4iGxjS.fMozR85MDV9yoTzEDk6TtS86e1C0D2i', '1', '985644301', 'Ha noi viet nam', '1', '2017-09-10 15:54:16', '2017-09-10 16:29:39');
