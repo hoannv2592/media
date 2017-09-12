@@ -15,6 +15,8 @@ class ComposerStaticInit31a178e44f349b4a9af8d3f29a031a46
         'b1fc73705e1bec51cd2b20a32cf1c60a' => __DIR__ . '/..' . '/cakephp/cakephp/src/Utility/bootstrap.php',
         '667aeda72477189d0494fecd327c3641' => __DIR__ . '/..' . '/symfony/var-dumper/Resources/functions/dump.php',
         'e7223560d890eab89cda23685e711e2c' => __DIR__ . '/..' . '/psy/psysh/src/Psy/functions.php',
+        '078c3be5d55114d2e5527ff1be638958' => __DIR__ . '/..' . '/PHPExcel/Classes/PHPExcel.php',
+        'f762b3a6cebb023f1235be6ecf61d193' => __DIR__ . '/..' . '/PHPExcel/Classes/PHPExcel/IOFactory.php',
     );
 
     public static $prefixLengthsPsr4 = array (

@@ -17,10 +17,10 @@
                         </ul>
                     </div>
                     <div class="body">
-                        <?php echo $this->Form->create('Import', array(
+                        <?php echo $this->Form->create('Users', array(
                             'id' => 'form_advanced_validation',
                             'type' => 'post',
-                            'url' => array('controller' => 'Import', 'action' => 'index'),
+                            'url' => array('controller' => 'Users', 'action' => 'import'),
                             'enctype' => 'multipart/form-data'
                         ));
                         ?>

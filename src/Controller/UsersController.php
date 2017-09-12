@@ -282,4 +282,26 @@ class UsersController extends AppController
             }
         }
     }
+
+    /**
+     * import method
+     * check email when edit new users
+     * @return \Cake\Http\Response|null Redirects to index.
+     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     */
+
+    public function import()
+    {
+        if ($this->request->is('post')) {
+            $tmp_name = $this->request->data['file_import']['tmp_name'];
+            $filename = $tmp_name;
+            $loadWorksheet = $this->PhpExcel->loadWorksheet($filename)->getActiveSheet();
+            $cell = $loadWorksheet->getCell('A1');
+            pr($cell); die;
+//            $this->dataArray = $excel->getSheet(0)->toArray();
+//            pr($this->dataArray);
+            die;
+
+        }
+    }
 }

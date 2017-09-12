@@ -27,7 +27,12 @@
     "autoload": {
         "psr-4": {
             "App\\": "src"
-        }
+        },
+		"files": [
+			"vendor/PHPExcel/Classes/PHPExcel.php",
+			"vendor/PHPExcel/Classes/PHPExcel/IOFactory.php"
+		]
+
     },
     "autoload-dev": {
         "psr-4": {
