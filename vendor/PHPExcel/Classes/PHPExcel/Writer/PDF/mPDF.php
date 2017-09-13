@@ -27,18 +27,18 @@ if (file_exists($pdfRendererClassFile)) {
  *  License along with this library; if not, write to the Free Software
  *  Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  *
- * @category    PHPExcel
- * @package     PHPExcel_Writer_PDF
- * @copyright   Copyright (c) 2006 - 2015 PHPExcel (http://www.codeplex.com/PHPExcel)
- * @license     http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
- * @version     ##VERSION##, ##DATE##
+ *  @category    PHPExcel
+ *  @package     PHPExcel_Writer_PDF
+ *  @copyright   Copyright (c) 2006 - 2015 PHPExcel (http://www.codeplex.com/PHPExcel)
+ *  @license     http://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt    LGPL
+ *  @version     ##VERSION##, ##DATE##
  */
 class PHPExcel_Writer_PDF_mPDF extends PHPExcel_Writer_PDF_Core implements PHPExcel_Writer_IWriter
 {
     /**
      *  Create a new PHPExcel_Writer_PDF
      *
-     * @param  PHPExcel $phpExcel PHPExcel object
+     *  @param  PHPExcel  $phpExcel  PHPExcel object
      */
     public function __construct(PHPExcel $phpExcel)
     {
@@ -48,8 +48,8 @@ class PHPExcel_Writer_PDF_mPDF extends PHPExcel_Writer_PDF_Core implements PHPEx
     /**
      *  Save PHPExcel to file
      *
-     * @param     string $pFilename Name of the file to save as
-     * @throws    PHPExcel_Writer_Exception
+     *  @param     string     $pFilename   Name of the file to save as
+     *  @throws    PHPExcel_Writer_Exception
      */
     public function save($pFilename = null)
     {
