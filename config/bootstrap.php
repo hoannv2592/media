@@ -217,3 +217,6 @@ if (Configure::read('debug')) {
 }
 Configure::load('config','default');
 require_once('constant.php');
+require(ROOT . DS . 'vendor' . DS . 'Spout' . DS . 'Autoloader' . DS . 'autoload.php');
+require_once  (ROOT . DS . 'vendor' . DS . 'PHPExcel' . DS .'Classes' . DS .'PHPExcel' . DS . 'IOFactory.php');
+require_once  (ROOT . DS . 'vendor' . DS . 'PHPExcel'. DS .'Classes' . DS . 'PHPExcel.php');
