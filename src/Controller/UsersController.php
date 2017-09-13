@@ -17,7 +17,9 @@ use Box\Spout\Writer\Style\BorderBuilder;
 use function MongoDB\BSON\toJSON;
 use PHPExcel;
 use PHPExcel_IOFactory;
+use PHPExcel_Style_Border;
 use PHPExcel_Cell;
+use PHPExcel_Style_Fill;
 
 /**
  * Users Controller
@@ -366,266 +368,80 @@ class UsersController extends AppController
                     $conn->rollback();
                 }
             }
-//            $pathinfo = pathinfo($tmp_name['name']);
-//            $extension = $pathinfo['extension'];
-//            if ($extension == 'xlsx') {
-//                $reader = ReaderFactory::create(Type::XLSX); // for XLSX files
-//            } else {
-//                $reader = ReaderFactory::create(Type::CSV); // for CSV files
-//            }
-//            $reader->open($tmp_name['tmp_name']);
-//            foreach ($reader->getSheetIterator() as $index => $sheet) {
-//                if ($index != 1) {
-//                    break;
-//                }
-//                $arData = array();
-//                $data = array();
-//                foreach ($sheet->getRowIterator() as $index_row => $row) {
-//                    if ($index_row == 1) {
-//                        continue;
-//                    }
-//                    foreach ($row as $key => $item) {
-//                        if ($key == 0) {
-//                            $data['email'] = $item;
-//                        } else if ($key == 1) {
-//                            $data['password'] = $item;
-//                        } else if ($key == 2) {
-//                            $data['address'] = $item;
-//                        } else if ($key == 3) {
-//                            $data['username'] = $item;
-//                        } else if ($key == 4) {
-//                            $data['phone'] = $item;
-//                        } else if ($key == 5) {
-//                            $data['role'] = $item;
-//                        } else {
-//                            $data['delete_flag'] = $item;
-//                        }
-//                    }
-//                    $arData[] = $data;
-//                    //if ($index_row % 100 == 0) {
-//                        //$arData = array();
-//                    //}
-//                }
-//            }
-//            // save data
-//            foreach ($arData as $arDatum) {
-//                $user = $this->Users->newEntity();
-//                $user = $this->Users->patchEntity($user, $arDatum);
-//                if (empty($user->errors())) {
-//                    if ($this->Users->save($user)) {
-//                        $conn->commit();
-//                    } else {
-//                        $conn->rollback();
-//                    }
-//                } else {
-//                    $conn->rollback();
-//                }
-//            }
-//            $reader->close();
-//            $this->redirect(['action' => 'index']);
-
         }
 
     }
 
-    public function export ()
-    {
 
+
+    public function exportexcel() {
+        $objPHPExcel = new PHPExcel();
+        $objPHPExcel->setActiveSheetIndex(0);
         $this->autoRender = false;
         $this->loadModel('Sys_User');
         $apt_key = $this->Sys_User->find('all')
             ->select(['usr_id', 'apt_key'])
-            ->where(['apt_key !=' => ''])
-            ->limit('100')
-            ->toArray();
-        $users = $this->Users->find()
-            ->select(['id'])
-            ->where(['delete_flag !=' => DELETED])
-            ->limit('100')
-            ->combine('id','id')
-            ->toArray();
-//        $dataSourceObject = ConnectionManager::get('default')->config();
-//        $db = (object) $dataSourceObject;
-//
-//        $conn = sprintf("host=%s dbname=%s user=%s password=%s", $db->host, $db->database, $db->username, $db->password);
-//        $link = pg_connect($conn);
-//        if (!$link) {
-//            die(' connection error!' . pg_last_error());
-//            exit();
-//        }
-//        pg_set_client_encoding("utf8");
-//        //get data table
-//        $sql = "SELECT * from $tableName";
-//        $result = pg_query($sql);
-//        if (!$apt_key) {
-//            die('no row' . pg_last_error() . $sql);
-//        }
-        // Instantiate a new PHPExcel object
-//        $objPHPExcel = new PHPExcel();
-//        // Set the active Excel worksheet to sheet 0
-//        $objPHPExcel->setActiveSheetIndex(0);
-//        // Initialise the Excel row number
-//        $rowCount = 1;
-//
-//        //start of printing column names as names of MySQL fields
-//        $column = 'A';
-//        foreach ($apt_key as  $key => $val) {
-//            pr($val->toArray());
-//        }
-//        die;
-//
-//        for ($i = 1; $i < count($apt_key); $i++) {
-//            $columnName = pg_field_name($apt_key, $i);
-//            if (!in_array($columnName, array('id', 'created', 'updated'))) {
-//                $objPHPExcel->getActiveSheet()->setCellValue($column . $rowCount, $columnName);
-//                $column++;
-//            }
-//        }
-        //end of adding column names
-        //start while loop to get data
-//        $rowCount = 2;
-//        while ($row = pg_fetch_row($apt_key)) {
-//            $column = 'A';
-//            for ($j = 1; $j < pg_num_fields($apt_key); $j++) {
-//                $columnName = pg_field_name($apt_key, $j);
-//                if (!in_array($columnName, array('id', 'created', 'updated'))) {
-//                    if (!isset($row[$j]))
-//                        $value = NULL;
-//                    elseif ($row[$j] != "")
-//                        $value = strip_tags($row[$j]);
-//                    else
-//                        $value = "";
-//
-//                    $objPHPExcel->getActiveSheet()->setCellValue($column . $rowCount, $value);
-//                    $column++;
-//                }
-//            }
-//            $rowCount++;
-//        }
-//        // Close DATABASE connection.
-//        pg_close($link);
-
-        $data = [
-            ['Nguyễn Khánh Linh', 'Nữ', '500k'],
-            ['Ngọc Trinh', 'Nữ', '700k'],
-            ['Tùng Sơn', 'Không xác định', 'Miễn phí'],
-            ['Kenny Sang', 'Không xác định', 'Miễn phí']
-        ];
-        //Khởi tạo đối tượng
-        $excel = new PHPExcel();
-        //Chọn trang cần ghi (là số từ 0->n)
-        $excel->setActiveSheetIndex(0);
-        //Tạo tiêu đề cho trang. (có thể không cần)
-        $excel->getActiveSheet()->setTitle('demo ghi dữ liệu');
-
-        //Xét chiều rộng cho từng, nếu muốn set height thì dùng setRowHeight()
-        $excel->getActiveSheet()->getColumnDimension('A')->setWidth(20);
-        $excel->getActiveSheet()->getColumnDimension('B')->setWidth(20);
-        $excel->getActiveSheet()->getColumnDimension('C')->setWidth(30);
-
-        //Xét in đậm cho khoảng cột
-        $excel->getActiveSheet()->getStyle('A1:C1')->getFont()->setBold(true);
-        //Tạo tiêu đề cho từng cột
-        //Vị trí có dạng như sau:
-        /**
-         * |A1|B1|C1|..|n1|
-         * |A2|B2|C2|..|n1|
-         * |..|..|..|..|..|
-         * |An|Bn|Cn|..|nn|
-         */
-        $excel->getActiveSheet()->setCellValue('A1', 'Tên');
-        $excel->getActiveSheet()->setCellValue('B1', 'Giới Tính');
-        $excel->getActiveSheet()->setCellValue('C1', 'Đơn giá(/shoot)');
-        // thực hiện thêm dữ liệu vào từng ô bằng vòng lặp
-        // dòng bắt đầu = 2
+            ->where(['apt_key !=' => 'apt_key'])
+            ->limit('100');
+        // Create new PHPExcel object
+        $first = $apt_key->first()->toArray();
+        $conn = ConnectionManager::get('default');
+//        $stmt = $conn->execute('SELECT apt_key, usr_email, usr_pass, usr_address, usr_service_name, usr_phone from sys_user limit 100');
+        $stmt = $conn->execute('SELECT usr_email, usr_pass, usr_address, usr_service_name, usr_phone from sys_user  WHERE usr_email != "0" limit 100');
+        // Read one row.
+        $first_row = $stmt->fetch('assoc');
         $numRow = 2;
-        foreach($data as $row){
-            $excel->getActiveSheet()->setCellValue('A'.$numRow, $row[0]);
-            $excel->getActiveSheet()->setCellValue('B'.$numRow, $row[1]);
-            $excel->getActiveSheet()->setCellValue('C'.$numRow, $row[2]);
-            $numRow++;
+        $column = 'A';
+        $headerStyle = array(
+            'fill' => array(
+                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                'color' => array('rgb'=>'00B4F2'),
+            ),
+            'font' => array(
+                'bold' => true,
+            )
+        );
+        $borderStyle = array(
+            'borders' =>
+                array('outline' => [
+                        'style' => PHPExcel_Style_Border::BORDER_THIN,
+                        'color' => ['argb' => '000000'],
+                    ],
+                ),
+        );
+        $nCols = count($first_row) - 1;
+        foreach (range(0, $nCols) as $col) {
+            $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($col)->setAutoSize(true);
         }
 
-
-
-
-
-
-
-
-
-
-
-
-        // Redirect output to a client痴 web browser
+        foreach ($first_row as $key => $item) {
+            $objPHPExcel->getActiveSheet()->setCellValue($column. $numRow, $key);
+            $objPHPExcel->getActiveSheet()->getStyle($column. $numRow)->getFont()->setBold(true);
+            $objPHPExcel->getActiveSheet()->getStyle($column. $numRow)->applyFromArray($headerStyle);
+            $column ++;
+        }
+        $rows = $stmt->fetchAll('assoc');
+        $rowCount = 3;
+        foreach ($rows as $key => $row) {
+            $column = 'A';
+            foreach ($row as $k => $val) {
+                $objPHPExcel->getActiveSheet()->setCellValue($column . $rowCount, $val);
+                $column++;
+            }
+            $rowCount++;
+        }
         $fileName = 'data' . '_' . date('Ymd-His');
-//        $extension = ($typeDownload == 'excel_xlsx') ? '.xlsx' : '.xls';
-//        $excelType = ($typeDownload == 'excel_xlsx') ? 'Excel2007' : 'Excel5';
-
-        header('Content-Type: application/vnd.ms-excel');
-        header('Content-Disposition: attachment;filename="' . $fileName . '.xls"');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+        header('Content-Disposition: attachment;filename="' . $fileName . '.xlsx"');
         header('Cache-Control: max-age=0');
-        $objWriter = PHPExcel_IOFactory::createWriter($excel, 'Excel5');
+        header('Cache-Control: max-age=1');
+        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
+        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
+        header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
+        header ('Pragma: public'); // HTTP/1.0
+        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save('php://output');
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//        $filePath = 'data_'.date('d-m-Y H-i-s');
-//        $writer = WriterFactory::create(Type::XLSX); // for XLSX files
-//
-//        $border = (new BorderBuilder())
-//            ->setBorderBottom(Color::GREEN, Border::WIDTH_THIN, Border::STYLE_DASHED)
-//            ->build();
-//
-//        $style = (new StyleBuilder())
-//            ->setBorder($border)
-//            ->setBackgroundColor(Color::YELLOW)
-//            ->setFontSize(12)
-//            ->build();
-//
-//        $writer->openToFile($filePath); // write data to a file or to a PHP stream
-//        foreach ($apt_key as $item) {
-//            $writer->addRows(array([$item]));
-//        }
-//
-//        foreach ($users as $user) {
-//            $writer->addRows(array([$user]));
-//        }
-//
-//        $writer->close();
-//        header("Content-Type: application/force-download");
-//        header("Content-Type: application/octet-stream");
-//        header("Content-Type: application/download");
-//        header('Content-type: application/vnd.ms-excel');
-//        header('Content-Disposition: attachment;filename="' . $filePath . '".xlsx"');
-//        readfile($filePath);
-//        if (file_exists(URL_DIRECTORY . $filePath . '.xlsx')) {
-//            unlink(URL_DIRECTORY . $filePath . '.xlsx');
-//        }
-//        exit;
-    }
-
-    public function exportexcel() {
-        $this->autoRender = false;
-
-
+        exit;
 
     }
 }
