@@ -72,7 +72,6 @@ class AppController extends Controller
                 'controller' => 'Users',
                 'action' => 'login'
             ],
-//            'authError' => 'Did you really think you are allowed to see that?',
         ]);
         $this->loadModel('Users');
         $this->loadModel('Devices');
@@ -154,14 +153,14 @@ class AppController extends Controller
         }
     }
 
-//    public function isAuthorized($user) {
-//
-//        if ($user['status'] == '0') {
-//            $this->Session->setFlash('You need to verify your Account first.');
-//            return false;
-//        }
-//        return false;
-//    }
+    public function isAuthorized($user) {
+
+        if ($user['delete_flag'] == DELETED) {
+            $this->Session->setFlash('You need to verify your Account first.');
+            return false;
+        }
+        return false;
+    }
 
     public function beforeFilter(Event $event)
     {
@@ -178,6 +177,9 @@ class AppController extends Controller
     }
 
 
+    /**
+     *
+     */
     public function getAllData()
     {
         $devices = $this->Devices->find()

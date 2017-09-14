@@ -93,7 +93,7 @@ class PhpExcelComponent extends Component
      *
      * @param string $file path to excel file to load
      *
-     * @return PHPExcel
+     * @return PhpExcelComponent
      */
     public function loadWorksheet($file)
     {
@@ -325,6 +325,7 @@ class PhpExcelComponent extends Component
                 $this->_row,
                 $d['label']
             );
+            // get sty of header of file
             if (isset($params['headerStyle'])) {
                 $this->_xls->getActiveSheet()->getStyle($column.$this->_row)->applyFromArray($params['headerStyle']);
             }
@@ -563,10 +564,11 @@ class PhpExcelComponent extends Component
     /**
      * Write array of data to current row starting from column defined by offset
      *
-     * @param array $data data
-     * @param int $offset number row
-     *
+     * @param $datas
      * @return $this for method chaining
+     * @internal param array $data data
+     * @internal param int $offset number row
+     *
      */
     public function addDataShukka($datas) {
         $num = 1;
@@ -590,6 +592,12 @@ class PhpExcelComponent extends Component
         return $this;
     }
 
+    /**
+     * @param $srcRow
+     * @param $dstRow
+     * @param $height
+     * @param $width
+     */
     function copyRows($srcRow, $dstRow, $height, $width)
     {
         $sheet = $this->_xls->getActiveSheet();
@@ -620,6 +628,12 @@ class PhpExcelComponent extends Component
         }
     }
 
+    /**
+     * @param $columnFrom
+     * @param $columnTo
+     * @param $rowFrom
+     * @param $rowTo
+     */
     protected function addRowTable($columnFrom, $columnTo, $rowFrom, $rowTo)
     {
         $sheet = $this->_xls->getActiveSheet();
@@ -651,6 +665,40 @@ class PhpExcelComponent extends Component
         $data = array();
         $data = $this->_xls->getActiveSheet()->toArray();
         return $data;
+    }
+
+    /**
+     * @param $filename
+     * @return PHPExcel
+     */
+    public function identify($filename)
+    {
+        $objFile = PHPExcel_IOFactory::identify($filename);
+        $objData = PHPExcel_IOFactory::createReader($objFile);
+        $objData->setReadDataOnly(true);
+        $objPHPExcel = $objData->load($filename);
+        return $objPHPExcel;
+    }
+
+    /**
+     * @param $sheet
+     * @return int
+     */
+    public function getTotalColum($sheet)
+    {
+        $LastColumn = $sheet->getHighestColumn();
+        $TotalCol = PHPExcel_Cell::columnIndexFromString($LastColumn);
+        return $TotalCol;
+    }
+
+    /**
+     * @param $sheet
+     * @return mixed
+     */
+    public function getTotalRow($sheet)
+    {
+        $Totalrow = $sheet->getHighestRow();
+        return $Totalrow;
     }
 
 }

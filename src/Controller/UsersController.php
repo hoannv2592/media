@@ -7,13 +7,6 @@ use App\Model\Entity\User;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
-use Box\Spout\Reader\ReaderFactory;
-use Box\Spout\Common\Type;
-use Box\Spout\Writer\Style\StyleBuilder;
-use Box\Spout\Writer\Style\Color;
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Writer\Style\Border;
-use Box\Spout\Writer\Style\BorderBuilder;
 use function MongoDB\BSON\toJSON;
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -67,12 +60,32 @@ class UsersController extends AppController
     public function view($id = null)
     {
         $user = $this->Users->get($id, [
-            'contain' => ['Landingpages']
+            'contain' => []
         ]);
 
         $this->set('user', $user);
         $this->set('_serialize', ['user']);
     }
+
+    /**
+     * Add detailPartner method
+     * get an infomation partner
+     *
+     *
+     * @param null $id
+     */
+    public function detailPartner($id = null)
+    {
+        $this->getAllData();
+        if (!$this->Users->exists($id)) {
+            $this->redirect(array('controller' => 'Users', 'action' => 'index'));
+        }
+        $user = $this->Users->get($id, [
+            'contain' => []
+        ]);
+        $this->set(compact('user'));
+    }
+
 
     /**
      * Add method
@@ -96,12 +109,10 @@ class UsersController extends AppController
                 } else {
                     $conn->rollback();
                     $this->Flash->error(__('The user could not be saved. Please, try again.'));
-//                    return $this->redirect(['action' => 'add']);
                 }
             } else {
                 $conn->rollback();
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
-//                return $this->redirect(['action' => 'add']);
             }
         }
         $this->set(compact('user'));
@@ -121,7 +132,7 @@ class UsersController extends AppController
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $this->getAllData();
-        if (!$this->Landingpages->exists($id)) {
+        if (!$this->Users->exists($id)) {
             $this->redirect(array('controller' => 'Users', 'action' => 'index'));
         }
 
@@ -132,6 +143,7 @@ class UsersController extends AppController
             $user = $this->Users->patchEntity($user, $this->request->getData());
             if (empty($user->errors())) {
                 if ($this->Users->save($user)) {
+                    $conn->commit();
                     $this->Flash->success(__('The user has been saved.'));
                     return $this->redirect(['action' => 'index']);
                 } else {
@@ -311,69 +323,27 @@ class UsersController extends AppController
         $conn->begin();
         if ($this->request->is('post')) {
             $tmpfName = $this->request->data['file_import'];
-            $objFile = PHPExcel_IOFactory::identify($tmpfName['tmp_name']);
-            $objData = PHPExcel_IOFactory::createReader($objFile);
-            //Read only data
-            $objData->setReadDataOnly(true);
-            //Load data to obj
-            $objPHPExcel = $objData->load($tmpfName['tmp_name']);
-            //Chọn trang cần truy xuất
-            $sheet  = $objPHPExcel->setActiveSheetIndex(0);
-            //Lấy ra số dòng cuối cùng
-            $Totalrow = $sheet->getHighestRow();
-            //Lấy ra tên cột cuối cùng
-            $LastColumn = $sheet->getHighestColumn();
-            //Chuyển đổi tên cột đó về vị trí thứ, VD: C là 3,D là 4
-            $TotalCol = PHPExcel_Cell::columnIndexFromString($LastColumn);
+            $objPHPExcel = $this->PhpExcel->identify($tmpfName['tmp_name']);
+            $sheet = $objPHPExcel->setActiveSheetIndex(0);
+            $Totalrow = $this->PhpExcel->getTotalRow($sheet);
+            $TotalCol = $this->PhpExcel->getTotalColum($sheet);
             $data = [];
-            //Tiến hành lặp qua từng ô dữ liệu
             //----Lặp dòng, Vì dòng đầu là tiêu đề cột nên chúng ta sẽ lặp giá trị từ dòng 2
             for ($i = 2; $i <= $Totalrow; $i++) {
                 //----Lặp cột
                 for ($j = 0; $j < $TotalCol; $j++) {
                     // Tiến hành lấy giá trị của từng ô đổ vào mảng
-                    $data[$i - 2][$j] = $sheet->getCellByColumnAndRow($j, $i)->getValue();;
+                    $data[$i - 2][$j] = $sheet->getCellByColumnAndRow($j, $i)->getValue();
                 }
             }
-            $new_array = array();
-            $arData = array();
-            foreach ($data as $datum) {
-                foreach ($datum as $key => $item) {
-                    if ($key == 0) {
-                        $arData['email'] = $item;
-                    } else if ($key == 1) {
-                        $arData['password'] = $item;
-                    } else if ($key == 2) {
-                        $arData['address'] = $item;
-                    } else if ($key == 3) {
-                        $arData['username'] = $item;
-                    } else if ($key == 4) {
-                        $arData['phone'] = $item;
-                    } else if ($key == 5) {
-                        $arData['role'] = $item;
-                    } else {
-                        $arData['delete_flag'] = $item;
-                    }
-                }
-                $new_array[] = $arData;
-            }
-            foreach ($new_array as $arDatum) {
-                $user = $this->Users->newEntity();
-                $user = $this->Users->patchEntity($user, $arDatum);
-                if (empty($user->errors())) {
-                    if ($this->Users->save($user)) {
-                        $conn->commit();
-                    } else {
-                        $conn->rollback();
-                    }
-                } else {
-                    $conn->rollback();
-                }
-            }
+            pr($data);
+            die;
         }
-
     }
 
+    /**
+     *
+     */
     public function componentExcel()
     {
         $this->autoRender = false;
@@ -412,73 +382,57 @@ class UsersController extends AppController
         $objPHPExcel->output($fileName, 'Excel2007');
     }
 
-    public function updatedevice()
+    /**
+     * profileUser METHOD
+     *
+     *
+     * @param null $id
+     */
+    public function profileUser($id = null)
     {
-        $this->autoRender = false;
-        $this->loadModel('Sys_User');
-        $conn = ConnectionManager::get('default');
-        $users = $conn->execute('SELECT id, phone,email,password from users  WHERE delete_flag != "1" ');
-        $rows = $users->fetchAll('assoc');
-        $new_arr = array();
-        $data = array();
-        foreach ($rows as $row) {
-            foreach ($row as $k=> $item) {
-                if ($k == 'phone') {
-                    $new_arr[$k] = '0'.$item;
-                } else {
-                    $new_arr[$k] = $item;
-                }
-            }
-            $data[] = $new_arr;
-        }
-        foreach ($data as $datum) {
-            $user = $this->Users->newEntity();
-            $user = $this->Users->patchEntity($user, $datum);
-            if (empty($user->errors())) {
-                if ($this->Devices->save($user)) {
-                    $conn->commit();
-                    pr('save ok') ;
-                } else {
-                    $conn->rollback();
-                }
-            } else {
-                $conn->rollback();
-            }
-        }
-        die;
-        foreach ($news as $k => $val) {
-            $user = $this->Users->get($k, [
-                'contain' => []
-            ]);
-//            $user = $this->Users->patchEntity($user, $val);
-            pr($val);
-        }
-         die;
-        $data = array();
-        foreach ($users as $k => $user) {
-            $data[$k]['user_id'] = $user;
-        }
-        foreach ($apt_keys as $k => $apt_key) {
-            $data[$k]['apt_key'] = $apt_key;
-            $data[$k]['name'] = 'Thiết bị_'.$k;
-            $data[$k]['delete_flag'] = 0;
-        }
-        $this->loadModel('Devices');
-        foreach ($data as $datum) {
-            $user = $this->Devices->newEntity();
-            $user = $this->Devices->patchEntity($user, $datum);
-            if (empty($user->errors())) {
-                if ($this->Devices->save($user)) {
-                    $conn->commit();
-                    echo 'save ok';
-                } else {
-                    $conn->rollback();
-                }
-            } else {
-                $conn->rollback();
-            }
+        $this->getAllData();
+        if (!$this->Users->exists($id)) {
+            $this->redirect(array('controller' => 'Users', 'action' => 'index'));
         }
 
+        $user = $this->Users->get($id,[
+            'contain' =>[]
+        ]);
+        $this->set(compact('user'));
+    }
+
+    public function updateProfile($id = null)
+    {
+        $this->autoRender = false;
+        $conn = ConnectionManager::get('default');
+        $conn->begin();
+        $this->getAllData();
+        if (!$this->Users->exists($id)) {
+            $this->redirect(array('controller' => 'Users', 'action' => 'index'));
+        }
+        $user = $this->Users->get($id,[
+            'contain' => []
+        ]);
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            if (empty($user->errors())) {
+                if ($this->Users->save($user)) {
+                    $conn->commit();
+                    $this->Flash->success(__('The user has been saved.'));
+                    return $this->redirect(['action' => 'index']);
+                } else {
+                    $conn->rollback();
+                    $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                    return $this->redirect(['action' => 'edit'.'/'. $id]);
+                }
+            } else {
+                $conn->rollback();
+                $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                return $this->redirect(['action' => 'edit'.'/'. $id]);
+            }
+        }
+        $this->set(compact('user'));
+        $this->set('_serialize', ['user']);
 
     }
 }

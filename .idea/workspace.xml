@@ -2,13 +2,46 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7263e534-ab7d-43b0-8b7a-a7eac1f13ad4" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Model/Table/DemosTable.php" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Template/Landingpages/laneding_demo.ctp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Template/Landingpages/detail_langdingpage.ctp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Template/Users/detail_partner.ctp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Template/Users/profile_user.ctp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/Template/Users/update_profile.ctp" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/bootstrap.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/font-awesome.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/font-awesome.min.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/page1.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/page1.css.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/page1.scss" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/page2.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/page2.css.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/page2.scss" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/page3.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/page3.css.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/page3.scss" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/style.css" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/style.css.map" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/css/style.scss" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage/fonts/font-awesome/fontawesome-webfont.eot" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/change/landingpage_v2.rar" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/Project_Default.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Controller/AppController.php" afterPath="$PROJECT_DIR$/src/Controller/AppController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Controller/Component/PhpExcelComponent.php" afterPath="$PROJECT_DIR$/src/Controller/Component/PhpExcelComponent.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Controller/DevicesController.php" afterPath="$PROJECT_DIR$/src/Controller/DevicesController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Controller/LandingpagesController.php" afterPath="$PROJECT_DIR$/src/Controller/LandingpagesController.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Controller/UsersController.php" afterPath="$PROJECT_DIR$/src/Controller/UsersController.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Template/Devices/add.ctp" afterPath="$PROJECT_DIR$/src/Template/Devices/add.ctp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Template/Devices/edit.ctp" afterPath="$PROJECT_DIR$/src/Template/Devices/edit.ctp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Template/Devices/index.ctp" afterPath="$PROJECT_DIR$/src/Template/Devices/index.ctp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Template/Landingpages/edit.ctp" afterPath="$PROJECT_DIR$/src/Template/Landingpages/edit.ctp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Template/Landingpages/index.ctp" afterPath="$PROJECT_DIR$/src/Template/Landingpages/index.ctp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Template/Layout/default.ctp" afterPath="$PROJECT_DIR$/src/Template/Layout/default.ctp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Template/Users/add.ctp" afterPath="$PROJECT_DIR$/src/Template/Users/add.ctp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Template/Users/edit.ctp" afterPath="$PROJECT_DIR$/src/Template/Users/edit.ctp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/Template/Users/index.ctp" afterPath="$PROJECT_DIR$/src/Template/Users/index.ctp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webroot/js/jquery-datatable.js" afterPath="$PROJECT_DIR$/webroot/js/jquery-datatable.js" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/webroot/js/jquery.validate.js" afterPath="$PROJECT_DIR$/webroot/js/jquery.validate.js" />
+      <change type="MOVED" beforePath="$PROJECT_DIR$/src/Model/Table/DemosTable.php" afterPath="$PROJECT_DIR$/src/Template/Devices/detail_device.ctp" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -20,105 +53,91 @@
   <component name="ComposerSettings" doNotAsk="true" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="jquery-datatable.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/webroot/js/jquery-datatable.js">
+      <file leaf-file-name="admin.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/webroot/js/admin.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="22">
+              <caret line="20" column="25" lean-forward="true" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="add.ctp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Template/Devices/add.ctp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="132">
+              <caret line="9" column="33" lean-forward="false" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="edit.ctp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Template/Landingpages/edit.ctp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="440">
+              <caret line="26" column="71" lean-forward="false" selection-start-line="26" selection-start-column="71" selection-end-line="26" selection-end-column="71" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="edit.ctp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Template/Devices/edit.ctp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="154">
+              <caret line="17" column="83" lean-forward="false" selection-start-line="17" selection-start-column="83" selection-end-line="17" selection-end-column="83" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="edit.ctp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Template/Users/edit.ctp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="25" column="68" lean-forward="false" selection-start-line="25" selection-start-column="68" selection-end-line="25" selection-end-column="68" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="detail_partner.ctp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Template/Users/detail_partner.ctp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="176">
-              <caret line="8" column="30" lean-forward="false" selection-start-line="8" selection-start-column="30" selection-end-line="8" selection-end-column="30" />
-              <folding>
-                <marker date="1505389209965" expanded="true" signature="14:926" ph="{...}" />
-                <marker date="1505389209965" expanded="true" signature="53:250" ph="{&quot;dom&quot;: 'Bfrtip'...}" />
-                <marker date="1505389209965" expanded="true" signature="123:250" ph="[...]" />
-              </folding>
+              <caret line="11" column="84" lean-forward="false" selection-start-line="11" selection-start-column="84" selection-end-line="11" selection-end-column="84" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="detail_device.ctp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/Template/Devices/detail_device.ctp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="17" column="67" lean-forward="false" selection-start-line="17" selection-start-column="59" selection-end-line="17" selection-end-column="67" />
+              <folding />
             </state>
           </provider>
         </entry>
       </file>
       <file leaf-file-name="index.ctp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Template/Landingpages/index.ctp">
+        <entry file="file://$PROJECT_DIR$/src/Template/Devices/index.ctp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="51" column="213" lean-forward="false" selection-start-line="51" selection-start-column="213" selection-end-line="51" selection-end-column="213" />
+            <state relative-caret-position="507">
+              <caret line="53" column="139" lean-forward="false" selection-start-line="53" selection-start-column="139" selection-end-line="53" selection-end-column="139" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LandingpagesController.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/Controller/LandingpagesController.php">
+      <file leaf-file-name="profile_user.ctp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/Template/Users/profile_user.ctp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="594">
-              <caret line="170" column="50" lean-forward="true" selection-start-line="170" selection-start-column="50" selection-end-line="170" selection-end-column="50" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DemosTable.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Model/Table/DemosTable.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="630">
-              <caret line="35" column="39" lean-forward="true" selection-start-line="35" selection-start-column="39" selection-end-line="35" selection-end-column="39" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ServiceGroupsTable.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Model/Table/ServiceGroupsTable.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="laneding_demo.ctp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Template/Landingpages/laneding_demo.ctp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="User.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Model/Entity/User.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="784">
-              <caret line="53" column="18" lean-forward="false" selection-start-line="53" selection-start-column="18" selection-end-line="53" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="constant.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/constant.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="110">
-              <caret line="5" column="18" lean-forward="false" selection-start-line="5" selection-start-column="8" selection-end-line="5" selection-end-column="18" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="UsersTable.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Model/Table/UsersTable.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="528">
-              <caret line="28" column="1" lean-forward="false" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AdgroupsTable.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/Model/Table/AdgroupsTable.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-448">
-              <caret line="22" column="1" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+            <state relative-caret-position="433">
+              <caret line="113" column="25" lean-forward="false" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="25" />
               <folding />
             </state>
           </provider>
@@ -128,18 +147,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>createReader</find>
-      <find>crea</find>
-      <find>getActiveSheet</find>
-      <find>getCell</find>
-      <find>getRow</find>
-      <find>getRowIterator</find>
-      <find>die</find>
-      <find>createReaderForFile</find>
-      <find>columnIndexFromString</find>
-      <find>getHighestColumn</find>
-      <find>getHighestRow</find>
-      <find>getCellByColumnAndRow</find>
       <find>PHPExcel</find>
       <find>new PHPExcel</find>
       <find>setActiveSheetIndex</find>
@@ -156,8 +163,20 @@
       <find>fill</find>
       <find>defaultModal</find>
       <find>modal-03</find>
-      <find>js-exportable</find>
       <find>js-basic-example</find>
+      <find>createReader</find>
+      <find>PHPExcel_IOFactory</find>
+      <find>setReadDataOnly</find>
+      <find>Xóa users</find>
+      <find>js-exportable</find>
+      <find>THÔNG TIN USERS</find>
+      <find>label-count</find>
+      <find>js-exportable_dev</find>
+      <find>This field is required.</find>
+      <find>form_advanced_validation</find>
+      <find>jquery.validate</find>
+      <find>form_edit_validation</find>
+      <find>username</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -182,29 +201,33 @@
         <option value="$PROJECT_DIR$/webroot/js/jquery.validate.js" />
         <option value="$PROJECT_DIR$/src/Template/Users/login.ctp" />
         <option value="$PROJECT_DIR$/src/Model/Table/UsersTable.php" />
-        <option value="$PROJECT_DIR$/src/Controller/DevicesController.php" />
         <option value="$PROJECT_DIR$/src/Template/Import/index.ctp" />
-        <option value="$PROJECT_DIR$/src/Template/Devices/edit.ctp" />
-        <option value="$PROJECT_DIR$/src/Template/Devices/add.ctp" />
-        <option value="$PROJECT_DIR$/src/Template/Users/add.ctp" />
         <option value="$PROJECT_DIR$/src/Template/Landingpages/add.ctp" />
-        <option value="$PROJECT_DIR$/src/Template/Landingpages/edit.ctp" />
         <option value="$PROJECT_DIR$/src/Template/Devices/set_new_advertise.ctp" />
-        <option value="$PROJECT_DIR$/src/Template/Devices/index.ctp" />
-        <option value="$PROJECT_DIR$/src/Template/Users/edit.ctp" />
-        <option value="$PROJECT_DIR$/src/Template/Layout/default.ctp" />
         <option value="$PROJECT_DIR$/src/Controller/ImportController.php" />
         <option value="$PROJECT_DIR$/src/Template/Users/import.ctp" />
-        <option value="$PROJECT_DIR$/src/Controller/AppController.php" />
         <option value="$PROJECT_DIR$/config/constant.php" />
         <option value="$PROJECT_DIR$/config/bootstrap.php" />
-        <option value="$PROJECT_DIR$/src/Controller/Component/PhpExcelComponent.php" />
-        <option value="$PROJECT_DIR$/src/Controller/UsersController.php" />
-        <option value="$PROJECT_DIR$/src/Template/Users/index.ctp" />
-        <option value="$PROJECT_DIR$/webroot/js/jquery-datatable.js" />
-        <option value="$PROJECT_DIR$/src/Template/Landingpages/index.ctp" />
         <option value="$PROJECT_DIR$/src/Model/Table/DemosTable.php" />
+        <option value="$PROJECT_DIR$/src/Controller/Component/PhpExcelComponent.php" />
+        <option value="$PROJECT_DIR$/src/Controller/AppController.php" />
+        <option value="$PROJECT_DIR$/src/Template/Users/add.ctp" />
+        <option value="$PROJECT_DIR$/webroot/js/jquery-datatable.js" />
+        <option value="$PROJECT_DIR$/src/Template/Users/index.ctp" />
+        <option value="$PROJECT_DIR$/src/Controller/DevicesController.php" />
+        <option value="$PROJECT_DIR$/src/Template/Landingpages/index.ctp" />
         <option value="$PROJECT_DIR$/src/Controller/LandingpagesController.php" />
+        <option value="$PROJECT_DIR$/src/Template/Landingpages/detail_langdingpage.ctp" />
+        <option value="$PROJECT_DIR$/src/Controller/UsersController.php" />
+        <option value="$PROJECT_DIR$/src/Template/Layout/default.ctp" />
+        <option value="$PROJECT_DIR$/src/Template/Users/profile_user.ctp" />
+        <option value="$PROJECT_DIR$/src/Template/Devices/add.ctp" />
+        <option value="$PROJECT_DIR$/src/Template/Devices/detail_device.ctp" />
+        <option value="$PROJECT_DIR$/src/Template/Users/detail_partner.ctp" />
+        <option value="$PROJECT_DIR$/src/Template/Users/edit.ctp" />
+        <option value="$PROJECT_DIR$/src/Template/Landingpages/edit.ctp" />
+        <option value="$PROJECT_DIR$/src/Template/Devices/edit.ctp" />
+        <option value="$PROJECT_DIR$/src/Template/Devices/index.ctp" />
       </list>
     </option>
   </component>
@@ -218,7 +241,7 @@
     <servers />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
-  <component name="ProjectFrameBounds" extendedState="6">
+  <component name="ProjectFrameBounds" extendedState="7">
     <option name="x" value="953" />
     <option name="width" value="974" />
     <option name="height" value="1047" />
@@ -277,26 +300,6 @@
               <item name="media" type="b2602c69:ProjectViewProjectNode" />
               <item name="media" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Model" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="media" type="b2602c69:ProjectViewProjectNode" />
-              <item name="media" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Model" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Entity" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="media" type="b2602c69:ProjectViewProjectNode" />
-              <item name="media" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Model" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Table" type="2a2b976b:PhpTreeStructureProvider$1" />
-            </path>
-            <path>
-              <item name="media" type="b2602c69:ProjectViewProjectNode" />
-              <item name="media" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="Template" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
@@ -304,7 +307,7 @@
               <item name="media" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="Template" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Element" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Devices" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
               <item name="media" type="b2602c69:ProjectViewProjectNode" />
@@ -331,6 +334,12 @@
               <item name="media" type="b2602c69:ProjectViewProjectNode" />
               <item name="media" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="webroot" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="media" type="b2602c69:ProjectViewProjectNode" />
+              <item name="media" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="webroot" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="js" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
           </expand>
           <select />
@@ -407,6 +416,7 @@
       <workItem from="1505351229864" duration="375000" />
       <workItem from="1505359942371" duration="13456000" />
       <workItem from="1505379561047" duration="8826000" />
+      <workItem from="1505403022562" duration="14587000" />
     </task>
     <task id="LOCAL-00001" summary="fix done user, device,landing page">
       <created>1505070430138</created>
@@ -426,10 +436,10 @@
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="126268000" />
+    <option name="totallyTimeSpent" value="140855000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="SLIDING" type="SLIDING" visible="false" show_stripe_button="true" weight="0.17492098" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -437,18 +447,18 @@
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Database" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.13043478" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32717392" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.16649105" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -483,99 +493,22 @@
     <option name="LAST_COMMIT_MESSAGE" value="fix done user, device,landing page" />
   </component>
   <component name="XDebuggerManager">
-    <breakpoint-manager />
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="php">
+          <url>file://$PROJECT_DIR$/src/Controller/AppController.php</url>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+      <option name="time" value="2" />
+    </breakpoint-manager>
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/webroot/css/all-themes.min.css">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="508">
-          <caret line="0" column="20554" lean-forward="false" selection-start-line="0" selection-start-column="20544" selection-end-line="0" selection-end-column="20554" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Model/Entity/Device.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-250">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/js/form-validation.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="462">
-          <caret line="21" column="33" lean-forward="true" selection-start-line="21" selection-start-column="33" selection-end-line="21" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/js/jquery.validate.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="25" column="63" lean-forward="true" selection-start-line="25" selection-start-column="63" selection-end-line="25" selection-end-column="63" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Model/Table/DevicesTable.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="23" column="6" lean-forward="false" selection-start-line="23" selection-start-column="6" selection-end-line="23" selection-end-column="13" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Template/Users/login.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="17" column="58" lean-forward="true" selection-start-line="17" selection-start-column="58" selection-end-line="17" selection-end-column="58" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Template/Import/index.ctp" />
-    <entry file="file://$PROJECT_DIR$/src/Template/Layout/default_bck.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/js/jquery.steps.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/js/sweetalert.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1789">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/js/form-wizard.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="347">
-          <caret line="29" column="41" lean-forward="false" selection-start-line="29" selection-start-column="19" selection-end-line="29" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Template/Landingpages/add.ctp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="88">
           <caret line="15" column="86" lean-forward="true" selection-start-line="15" selection-start-column="64" selection-end-line="15" selection-end-column="86" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Template/Landingpages/edit.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="278">
-          <caret line="16" column="73" lean-forward="false" selection-start-line="16" selection-start-column="73" selection-end-line="16" selection-end-column="73" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Template/Users/add.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1408">
-          <caret line="72" column="64" lean-forward="false" selection-start-line="72" selection-start-column="24" selection-end-line="72" selection-end-column="64" />
         </state>
       </provider>
     </entry>
@@ -586,42 +519,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Template/Devices/add.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1386">
-          <caret line="66" column="41" lean-forward="false" selection-start-line="61" selection-start-column="32" selection-end-line="66" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Template/Devices/edit.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1342">
-          <caret line="65" column="87" lean-forward="false" selection-start-line="65" selection-start-column="87" selection-end-line="65" selection-end-column="87" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Template/Devices/index.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="66">
-          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/PHPExcel.php" />
-    <entry file="file://$PROJECT_DIR$/src/Template/Users/edit.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2156">
-          <caret line="107" column="8" lean-forward="false" selection-start-line="107" selection-start-column="8" selection-end-line="107" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Template/Layout/default.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4752">
-          <caret line="223" column="14" lean-forward="false" selection-start-line="223" selection-start-column="14" selection-end-line="223" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/routes.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="198">
@@ -650,29 +548,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/AppController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="814">
-          <caret line="56" column="38" lean-forward="false" selection-start-line="56" selection-start-column="30" selection-end-line="56" selection-end-column="38" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Template/Element/device_groups/get_device_group.ctp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3806">
           <caret line="176" column="37" lean-forward="false" selection-start-line="176" selection-start-column="37" selection-end-line="176" selection-end-column="37" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/DevicesController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="281">
-          <caret line="219" column="0" lean-forward="true" selection-start-line="219" selection-start-column="0" selection-end-line="219" selection-end-column="0" />
-          <folding>
-            <marker date="1505114183797" expanded="true" signature="397:404" ph="{...}" />
-            <marker date="1505114183797" expanded="true" signature="6790:6874" ph="..." />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -744,79 +623,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/Component/PhpExcelComponent.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="11440">
-          <caret line="537" column="51" lean-forward="false" selection-start-line="537" selection-start-column="46" selection-end-line="537" selection-end-column="51" />
-          <folding>
-            <element signature="e#387#417#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Controller/UsersController.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="418">
-          <caret line="439" column="32" lean-forward="false" selection-start-line="439" selection-start-column="32" selection-end-line="439" selection-end-column="32" />
-          <folding>
-            <element signature="e#33#66#0#PHP" expanded="true" />
-            <element signature="e#888#966#0#PHP" expanded="false" />
-            <element signature="e#971#1515#0#PHP" expanded="false" />
-            <element signature="e#1521#1726#0#PHP" expanded="false" />
-            <element signature="e#1731#1950#0#PHP" expanded="false" />
-            <element signature="e#1956#2085#0#PHP" expanded="false" />
-            <element signature="e#3268#3518#0#PHP" expanded="false" />
-            <element signature="e#4852#5040#0#PHP" expanded="false" />
-            <element signature="e#5045#5818#0#PHP" expanded="false" />
-            <element signature="e#5822#6009#0#PHP" expanded="false" />
-            <element signature="e#6011#7941#0#PHP" expanded="false" />
-            <element signature="e#7947#8135#0#PHP" expanded="false" />
-            <element signature="e#8140#8283#0#PHP" expanded="false" />
-            <element signature="e#8289#8514#0#PHP" expanded="false" />
-            <element signature="e#8519#9125#0#PHP" expanded="false" />
-            <element signature="e#9131#9361#0#PHP" expanded="false" />
-            <element signature="e#9366#10199#0#PHP" expanded="false" />
-            <element signature="e#13830#13938#0#PHP" expanded="false" />
-            <element signature="e#13962#14207#0#PHP" expanded="false" />
-            <marker date="1505383243679" expanded="true" signature="13480:13596" ph="SELECT usr_e... sys_user" />
-            <marker date="1505383243679" expanded="true" signature="14882:14950" ph="SELECT id, p... users" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/favicon.ico">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Template/Users/index.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="235">
-          <caret line="35" column="97" lean-forward="false" selection-start-line="35" selection-start-column="89" selection-end-line="35" selection-end-column="102" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/webroot/js/jquery-datatable.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="176">
-          <caret line="8" column="30" lean-forward="false" selection-start-line="8" selection-start-column="30" selection-end-line="8" selection-end-column="30" />
-          <folding>
-            <marker date="1505389209965" expanded="true" signature="14:926" ph="{...}" />
-            <marker date="1505389209965" expanded="true" signature="53:250" ph="{&quot;dom&quot;: 'Bfrtip'...}" />
-            <marker date="1505389209965" expanded="true" signature="123:250" ph="[...]" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/Template/Landingpages/index.ctp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="51" column="213" lean-forward="false" selection-start-line="51" selection-start-column="213" selection-end-line="51" selection-end-column="213" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Template/Landingpages/laneding_demo.ctp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -843,8 +649,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Model/Table/AdgroupsTable.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-448">
-          <caret line="22" column="1" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
+        <state relative-caret-position="418">
+          <caret line="22" column="1" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
           <folding />
         </state>
       </provider>
@@ -859,7 +665,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Model/Entity/User.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="784">
+        <state relative-caret-position="1144">
           <caret line="53" column="18" lean-forward="false" selection-start-line="53" selection-start-column="18" selection-end-line="53" selection-end-column="18" />
           <folding />
         </state>
@@ -867,16 +673,350 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Model/Table/DemosTable.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="630">
-          <caret line="35" column="39" lean-forward="true" selection-start-line="35" selection-start-column="39" selection-end-line="35" selection-end-column="39" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Model/Table/DevicesTable.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="664">
+          <caret line="49" column="26" lean-forward="false" selection-start-line="49" selection-start-column="26" selection-end-line="49" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/vendor/PHPExcel/Classes/PHPExcel/IOFactory.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="290">
+          <caret line="203" column="27" lean-forward="false" selection-start-line="203" selection-start-column="27" selection-end-line="203" selection-end-column="27" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/favicon.ico">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/AppController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="682">
+          <caret line="50" column="7" lean-forward="true" selection-start-line="50" selection-start-column="7" selection-end-line="50" selection-end-column="7" />
+          <folding>
+            <element signature="e#1667#2923#0#PHP" expanded="false" />
+            <element signature="e#5922#7739#0#PHP" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Users/add.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="572">
+          <caret line="55" column="56" lean-forward="true" selection-start-line="55" selection-start-column="24" selection-end-line="55" selection-end-column="56" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/Component/PhpExcelComponent.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="5" lean-forward="true" selection-start-line="0" selection-start-column="5" selection-end-line="0" selection-end-column="5" />
+          <folding>
+            <element signature="e#387#417#0#PHP" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/js/jquery-datatable.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="674">
+          <caret line="58" column="19" lean-forward="false" selection-start-line="58" selection-start-column="19" selection-end-line="58" selection-end-column="19" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Users/login.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="17" column="58" lean-forward="true" selection-start-line="17" selection-start-column="58" selection-end-line="17" selection-end-column="58" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/DevicesController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="828">
+          <caret line="266" column="38" lean-forward="false" selection-start-line="266" selection-start-column="38" selection-end-line="266" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Landingpages/detail_langdingpage.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="352">
+          <caret line="32" column="96" lean-forward="false" selection-start-line="32" selection-start-column="96" selection-end-line="32" selection-end-column="96" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Landingpages/index.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="136" column="9" lean-forward="true" selection-start-line="136" selection-start-column="9" selection-end-line="136" selection-end-column="9" />
+          <folding>
+            <element signature="n#section#0;n#!!top" expanded="false" />
+            <element signature="n#script#0;n#!!top" expanded="false" />
+            <marker date="1505411299954" expanded="true" signature="3756:3769" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Users/update_profile.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Users/index.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="308">
+          <caret line="61" column="156" lean-forward="false" selection-start-line="61" selection-start-column="156" selection-end-line="61" selection-end-column="156" />
+          <folding>
+            <element signature="n#div#0;n#div#0;n#div#0;n#div#0;n#div#0;n#section#0;n#!!top" expanded="false" />
+            <element signature="n#div#0;n#!!top" expanded="false" />
+            <element signature="n#script#0;n#!!top" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller/LandingpagesController.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="594">
-          <caret line="170" column="50" lean-forward="true" selection-start-line="170" selection-start-column="50" selection-end-line="170" selection-end-column="50" />
+        <state relative-caret-position="740">
+          <caret line="301" column="43" lean-forward="false" selection-start-line="301" selection-start-column="43" selection-end-line="301" selection-end-column="43" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/js/form-validation.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-59">
+          <caret line="208" column="35" lean-forward="false" selection-start-line="208" selection-start-column="11" selection-end-line="208" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/js/jquery.validate.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="351" column="16" lean-forward="false" selection-start-line="351" selection-start-column="8" selection-end-line="351" selection-end-column="16" />
+          <folding>
+            <element signature="n#!!doc" expanded="true" />
+            <marker date="1505030939103" expanded="true" signature="6871:46514" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="10543:33053" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="32471:32727" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="32618:32720" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="32825:33049" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="33076:33305" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="33353:33514" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="33397:33450" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="33456:33511" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="33550:33829" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="33631:33810" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="33677:33803" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="33728:33798" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="33896:34555" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="33901:34052" ph="//..." />
+            <marker date="1505030939103" expanded="true" signature="34149:34306" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="34273:34302" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="34338:34371" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="34420:34552" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="34426:34521" ph="//..." />
+            <marker date="1505030939103" expanded="true" signature="34595:35490" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="34744:35265" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="34847:35149" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="34898:35024" ph="//..." />
+            <marker date="1505030939103" expanded="true" signature="35049:35075" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="35155:35198" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="35525:35869" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="35674:35850" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="35906:36125" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="36013:36106" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="36172:38080" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="36243:36876" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="36339:36383" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="36419:36872" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="36480:36662" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="36500:36569" ph="..." />
+            <marker date="1505030939103" expanded="true" signature="36590:36656" ph="..." />
+            <marker date="1505030939103" expanded="true" signature="36683:36755" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="36761:36867" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="36951:37062" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="37147:37228" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="37173:37224" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="37281:37656" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="37321:37652" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="37361:37453" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="37699:38060" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="37776:37870" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="38207:38398" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="38243:38380" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="38312:38350" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="38507:38754" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="38673:38751" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="38825:46511" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="38924:39376" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="39001:39041" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="39096:39252" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="39289:39344" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="39462:39923" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="39468:39730" ph="//..." />
+            <marker date="1505030939103" expanded="true" signature="40005:40727" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="40011:40211" ph="//..." />
+            <marker date="1505030939103" expanded="true" signature="40811:40907" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="40997:41118" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="41206:41310" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="41398:41464" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="41565:41711" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="41812:41958" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="42063:42242" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="42331:42390" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="42479:42538" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="42631:42722" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="42813:43932" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="43135:43340" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="43212:43236" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="43370:43435" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="43473:43623" ph="//..." />
+            <marker date="1505030939103" expanded="true" signature="43647:43690" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="44029:44416" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="44247:44378" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="44519:46508" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="44556:44596" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="44808:44863" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="45427:46471" ph="{&quot;mode&quot;: &quot;abort&quot;...}" />
+            <marker date="1505030939103" expanded="true" signature="45593:46466" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="45794:46103" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="46109:46385" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="46519:46720" ph="//..." />
+            <marker date="1505030939103" expanded="true" signature="46818:47057" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="46867:47052" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="46968:47011" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="47063:47517" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="47128:47514" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="47293:47471" ph="{...}" />
+            <marker date="1505030939103" expanded="true" signature="47329:47372" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Layout/default.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="593">
+          <caret line="59" column="22" lean-forward="true" selection-start-line="59" selection-start-column="22" selection-end-line="59" selection-end-column="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Controller/UsersController.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="344">
+          <caret line="419" column="36" lean-forward="false" selection-start-line="419" selection-start-column="36" selection-end-line="419" selection-end-column="36" />
+          <folding>
+            <element signature="e#33#66#0#PHP" expanded="true" />
+            <element signature="e#637#715#0#PHP" expanded="false" />
+            <element signature="e#1270#1475#0#PHP" expanded="false" />
+            <element signature="e#2284#3326#0#PHP" expanded="false" />
+            <element signature="e#3332#3582#0#PHP" expanded="false" />
+            <element signature="e#4946#5134#0#PHP" expanded="false" />
+            <element signature="e#5139#5912#0#PHP" expanded="false" />
+            <element signature="e#5916#6103#0#PHP" expanded="false" />
+            <element signature="e#8041#8229#0#PHP" expanded="false" />
+            <element signature="e#8234#8377#0#PHP" expanded="false" />
+            <element signature="e#8383#8608#0#PHP" expanded="false" />
+            <element signature="e#8613#9219#0#PHP" expanded="false" />
+            <element signature="e#9225#9455#0#PHP" expanded="false" />
+            <element signature="e#9460#10293#0#PHP" expanded="false" />
+            <element signature="e#10525#11492#0#PHP" expanded="false" />
+            <element signature="e#11521#12918#0#PHP" expanded="false" />
+            <element signature="e#12066#12174#0#PHP" expanded="false" />
+            <element signature="e#12198#12443#0#PHP" expanded="false" />
+            <marker date="1505414178153" expanded="true" signature="11716:11832" ph="SELECT usr_e... sys_user" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/webroot/js/admin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="22">
+          <caret line="20" column="25" lean-forward="true" selection-start-line="20" selection-start-column="25" selection-end-line="20" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Devices/add.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="132">
+          <caret line="9" column="33" lean-forward="false" selection-start-line="9" selection-start-column="33" selection-end-line="9" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Devices/detail_device.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="17" column="67" lean-forward="false" selection-start-line="17" selection-start-column="59" selection-end-line="17" selection-end-column="67" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Users/edit.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="25" column="68" lean-forward="false" selection-start-line="25" selection-start-column="68" selection-end-line="25" selection-end-column="68" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Landingpages/edit.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="26" column="71" lean-forward="false" selection-start-line="26" selection-start-column="71" selection-end-line="26" selection-end-column="71" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Devices/edit.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="154">
+          <caret line="17" column="83" lean-forward="false" selection-start-line="17" selection-start-column="83" selection-end-line="17" selection-end-column="83" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Users/detail_partner.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="176">
+          <caret line="11" column="84" lean-forward="false" selection-start-line="11" selection-start-column="84" selection-end-line="11" selection-end-column="84" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Devices/index.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="507">
+          <caret line="53" column="139" lean-forward="false" selection-start-line="53" selection-start-column="139" selection-end-line="53" selection-end-column="139" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Template/Users/profile_user.ctp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="433">
+          <caret line="113" column="25" lean-forward="false" selection-start-line="113" selection-start-column="20" selection-end-line="113" selection-end-column="25" />
           <folding />
         </state>
       </provider>

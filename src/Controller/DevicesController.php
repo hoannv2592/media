@@ -106,7 +106,7 @@ class DevicesController extends AppController
     {
         $conn = ConnectionManager::get('default');
         $conn->begin();
-        if (!$this->Landingpages->exists($id)) {
+        if (!$this->Devices->exists($id)) {
             $this->redirect(array('controller' => 'Devices', 'action' => 'index'));
         }
         $device = $this->Devices->get($id, [
@@ -253,5 +253,17 @@ class DevicesController extends AppController
     public function setNewAdvertise($id = null)
     {
         $this->getAllData();
+    }
+
+    public function detailDevice($id = null)
+    {
+        $this->getAllData();
+        if (!$this->Devices->exists($id)) {
+            $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
+        }
+        $device = $this->Devices->get($id,[
+            'contain' =>[]
+        ]);
+        $this->set(compact('device'));
     }
 }

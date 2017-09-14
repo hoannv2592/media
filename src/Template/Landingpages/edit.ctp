@@ -7,15 +7,15 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row clearfix">
-            <ol class="breadcrumb breadcrumb-col-pink">
+            <ol class="breadcrumb">
                 <li>
                     <a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'index'])?>">
                         <i class="material-icons">home</i> Home
                     </a>
                 </li>
-                <li class="active">
-                    <i class="material-icons">library_books</i> Chỉnh sửa màn hình quảng cáo
-                </li>
+                <li class="active"><a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'detail-langdingpage/'.$landingpage->id])?>">
+                        Thông tin</a></li>
+                <li class="active"><a href="javascript:void (0)">Chỉnh sửa thông tin</a></li>
             </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -56,7 +56,7 @@
                             </div>
                             <div class="help-info">Mô tả quảng cáo</div>
                         </div>
-                        <button class="btn btn-primary waves-effect" id = "submit" type="submit">CHỈNH SỬA</button>
+                        <button class="btn btn-primary waves-effect" id = "submit" type="submit">CẬP NHẬT</button>
                         <?php echo $this->Form->end(); ?>
                     </div>
                 </div>

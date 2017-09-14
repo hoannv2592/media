@@ -20,10 +20,7 @@
                     </a>
                 </li>
                 <li class="active">
-                    <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail-partner/'.$user['id']])?>">Thông tin</a>
-                </li>
-                <li class="active">
-                    <a href="javascript:void(0)">Chỉnh sửa thông tin</a>
+                    <a href="javascript:void(0)">Chỉnh sửa người dùng</a>
                 </li>
             </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -40,9 +37,9 @@
                     </div>
                     <div class="body">
                         <?php echo $this->Form->create('Users', array(
-                            'id' => 'form_edit_validation',
+                            'id' => 'form_edit_validation_profile',
                             'type' => 'post',
-                            'url' => array('controller' => 'Users', 'action' => 'edit'.'/'. $user['id']),
+                            'url' => array('controller' => 'Users', 'action' => 'updateProfile'.'/'. $user['id']),
                             'inputDefaults' => array(
                                 'label' => false,
                                 'div' => false
@@ -54,7 +51,7 @@
                             <div class="form-line">
                                 <input type="text" class="form-control" name="username" value="<?php echo $user['username'] ? $user['username']: ''; ?>" required>
                             </div>
-                            <div class="help-info">Tên người dùng</div>
+                            <div class="help-info">Tên username</div>
                         </div>
                         <label for="Email">Email</label>
                         <div class="form-group form-float">
@@ -105,16 +102,16 @@
     </div>
 </section>
 <script type="application/javascript">
-    //$(document).ready(function () {
+    $(document).ready(function () {
         //Advanced Form Validation
-        $('#form_edit_validation').validate({
+        $('#form_edit_validation_profile').validate({
             onkeyup: false,
             rules: {
                 'phone': {
                     number : true
                 },
                 'email' : {
-                    'email' :true,
+                    email : true,
                     remote: {
                         type: 'POST',
                         async: false,
@@ -137,5 +134,5 @@
                 $(element).parents('.form-group').append(error);
             }
         });
-//    });
+    });
 </script>
