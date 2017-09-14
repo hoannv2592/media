@@ -37,6 +37,7 @@
                                 <tr class="bg-blue-grey">
                                     <th>Tên quảng cáo</th>
                                     <th>Mô tả</th>
+                                    <th>Demo</th>
                                     <th>Ngày tạo</th>
                                     <th>Điều hướng</th>
                                 </tr>
@@ -48,6 +49,7 @@
                                             <a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'edit' . '/' . $landingpage->id]) ?>"><?php echo h($landingpage->name); ?></a>
                                         </td>
                                         <td><?php echo nl2br($landingpage->description); ?></td>
+                                        <td><a class="btn bg-indigo waves-effect" href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'laneding_demo' . '/' . $landingpage->id]) ?>">Demo</a></td>
                                         <td><?php echo date('d/m/Y H:i', strtotime($landingpage->created));?></td>
                                         <td class="delete_advertise" value="<?php echo h($landingpage->id); ?>"><button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa quảng cáo</button></td>
                                     </tr>
@@ -58,57 +60,6 @@
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div class="modal fade" id="defaultModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="row clearfix">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
-                    <div class="header bg-light-blue">
-                        <h2>THÊM MỚI QUẢNG CÁO</h2>
-                        <ul class="header-dropdown m-r--5">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="material-icons">more_vert</i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="body">
-                        <?php
-                            echo $this->Form->create('Landingpages', array(
-                                'id' => 'form_advanced_validation',
-                                'type' => 'post',
-                                'url' => array('controller' => 'Landingpages', 'action' => 'add'),
-                                'inputDefaults' => array(
-                                    'label' => false,
-                                    'div' => false
-                                ),
-                                //'onsubmit'=>"event.returnValue = false; return false;",
-                            ));
-                        ?>
-                            <div class="form-group form-float">
-                                <div class="form-line">
-                                    <input type="text" class="form-control" name="name"  required>
-                                    <label class="form-label">Tên loại quảng cáo</label>
-                                </div>
-                                <div class="help-info">Tên loại quảng cáo</div>
-                            </div>
-                            <div class="form-group form-float">
-                                <div class="form-line">
-                                    <textarea name="description" cols="30" rows="5" class="form-control no-resize" required></textarea>
-                                    <label class="form-label">Mô tả quảng cáo</label>
-                                </div>
-                                <div class="help-info">Mô tả quảng cáo</div>
-                            </div>
-                            <button class="btn btn-primary waves-effect" id = "submit" type="submit">THÊM MỚI</button>
-                            <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
-                        <?php echo $this->Form->end(); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
         </div>
     </div>
     <div class="modal fade" id="modal-03" tabindex="-1" role="dialog">

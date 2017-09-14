@@ -27,6 +27,8 @@ use PHPExcel_Style_Fill;
  * @property \App\Model\Table\UsersTable $Users
  *
  * @method \App\Model\Entity\User[] paginate($object = null, array $settings = [])
+ *
+ * @property  \App\Controller\Component\PhpExcelComponent $PhpExcel
  */
 class UsersController extends AppController
 {
@@ -372,26 +374,22 @@ class UsersController extends AppController
 
     }
 
-
-
-    public function exportexcel() {
-        $objPHPExcel = new PHPExcel();
-        $objPHPExcel->setActiveSheetIndex(0);
+    public function componentExcel()
+    {
         $this->autoRender = false;
         $this->loadModel('Sys_User');
-        $apt_key = $this->Sys_User->find('all')
-            ->select(['usr_id', 'apt_key'])
-            ->where(['apt_key !=' => 'apt_key'])
-            ->limit('100');
-        // Create new PHPExcel object
-        $first = $apt_key->first()->toArray();
         $conn = ConnectionManager::get('default');
-//        $stmt = $conn->execute('SELECT apt_key, usr_email, usr_pass, usr_address, usr_service_name, usr_phone from sys_user limit 100');
         $stmt = $conn->execute('SELECT usr_email, usr_pass, usr_address, usr_service_name, usr_phone from sys_user  WHERE usr_email != "0" limit 100');
-        // Read one row.
         $first_row = $stmt->fetch('assoc');
-        $numRow = 2;
-        $column = 'A';
+        $objPHPExcel = $this->PhpExcel->createWorksheet();
+        $objPHPExcel->setActiveSheet(0);
+        $lable = array();
+        $k = 0;
+        $lable[0]['label'] = 'Stt';
+        foreach ($first_row as $key => $val) {
+            $lable[$k+1]['label'] = $key;
+            $k++;
+        }
         $headerStyle = array(
             'fill' => array(
                 'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -401,47 +399,86 @@ class UsersController extends AppController
                 'bold' => true,
             )
         );
-        $borderStyle = array(
-            'borders' =>
-                array('outline' => [
-                        'style' => PHPExcel_Style_Border::BORDER_THIN,
-                        'color' => ['argb' => '000000'],
-                    ],
-                ),
-        );
-        $nCols = count($first_row) - 1;
-        foreach (range(0, $nCols) as $col) {
-            $objPHPExcel->getActiveSheet()->getColumnDimensionByColumn($col)->setAutoSize(true);
+
+        $objPHPExcel->addTableHeader($lable, array('bold' => true, 'headerStyle' => $headerStyle));
+        $objPHPExcel->addTableFooter();
+        // all rows
+        $rows = $stmt->fetchAll('assoc');
+        foreach ($rows as $k => $row) {
+            $objPHPExcel->addTableRow($k, $row);
+        }
+        $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
+        $objPHPExcel->save($fileName, 'Excel2007');
+        $objPHPExcel->output($fileName, 'Excel2007');
+    }
+
+    public function updatedevice()
+    {
+        $this->autoRender = false;
+        $this->loadModel('Sys_User');
+        $conn = ConnectionManager::get('default');
+        $users = $conn->execute('SELECT id, phone,email,password from users  WHERE delete_flag != "1" ');
+        $rows = $users->fetchAll('assoc');
+        $new_arr = array();
+        $data = array();
+        foreach ($rows as $row) {
+            foreach ($row as $k=> $item) {
+                if ($k == 'phone') {
+                    $new_arr[$k] = '0'.$item;
+                } else {
+                    $new_arr[$k] = $item;
+                }
+            }
+            $data[] = $new_arr;
+        }
+        foreach ($data as $datum) {
+            $user = $this->Users->newEntity();
+            $user = $this->Users->patchEntity($user, $datum);
+            if (empty($user->errors())) {
+                if ($this->Devices->save($user)) {
+                    $conn->commit();
+                    pr('save ok') ;
+                } else {
+                    $conn->rollback();
+                }
+            } else {
+                $conn->rollback();
+            }
+        }
+        die;
+        foreach ($news as $k => $val) {
+            $user = $this->Users->get($k, [
+                'contain' => []
+            ]);
+//            $user = $this->Users->patchEntity($user, $val);
+            pr($val);
+        }
+         die;
+        $data = array();
+        foreach ($users as $k => $user) {
+            $data[$k]['user_id'] = $user;
+        }
+        foreach ($apt_keys as $k => $apt_key) {
+            $data[$k]['apt_key'] = $apt_key;
+            $data[$k]['name'] = 'Thiết bị_'.$k;
+            $data[$k]['delete_flag'] = 0;
+        }
+        $this->loadModel('Devices');
+        foreach ($data as $datum) {
+            $user = $this->Devices->newEntity();
+            $user = $this->Devices->patchEntity($user, $datum);
+            if (empty($user->errors())) {
+                if ($this->Devices->save($user)) {
+                    $conn->commit();
+                    echo 'save ok';
+                } else {
+                    $conn->rollback();
+                }
+            } else {
+                $conn->rollback();
+            }
         }
 
-        foreach ($first_row as $key => $item) {
-            $objPHPExcel->getActiveSheet()->setCellValue($column. $numRow, $key);
-            $objPHPExcel->getActiveSheet()->getStyle($column. $numRow)->getFont()->setBold(true);
-            $objPHPExcel->getActiveSheet()->getStyle($column. $numRow)->applyFromArray($headerStyle);
-            $column ++;
-        }
-        $rows = $stmt->fetchAll('assoc');
-        $rowCount = 3;
-        foreach ($rows as $key => $row) {
-            $column = 'A';
-            foreach ($row as $k => $val) {
-                $objPHPExcel->getActiveSheet()->setCellValue($column . $rowCount, $val);
-                $column++;
-            }
-            $rowCount++;
-        }
-        $fileName = 'data' . '_' . date('Ymd-His');
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $fileName . '.xlsx"');
-        header('Cache-Control: max-age=0');
-        header('Cache-Control: max-age=1');
-        header ('Expires: Mon, 26 Jul 1997 05:00:00 GMT'); // Date in the past
-        header ('Last-Modified: '.gmdate('D, d M Y H:i:s').' GMT'); // always modified
-        header ('Cache-Control: cache, must-revalidate'); // HTTP/1.1
-        header ('Pragma: public'); // HTTP/1.0
-        $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
-        $objWriter->save('php://output');
-        exit;
 
     }
 }

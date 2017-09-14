@@ -21,6 +21,7 @@ use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Cell;
 use PHPExcel_Worksheet;
+use PHPExcel_Style;
 
 class PhpExcelComponent extends Component
 {
@@ -306,6 +307,7 @@ class PhpExcelComponent extends Component
                 ->getFont()
                 ->setItalic($params['italic']);
         }
+
         // set internal params that need to be processed after data are inserted
         $this->_tableParams = array(
             'header_row' => $this->_row,
@@ -315,6 +317,44 @@ class PhpExcelComponent extends Component
             'filter' => array(),
             'wrap' => array()
         );
+        $column = 'A';
+        $numRow = 2;
+        foreach ($data as $d) {
+            $this->_xls->getActiveSheet()->setCellValueByColumnAndRow(
+                $offset,
+                $this->_row,
+                $d['label']
+            );
+            if (isset($params['headerStyle'])) {
+                $this->_xls->getActiveSheet()->getStyle($column.$this->_row)->applyFromArray($params['headerStyle']);
+            }
+            // set width
+            if (isset($d['width']) && is_numeric($d['width'])) {
+                $this->_xls->getActiveSheet()
+                    ->getColumnDimensionByColumn($offset)
+                    ->setWidth((float)$d['width']);
+            } else {
+                $this->_tableParams['auto_width'][] = $offset;
+            }
+            // filter
+            if (isset($d['filter']) && $d['filter']) {
+                $this->_tableParams['filter'][] = $offset;
+            }
+            // wrap
+            if (isset($d['wrap']) && $d['wrap']) {
+                $this->_tableParams['wrap'][] = $offset;
+            }
+            $offset++;
+            $column++;
+        }
+        $this->_row++;
+        return $this;
+    }
+
+
+    public function addStyleTableHeader ($data, $params = array())
+    {
+        $offset = 0;
         foreach ($data as $d) {
             // set label
             $this->_xls->getActiveSheet()->setCellValueByColumnAndRow(
@@ -322,6 +362,9 @@ class PhpExcelComponent extends Component
                 $this->_row,
                 $d['label']
             );
+            // set label
+            $this->_xls->getActiveSheet()->getStyle($this->_row)->applyFromArray($params);
+
             // set width
             if (isset($d['width']) && is_numeric($d['width'])) {
                 $this->_xls->getActiveSheet()
@@ -342,21 +385,23 @@ class PhpExcelComponent extends Component
         }
         $this->_row++;
         return $this;
+
     }
+
 
     /**
      * Write array of data to current row
      *
+     * @param $k
      * @param array $data data
-     *
      * @return $this for method chaining
      */
-    public function addTableRow($data)
+    public function addTableRow($k, $data)
     {
         $offset = $this->_tableParams['offset'];
+        $this->_xls->getActiveSheet()->setCellValueByColumnAndRow($offset++, $this->_row, $k+1);
         foreach ($data as $d) {
-            $this->_xls->getActiveSheet()
-                ->setCellValueByColumnAndRow($offset++, $this->_row, $d);
+            $this->_xls->getActiveSheet()->setCellValueByColumnAndRow($offset++, $this->_row, $d);
         }
         $this->_row++;
         $this->_tableParams['row_count']++;
