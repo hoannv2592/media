@@ -12,20 +12,18 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row clearfix">
-            <ol class="breadcrumb breadcrumb-col-pink">
+            <ol class="breadcrumb ">
                 <li>
                     <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index']) ?>">
-                        <i class="material-icons">home</i> Home
+                        <i class="material-icons">home</i> Trang chủ
                     </a>
                 </li>
-                <li class="active">
-                    <i class="material-icons">add</i> new user
-                </li>
+                <li class="active"><a href="javascript:void(0)">Tạo mới người dùng</a></li>
             </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header bg-light-blue">
-                        <h2>THÊM MỚI USERS</h2>
+                        <h2>THÊM MỚI NGƯỜI DÙNG</h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
@@ -47,17 +45,19 @@
                             'autocomplete' => "off"
                         ));
                         ?>
-                        <label for="username">Loại tài khoản</label>
+                        <label for="username">Tên người dùng</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="username" placeholder="Điền tên người dùng" required>
+                                <input type="text" class="form-control" name="username"
+                                       placeholder="Điền tên người dùng" required>
                             </div>
                             <div class="help-info">Tên người dùng</div>
                         </div>
                         <label for="email">Email</label>
                         <div class="form-group form-float">
                             <div class="form-line" id="email_user">
-                                <input type="text" class="form-control" name="email" id="email" placeholder="Điền email" required >
+                                <input type="text" class="form-control" name="email" id="email" placeholder="Điền email"
+                                       required>
                             </div>
                             <div class="help-info">Email</div>
                         </div>
@@ -81,7 +81,8 @@
                         <label for="address">Địa chỉ</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="address" placeholder="Điền địa chỉ" required>
+                                <input type="text" class="form-control" name="address" placeholder="Điền địa chỉ"
+                                       required>
                             </div>
                             <div class="help-info">Địa chỉ</div>
                         </div>
@@ -136,14 +137,14 @@
     });
 
 
-    (function($, window, document, undefined) {
+    (function ($, window, document, undefined) {
 
         var pluginName = 'disableAutofill';
         var defaults = {};
 
         function Plugin(element, options) {
             this.element = element;
-            this.options = $.extend({}, defaults, options) ;
+            this.options = $.extend({}, defaults, options);
 
             this._defaults = defaults;
             this._name = pluginName;
@@ -151,7 +152,7 @@
             this.initialize();
         }
 
-        Plugin.prototype.initialize = function() {
+        Plugin.prototype.initialize = function () {
             var $element = $(this.element);
             $element
                 .val($element.attr('value'))
@@ -161,8 +162,8 @@
                 .hide();
         };
 
-        $.fn[pluginName] = function(options) {
-            return this.each(function() {
+        $.fn[pluginName] = function (options) {
+            return this.each(function () {
                 if (!$.data(this, 'plugin_' + pluginName)) {
                     $.data(this, 'plugin_' + pluginName, new Plugin(this, options));
                 }

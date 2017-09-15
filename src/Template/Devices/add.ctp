@@ -7,14 +7,13 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row clearfix">
-            <ol class="breadcrumb breadcrumb-col-pink">
+            <ol class="breadcrumb">
                 <li>
                     <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
                         <i class="material-icons">home</i> Home
                     </a>
                 </li>
-                <li class="active">
-                    <i class="material-icons">library_books</i> thiết bị mới
+                <li class="active"><a href="javascript:void(0)">Thêm thiết bị mới</a>
                 </li>
             </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">

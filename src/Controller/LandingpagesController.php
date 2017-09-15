@@ -290,4 +290,16 @@ class LandingpagesController extends AppController
             }
         }
     }
+
+    public function detailLangdingpage($id = null)
+    {
+        if (!$this->Landingpages->exists($id)) {
+            $this->redirect(array('controller' => 'Landingpages', 'action' => 'index'));
+        }
+        $landingpage = $this->Landingpages->get($id,[
+            'contain' => []
+        ]);
+        $this->set(compact('landingpage'));
+    }
 }
+

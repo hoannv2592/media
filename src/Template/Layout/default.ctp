@@ -57,6 +57,7 @@ $cakeDescription = 'Media ';
         'dataTables.bootstrap.min',
         'jquery-datatable',
         'jquery.validate',
+        'messages_vi',
         'autosize.min',
         'form-validation',
         'jquery.steps.min',
@@ -88,17 +89,6 @@ $cakeDescription = 'Media ';
 <!-- Overlay For Sidebars -->
 <div class="overlay"></div>
 <!-- #END# Overlay For Sidebars -->
-<!-- Search Bar -->
-<div class="search-bar">
-    <div class="search-icon">
-        <i class="material-icons">search</i>
-    </div>
-    <input type="text" placeholder="START TYPING...">
-    <div class="close-search">
-        <i class="material-icons">close</i>
-    </div>
-</div>
-<!-- #END# Search Bar -->
 <nav class="navbar">
     <div class="container-fluid">
         <div class="navbar-header">
@@ -109,18 +99,12 @@ $cakeDescription = 'Media ';
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "edit"."/". $userData['id']]); ?>" ><?php echo $userData['email'];?></a>
+                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user"."/". $userData['id']]); ?>" ><?php echo $userData['email'];?></a>
                 </li>
                 <li >
-                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "logout"]); ?>" ><span>Logout</span></a>
+                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "logout"]); ?>" ><span>Đăng xuất</span></a>
                 </li>
                 <!-- Tasks -->
-                <li class="dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button">
-                        <i class="material-icons">flag</i>
-                        <span class="label-count">9</span>
-                    </a>
-                </li>
                 <!-- #END# Tasks -->
                 <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
             </ul>
@@ -205,17 +189,6 @@ $cakeDescription = 'Media ';
                         <span>Báo cáo</span>
                     </a>
                 </li>
-
-<!--                --><?php //if ($controller == 'import') { ?>
-<!--                <li class="left_menu active ">-->
-<!--                    --><?php //} else { ?>
-<!--                <li class="left_menu">-->
-<!--                    --><?php //} ?>
-<!--                    <a href="--><?php //echo $this->Url->build(["controller" => "import", "action" => "index"]); ?><!--" >-->
-<!--                        <i class="material-icons">file_upload</i>-->
-<!--                        <span>Import data</span>-->
-<!--                    </a>-->
-<!--                </li>-->
             </ul>
         </div>
         <!-- #Menu -->

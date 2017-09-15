@@ -8,15 +8,14 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row clearfix">
-            <ol class="breadcrumb breadcrumb-col-pink">
+            <ol class="breadcrumb">
                 <li>
                     <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
-                        <i class="material-icons">home</i> Home
+                        <i class="material-icons">home</i> Trang chủ
                     </a>
                 </li>
-                <li class="active">
-                    <i class="material-icons">library_books</i> chỉnh sửa thiết bị
-                </li>
+                <li class="active"><a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device/'.$device['id']])?>">Thông tin</a></li>
+                <li class="active"><a href="javascript:void(0)">Chỉnh sửa thông tin</a></li>
             </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -70,9 +69,9 @@
                                     <?php } ?>
                                 </select>
                             </div>
-                            <div class="help-info">Chọn Users</div>
+                            <div class="help-info">Chọn người dùng</div>
                         </div>
-                        <button class="btn btn-primary waves-effect" id = "submit" type="submit">CHỈNH SỬA</button>
+                        <button class="btn btn-primary waves-effect" id = "submit" type="submit">CẬP NHẬT</button>
                         <?php echo $this->Form->end(); ?>
                     </div>
                 </div>

@@ -30,33 +30,34 @@
                         <div class="button-demo">
                             <a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'add']) ?>" class="btn btn-primary waves-effect m-r-20">THÊM QUẢNG CÁO</a>
                         </div>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                                <thead>
-                                <tr class="bg-blue-grey">
-                                    <th>Tên quảng cáo</th>
-                                    <th>Mô tả</th>
-                                    <th>Demo</th>
-                                    <th>Ngày tạo</th>
-                                    <th>Điều hướng</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach ($landingpages as $key => $landingpage) { ?>
-                                    <tr>
-                                        <td class="advertise font-bold col-cyan">
-                                            <a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'edit' . '/' . $landingpage->id]) ?>"><?php echo h($landingpage->name); ?></a>
-                                        </td>
-                                        <td><?php echo nl2br($landingpage->description); ?></td>
-                                        <td><a class="btn bg-indigo waves-effect" href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'laneding_demo' . '/' . $landingpage->id]) ?>">Demo</a></td>
-                                        <td><?php echo date('d/m/Y H:i', strtotime($landingpage->created));?></td>
-                                        <td class="delete_advertise" value="<?php echo h($landingpage->id); ?>"><button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa quảng cáo</button></td>
+                        <?php if (!empty($landingpages)) { ?>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
+                                    <thead>
+                                    <tr class="bg-blue-grey">
+                                        <th>Tên quảng cáo</th>
+                                        <th>Mô tả</th>
+<!--                                        <th>Demo</th>-->
+                                        <th>Ngày tạo</th>
+                                        <th>Điều hướng</th>
                                     </tr>
-                                <?php } ?>
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                    <?php foreach ($landingpages as $key => $landingpage) { ?>
+                                        <tr>
+                                            <td class="advertise font-bold col-cyan">
+                                                <a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'detail_langdingpage' . '/' . $landingpage->id]) ?>"><?php echo h($landingpage->name); ?></a>
+                                            </td>
+                                            <td><?php echo nl2br($landingpage->description); ?></td>
+<!--                                            <td><a class="btn bg-indigo waves-effect" href="--><?php //echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'laneding_demo' . '/' . $landingpage->id]) ?><!--">Demo</a></td>-->
+                                            <td><?php echo date('d/m/Y H:i', strtotime($landingpage->created));?></td>
+                                            <td class="delete_advertise" value="<?php echo h($landingpage->id); ?>"><button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa quảng cáo</button></td>
+                                        </tr>
+                                    <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
