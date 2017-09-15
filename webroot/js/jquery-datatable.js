@@ -1,6 +1,7 @@
 $(function () {
     $('.js-basic-example').DataTable({
         dom: 'Bfrtip',
+        "scrollX": false,
         responsive: true,
         "columns": [
             { "width": "15%" },
@@ -12,13 +13,14 @@ $(function () {
             "lengthMenu": "Display _MENU_ records per page",
             "zeroRecords": "Không tìm thấy dữ liệu",
             "info": "Hiển thị trang _PAGE_ / _PAGES_",
-            "infoEmpty": "Không có người dùng nào phù hợp",
-            "infoFiltered": "(_MAX_ người dùng)",
+            "infoEmpty": "Không có dữ liệu nào phù hợp",
+            "infoFiltered": "(_MAX_ dữ liệu)",
             "search": "Tìm kiếm :"
         }
     });
     $('.js-exportable_dev').DataTable({
         dom: 'Bfrtip',
+        "scrollX": false,
         responsive: true,
         "columns": [
             { "width": "15%" },
@@ -31,8 +33,8 @@ $(function () {
             "lengthMenu": "Display _MENU_ records per page",
             "zeroRecords": "Không tìm thấy dữ liệu",
             "info": "Hiển thị trang _PAGE_ / _PAGES_",
-            "infoEmpty": "Không có người dùng nào phù hợp",
-            "infoFiltered": "(_MAX_ người dùng)",
+            "infoEmpty": "Không có dữ liệu nào phù hợp",
+            "infoFiltered": "(_MAX_ dữ liệu)",
             "search": "Tìm kiếm :"
         }
     });
@@ -40,12 +42,13 @@ $(function () {
     //Exportable table
     $('.js-exportable').DataTable({
         dom: 'Bfrtip',
+        "scrollX": false,
         responsive: true,
         "columns": [
             { "width": "15%" },
             { "width": "10%" },
             { "width": "15%"},
-            { "width": "20%" },
+            { "width": "15%" },
             { "width": "10%" },
             { "width": "10%" },
             { "width": "8%" }
@@ -54,9 +57,9 @@ $(function () {
             "lengthMenu": "Display _MENU_ records per page",
             "zeroRecords": "Không tìm thấy dữ liệu",
             "info": "Hiển thị trang _PAGE_ / _PAGES_",
-            "infoEmpty": "Không có người dùng nào phù hợp",
-            "infoFiltered": "(_MAX_ người dùng)",
-            "search": "Tìm kiếm :",
+            "infoEmpty": "Không có dữ liệu nào phù hợp",
+            "infoFiltered": "(_MAX_ dữ liệu)",
+            "search": "Tìm kiếm :"
         }
     });
 });

@@ -133,3 +133,7 @@
         -webkit-font-feature-settings: 'liga';
         -webkit-font-smoothing: antialiased;
     }
+
+    div.dataTables_wrapper div.dataTables_filter {
+         text-align: left !important;
+    }

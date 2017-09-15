@@ -58,16 +58,21 @@
                         <label for="user_id">Chọn tài khoản</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <select class="form-control required" name="user_id" id="user_id">
-                                    <option disabled selected value> -- Chọn tài khoản --</option>
-                                    <?php foreach ($users as $key => $user) {
-                                        if ($device['user_id'] == $key) { ?>
-                                            <option selected="selected" value="<?php echo $key;?>"><?php echo $user ?></option>
-                                        <?php } else { ?>
-                                            <option value="<?php echo $key;?>"><?php echo $user ?></option>
+                                <?php
+                                if ($userData['role'] == \App\Model\Entity\User::ROLE_TOW) {
+                                    echo isset($users[$device['user_id']]) ? $users[$device['user_id']]: '';
+                                } else { ?>
+                                    <select class="form-control required" name="user_id" id="user_id">
+                                        <option disabled selected value> -- Chọn tài khoản --</option>
+                                        <?php foreach ($users as $key => $user) {
+                                            if ($device['user_id'] == $key) { ?>
+                                                <option selected="selected" value="<?php echo $key;?>"><?php echo $user ?></option>
+                                            <?php } else { ?>
+                                                <option value="<?php echo $key;?>"><?php echo $user ?></option>
+                                            <?php } ?>
                                         <?php } ?>
-                                    <?php } ?>
-                                </select>
+                                    </select>
+                                <?php } ?>
                             </div>
                             <div class="help-info">Chọn người dùng</div>
                         </div>

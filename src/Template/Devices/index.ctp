@@ -28,10 +28,14 @@
                         </ul>
                     </div>
                     <div class="body">
-                        <div class="button-demo">
-                            <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'add']) ?>"
-                               class="btn btn-primary waves-effect m-r-20">THÊM THIẾT BỊ</a>
-                        </div>
+                        <?php if ($userData['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
+                            <div class="button-demo">
+                                <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'add']) ?>"
+                                   class="btn btn-primary waves-effect m-r-20">THÊM THIẾT BỊ</a>
+                            </div>
+                        <?php } else { ?>
+                            <a disabled="disabled" href="javascript:void(0);" class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
+                        <?php } ?>
                         <?php if (!empty($devices)) { ?>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover js-exportable_dev dataTable">

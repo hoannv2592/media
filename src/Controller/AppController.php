@@ -79,6 +79,7 @@ class AppController extends Controller
         $this->loadModel('Landingpages');
         $this->loadModel('ServiceGroups');
         $this->loadModel('CampaignGroups');
+        $this->Auth->config('authorize', false);
 
         /*
          * Enable the following components for recommended CakePHP security settings.
@@ -170,6 +171,9 @@ class AppController extends Controller
         if ($this->Auth->user()) {
             $this->set('userData', $this->Auth->user());
         }
+        if (!$this->Auth->user()) {
+            $this->Auth->config('authError', false);
+        }
 //        if (!$this->checkPerms()) {
 //            return $this->redirect($this->referer());
 //        }
@@ -178,7 +182,9 @@ class AppController extends Controller
 
 
     /**
+     * getAllData method
      *
+     * @return array
      */
     public function getAllData()
     {

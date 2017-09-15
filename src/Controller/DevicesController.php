@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\User;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 
@@ -27,12 +28,25 @@ class DevicesController extends AppController
      */
     public function index()
     {
-        $devices = $this->Devices->find('all',[
-            'contain'  => ['Users' => function ($q) {
-                return $q
-                    ->where(['Devices.delete_flag !=' => 1 ]);
-            }]
-        ])->toArray();
+        $login = $this->Auth->user();
+        if ($login['role'] == User::ROLE_ONE) {
+            $devices = $this->Devices->find('all',[
+                'contain'  => ['Users' => function ($q) {
+                    return $q
+                        ->where(['Devices.delete_flag !=' => 1 ]);
+                }]
+            ])->toArray();
+        } else {
+            $devices = $this->Devices->find('all',[
+                'contain'  => ['Users' => function ($q) {
+                    return $q
+                        ->where([
+                            'Devices.delete_flag !=' => 1,
+                        ]);
+                }],
+                'conditions' => ['Devices.user_id ' => $login['id']],
+            ])->toArray();
+        }
         $this->set(compact('devices'));
 
 

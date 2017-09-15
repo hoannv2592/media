@@ -33,21 +33,41 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $users = $this->Users->find('all',[
-            'contain'  => ['Devices' => function ($q) {
-                return $q
-                    ->where([
-                        'Devices.delete_flag !=' => 1
-                    ])
-                    ->select([
-                        'Devices.user_id', 'id', 'name'
-                    ]);
-            }],
-            'conditions' => [
-                'Users.delete_flag !=' => 1
-            ]
-        ])->toArray();
+        $login = $this->Auth->user();
+        if ($login['role'] == User::ROLE_ONE) {
+            $users = $this->Users->find('all',[
+                'contain'  => ['Devices' => function ($q) {
+                    return $q
+                        ->where([
+                            'Devices.delete_flag !=' => 1
+                        ])
+                        ->select([
+                            'Devices.user_id', 'id', 'name'
+                        ]);
+                }],
+                'conditions' => [
+                    'Users.delete_flag !=' => 1
+                ]
+            ])->toArray();
+        } else {
+            $users = $this->Users->find('all',[
+                'contain'  => ['Devices' => function ($q) {
+                    return $q
+                        ->where([
+                            'Devices.delete_flag !=' => 1,
+                        ])
+                        ->select([
+                            'Devices.user_id', 'id', 'name'
+                        ]);
+                }],
+                'conditions' => [
+                    'Users.id' => $login['id'],
+                    'Users.delete_flag !=' => 1,
+                ]
+            ])->toArray();
+        }
         $this->set(compact('users'));
+
     }
 
     /**
@@ -201,6 +221,7 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEntity();
         $session = $this->request->session()->read('Users');
+        //pr($session);
         if (!empty($session)) {
             $user = $this->Users->get($session['id']);
             if (!empty($user)) {

@@ -40,15 +40,25 @@
                     </div>
                     <div class="body">
                         <?php echo $this->Form->create('Users', array(
-                            'id' => 'form_edit_validation',
+                            'id' => 'form_advanced_validation',
                             'type' => 'post',
                             'url' => array('controller' => 'Users', 'action' => 'edit'.'/'. $user['id']),
                             'inputDefaults' => array(
                                 'label' => false,
-                                'div' => false
+                                'div' => false,
                             ),
+                            'autocomplete' => "off"
                         ));
                         ?>
+                        <label for="email">Email</label>
+                        <div class="form-group form-float">
+                            <div class="form-line" id="email_user">
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="email" id="email"  value="<?php echo $user['email'] ? $user['email']: ''; ?>" required>
+                                </div>
+                            </div>
+                            <div class="help-info">Email</div>
+                        </div>
                         <label for="username">Tên người dùng</label>
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -56,48 +66,50 @@
                             </div>
                             <div class="help-info">Tên người dùng</div>
                         </div>
-                        <label for="Email">Email</label>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" class="form-control" name="email" id="email"  value="<?php echo $user['email'] ? $user['email']: ''; ?>" required>
-                            </div>
-                            <div class="help-info">Email</div>
-                            <input type="hidden" id="email_backup"  value="<?php echo $user['email'] ? $user['email']: ''; ?>" >
-                        </div>
                         <label for="phone">Số điện thoại</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control"  name="phone" value="<?php echo $user['phone'] ? $user['phone']: ''; ?>" required>
+                                <div class="form-line">
+                                    <input type="text" class="form-control"  name="phone" value="<?php echo $user['phone'] ? '0'.$user['phone']: ''; ?>" required>
+                                </div>
                             </div>
                             <div class="help-info">Số điện thoại</div>
                         </div>
                         <label for="address">Địa chỉ</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="address" value="<?php echo $user['address'] ? $user['address']: ''; ?>" required>
+                                <div class="form-line">
+                                    <input type="text" class="form-control" name="address" value="<?php echo $user['address'] ? $user['address']: ''; ?>" required>
+                                </div>
                             </div>
                             <div class="help-info">Địa chỉ</div>
                         </div>
-                        <label for="role">Loại người dùng</label>
+                        <label for="user_id">Loại tài khoản</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <select class="form-control required" name="role" id="role">
-                                    <option disabled selected value> -- chọn quyền -- </option>
-                                    <?php
-                                    foreach ($role as $key => $item) {
-                                        if ($user['role'] == $key) { ?>
-                                            <option selected="selected" value="<?php echo $key; ?>" ><?php echo $item; ?></option>
-                                        <?php } else { ?>
-                                            <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
-                                        <?php }
-                                    }
-                                    ?>
-                                </select>
+                                <?php
+                                if ($userData['role'] == \App\Model\Entity\User::ROLE_TOW) {
+                                    echo isset($role[$user['role']]) ? $role[$user['role']]: '';
+                                } else { ?>
+                                    <select class="form-control required" name="role" id="role">
+                                        <option disabled selected value> -- chọn quyền -- </option>
+                                        <?php
+                                        foreach ($role as $key => $item) {
+                                            if ($user['role'] == $key) { ?>
+                                                <option selected="selected" value="<?php echo $key; ?>" ><?php echo $item; ?></option>
+                                            <?php } else { ?>
+                                                <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
+                                            <?php }
+                                        }
+                                        ?>
+                                    </select>
+                                <?php } ?>
                             </div>
-                            <div class="help-info">Loại người dùng</div>
+                            <div class="help-info">Loại tài khoản</div>
                         </div>
-                        <button class="btn btn-primary waves-effect" id = "submit" type="submit">CẬP NHẬT</button>
+                        <button class="btn btn-primary waves-effect" id="submit" type="submit">THÊM MỚI</button>
                         <?php echo $this->Form->end(); ?>
+                        <div id="email_backup"  value="<?php echo $user['email'] ? $user['email']: ''; ?>" ></div>
                     </div>
                 </div>
             </div>
@@ -105,23 +117,23 @@
     </div>
 </section>
 <script type="application/javascript">
-    //$(document).ready(function () {
+    $(document).ready(function () {
         //Advanced Form Validation
-        $('#form_edit_validation').validate({
+        $('#form_advanced_validation').validate({
             onkeyup: false,
             rules: {
                 'phone': {
                     number : true
                 },
                 'email' : {
-                    'email' :true,
+                    'email' : true,
                     remote: {
                         type: 'POST',
                         async: false,
                         url: '/Users/isEmaiEditlExist',
                         data: {
                             backup_email: function () {
-                                return $('#email_backup').val();
+                                return $('#email_backup').attr('value');
                             }
                         }
                     }
@@ -137,5 +149,5 @@
                 $(element).parents('.form-group').append(error);
             }
         });
-//    });
+    });
 </script>

@@ -46,13 +46,6 @@
                             ),
                         ));
                         ?>
-                        <label for="username">Tên người dùng</label>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" class="form-control" name="username" value="<?php echo $user['username'] ? $user['username']: ''; ?>" required>
-                            </div>
-                            <div class="help-info">Tên username</div>
-                        </div>
                         <label for="Email">Email</label>
                         <div class="form-group form-float">
                             <div class="form-line">
@@ -61,10 +54,17 @@
                             <div class="help-info">Email</div>
                             <input type="hidden" id="email_backup"  value="<?php echo $user['email'] ? $user['email']: ''; ?>" >
                         </div>
+                        <label for="username">Tên người dùng</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="username" value="<?php echo $user['username'] ? $user['username']: ''; ?>" required>
+                            </div>
+                            <div class="help-info">Tên username</div>
+                        </div>
                         <label for="phone">Số điện thoại</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control"  name="phone" value="<?php echo $user['phone'] ? $user['phone']: ''; ?>" required>
+                                <input type="text" class="form-control"  name="phone" value="<?php echo $user['phone'] ? '0'.$user['phone']: ''; ?>" required>
                             </div>
                             <div class="help-info">Số điện thoại</div>
                         </div>
@@ -78,18 +78,23 @@
                         <label for="role">Loại người dùng</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <select class="form-control required" name="role" id="role">
-                                    <option disabled selected value> -- chọn quyền -- </option>
-                                    <?php
-                                    foreach ($role as $key => $item) {
-                                        if ($user['role'] == $key) { ?>
-                                            <option selected="selected" value="<?php echo $key; ?>" ><?php echo $item; ?></option>
-                                        <?php } else { ?>
-                                            <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
-                                        <?php }
-                                    }
-                                    ?>
-                                </select>
+                                <?php
+                                if ($userData['role'] == \App\Model\Entity\User::ROLE_TOW) {
+                                    echo isset($role[$user['role']]) ? $role[$user['role']]: '';
+                                } else { ?>
+                                    <select class="form-control required" name="role" id="role">
+                                        <option disabled selected value> -- chọn quyền -- </option>
+                                        <?php
+                                        foreach ($role as $key => $item) {
+                                            if ($user['role'] == $key) { ?>
+                                                <option selected="selected" value="<?php echo $key; ?>" ><?php echo $item; ?></option>
+                                            <?php } else { ?>
+                                                <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
+                                            <?php }
+                                        }
+                                        ?>
+                                    </select>
+                                <?php } ?>
                             </div>
                             <div class="help-info">Loại người dùng</div>
                         </div>
