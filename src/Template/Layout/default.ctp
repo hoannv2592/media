@@ -45,6 +45,9 @@ $cakeDescription = 'Media ';
         'my_style',
         'dataTables.bootstrap.min',
         'sweetalert',
+        'multi-select',
+        'bootstrap-select.min',
+
     )) ?>
     <?= $this->Html->script(array(
         'jquery.min',
@@ -63,6 +66,7 @@ $cakeDescription = 'Media ';
         'jquery.steps.min',
         'sweetalert.min',
         'form-wizard',
+        'jquery.multi-select'
     ))?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -138,6 +142,16 @@ $cakeDescription = 'Media ';
                         <span>Quản lý thiết bị</span>
                     </a>
                 </li>
+                <?php if ($controller == 'Adgroups') { ?>
+            <li class="left_menu active ">
+            <?php } else { ?>
+                <li class="left_menu ">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "Adgroups", "action" => "index"]); ?>">
+                        <i class="material-icons">view_list</i>
+                        <span>Quản lý nhóm </span>
+                    </a>
+                </li>
                 <?php if ($controller == 'Landingpages') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
@@ -148,6 +162,7 @@ $cakeDescription = 'Media ';
                         <span>Màn hình quảng cáo</span>
                     </a>
                 </li>
+
             <?php if ($controller == 'CampaignGroups') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
@@ -167,16 +182,6 @@ $cakeDescription = 'Media ';
                     <a href="javascript:void(0);" >
                         <i class="material-icons">widgets</i>
                         <span>Nhóm dịch vụ</span>
-                    </a>
-                </li>
-                <?php if ($controller == 'Adgroups') { ?>
-            <li class="left_menu active ">
-            <?php } else { ?>
-                <li class="left_menu ">
-                    <?php } ?>
-                    <a href="javascript:void(0);">
-                        <i class="material-icons">view_list</i>
-                        <span>Mhóm quáng cáo</span>
                     </a>
                 </li>
                 <?php if ($controller == 'reports') { ?>

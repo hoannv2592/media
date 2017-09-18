@@ -35,7 +35,10 @@ class DevicesController extends AppController
                 'contain'  => ['Users' => function ($q) {
                     return $q
                         ->where(['Devices.delete_flag !=' => 1 ]);
-                }]
+                }],
+//                'conditions' => array(
+//                    'Devices.status ' => NO_LANDING
+//                )
             ])->toArray();
         } else {
             $devices = $this->Devices->find('all',[
@@ -45,7 +48,10 @@ class DevicesController extends AppController
                             'Devices.delete_flag !=' => 1,
                         ]);
                 }],
-                'conditions' => ['Devices.user_id ' => $login['id']],
+                'conditions' => [
+                    'Devices.user_id ' => $login['id'],
+//                    'Devices.status ' => NO_LANDING
+                ],
             ])->toArray();
         }
         $this->set(compact('devices'));
@@ -348,15 +354,45 @@ class DevicesController extends AppController
     /**
      * setQc method
      *
+     * @param null $device_id
+     * @param null $user_id
      * @return \Cake\Http\Response|void
+     * @internal param null $id
      */
-    public function setQc()
+    public function setQc($device_id = null, $user_id = null)
     {
+        $conn = ConnectionManager::get('default');
+        $conn->begin();
         $this->loadModel('LangdingDevices');
-
-        if ($this->request->getData()) {
-            $langdingpage_id = $this->request->getData('langdingpage_id');
-            pr($langdingpage_id); die;
+        if (!$this->Users->exists($user_id)) {
+            $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
         }
+        if (!$this->Devices->exists($device_id)) {
+            $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
+        }
+        $device = $this->Devices->get($device_id, [
+            'contain' => []
+        ]);
+        if ($this->request->getData()) {
+            $data_update = array(
+                'user_id' => $user_id,
+                'status' => HAS_LANDING,
+                'langdingpage_id' => $this->request->getData('langdingpage_id')
+            );
+            $device = $this->Devices->patchEntity($device, $data_update);
+            if (empty($device->errors())) {
+                if ($this->Devices->save($device)) {
+                    $conn->commit();
+                    $this->redirect(['action' => 'loadDeviceHasLangdingpage']);
+                } else {
+                    $conn->rollback();
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc'.'/'.$device_id.'/'.$user_id]);
+                }
+            } else {
+                $conn->rollback();
+                $this->redirect(['Controller' => 'Devices', 'action' => 'setQc'.'/'.$device_id.'/'.$user_id]);
+            }
+        }
+        $this->set(compact('device', 'device_id', 'user_id'));
     }
 }

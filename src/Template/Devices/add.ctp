@@ -1,7 +1,7 @@
 <?php
 /**
   * @var \App\View\AppView $this
- * @var \App\Model\Entity\Devices[]|\Cake\Collection\CollectionInterface $users
+  * @var \App\Model\Entity\Devices[]|\Cake\Collection\CollectionInterface $users
   */
 ?>
 <section class="content">

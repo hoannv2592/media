@@ -146,3 +146,15 @@
     max-width: 100%;
      margin-bottom: 0 !important;
 }
+
+table.dataTable tbody td {
+    vertical-align: middle;
+}
+
+tr:last-child {
+    border-bottom: 1px solid rgba(86,61,124,.2);
+}
+
+.demo-checkbox label, .demo-radio-button label {
+    min-width: 250px !important;
+}

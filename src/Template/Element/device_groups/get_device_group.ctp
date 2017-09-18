@@ -160,68 +160,6 @@
     </div>
 </div>
 
-<div class="modal fade" id="modal-04" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="row clearfix">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
-                    <div class="header bg-light-blue">
-                        <h2>CHỌN QUẢNG CÁO</h2>
-                        <ul class="header-dropdown m-r--5">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
-                                   role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="material-icons">more_vert</i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="body">
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <h2 class="card-inside-title">
-                                        Chọn loại quảng cáo
-                                    </h2>
-                                    <div class="demo-radio-button">
-                                        <?php
-                                        echo $this->Form->create('energy_input', array(
-                                                'id' => 'EnergyInputForm',
-                                                'type' => 'post',
-                                                'url' => array('controller' => 'Devices', 'action' => 'set_qc'),
-                                                'inputDefaults' => array(
-                                                    'div' => false
-                                                )
-                                            )
-                                        );
-                                        ?>
-                                        
-                                        <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="with-gap radio-col-red" checked/>
-                                        <label style="font-weight: bold" for="radio_30">Quảng Cáo với Facebook</label>
-                                        <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="with-gap radio-col-pink"/>
-                                        <label style="font-weight: bold" for="radio_31">Quảng cáo với hình ảnh</label>
-                                        <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="with-gap radio-col-purple"/>
-                                        <label style="font-weight: bold" for="radio_32">Quảng Cáo với voucher</label>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button class="btn btn-primary waves-effect" id="submit_delete" type="submit">
-                                            CÀI ĐẶT
-                                        </button>
-                                        <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">
-                                            CLOSE
-                                        </button>
-                                    </div>
-                                    <?php echo $this->Form->end(); ?>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- #END# Radio -->
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-</div>
-
 
 <script type="application/javascript">
     var id;

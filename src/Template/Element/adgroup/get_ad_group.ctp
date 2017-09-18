@@ -149,12 +149,10 @@
                 data: { id: id },
                 success: function (response) {
                     if (response) {
-                        alert_message('Đã xóa thành công');
                         setTimeout(function(){
                             window.location.reload();
-                        }, 1000);
+                        }, 50);
                     } else {
-                        alert_message('Đã có lỗi xảy ra.vui lòng thử lại');
                         return false;
                     }
                 }
@@ -162,26 +160,6 @@
         });
     });
 
-    $('.advertise').click(function () {
-        var id = $(this).attr('value');
-        $('#cname').val(id);
-        var url = "<?php echo URL_LOAD_AD; ?>";
-        $.ajax({
-            url: url,
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                id: id
-            },
-            success: function (response) {
-                if (response) {
-                    $('#modal-02 #name').val(response.name);
-                    $('#modal-02 #description').val(response.description);
-                    $('#modal-02 #landingpage').val(response.name);
-                }
-            }
-        });
-    });
     $('#form_advanced_validation').validate({
         rules: {
             'name': {

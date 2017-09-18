@@ -42,4 +42,14 @@ class Device extends Entity
     protected $_hidden = [
         'password'
     ];
+
+    const LANDING_ONE = 1;
+    const LANDING_TOW = 2;
+    const LANDING_THREE = 3;
+
+    public static $langding_page = array(
+        Device::LANDING_ONE => 'Quảng Cáo với Facebook',
+        Device::LANDING_TOW => 'Quảng cáo với hình ảnh',
+        Device::LANDING_THREE => 'Quảng Cáo với voucher',
+    );
 }

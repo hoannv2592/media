@@ -62,12 +62,10 @@ class AdgroupsTable extends Table
             ->allowEmpty('id', 'create');
 
         $validator
-            ->scalar('name')
             ->requirePresence('name', 'create')
             ->notEmpty('name');
 
         $validator
-            ->scalar('description')
             ->requirePresence('description', 'create')
             ->notEmpty('description');
 

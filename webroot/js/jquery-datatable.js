@@ -19,6 +19,29 @@ $(function () {
             "search": "Tìm kiếm :"
         }
     });
+
+    $('.js-basic-example_ad').DataTable({
+        dom: 'Bfrtip',
+        "scrollX": false,
+        responsive: true,
+        "columns": [
+            { "width": "15%" },
+            { "width": "20%" },
+            { "width": "15%" },
+            { "width": "15%"},
+            { "width": "15%"},
+            { "width": "10%"},
+
+        ],
+        "language": {
+            "lengthMenu": "Display _MENU_ records per page",
+            "zeroRecords": "Không tìm thấy dữ liệu",
+            "info": "Hiển thị trang _PAGE_ / _PAGES_",
+            "infoEmpty": "Không có dữ liệu nào phù hợp",
+            "infoFiltered": "(_MAX_ dữ liệu)",
+            "search": "Tìm kiếm :"
+        }
+    });
     $('.js-exportable_dev').DataTable({
         dom: 'Bfrtip',
         "scrollX": false,
@@ -27,8 +50,29 @@ $(function () {
             { "width": "15%" },
             { "width": "15%" },
             { "width": "15%"},
+            { "width": "10%" },
+            { "width": "15%" }
+        ],
+        "language": {
+            "lengthMenu": "Display _MENU_ records per page",
+            "zeroRecords": "Không tìm thấy dữ liệu",
+            "info": "Hiển thị trang _PAGE_ / _PAGES_",
+            "infoEmpty": "Không có dữ liệu nào phù hợp",
+            "infoFiltered": "(_MAX_ dữ liệu)",
+            "search": "Tìm kiếm :"
+        }
+    });
+    $('.js-exportable_has').DataTable({
+        dom: 'Bfrtip',
+        "scrollX": false,
+        responsive: true,
+        "columns": [
             { "width": "15%" },
-            { "width": "10%" }
+            { "width": "15%" },
+            { "width": "15%"},
+            { "width": "15%"},
+            { "width": "10%" },
+            { "width": "20%" }
         ],
         "language": {
             "lengthMenu": "Display _MENU_ records per page",
