@@ -10,6 +10,7 @@ use Cake\Event\Event;
 /**
  * Devices Controller
  *
+ * @property \App\Model\Table\LangdingDevicesTable $LangdingDevices
  * @property \App\Model\Table\DevicesTable $Devices
  *
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
@@ -50,6 +51,69 @@ class DevicesController extends AppController
         $this->set(compact('devices'));
 
 
+    }
+
+
+    public function loadDeviceNoLangdingpage()
+    {
+        $login = $this->Auth->user();
+        if ($login['role'] == User::ROLE_ONE) {
+            $devices = $this->Devices->find('all',[
+                'contain'  => ['Users' => function ($q) {
+                    return $q
+                        ->where(['Devices.delete_flag !=' => 1 ]);
+                }],
+                'conditions' => array(
+                    'Devices.status ' => NO_LANDING
+                )
+            ])->toArray();
+        } else {
+            $devices = $this->Devices->find('all',[
+                'contain'  => ['Users' => function ($q) {
+                    return $q
+                        ->where([
+                            'Devices.delete_flag !=' => 1,
+                        ]);
+                }],
+                'conditions' => [
+                    'Devices.user_id ' => $login['id'],
+                    'Devices.status ' => NO_LANDING
+                ],
+            ])->toArray();
+        }
+        $this->set(compact('devices'));
+        $this->render('/Devices/index');
+    }
+
+    public function loadDeviceHasLangdingpage()
+    {
+        $login = $this->Auth->user();
+        if ($login['role'] == User::ROLE_ONE) {
+            $devices = $this->Devices->find('all',[
+                'contain'  => ['Users' => function ($q) {
+                    return $q
+                        ->where(['Devices.delete_flag !=' => 1 ]);
+                }],
+                'conditions' => array(
+                    'Devices.status ' => HAS_LANDING
+                )
+            ])->toArray();
+        } else {
+            $devices = $this->Devices->find('all',[
+                'contain'  => ['Users' => function ($q) {
+                    return $q
+                        ->where([
+                            'Devices.delete_flag !=' => 1,
+                        ]);
+                }],
+                'conditions' => [
+                    'Devices.user_id ' => $login['id'],
+                    'Devices.status ' => HAS_LANDING
+                ],
+            ])->toArray();
+        }
+        $this->set(compact('devices'));
+        $this->render('/Devices/index');
     }
 
     /**
@@ -288,6 +352,8 @@ class DevicesController extends AppController
      */
     public function setQc()
     {
+        $this->loadModel('LangdingDevices');
+
         if ($this->request->getData()) {
             $langdingpage_id = $this->request->getData('langdingpage_id');
             pr($langdingpage_id); die;

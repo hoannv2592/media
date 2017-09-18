@@ -179,7 +179,6 @@
                     <div class="body">
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="card">
                                     <h2 class="card-inside-title">
                                         Chọn loại quảng cáo
                                     </h2>
@@ -195,6 +194,7 @@
                                             )
                                         );
                                         ?>
+                                        
                                         <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="with-gap radio-col-red" checked/>
                                         <label style="font-weight: bold" for="radio_30">Quảng Cáo với Facebook</label>
                                         <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="with-gap radio-col-pink"/>
@@ -211,7 +211,6 @@
                                         </button>
                                     </div>
                                     <?php echo $this->Form->end(); ?>
-                                </div>
                             </div>
                         </div>
                     </div>

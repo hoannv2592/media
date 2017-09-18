@@ -168,6 +168,7 @@ class AppController extends Controller
         $param = (Router::parse($this->request->here));
         $controller = $param['controller'];
         $this->set('controller', $controller);
+        $this->set('action', $param['action']);
         if ($this->Auth->user()) {
             $this->set('userData', $this->Auth->user());
         }

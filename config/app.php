@@ -342,5 +342,6 @@ return [
      */
     'Session' => [
         'defaults' => 'php',
+        'timeout'=>1440 /*24 hours*/
     ],
 ];
