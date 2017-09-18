@@ -6,6 +6,7 @@ define('DELETED', true);
 define('UN_DELETED', '0');
 define('URL_LOAD', '/Landingpages/load');
 define('URL_DELETE', '/Landingpages/delete');
+define('URL_DEMO', '/Landingpages/lanedingDemo');
 define('URL_LOAD_AD', '/Adgroups/load');
 define('URL_LOAD_APT', '/Devices/load');
 define('URL_DELETE_APT', '/Devices/delete');

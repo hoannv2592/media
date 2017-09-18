@@ -280,4 +280,17 @@ class DevicesController extends AppController
         ]);
         $this->set(compact('device'));
     }
+
+    /**
+     * setQc method
+     *
+     * @return \Cake\Http\Response|void
+     */
+    public function setQc()
+    {
+        if ($this->request->getData()) {
+            $langdingpage_id = $this->request->getData('langdingpage_id');
+            pr($langdingpage_id); die;
+        }
+    }
 }

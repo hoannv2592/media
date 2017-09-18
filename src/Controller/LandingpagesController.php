@@ -301,5 +301,25 @@ class LandingpagesController extends AppController
         ]);
         $this->set(compact('landingpage'));
     }
+
+
+    public function lanedingDemo($id = null)
+    {
+        if (!$this->Landingpages->exists($id)) {
+            $this->redirect(array('controller' => 'Landingpages', 'action' => 'index'));
+        }
+        $landingpage = $this->Landingpages->get($id,[
+            'contain' => []
+        ]);
+
+        if ($landingpage['name'] == 'Quảng Cáo với Facebook') {
+            $code_lan = 1;
+        } else if ($landingpage[''] == 'Quảng Cáo với Facebook') {
+            $code_lan = 2;
+        } else {
+            $code_lan = 3;
+        }
+        $this->set(compact('code_lan'));
+    }
 }
 
