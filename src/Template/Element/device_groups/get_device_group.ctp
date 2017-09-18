@@ -10,10 +10,11 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header bg-light-blue">
-                            <h2>THÊM MỚI THIẾT BỊ</h2>
+                        <h2>THÊM MỚI THIẾT BỊ</h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                   role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="material-icons">more_vert</i>
                                 </a>
                             </li>
@@ -39,19 +40,19 @@
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="apt_key"  required>
+                                <input type="text" class="form-control" name="apt_key" required>
                                 <label class="form-label">Mã apt_key</label>
                             </div>
                             <div class="help-info">Mã apt_key</div>
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="pass_apt_key"  required>
+                                <input type="text" class="form-control" name="pass_apt_key" required>
                                 <label class="form-label">Mật khẩu thiết bị </label>
                             </div>
                             <div class="help-info">Mật khẩu thiết bị</div>
                         </div>
-                        <button class="btn btn-primary waves-effect" id = "submit_add" type="submit" >THÊM MỚI</button>
+                        <button class="btn btn-primary waves-effect" id="submit_add" type="submit">THÊM MỚI</button>
                         <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
                         <?php echo $this->Form->end(); ?>
                     </div>
@@ -70,7 +71,8 @@
                         <h2>THÔNG TIN THIẾT BỊ</h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                   role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="material-icons">more_vert</i>
                                 </a>
                             </li>
@@ -103,11 +105,11 @@
                         </div>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="pass_apt_key" id="pass_apt_key"  required>
+                                <input type="text" class="form-control" name="pass_apt_key" id="pass_apt_key" required>
                             </div>
                             <div class="help-info">Mật khẩu thiết bị</div>
                         </div>
-                        <button class="btn btn-primary waves-effect" id = "submit" type="submit">CHỈNH SỬA</button>
+                        <button class="btn btn-primary waves-effect" id="submit" type="submit">CHỈNH SỬA</button>
                         <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
                         <?php echo $this->Form->end(); ?>
                     </div>
@@ -125,7 +127,8 @@
                         <h2>XÁC NHẬN</h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                   role="button" aria-haspopup="true" aria-expanded="false">
                                     <i class="material-icons">more_vert</i>
                                 </a>
                             </li>
@@ -140,12 +143,13 @@
                                 'label' => false,
                                 'div' => false
                             ),
-                            'onsubmit'=>"event.returnValue = false; return false;",
+                            'onsubmit' => "event.returnValue = false; return false;",
                         ));
                         ?>
                         <p>Bạn có chắc chắn muốn xóa thiết bị này không? </p>
                         <div class="modal-footer">
-                            <button class="btn btn-primary waves-effect" id = "submit_delete" type="submit">XÓA THIẾT BỊ</button>
+                            <button class="btn btn-primary waves-effect" id="submit_delete" type="submit">XÓA THIẾT BỊ
+                            </button>
                             <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
                         </div>
                         <?php echo $this->Form->end(); ?>
@@ -155,6 +159,71 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modal-04" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="row clearfix">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="card">
+                    <div class="header bg-light-blue">
+                        <h2>CHỌN QUẢNG CÁO</h2>
+                        <ul class="header-dropdown m-r--5">
+                            <li class="dropdown">
+                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                   role="button" aria-haspopup="true" aria-expanded="false">
+                                    <i class="material-icons">more_vert</i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="card">
+                                    <h2 class="card-inside-title">
+                                        Chọn loại quảng cáo
+                                    </h2>
+                                    <div class="demo-radio-button">
+                                        <?php
+                                        echo $this->Form->create('energy_input', array(
+                                                'id' => 'EnergyInputForm',
+                                                'type' => 'post',
+                                                'url' => array('controller' => 'Devices', 'action' => 'set_qc'),
+                                                'inputDefaults' => array(
+                                                    'div' => false
+                                                )
+                                            )
+                                        );
+                                        ?>
+                                        <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="with-gap radio-col-red" checked/>
+                                        <label style="font-weight: bold" for="radio_30">Quảng Cáo với Facebook</label>
+                                        <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="with-gap radio-col-pink"/>
+                                        <label style="font-weight: bold" for="radio_31">Quảng cáo với hình ảnh</label>
+                                        <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="with-gap radio-col-purple"/>
+                                        <label style="font-weight: bold" for="radio_32">Quảng Cáo với voucher</label>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button class="btn btn-primary waves-effect" id="submit_delete" type="submit">
+                                            CÀI ĐẶT
+                                        </button>
+                                        <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">
+                                            CLOSE
+                                        </button>
+                                    </div>
+                                    <?php echo $this->Form->end(); ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- #END# Radio -->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+
+
 <script type="application/javascript">
     var id;
     $('.delete_advertise').click(function () {
@@ -165,13 +234,12 @@
                 url: url,
                 type: 'POST',
                 dataType: 'json',
-                data: { id: id },
+                data: {id: id},
                 success: function (response) {
                     if (response) {
-//                        alert_message('Đã xóa thành công');
-                        setTimeout(function(){
+                        setTimeout(function () {
                             window.location.reload();
-                        }, 100);
+                        }, 50);
                     } else {
                         alert_message('Đã có lỗi xảy ra.vui lòng thử lại');
                         return false;
@@ -180,57 +248,4 @@
             });
         });
     });
-
-//    $('.advertise').click(function () {
-//        var id = $(this).attr('value');
-//        $('#cname').val(id);
-//        var url = "<?php //echo URL_LOAD_APT; ?>//";
-//        $.ajax({
-//            url: url,
-//            type: 'POST',
-//            dataType: 'json',
-//            data: { id: id },
-//            success: function (response) {
-//                if (response) {
-//                    $('#modal-02 #id').val(response.name);
-//                    $('#modal-02 #name').val(response.name);
-//                    $('#modal-02 #apt_key').val(response.apt_key);
-//                    $('#modal-02 #pass_apt_key').val(response.pass_apt_key);
-//                }
-//            }
-//        });
-//    });
-//
-//    $('#form_advanced_validation').validate({
-//        rules: {
-//            'name': {
-//                remote: {
-//                    type: 'POST',
-//                    async: false,
-//                    url: '/Devices/isNameExistAdd',
-//                    onkeyup: false
-//                }
-//            }
-//        },
-//        onkeyup: function(element, event) {
-//            if ($(element).attr('name') === "name") {
-//                return false; // disable onkeyup for your element named as "name"
-//            } else { // else use the default on everything else
-//                if ( event.which === 9 && this.elementValue( element ) === "" ) {
-//                    return;
-//                } else if ( element.name in this.submitted || element === this.lastElement ) {
-//                    this.element( element );
-//                }
-//            }
-//        },
-//        highlight: function (input) {
-//            $(input).parents('.form-line').addClass('error');
-//        },
-//        unhighlight: function (input) {
-//            $(input).parents('.form-line').removeClass('error');
-//        },
-//        errorPlacement: function (error, element) {
-//            $(element).parents('.form-group').append(error);
-//        }
-//    });
 </script>

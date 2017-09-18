@@ -6,8 +6,9 @@ $(function () {
         "columns": [
             { "width": "15%" },
             { "width": "20%" },
+            { "width": "15%" },
             { "width": "15%"},
-            { "width": "15%" }
+            { "width": "15%" },
         ],
         "language": {
             "lengthMenu": "Display _MENU_ records per page",
@@ -60,6 +61,7 @@ $(function () {
             "infoEmpty": "Không có dữ liệu nào phù hợp",
             "infoFiltered": "(_MAX_ dữ liệu)",
             "search": "Tìm kiếm :"
-        }
+        },
+        'rowsGroup': [1]
     });
 });

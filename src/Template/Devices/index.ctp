@@ -43,7 +43,7 @@
                                     <tr class="bg-blue-grey">
                                         <th>Tên thiết bị</th>
                                         <th>User quản lý</th>
-                                        <th>Apt Key</th>
+                                        <th>Mã xác thực</th>
                                         <th>Ngày tạo</th>
                                         <th>Điều hướng</th>
                                     </tr>
@@ -62,12 +62,9 @@
                                             <td class="delete_advertise" value="<?php echo h($device->id); ?>">
 
                                                 <div class="button-demo">
-                                                    <!--                                                <a href="--><?php //echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_new_advertise' . '/' . $device->id]) ?><!--"-->
-                                                    <!--                                                   class="btn btn-primary waves-effect m-r-20">TẠO QUẢNG CÁO</a>-->
+                                                    <button type="button" class="btn btn-primary waves-effect" data-toggle="modal" data-target="#modal-04">Tạo quảng cáo</button>
                                                 </div>
-                                                <button type="button" class="btn btn-danger waves-effect"
-                                                        data-toggle="modal" data-target="#modal-03">Xóa thiết bị
-                                                </button>
+                                                <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa thiết bị</button>
                                             </td>
                                         </tr>
                                     <?php } ?>

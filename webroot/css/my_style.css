@@ -137,3 +137,12 @@
     div.dataTables_wrapper div.dataTables_filter {
          text-align: left !important;
     }
+.table-bordered tbody tr td, .table-bordered tbody tr th {
+    padding: 10px;
+    border: 1px solid rgba(86,61,124,.2);
+}
+.table {
+    width: 100%;
+    max-width: 100%;
+     margin-bottom: 0 !important;
+}
