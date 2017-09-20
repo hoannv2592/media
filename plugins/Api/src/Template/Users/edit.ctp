@@ -70,7 +70,7 @@
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <div class="form-line">
-                                    <input type="text" class="form-control"  name="phone" value="<?php echo $user['phone'] ? '0'.$user['phone']: ''; ?>" required>
+                                    <input type="text" class="form-control"  name="phone" value="<?php echo $user['phone'] ? $user['phone']: ''; ?>" required>
                                 </div>
                             </div>
                             <div class="help-info">Số điện thoại</div>

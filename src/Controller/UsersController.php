@@ -229,7 +229,6 @@ class UsersController extends AppController
                 return $this->redirect($this->Auth->redirectUrl());
             }
         }
-
         if ($this->request->is('post')) {
             $user = $this->Users->newEntity();
             $user = $this->Users->patchEntity($user, $this->request->getData());
@@ -237,17 +236,12 @@ class UsersController extends AppController
                 $user = $this->Auth->identify();
                 if ($user) {
                     if ($user['delete_flag'] != DELETED) {
-                        $keep_login = isset($this->request->getData()['keep_login']) ? $this->request->getData()['keep_login']:'';
-                        if ($keep_login) {
-                            $session = array(
-                                'id' => $user['id'],
-                                'email' => $this->request->getData()['email'],
-                                'password' => $this->request->getData()['password'],
-                            );
-                            $this->request->session()->write('Users', $session);
-                        } else {
-                            $this->request->session()->delete('Users');
-                        }
+                        $session = array(
+                            'id' => $user['id'],
+                            'email' => $this->request->getData()['email'],
+                            'password' => $this->request->getData()['password'],
+                        );
+                        $this->request->session()->write('Users', $session);
                         $this->Auth->setUser($user);
                         return $this->redirect($this->Auth->redirectUrl());
                     } else {

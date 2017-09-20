@@ -1,6 +1,6 @@
 <?php
 namespace App\Controller;
-
+namespace Api\Controller;
 use App\Controller\AppController;
 use Cake\Datasource\ConnectionManager;
 use App\Model\Entity\User;
@@ -221,7 +221,6 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEntity();
         $session = $this->request->session()->read('Users');
-        //pr($session);
         if (!empty($session)) {
             $user = $this->Users->get($session['id']);
             if (!empty($user)) {
@@ -237,17 +236,12 @@ class UsersController extends AppController
                 $user = $this->Auth->identify();
                 if ($user) {
                     if ($user['delete_flag'] != DELETED) {
-                        $keep_login = isset($this->request->getData()['keep_login']) ? $this->request->getData()['keep_login']:'';
-                        if ($keep_login) {
-                            $session = array(
-                                'id' => $user['id'],
-                                'email' => $this->request->getData()['email'],
-                                'password' => $this->request->getData()['password'],
-                            );
-                            $this->request->session()->write('Users', $session);
-                        } else {
-                            $this->request->session()->delete('Users');
-                        }
+                        $session = array(
+                            'id' => $user['id'],
+                            'email' => $this->request->getData()['email'],
+                            'password' => $this->request->getData()['password'],
+                        );
+                        $this->request->session()->write('Users', $session);
                         $this->Auth->setUser($user);
                         return $this->redirect($this->Auth->redirectUrl());
                     } else {

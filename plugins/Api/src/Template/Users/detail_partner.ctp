@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $user
  * @var \App\View\AppView $this
+ * @var \App\View\AppView $role
  */
 ?>
 <section class="content">
@@ -41,7 +42,7 @@
                         <label for="phone">Số điện thoại</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <?php echo $user['phone'] ? '0'.$user['phone']: ''; ?>
+                                <?php echo $user['phone'] ? $user['phone']: ''; ?>
                             </div>
                             <div class="help-info">Số điện thoại</div>
                         </div>

@@ -23,8 +23,8 @@
                 </div>
                 <div class="row">
                     <div class="col-xs-7 p-t-5">
-                        <input type="checkbox" name="keep_login" id="keep_login" class="filled-in chk-col-pink">
-                        <label for="keep_login">Ghi nhớ </label>
+<!--                        <input type="checkbox" name="keep_login" id="keep_login" class="filled-in chk-col-pink">-->
+<!--                        <label for="keep_login">Ghi nhớ </label>-->
                     </div>
                     <div class="col-xs-5">
                         <button class="btn btn-block bg-pink waves-effect" type="submit">ĐĂNG NHẬP</button>

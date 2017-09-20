@@ -70,7 +70,7 @@
                                                 </table>
                                             </td>
                                             <td><?php echo nl2br($user->address); ?></td>
-                                            <td><?php echo '0' . nl2br($user->phone); ?></td>
+                                            <td><?php echo nl2br($user->phone); ?></td>
                                             <td><?php echo date('d/m/Y H:i', strtotime($user->created)); ?></td>
                                             <td class="delete_advertise" value="<?php echo h($user->id); ?>">
                                                 <button type="button" class="btn btn-danger waves-effect"

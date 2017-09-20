@@ -3,6 +3,7 @@
 namespace Api\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\Device;
 use App\Model\Entity\User;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
@@ -33,21 +34,21 @@ class DevicesController extends AppController
         if ($login['role'] == User::ROLE_ONE) {
             $devices = $this->Devices->find('all',[
                 'contain'  => [
-//                    'Users' => function ($q) {
-//                        return $q
-//                        ->where(['Devices.delete_flag !=' => 1 ]);
-//                    }
+                    'Users' => function ($q) {
+                        return $q
+                        ->where(['Devices.delete_flag !=' => 1 ]);
+                    }
                 ]
             ])->toArray();
         } else {
             $devices = $this->Devices->find('all',[
                 'contain'  => [
-//                    'Users' => function ($q) {
-//                        return $q
-//                            ->where([
-//                                'Devices.delete_flag !=' => 1,
-//                            ]);
-//                    }
+                    'Users' => function ($q) {
+                        return $q
+                            ->where([
+                                'Devices.delete_flag !=' => 1,
+                            ]);
+                    }
                 ],
                 'conditions' => [
                     'Devices.user_id ' => $login['id'],
@@ -60,6 +61,10 @@ class DevicesController extends AppController
     }
 
 
+    /**
+     *
+     *
+     */
     public function loadDeviceNoLangdingpage()
     {
         $login = $this->Auth->user();
@@ -91,6 +96,10 @@ class DevicesController extends AppController
         $this->render('/Devices/index');
     }
 
+    /**
+     *
+     *
+     */
     public function loadDeviceHasLangdingpage()
     {
         $login = $this->Auth->user();
@@ -149,26 +158,60 @@ class DevicesController extends AppController
     {
         $conn = ConnectionManager::get('default');
         $conn->begin();
-        $this->autoRender= false;
-        $new_devices = array(
-            'apt_key' => $apt_key
-        );
-        $device = $this->Devices->newEntity();
-        $device = $this->Devices->patchEntity($device, $new_devices);
-        $device->delete_flag = UN_DELETED;
-        $device->status = UN_DELETED;
-        if (empty($device->errors())) {
-            if ($this->Devices->save($device)) {
-                $conn->commit();
-                return $this->redirect(['controller' => 'Devices','action' => 'index']);
+        if ($apt_key != '') {
+            $this->autoRender= false;
+            $apt_key_check = $this->Devices->find()->where(['apt_key' => $apt_key])->select(['apt_key', 'langdingpage_id'])->hydrate(false)->first();
+            if (empty($apt_key_check)) {
+                $query = $this->Users->find('all', [])->count();
+                $new_devices = array(
+                    'apt_key' => $apt_key,
+                    'name' => DEVICE.($query + 1)
+                );
+                $users = $this->Users->newEntity();
+                $data_user = [
+                    'username' => USER.($query + 1),
+                    'email' => USER.($query + 1).'@wifimedia.com',
+                    'password' => '123456',
+                    'delete_flag' => UN_DELETED,
+                    'role' => User::ROLE_TOW
+                ];
+                $device = $this->Devices->newEntity();
+                $device = $this->Devices->patchEntity($device, $new_devices);
+                $device->delete_flag = UN_DELETED;
+                $device->status = UN_DELETED;
+                $users = $this->Users->patchEntity($users, $data_user);
+                if (empty($users->errors())) {
+                    $result = $this->Users->save($users);
+                    if ($result) {
+                        $device->user_id = $result->id;
+                        if (empty($device->errors())) {
+                            if ($this->Devices->save($device)) {
+                                $conn->commit();
+                                return $this->redirect(['action' => 'index', '']);
+                            } else {
+                                $conn->rollback();
+                                return $this->redirect(['action' => 'add']);
+                            }
+                        } else {
+                            $conn->rollback();
+                            return $this->redirect(['action' => 'add']);
+                        }
+                    } else {
+                        $conn->rollback();
+                    }
+                }
+                $apt_key_check['langdingpage_id'] = Device::LANDING_ONE;
             } else {
-                $conn->rollback();
-                return $this->redirect(['action' => 'add']);
+                if (!isset($apt_key_check['langdingpage_id'])) {
+                    $apt_key_check['langdingpage_id'] = Device::LANDING_ONE;
+                }
+                $this->set(compact('apt_key_check'));
+                $this->render('/QC/index');
             }
         } else {
             $conn->rollback();
-            return $this->redirect(['action' => 'add']);
         }
+
     }
 
     /**

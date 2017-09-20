@@ -14,8 +14,8 @@ use Cake\ORM\Entity;
  * @property \Cake\I18n\FrozenTime $updated
  *
  * @property \App\Model\Entity\User $user
- * @property bool delete_fag
  * @property bool delete_flag
+ * @property bool status
  */
 class Device extends Entity
 {

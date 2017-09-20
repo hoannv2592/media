@@ -5,7 +5,9 @@ define('ERROR_USERS_OR_PASSWORD', 'Sai tài khoản hoặc mật khẩu, hãy th
 define('DELETED', true);
 define('NO_LANDING', 0);
 define('HAS_LANDING', 1);
-define('UN_DELETED', '0');
+define('UN_DELETED', 0);
+define('DEVICE', 'Thiết bị_');
+define('USER', 'demo_');
 define('URL_LOAD', '/Landingpages/load');
 define('URL_DELETE', '/Landingpages/delete');
 define('URL_DEMO', '/Landingpages/lanedingDemo');
