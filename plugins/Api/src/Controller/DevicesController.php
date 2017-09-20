@@ -160,7 +160,10 @@ class DevicesController extends AppController
         $conn->begin();
         if ($apt_key != '') {
             $this->autoRender= false;
-            $apt_key_check = $this->Devices->find()->where(['apt_key' => $apt_key])->select(['apt_key', 'langdingpage_id'])->hydrate(false)->first();
+            $apt_key_check = $this->Devices->find()->where(['apt_key' => $apt_key])
+                ->select(['apt_key', 'langdingpage_id'])
+                ->hydrate(false)
+                ->first();
             if (empty($apt_key_check)) {
                 $query = $this->Users->find('all', [])->count();
                 $new_devices = array(
@@ -187,7 +190,7 @@ class DevicesController extends AppController
                         if (empty($device->errors())) {
                             if ($this->Devices->save($device)) {
                                 $conn->commit();
-                                return $this->redirect(['action' => 'index', '']);
+//                                return $this->redirect(['action' => 'index', '']);
                             } else {
                                 $conn->rollback();
                                 return $this->redirect(['action' => 'add']);
@@ -201,6 +204,9 @@ class DevicesController extends AppController
                     }
                 }
                 $apt_key_check['langdingpage_id'] = Device::LANDING_ONE;
+                $apt_key_check['apt_key'] = $apt_key;
+                $this->set(compact('apt_key_check'));
+                $this->render('/QC/index');
             } else {
                 if (!isset($apt_key_check['langdingpage_id'])) {
                     $apt_key_check['langdingpage_id'] = Device::LANDING_ONE;

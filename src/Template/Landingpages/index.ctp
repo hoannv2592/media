@@ -37,7 +37,7 @@
                                     <tr class="bg-blue-grey">
                                         <th>Tên quảng cáo</th>
                                         <th>Mô tả</th>
-                                        <th>Demo</th>
+<!--                                        <th>Demo</th>-->
                                         <th>Ngày tạo</th>
                                         <th>Điều hướng</th>
                                     </tr>
@@ -49,7 +49,7 @@
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'detail_langdingpage' . '/' . $landingpage->id]) ?>"><?php echo h($landingpage->name); ?></a>
                                             </td>
                                             <td><?php echo nl2br($landingpage->description); ?></td>
-                                            <td><a class="btn bg-indigo waves-effect" href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'laneding_demo' . '/' . $landingpage->id]) ?>">Demo</a></td>
+<!--                                            <td><a class="btn bg-indigo waves-effect" href="--><?php //echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'laneding_demo' . '/' . $landingpage->id]) ?><!--">Demo</a></td>-->
                                             <td><?php echo date('d/m/Y H:i', strtotime($landingpage->created));?></td>
                                             <td class="delete_advertise" value="<?php echo h($landingpage->id); ?>"><button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa quảng cáo</button></td>
                                         </tr>
