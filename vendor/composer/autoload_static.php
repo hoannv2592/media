@@ -53,6 +53,8 @@ class ComposerStaticInit31a178e44f349b4a9af8d3f29a031a46
         ),
         'M' => 
         array (
+            'MyPlugin\\Test\\' => 14,
+            'MyPlugin\\' => 9,
             'Migrations\\' => 11,
         ),
         'J' => 
@@ -66,6 +68,8 @@ class ComposerStaticInit31a178e44f349b4a9af8d3f29a031a46
         ),
         'C' => 
         array (
+            'ContactManager\\Test\\' => 20,
+            'ContactManager\\' => 15,
             'Composer\\Spdx\\' => 14,
             'Composer\\Semver\\' => 16,
             'Composer\\CaBundle\\' => 18,
@@ -84,6 +88,8 @@ class ComposerStaticInit31a178e44f349b4a9af8d3f29a031a46
             'Aura\\Intl\\' => 10,
             'App\\Test\\' => 9,
             'App\\' => 4,
+            'Api\\Test\\' => 9,
+            'Api\\' => 4,
         ),
     );
 
@@ -164,6 +170,14 @@ class ComposerStaticInit31a178e44f349b4a9af8d3f29a031a46
         array (
             0 => __DIR__ . '/..' . '/robmorgan/phinx/src/Phinx',
         ),
+        'MyPlugin\\Test\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/plugins/MyPlugin/tests',
+        ),
+        'MyPlugin\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/plugins/MyPlugin/src',
+        ),
         'Migrations\\' => 
         array (
             0 => __DIR__ . '/..' . '/cakephp/migrations/src',
@@ -179,6 +193,14 @@ class ComposerStaticInit31a178e44f349b4a9af8d3f29a031a46
         'DebugKit\\' => 
         array (
             0 => __DIR__ . '/..' . '/cakephp/debug_kit/src',
+        ),
+        'ContactManager\\Test\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/plugins/ContactManager/tests',
+        ),
+        'ContactManager\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/plugins/ContactManager/src',
         ),
         'Composer\\Spdx\\' => 
         array (
@@ -227,6 +249,14 @@ class ComposerStaticInit31a178e44f349b4a9af8d3f29a031a46
         'App\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Api\\Test\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/plugins/Api/tests',
+        ),
+        'Api\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/plugins/Api/src',
         ),
     );
 
