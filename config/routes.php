@@ -63,6 +63,7 @@ Router::scope('/', function (RouteBuilder $routes) {
             'id' => '[0-9a-z:A-Z]+'
         )
     );
+    $routes->connect('/random', array('controller' => 'Devices', 'action' => 'radom', 'plugin' => 'Api'));
 
     /**
      * Connect catchall routes for all controllers.

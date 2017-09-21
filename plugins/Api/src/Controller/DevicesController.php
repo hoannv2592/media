@@ -451,4 +451,31 @@ class DevicesController extends AppController
         $this->autoRender = false;
 
     }
+
+    public function radom()
+    {
+//        $this->autoRender = false;
+        $length = 7;
+        $number_add=0;
+        $strRandom = "";
+        $sum = 0;
+        $chars = "0123456789";
+        $size = strlen($chars);
+        //xử lý lấy chuỗi có 7 kí tự trước, và tính tổng 7 kí tự này
+        for ($j = 0; $j < $length; $j++) {
+            $rdcheck = $chars[rand(0, $size - 1)];
+            $strRandom .= $rdcheck;
+            $sum += $rdcheck;
+        }
+        // xử lý kí chọn số cuối cùng để đúng quy luat
+        $number_add = substr($sum, -1, 1);
+        if($number_add == 0){
+            $strRandom = $strRandom.$number_add;
+        }else{
+            $number_add = 10 - substr($sum, -1, 1);
+            $strRandom = $strRandom.$number_add;
+        }
+        //return $strRandom la số cần tìm
+        $this->set('strRandom', $strRandom);
+    }
 }
