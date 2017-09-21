@@ -34,7 +34,8 @@
                                    class="btn btn-primary waves-effect m-r-20">THÊM MỚI NGƯỜI DÙNG</a>
                             </div>
                         <?php } else { ?>
-                            <a disabled="disabled" href="javascript:void(0);" class="btn btn-primary waves-effect m-r-20">THÊM MỚI NGƯỜI DÙNG</a>
+                            <a disabled="disabled" href="javascript:void(0);"
+                               class="btn btn-primary waves-effect m-r-20">THÊM MỚI NGƯỜI DÙNG</a>
                         <?php } ?>
                         <?php
                         if (!empty($users)) { ?>
@@ -70,7 +71,7 @@
                                                 </table>
                                             </td>
                                             <td><?php echo nl2br($user->address); ?></td>
-                                            <td><?php echo '0' . nl2br($user->phone); ?></td>
+                                            <td><?php echo nl2br($user->phone); ?></td>
                                             <td><?php echo date('d/m/Y H:i', strtotime($user->created)); ?></td>
                                             <td class="delete_advertise" value="<?php echo h($user->id); ?>">
                                                 <button type="button" class="btn btn-danger waves-effect"
