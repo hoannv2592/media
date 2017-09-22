@@ -454,9 +454,7 @@ class DevicesController extends AppController
 
     public function radom()
     {
-//        $this->autoRender = false;
         $length = 7;
-        $number_add=0;
         $strRandom = "";
         $sum = 0;
         $chars = "0123456789";
@@ -468,6 +466,7 @@ class DevicesController extends AppController
             $sum += $rdcheck;
         }
         // xử lý kí chọn số cuối cùng để đúng quy luat
+        pr($sum);
         $number_add = substr($sum, -1, 1);
         if($number_add == 0){
             $strRandom = $strRandom.$number_add;

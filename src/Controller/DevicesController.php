@@ -12,6 +12,7 @@ use Cake\Event\Event;
  *
  * @property \App\Model\Table\LangdingDevicesTable $LangdingDevices
  * @property \App\Model\Table\DevicesTable $Devices
+ * @property bool|object Files
  *
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
  */
@@ -413,23 +414,18 @@ class DevicesController extends AppController
         $uploadData = '';
         if ($this->request->is('post')) {
             if (!empty($this->request->data['file']['name'])) {
-                $fileName = $this->request->data['file']['name'];
-                $uploadPath = UPLOADS_FILE_PATH . 'files' . DS;
-                if (!is_dir($uploadPath)) {
-                    mkdir($uploadPath, 0755, true);
+                // upload the file to the server
+                $fileOK = $this->uploadFiles('upload/files', $this->request->data);
+                $uploadData = $this->Files->newEntity();
+                if(array_key_exists('urls', $fileOK)) {
+                    // save the url in the form data
+                    $uploadData->path = $fileOK['urls'][0];
                 }
-                $uploadFile = $uploadPath . $fileName;
-                if (move_uploaded_file($this->request->data['file']['tmp_name'], $uploadFile)) {
-                    $uploadData = $this->Files->newEntity();
-                    $uploadData->name = $fileName;
-                    $uploadData->path = $uploadPath;
-                    $uploadData->created = date("Y-m-d H:i:s");
-                    $uploadData->modified = date("Y-m-d H:i:s");
-                    if ($this->Files->save($uploadData)) {
-                        $this->Flash->success(__('File has been uploaded and inserted successfully.'));
-                    } else {
-                        $this->Flash->error(__('Unable to upload file, please try again.'));
-                    }
+                $uploadData->name = $this->request->data['file']['name'];
+                $uploadData->created = date("Y-m-d H:i:s");
+                $uploadData->modified = date("Y-m-d H:i:s");
+                if ($this->Files->save($uploadData)) {
+                    $this->Flash->success(__('File has been uploaded and inserted successfully.'));
                 } else {
                     $this->Flash->error(__('Unable to upload file, please try again.'));
                 }
