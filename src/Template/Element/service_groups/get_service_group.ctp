@@ -149,10 +149,7 @@
                     data: { id: id },
                     success: function (response) {
                         if (response) {
-                            alert_message('Đã xóa thành công');
-                            setTimeout(function(){
-                                window.location.reload();
-                            }, 1000);
+                            window.location.reload();
                         } else {
                             alert_message('Đã có lỗi xảy ra.vui lòng thử lại');
                             return false;

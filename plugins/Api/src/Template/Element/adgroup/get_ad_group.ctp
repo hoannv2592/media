@@ -149,9 +149,7 @@
                 data: { id: id },
                 success: function (response) {
                     if (response) {
-                        setTimeout(function(){
-                            window.location.reload();
-                        }, 50);
+                        window.location.reload();
                     } else {
                         return false;
                     }

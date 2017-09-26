@@ -174,9 +174,7 @@
                 data: {id: id},
                 success: function (response) {
                     if (response) {
-                        setTimeout(function () {
-                            window.location.reload();
-                        }, 50);
+                        window.location.reload();
                     } else {
                         alert_message('Đã có lỗi xảy ra.vui lòng thử lại');
                         return false;
