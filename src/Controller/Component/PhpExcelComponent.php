@@ -7,10 +7,9 @@
  *
  * @category  PhpExcelComponent
  * @package   App\Controller\Component
- * @author    Thinhnd <nguyen.thinh@jvb-corp.com>
- * @copyright 2017 JVB
- * @license   http://jvb-corp.com JVB License 1.0
- * @link      http://jvb-corp.com
+ * @author    hoannv
+ * @copyright 2017
+ * @license    License 1.0
  * @date      May 11, 2017 2:45:53 PM
  */
 

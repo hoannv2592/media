@@ -12,9 +12,11 @@ use Cake\Event\Event;
  *
  * @property \App\Model\Table\LangdingDevicesTable $LangdingDevices
  * @property \App\Model\Table\DevicesTable $Devices
- * @property bool|object Files
+ * @property \App\Model\Table\FileAttachmentsTable $FileAttachments
  *
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
+ *
+ *  * @property  \App\Controller\Component\UploadImageComponent $UploadImage
  */
 class DevicesController extends AppController
 {
@@ -29,9 +31,10 @@ class DevicesController extends AppController
 
         // Include the FlashComponent
         $this->loadComponent('Flash');
+        $this->loadComponent('UploadImage');
 
         // Load Files model
-        $this->loadModel('Files');
+        $this->loadModel('FileAttachments');
     }
 
     /**
@@ -72,6 +75,9 @@ class DevicesController extends AppController
     }
 
 
+    /**
+     *
+     */
     public function loadDeviceNoLangdingpage()
     {
         $login = $this->Auth->user();
@@ -103,6 +109,9 @@ class DevicesController extends AppController
         $this->render('/Devices/index');
     }
 
+    /**
+     *
+     */
     public function loadDeviceHasLangdingpage()
     {
         $login = $this->Auth->user();
@@ -376,6 +385,7 @@ class DevicesController extends AppController
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $this->loadModel('LangdingDevices');
+        $uploadData = '';
         if (!$this->Users->exists($user_id)) {
             $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
         }
@@ -387,36 +397,50 @@ class DevicesController extends AppController
         ]);
         if ($this->request->getData()) {
             $data_update = array(
+                'device_id' => $device_id,
                 'user_id' => $user_id,
                 'status' => HAS_LANDING,
                 'langdingpage_id' => $this->request->getData('langdingpage_id')
             );
             $device = $this->Devices->patchEntity($device, $data_update);
-            if (empty($device->errors())) {
-                if ($this->Devices->save($device)) {
-                    $conn->commit();
-                    $this->redirect(['action' => 'loadDeviceHasLangdingpage']);
-                } else {
-                    $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $device_id . '/' . $user_id]);
-                }
-            } else {
-                $conn->rollback();
-                $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $device_id . '/' . $user_id]);
-            }
+            $this->set('uploadData', $uploadData);
+            $files = $this->FileAttachments->find('all', ['order' => ['Files.created' => 'DESC']]);
+            $filesRowNum = $files->count();
+            $this->set('files', $files);
+            $this->set('filesRowNum', $filesRowNum);
+            $this->set(compact('device'));
+            $this -> render('/Devices/image_upload');
+//            $this->redirect('/Devices/imageUpload');
+//            pr($device); die;
+//            if (empty($device->errors())) {
+//                if ($this->Devices->save($device)) {
+//                    $conn->commit();
+//                    $this->redirect(['action' => 'loadDeviceHasLangdingpage']);
+//                } else {
+//                    $conn->rollback();
+//                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $device_id . '/' . $user_id]);
+//                }
+//            } else {
+//                $conn->rollback();
+//                $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $device_id . '/' . $user_id]);
+//            }
         }
         $this->set(compact('device', 'device_id', 'user_id'));
     }
 
 
+    /**
+     *
+     */
     public function imageUpload()
     {
-        $uploadData = '';
+        $this->autoRender = false;
         if ($this->request->is('post')) {
             if (!empty($this->request->data['file']['name'])) {
                 // upload the file to the server
-                $fileOK = $this->uploadFiles('upload/files', $this->request->data);
-                $uploadData = $this->Files->newEntity();
+                $fileOK = $this->UploadImage->uploadFiles('upload/files', $this->request->data);
+                pr($fileOK); die;
+                $uploadData = $this->FileAttachments->newEntity();
                 if(array_key_exists('urls', $fileOK)) {
                     // save the url in the form data
                     $uploadData->path = $fileOK['urls'][0];
@@ -424,7 +448,7 @@ class DevicesController extends AppController
                 $uploadData->name = $this->request->data['file']['name'];
                 $uploadData->created = date("Y-m-d H:i:s");
                 $uploadData->modified = date("Y-m-d H:i:s");
-                if ($this->Files->save($uploadData)) {
+                if ($this->FileAttachments->save($uploadData)) {
                     $this->Flash->success(__('File has been uploaded and inserted successfully.'));
                 } else {
                     $this->Flash->error(__('Unable to upload file, please try again.'));
@@ -434,11 +458,5 @@ class DevicesController extends AppController
             }
 
         }
-        $this->set('uploadData', $uploadData);
-
-        $files = $this->Files->find('all', ['order' => ['Files.created' => 'DESC']]);
-        $filesRowNum = $files->count();
-        $this->set('files', $files);
-        $this->set('filesRowNum', $filesRowNum);
     }
 }

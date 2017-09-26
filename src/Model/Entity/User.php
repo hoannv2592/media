@@ -63,7 +63,7 @@ class User extends Entity
     const ROLE_TOW = 2;
 
     public static $role = array(
-        User::ROLE_ONE => 'Admin',
-        User::ROLE_TOW => 'User thường'
+        User::ROLE_ONE => 'Admin quản lý',
+        User::ROLE_TOW => 'Người dùng thường'
     );
 }

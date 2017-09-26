@@ -52,12 +52,12 @@
                             </div>
                             <div class="help-info">Địa chỉ</div>
                         </div>
-                        <label for="role">Loại người dùng</label>
+                        <label for="role">Loại tài khoản</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?php echo isset($role[$user['role']]) ? $role[$user['role']] : '' ?>
                             </div>
-                            <div class="help-info">Loại người dùng</div>
+                            <div class="help-info">Loại tài khoản</div>
                         </div>
                         <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit'.'/'.$user['id']]);?>" >CHỈNH SỬA</a>                        <?php echo $this->Form->end(); ?>
                     </div>

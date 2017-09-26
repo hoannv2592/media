@@ -91,8 +91,8 @@
                             <div class="form-line">
                                 <select class="form-control required" name="role" id="role">
                                     <option disabled selected value> -- Chọn quyền --</option>
-                                    <option value="1">Admin</option>
-                                    <option value="2">User thường</option>
+                                    <option value="1">Admin quản lý</option>
+                                    <option value="2">người dùng thường</option>
                                 </select>
                             </div>
                             <div class="help-info">Loại tài khoản</div>

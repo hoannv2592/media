@@ -75,7 +75,7 @@
                             </div>
                             <div class="help-info">Địa chỉ</div>
                         </div>
-                        <label for="role">Loại người dùng</label>
+                        <label for="role">Loại tài khoản</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?php
@@ -96,7 +96,7 @@
                                     </select>
                                 <?php } ?>
                             </div>
-                            <div class="help-info">Loại người dùng</div>
+                            <div class="help-info">Loại tài khoản</div>
                         </div>
                         <button class="btn btn-primary waves-effect" id = "submit" type="submit">CẬP NHẬT</button>
                         <?php echo $this->Form->end(); ?>
