@@ -45,6 +45,7 @@
                                             <table class="table table-bordered table-striped table-hover dataTable js-exportable_has">
                                                 <thead>
                                                 <tr class="bg-blue-grey">
+                                                    <th>STT</th>
                                                     <th>Tên thiết bị</th>
                                                     <th>User quản lý</th>
                                                     <th>Loại quảng cáo</th>

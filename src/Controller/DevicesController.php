@@ -408,7 +408,7 @@ class DevicesController extends AppController
             $filesRowNum = $files->count();
             $this->set('files', $files);
             $this->set('filesRowNum', $filesRowNum);
-            $this->set(compact('device'));
+            $this->set(compact('device', 'data_update'));
             $this -> render('/Devices/image_upload');
 //            $this->redirect('/Devices/imageUpload');
 //            pr($device); die;
@@ -436,6 +436,7 @@ class DevicesController extends AppController
     {
         $this->autoRender = false;
         if ($this->request->is('post')) {
+            pr($this->request->data); die;
             if (!empty($this->request->data['file']['name'])) {
                 // upload the file to the server
                 $fileOK = $this->UploadImage->uploadFiles('upload/files', $this->request->data);

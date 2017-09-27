@@ -1,3 +1,12 @@
+<?php
+/**
+ * @var \App\View\AppView $uploadData
+ * @var \App\View\AppView $device
+ * @var \App\View\AppView $filesRowNum
+ * @var \App\View\AppView $data_update
+ *
+ */
+?>
 <section class="content">
     <div class="container-fluid">
         <!-- File Upload | Drag & Drop OR With Click & Choose -->
@@ -6,9 +15,6 @@
                 <div class="card">
                     <div class="header">
                         <h2>
-                            <?php
-//                            pr($device);
-                            ?>
                             TẠO ẢNH NỀN CHO THIẾT BỊ
                         </h2>
                         <ul class="header-dropdown m-r--5">
@@ -22,37 +28,54 @@
                     </div>
                     <div class="body">
                         <?= $this->Flash->render() ?>
-                        <div class="upload-frm">
-                            <?php echo $this->Form->create($uploadData, [
-                                'type' => 'file',
-                                'url' => ['controller' => 'Devices', 'action' => 'imageUpload'],
-                                'id' => 'uploadForm'
-                            ]); ?>
-                            <?php echo $this->Form->input('file', [
-                                    'type' => 'file',
-                                    'label' => 'Chọn một ảnh',
-                                    'class' => 'form-control',
-                                    'id' => 'file'
-                                ]
-                            ); ?>
+                        <?php echo $this->Form->create($uploadData, [
+                            'type' => 'file',
+                            'url' => ['controller' => 'Devices', 'action' => 'imageUpload'],
+                            'id' => 'uploadForm'
+                        ]); ?>
+                        <label for="email_address">Chọn một ảnh</label>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <input type="file" name="file" id="file" class="form-control">
+                            </div>
+                        </div>
+                        <?php echo $this->Form->input('device_id', [
+                                'type' => 'hidden',
+                                'value' => $data_update['device_id']
+                            ]
+                        );
+                        echo $this->Form->input('user_id', [
+                                'type' => 'hidden',
+                                'value' => $data_update['user_id']
+                            ]
+                        );
+                        echo $this->Form->input('status', [
+                                'type' => 'hidden',
+                                'value' => $data_update['status']
+                            ]
+                        );
+                        echo $this->Form->input('langdingpage_id', [
+                                'type' => 'hidden',
+                                'value' => $data_update['langdingpage_id']
+                            ]
+                        ); ?>
+                        <label for="password">Tên cơ sở dịch vụ</label>
+                        <div class="form-group" id="end_show">
+                            <div class="form-line">
+                                <input type="text" name="tile_name" id="Title" class="form-control" placeholder="Điền tên..">
+                            </div>
+                        </div>
+                        <?php echo $this->Form->button(__('Cập nhật'), [
+                                'type' => 'submit',
+                                'id' => 'submit',
+                                'class' => 'btn btn-danger waves-effect m-t-10']
+                        ); ?>
 
-                            <?php echo $this->Form->input('device', [
-                                    'type' => 'hidden',
-                                    'label' => 'Chọn một ảnh',
-                                    'class' => 'form-control',
-                                    'value' => $device
-                                ]
-                            ); ?>
-                            <?php echo $this->Form->button(__('Tải ảnh lên'), [
-                                    'type' => 'submit',
-                                    'class' => 'btn btn-danger waves-effect m-t-10']
-                            ); ?>
-                            <?php echo $this->Form->end(); ?>
+                        <?php echo $this->Form->end(); ?>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -110,8 +133,8 @@
         if (input.files && input.files[0]) {
             var reader = new FileReader();
             reader.onload = function (e) {
-                $('#uploadForm + img').remove();
-                $('#uploadForm').after('<div class="text-center"><img src="'+e.target.result+'" width="450" height="300"/></div>');
+                $('#end_show + div').remove();
+                $('#end_show').after('<div class="text-center"><img src="'+e.target.result+'" width="450" height="300"/></div>');
             };
             reader.readAsDataURL(input.files[0]);
         }
