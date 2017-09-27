@@ -17,30 +17,34 @@
 <html>
 <head>
     <?= $this->Html->charset() ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
+        <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
     </title>
     <?= $this->Html->meta('icon') ?>
+    <?= $this->Html->css(array(
+        'bootstrap.min',
+        'waves.min',
+        'style.min',
+        'my_style',
 
-    <?= $this->Html->css('base.css') ?>
-    <?= $this->Html->css('cake.css') ?>
-
+    )) ?>
+    <?= $this->Html->script(array(
+        'jquery.min',
+        'waves.min',
+        'bootstrap.min'
+    )) ?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
 </head>
-<body>
-    <div id="container">
-        <div id="header">
-            <h1><?= __('Error') ?></h1>
-        </div>
-        <div id="content">
-            <?= $this->Flash->render() ?>
-
-            <?= $this->fetch('content') ?>
-        </div>
-        <div id="footer">
-            <?= $this->Html->link(__('Back'), 'javascript:history.back()') ?>
+<body class="four-zero-four">
+    <div class="four-zero-four-container">
+        <div class="error-code">404</div>
+        <div class="error-message">Trang bạn yêu cầu không tồn tại !</div>
+        <div class="button-place">
+            <a href="javascript:history.back()" class="btn btn-default btn-lg waves-effect">TRỞ VỀ TRANG TRƯỚC</a>
         </div>
     </div>
 </body>

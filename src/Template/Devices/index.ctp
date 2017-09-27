@@ -54,8 +54,11 @@
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php foreach ($devices as $key => $device) { ?>
+                                                <?php
+                                                $count = 0;
+                                                foreach ($devices as $key => $device) { $count++; ?>
                                                     <tr valign="middle">
+                                                        <td><?php echo $count; ?></td>
                                                         <td class="advertise font-bold col-cyan">
                                                             <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device' . '/' . $device->id]) ?>"><?php echo h($device->name); ?></a>
                                                         </td>

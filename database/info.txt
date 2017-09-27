@@ -1,0 +1,3 @@
+http://crm.wifimedia.vn/phpmyadmin
+user:  wificrm
+Password:hrlA3K7Ml6XVtMgS

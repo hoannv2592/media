@@ -38,11 +38,12 @@
                                 <a disabled="disabled" href="javascript:void(0);" class="btn btn-primary waves-effect m-r-20">THÊM NHÓM QUẢNG CÁO</a>
                             <?php } ?>
                         </div>
-
-                        <div class="table-responsive">
+                        <?php if (!empty($adgroups)) { ?>
+                            <div class="table-responsive">
                             <table class="table table-bordered table-striped table-hover js-basic-example_ad dataTable">
                                 <thead>
                                 <tr class="bg-blue-grey">
+                                    <th>STT</th>
                                     <th>Tên quảng cáo</th>
                                     <th>Người dùng</th>
                                     <th>Loại quảng cáo</th>
@@ -52,8 +53,11 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach ($adgroups as $key => $adgroup) { ?>
+                                <?php
+                                $count = 0;
+                                foreach ($adgroups as $key => $adgroup) { $count++;?>
                                     <tr>
+                                        <td><?php echo $count; ?></td>
                                         <td class="advertise font-bold col-cyan">
                                             <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'detail_group' . '/' . $adgroup->id]) ?>"><?php echo h($adgroup->name); ?></a>
                                         </td>
@@ -82,6 +86,7 @@
                                 </tbody>
                             </table>
                         </div>
+                        <?php } ?>
                     </div>
                 </div>
             </div>

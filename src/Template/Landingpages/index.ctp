@@ -1,8 +1,8 @@
 <?php
 /**
-  * @var \App\View\AppView $this
-  * @var \App\Model\Entity\Landingpage[]|\Cake\Collection\CollectionInterface $landingpages
-  */
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Landingpage[]|\Cake\Collection\CollectionInterface $landingpages
+ */
 ?>
 <section class="content" xmlns="">
     <div class="container-fluid">
@@ -11,7 +11,8 @@
                 <div class="card">
                     <div class="header bg-green">
                         <h2>
-                            Quản lý màn hình quảng cáo <small>Description text here...</small>
+                            Quản lý màn hình quảng cáo
+                            <small>Description text here...</small>
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>
@@ -28,30 +29,38 @@
                     </div>
                     <div class="body">
                         <div class="button-demo">
-                            <a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'add']) ?>" class="btn btn-primary waves-effect m-r-20">THÊM QUẢNG CÁO</a>
+<!--                            <a href="--><?php //echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'add']) ?><!--" class="btn btn-primary waves-effect m-r-20">THÊM QUẢNG CÁO</a>-->
+                            <a disabled="disabled" href="javascript:void(0);" class="btn btn-primary waves-effect m-r-20">THÊM QUẢNG CÁO</a>
                         </div>
                         <?php if (!empty($landingpages)) { ?>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
                                     <thead>
                                     <tr class="bg-blue-grey">
+                                        <th>STT</th>
                                         <th>Tên quảng cáo</th>
                                         <th>Mô tả</th>
-<!--                                        <th>Demo</th>-->
                                         <th>Ngày tạo</th>
                                         <th>Điều hướng</th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($landingpages as $key => $landingpage) { ?>
+                                    <?php
+                                    $count = 0;
+                                    foreach ($landingpages as $key => $landingpage) {
+                                        $count++; ?>
                                         <tr>
+                                            <td><?php echo $count; ?></td>
                                             <td class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'detail_langdingpage' . '/' . $landingpage->id]) ?>"><?php echo h($landingpage->name); ?></a>
                                             </td>
                                             <td><?php echo nl2br($landingpage->description); ?></td>
-<!--                                            <td><a class="btn bg-indigo waves-effect" href="--><?php //echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'laneding_demo' . '/' . $landingpage->id]) ?><!--">Demo</a></td>-->
-                                            <td><?php echo date('d/m/Y H:i', strtotime($landingpage->created));?></td>
-                                            <td class="delete_advertise" value="<?php echo h($landingpage->id); ?>"><button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa quảng cáo</button></td>
+                                            <td><?php echo date('d/m/Y H:i', strtotime($landingpage->created)); ?></td>
+                                            <td class="delete_advertise" value="<?php echo h($landingpage->id); ?>">
+                                                <button type="button" class="btn btn-danger waves-effect"
+                                                        data-toggle="modal" data-target="#modal-03">Xóa quảng cáo
+                                                </button>
+                                            </td>
                                         </tr>
                                     <?php } ?>
                                     </tbody>
@@ -72,7 +81,8 @@
                             <h2>XÁC NHẬN</h2>
                             <ul class="header-dropdown m-r--5">
                                 <li class="dropdown">
-                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                       role="button" aria-haspopup="true" aria-expanded="false">
                                         <i class="material-icons">more_vert</i>
                                     </a>
                                 </li>
@@ -87,13 +97,16 @@
                                     'label' => false,
                                     'div' => false
                                 ),
-                                'onsubmit'=>"event.returnValue = false; return false;",
+                                'onsubmit' => "event.returnValue = false; return false;",
                             ));
                             ?>
                             <p>Bạn có chắc chắn muốn xóa quảng cáo này không? </p>
                             <div class="modal-footer">
-                                <button class="btn btn-primary waves-effect" id = "submit_delete" type="submit">XÓA QUẢNG CÁO</button>
-                                <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
+                                <button class="btn btn-primary waves-effect" id="submit_delete" type="submit">XÓA QUẢNG
+                                    CÁO
+                                </button>
+                                <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE
+                                </button>
                             </div>
                             <?php echo $this->Form->end(); ?>
                         </div>
@@ -112,7 +125,7 @@
                 url: url,
                 type: 'POST',
                 dataType: 'json',
-                data: { id: id },
+                data: {id: id},
                 success: function (response) {
                     if (response) {
                         window.location.reload();
@@ -124,9 +137,9 @@
             });
         });
     });
-    $('form').on('submit', function(e) {
+    $('form').on('submit', function (e) {
         var $form = $(this);
-        if($form.attr('data-disabled') === true) {
+        if ($form.attr('data-disabled') === true) {
             e.preventDefault();
             return false;
         }

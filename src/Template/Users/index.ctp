@@ -43,6 +43,7 @@
                                 <table class="table table-bordered table-striped table-hover js-exportable dataTable">
                                     <thead>
                                     <tr class="bg-blue-grey">
+                                        <th>STT</th>
                                         <th>Tên người dùng</th>
                                         <th>Email</th>
                                         <th>Thiết bị</th>
@@ -53,8 +54,11 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php foreach ($users as $key => $user) { ?>
+                                    <?php
+                                    $count = 0;
+                                    foreach ($users as $key => $user) { $count ++;?>
                                         <tr>
+                                            <td><?php echo $count;?></td>
                                             <td class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail_partner' . '/' . $user->id]) ?>"><?php echo h($user->username); ?></a>
                                             </td>

@@ -4,10 +4,11 @@ $(function () {
         "scrollX": false,
         responsive: true,
         "columns": [
+            { "width": "1%" },
             { "width": "15%" },
             { "width": "20%" },
             { "width": "15%" },
-            { "width": "15%"},
+            // { "width": "15%"},
             { "width": "15%" },
         ],
         "language": {
@@ -25,6 +26,7 @@ $(function () {
         "scrollX": false,
         responsive: true,
         "columns": [
+            { "width": "1%" },
             { "width": "15%" },
             { "width": "20%" },
             { "width": "15%" },
@@ -67,6 +69,7 @@ $(function () {
         "scrollX": false,
         responsive: true,
         "columns": [
+            { "width": "1%" },
             { "width": "15%" },
             { "width": "15%" },
             { "width": "15%"},
@@ -90,6 +93,7 @@ $(function () {
         "scrollX": false,
         responsive: true,
         "columns": [
+            { "width": "1%" },
             { "width": "15%" },
             { "width": "10%" },
             { "width": "15%"},
