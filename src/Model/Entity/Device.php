@@ -48,8 +48,8 @@ class Device extends Entity
     const LANDING_THREE = 3;
 
     public static $langding_page = array(
-        Device::LANDING_ONE => 'Quảng Cáo với Facebook',
-        Device::LANDING_TOW => 'Quảng cáo với hình ảnh',
-        Device::LANDING_THREE => 'Quảng Cáo với voucher',
+        Device::LANDING_ONE => 'Quảng cáo với password',
+        Device::LANDING_TOW => 'Quảng cáo Facebook-Login',
+        Device::LANDING_THREE => 'Quảng cáo lấy thông tin khách hàng',
     );
 }

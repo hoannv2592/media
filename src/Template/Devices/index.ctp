@@ -72,14 +72,15 @@
                                                         <td class="delete_advertise" value="<?php echo h($device->id); ?>">
                                                             <div class="button-demo">
                                                                 <?php
-                                                                $langdingpage_id = isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id])? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id]:'';
+                                                                $langdingpage_id = isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id]:'';
                                                                 if ($langdingpage_id != '') { ?>
-                                                                    <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $device->id.'/'. $device->user->id]) ?>">Sửa quảng cáo</a>
+                                                                    <a class="btn btn-success waves-effect" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'view_qc' . '/' . $device->id]) ?>">Xem QC</a>
+                                                                    <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $device->id.'/'. $device->user->id]) ?>">Sửa QC</a>
                                                                 <?php } else { ?>
-                                                                    <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $device->id.'/'. $device->user->id]) ?>">Tạo quảng cáo</a>
+                                                                    <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $device->id.'/'. $device->user->id]) ?>">Tạo QC</a>
                                                                 <?php }
                                                                 ?>
-                                                                <a class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa thiết bị</a>
+                                                                <a class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa TB</a>
                                                             </div>
                                                         </td>
                                                     </tr>
