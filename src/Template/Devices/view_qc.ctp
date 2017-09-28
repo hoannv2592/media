@@ -173,32 +173,15 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
         if(pass.trim() == '' ){
             $('#user_password').focus();
             $('#user_password-error').remove();
-            $('#user_password').parent().append('<div id="user_password-error" class="c-input c-input__value " style="color: red;font-style: italic;display: block;" for="data[Partner][previous_company_public_flag]"><?php echo __("Hãy nhập mật khẩu") ?></div>');
+            $('#user_password').parent().append('<label id="user_password-error" class="c-input c-input__value " style="color: red;font-style: italic;display: block;" for="data[Partner][previous_company_public_flag]"><?php echo __("Hãy nhập mật khẩu") ?></div>');
             return false;
         }else{
-//            $.ajax({
-//                type:'POST',
-//                url:'submit_form.php',
-//                data:'contactFrmSubmit=1&name='+name+'&email='+email+'&message='+message,
-//                beforeSend: function () {
-//                    $('.submitBtn').attr("disabled","disabled");
-//                    $('.modal-body').css('opacity', '.5');
-//                },
-//                success:function(msg){
-//                    if(msg == 'ok'){
-//                        $('#inputName').val('');
-//                        $('#inputEmail').val('');
-//                        $('#inputMessage').val('');
-//                        $('.statusMsg').html('<span style="color:green;">Thanks for contacting us, we\'ll get back to you soon.</p>');
-//                    }else{
-//                        $('.statusMsg').html('<span style="color:red;">Some problem occurred, please try again.</span>');
-//                    }
-//                    $('.submitBtn').removeAttr("disabled");
-//                    $('.modal-body').css('opacity', '');
-//                }
-//            });
+            return true;
         }
     }
+    $('#user_password').keyup(function () {
+        $('#user_password-error').remove();
+    })
 </script>
 <style>
     input[placeholder], [placeholder], *[placeholder] {
