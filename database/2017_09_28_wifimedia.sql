@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 100125
 File Encoding         : 65001
 
-Date: 2017-09-27 10:10:57
+Date: 2017-09-29 02:33:02
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -22,13 +22,15 @@ DROP TABLE IF EXISTS `adgroups`;
 CREATE TABLE `adgroups` (
   `id` int(12) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL,
+  `user_id` text,
   `delete_flag` tinyint(2) NOT NULL,
+  `langdingpage_id` tinyint(2) DEFAULT NULL,
   `description` text NOT NULL,
   `created` datetime NOT NULL,
   `updated` datetime NOT NULL,
   PRIMARY KEY (`id`),
   KEY `ad` (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of adgroups
@@ -63,8 +65,18 @@ CREATE TABLE `devices` (
   `name` varchar(255) NOT NULL,
   `apt_key` varchar(255) NOT NULL,
   `status` tinyint(1) NOT NULL,
+  `image_backgroup` varchar(255) DEFAULT NULL,
+  `path` varchar(255) DEFAULT NULL,
+  `tile_name` varchar(255) DEFAULT NULL,
   `user_id` int(12) NOT NULL,
   `langdingpage_id` int(2) DEFAULT NULL,
+  `flag_check` tinyint(1) DEFAULT NULL,
+  `splashcheck` tinyint(1) DEFAULT NULL,
+  `auth_target` varchar(255) DEFAULT NULL,
+  `uptime` datetime DEFAULT NULL,
+  `num_clients` text,
+  `client_mac` text,
+  `gateway_name` varchar(255) DEFAULT NULL,
   `delete_flag` tinyint(2) NOT NULL,
   `created` datetime NOT NULL,
   `modified` datetime NOT NULL,
@@ -122,6 +134,27 @@ INSERT INTO `landingpages` VALUES ('2', 'Quảng cáo Facebook-Login', '0', 'Qu�
 INSERT INTO `landingpages` VALUES ('3', 'Quảng cáo với password', '0', 'Quảng cáo với password\r\nQuảng cáo với password', '2017-09-27 02:55:31', '0000-00-00 00:00:00');
 
 -- ----------------------------
+-- Table structure for logs
+-- ----------------------------
+DROP TABLE IF EXISTS `logs`;
+CREATE TABLE `logs` (
+  `id` int(12) NOT NULL AUTO_INCREMENT,
+  `full_name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
+  `telephone` varchar(20) COLLATE utf8_unicode_ci NOT NULL,
+  `address` text COLLATE utf8_unicode_ci NOT NULL,
+  `device_id` int(12) NOT NULL,
+  `user_id` int(12) NOT NULL,
+  `created` datetime NOT NULL,
+  `modified` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+-- ----------------------------
+-- Records of logs
+-- ----------------------------
+
+-- ----------------------------
 -- Table structure for service_groups
 -- ----------------------------
 DROP TABLE IF EXISTS `service_groups`;
@@ -163,5 +196,5 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'admin', 'admin@wifimedia.com', '$2y$10$YM9H9SQw1WkpfrSw/qCWzOIvTOppGkHUccFIF.yYz2H7UjsWK.j3u', '0', '0989123456', 'HA NOI', '1', null, '2017-09-27 02:48:00', '2017-09-27 02:48:00');
+INSERT INTO `users` VALUES ('1', 'admin', 'adim@wifimedia.com', '$2y$10$CmOc3ND5QfhDKmL5vz9pL.JLyM/U6JSPkysZO/Xjj.F9tVkpZ3El6', '0', '0985644301', 'HÀ NỘI', '1', null, '2017-09-28 19:32:02', '2017-09-28 19:32:02');
 SET FOREIGN_KEY_CHECKS=1;

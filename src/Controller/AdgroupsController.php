@@ -283,6 +283,16 @@ class AdgroupsController extends AppController
                 'description' => $this->request->getData()['description'],
                 'langdingpage_id' => $this->request->getData()['langdingpage_id'],
             );
+
+            $devices = $this->Devices->find('all')
+                ->where(['user_id IN' => $this->request->getData()['user_id']])
+                ->select(['id'])
+                ->hydrate(false)
+                ->toList();
+            // Common Usage:
+            $result_id_devices = Hash::extract($devices, '{n}.id');
+            $this->publishall($result_id_devices, $this->request->getData()['langdingpage_id']);
+            //$this->publishall($result_id_devices, $this->request->getData()['langdingpage_id']);
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             if (empty($adgroup->errors())) {
                 if ($this->Adgroups->save($adgroup)) {

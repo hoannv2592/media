@@ -13,7 +13,7 @@
                         <i class="material-icons">home</i> Trang chủ
                     </a>
                 </li>
-                <li class="active"><a href="javascript:void(0)">Tạo mới người dùng</a></li>
+                <li class="active"><a href="javascript:void(0)">Tạo nhóm</a></li>
             </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
@@ -72,11 +72,11 @@
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="demo-radio-button">
                                 <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" checked/>
-                                <label style="font-weight: bold" for="radio_30">Quảng Cáo với Facebook</label>
+                                <label style="font-weight: bold" for="radio_30">Quảng cáo với password</label>
                                 <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" />
-                                <label style="font-weight: bold" for="radio_31">Quảng cáo với hình ảnh</label>
+                                <label style="font-weight: bold" for="radio_31">Quảng cáo Facebook-Login</label>
                                 <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey"  />
-                                <label style="font-weight: bold" for="radio_32">Quảng Cáo với voucher</label>
+                                <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
                             </div>
                             </div>
                         </div>

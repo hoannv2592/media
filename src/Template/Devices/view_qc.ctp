@@ -2,8 +2,10 @@
 /**
  * @var \App\View\AppView $infor_devices
  * @var \App\View\AppView $this
+ * @var \App\View\AppView auth_target
  */
 $this->layout = 'landing';
+$langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : 1;
 if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
     echo $this->Html->css('back_end/page1'); ?>
     <div class="landing">
@@ -33,7 +35,7 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
                     </div>
                     <div class="c-spacer--x-large c-spacer"></div>
                     <div class="redirect">
-                        <a class="redirect__normal" href="#">Connect now - Slow</a>
+                        <a class="redirect__normal" href="<?php echo $infor_devices->auth_target;?>">Connect now - Slow</a>
                     </div>
                 </div>
             </div>
@@ -68,14 +70,16 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
                         Vui lòng nhập số điện thoại để nhận được voucher giảm 50% qua sms
                     </div>
                     <div class="c-spacer--x-large c-spacer"></div>
-                    <form action="" name="register_form" class="register_form" id="register_form" method="post">
+                    <form action="<?php echo $infor_devices->auth_target;?>" name="register_form" class="register_form" id="register_form" method="post">
                         <p>
-                            <input type="text" id="_reg_full_name" name="_reg_full_name" value="" class="txt_input" placeholder="Họ và tên">
+                            <input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên">
                         </p>
                         <p>
-                            <input type="text" id="_reg_telephone" name="_reg_telephone" value="" class="txt_input" placeholder="Số điện thoại">
+                            <input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại">
                         </p>
-                        <p><input type="text" id="_reg_address" name="_reg_address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                        <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                        <input type="hidden" name="device_id" value="<?php echo $infor_devices->id;?>" >
+                        <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id;?>" >
                         <p><input type="submit" class="_btn" value="Đăng ký"></p>
                     </form>
                 </div>
@@ -118,7 +122,7 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
                             <div class="c-cell">
                                 <div class="c-cell__content">
                                     <div class="c-cell__body">
-                                        <a class="redirect__normal c-button--filled c-button--normal c-button " onclick="submitContactForm()"><span class="c-button__content">Connect now</span></a>
+                                        <a id="submit_password" href="javascript:void (0);" class="redirect__normal c-button--filled c-button--normal c-button " onclick="submitContactForm()"><span class="c-button__content">Connect now</span></a>
                                     </div>
                                 </div>
                             </div>
@@ -128,7 +132,7 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
             </div>
         </div>
     </div>
-<?php } else {
+<?php } else if($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
     echo $this->Html->css('back_end/page3'); ?>
     <div class="landing">
         <div class="wapper" style="background: url(<?php echo '/'.$infor_devices->path?>) top center"></div>
@@ -148,61 +152,106 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="redirect">
-                        <a class="btn _face" href="javascript:void (0);"><i class="fa fa-facebook"></i>Login with Facebook</a>
+                        <a class="btn _face" href="<?php echo $infor_devices->auth_target;?>"><i class="fa fa-facebook"></i>Login with Facebook</a>
                         <div class=" c-spacer"></div>
-                        <a class="btn _goog" href="javascript:void (0);"><i class="fa fa-google-plus"></i>Login with Google</a>
+                        <a class="btn _goog" href="<?php echo $infor_devices->auth_target;?>"><i class="fa fa-google-plus"></i>Login with Google</a>
                         <div class="c-spacer--x-large c-spacer"></div>
-                        <a class="btn _wifi" href="javascript:void (0);"><i class="fa fa-wifi"></i>Connect now - Slow</a>
+                        <a class="btn _wifi" href="<?php echo $infor_devices->auth_target;?>"><i class="fa fa-wifi"></i>Connect now - Slow</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+<?php } else { ?>
+   <?php $this->layout = 'demo'; ?>
+    <body class="login-page">
+        <div class="login-box">
+            <div class="logo">
+                <a href="javascript:void(0);"><b>WIFI</b></a>
+                <small>Demo by wifi - media </small>
+            </div>
+            <div class="card">
+                <div class="body">
+                        <div class="msg"></div>
+                        <div class="">
+                            <div class="form-line"></div>
+                        </div>
+                        <div class="">
+                            <div class="form-line"></div>
+                        </div>
+                        <div class="row m-b-10">
+                            <div class="col-xs-6 col-xs-offset-3">
+                                <a href="<?php echo $infor_devices->auth_target;?>" class="btn btn-lg btn-block bg-pink waves-effect" >Connect to wifi</a>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </body>
+
 <?php } ?>
 <script type="application/javascript">
+    var url = "<?php echo $infor_devices->auth_target?>";
     function submitContactForm(){
         var pass = $('#user_password').val();
         if(pass.trim() == '' ){
             $('#user_password').focus();
             $('#user_password-error').remove();
-            $('#user_password').parent().append('<label id="user_password-error" class="c-input c-input__value " style="color: red;font-style: italic;display: block;" for="data[Partner][previous_company_public_flag]"><?php echo __("Hãy nhập mật khẩu") ?></div>');
+            $('#user_password').parent().parent().append('<div id="user_password-error" class="c-input c-input__value " style="color: red;display: block;"><?php echo __("Hãy nhập mật khẩu") ?></div>');
+            $('#submit_password').attr('disabled', true);
             return false;
         }else{
+            $("#submit_password").attr("href", url);
             return true;
         }
     }
     $('#user_password').keyup(function () {
+        $('#submit_password').removeAttr('disabled');
         $('#user_password-error').remove();
     });
 
     $('#register_form').validate({
         rules: {
-            '_reg_full_name': {
+            'full_name': {
                 required: true
             },
-            '_reg_telephone': {
-                required: true
+            'telephone': {
+                required: true,
+                number : true
             },
-            '_reg_address': {
+            'address': {
                 required: true
             }
         },
         messages:{
-            '_reg_full_name': {
+            'full_name': {
                 required: 'Hãy nhập'
             },
-            '_reg_telephone': {
-                required: 'Hãy nhập'
+            'telephone': {
+                required: 'Hãy nhập',
+                number :'Hãy nhập số điện thoại'
             },
-            '_reg_address': {
+            'address': {
                 required: 'Hãy nhập'
             }
         },
-        highlight: function (input) {
-            $(input).addClass('error');
-        },
-        unhighlight: function (input) {
-            $(input).removeClass('error');
+        submitHandler: function(form) {
+            $.ajax({
+                url: "/Devices/add_log",
+                type: "POST",
+                data: $("#register_form").serialize(),
+                cache: false,
+                processData: false,
+                success: function(data) {
+                   if (data == 'true') {
+                       window.location.href = url;
+                        return true;
+                   } else {
+                       return false;
+                   }
+                }
+            });
+            return false;
         }
     });
 

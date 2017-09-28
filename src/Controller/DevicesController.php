@@ -12,6 +12,7 @@ use Cake\Event\Event;
  *
  * @property \App\Model\Table\LangdingDevicesTable $LangdingDevices
  * @property \App\Model\Table\DevicesTable $Devices
+ * @property \App\Model\Table\LogsTable $Logs
  * @property \App\Model\Table\FileAttachmentsTable $FileAttachments
  *
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
@@ -35,6 +36,7 @@ class DevicesController extends AppController
 
         // Load Files model
         $this->loadModel('FileAttachments');
+        $this->loadModel('Logs');
     }
 
     /**
@@ -407,12 +409,21 @@ class DevicesController extends AppController
             $this->set(compact('device', 'data_update'));
             $this->render('/Devices/image_upload');
         }
+
+        $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
+        $filesRowNum = $files->count();
+        $this->set('files',$files);
+            $this->set('filesRowNum',$filesRowNum);
         $this->set(compact('device', 'device_id', 'user_id'));
     }
 
 
     /**
      *
+     * imageUploadQC method
+     * display upload backgroup and title
+     *
+     * @author Hoannv
      */
     public function imageUploadQC()
     {
@@ -421,7 +432,6 @@ class DevicesController extends AppController
         $this->autoRender = false;
         $this->request->allowMethod(['post', 'get']);
         if ($this->request->data) {
-//            pr($this->request->data);
             $device = $this->Devices->get($this->request->getData('device_id'));
             if (!empty($this->request->data['file']['name'])) {
                 // upload the file to the server
@@ -446,7 +456,7 @@ class DevicesController extends AppController
                 if (empty($device->errors())) {
                     if ($this->Devices->save($device)) {
                         $conn->commit();
-                        $this->redirect(['action' => 'loadDeviceHasLangdingpage']);
+                        $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
                         $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $data_update['user_id']]);
@@ -456,7 +466,22 @@ class DevicesController extends AppController
                     $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $data_update['user_id']]);
                 }
             } else {
-                $this->Flash->error(__('Please choose a file to upload.'));
+                $tile_name = array(
+                    'tile_name' => $this->request->data['tile_name']
+                );
+                $device = $this->Devices->patchEntity($device, $tile_name);
+                if (empty($device->errors())) {
+                    if ($this->Devices->save($device)) {
+                        $conn->commit();
+                        $this->redirect(['action' => 'index']);
+                    } else {
+                        $conn->rollback();
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $data_update['user_id']]);
+                    }
+                } else {
+                    $conn->rollback();
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $data_update['user_id']]);
+                }
             }
         }
     }
@@ -470,5 +495,24 @@ class DevicesController extends AppController
     {
         $infor_devices = $this->Devices->get($device_id);
         $this->set(compact('infor_devices'));
+    }
+
+
+    public function addLog()
+    {
+        $this->autoRender= false;
+        if ($this->request->getData()) {
+            $log = $this->Logs->newEntity();
+            if ($this->request->is('post')) {
+                $log = $this->Logs->patchEntity($log, $this->request->data);
+                if (empty($log->errors())) {
+                    if ($this->Logs->save($log)) {
+                        die(json_encode(true));
+                    } else {
+                        die(json_encode(false));
+                    }
+                }
+            }
+        }
     }
 }

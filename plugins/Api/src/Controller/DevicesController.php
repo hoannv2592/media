@@ -161,15 +161,11 @@ class DevicesController extends AppController
         if ($apt_key != '') {
             $this->autoRender= false;
             $apt_key_check = $this->Devices->find()->where(['apt_key' => $apt_key])
-                ->select(['apt_key', 'langdingpage_id'])
-                ->hydrate(false)
+                ->select()
+                ->hydrate(true)
                 ->first();
             if (empty($apt_key_check)) {
                 $query = $this->Users->find('all', [])->count();
-                $new_devices = array(
-                    'apt_key' => $apt_key,
-                    'name' => DEVICE.($query + 1)
-                );
                 $users = $this->Users->newEntity();
                 $data_user = [
                     'username' => USER.($query + 1),
@@ -179,40 +175,34 @@ class DevicesController extends AppController
                     'role' => User::ROLE_TOW
                 ];
                 $device = $this->Devices->newEntity();
-                $device = $this->Devices->patchEntity($device, $new_devices);
+                $device = $this->Devices->patchEntity($device, $this->request->data);
                 $device->delete_flag = UN_DELETED;
                 $device->status = UN_DELETED;
+                $device->name = DEVICE.($query + 1);
+                $device->apt_key = isset($this->request->data['gateway_mac']) ? $this->request->data['gateway_mac'] : $apt_key;
                 $users = $this->Users->patchEntity($users, $data_user);
                 if (empty($users->errors())) {
                     $result = $this->Users->save($users);
                     if ($result) {
                         $device->user_id = $result->id;
                         if (empty($device->errors())) {
-                            if ($this->Devices->save($device)) {
+                            $data_device = $this->Devices->save($device);
+                            if ($data_device) {
                                 $conn->commit();
-//                                return $this->redirect(['action' => 'index', '']);
+                                $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . $data_device->id]);
                             } else {
                                 $conn->rollback();
-                                return $this->redirect(['action' => 'add']);
                             }
                         } else {
                             $conn->rollback();
-                            return $this->redirect(['action' => 'add']);
                         }
                     } else {
                         $conn->rollback();
                     }
                 }
-                $apt_key_check['langdingpage_id'] = Device::LANDING_ONE;
-                $apt_key_check['apt_key'] = $apt_key;
-                $this->set(compact('apt_key_check'));
-                $this->render('/QC/index');
             } else {
-                if (!isset($apt_key_check['langdingpage_id'])) {
-                    $apt_key_check['langdingpage_id'] = Device::LANDING_ONE;
-                }
                 $this->set(compact('apt_key_check'));
-                $this->render('/QC/index');
+                $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . $apt_key_check->id]);
             }
         } else {
             $conn->rollback();
