@@ -33,7 +33,7 @@
     <meta name='CODE_LANGUAGE' content='PHP'/>
     <meta http-equiv='REFRESH' content='3600'/>
     <?php echo $this->Html->css(['back_end/bootstrap.min', 'back_end/font-awesome.min']); ?>
-    <?php echo $this->Html->script(['back_end/jquery-1.11.0.min', 'back_end/bootstrap.min', 'back_end/commom']); ?>
+    <?php echo $this->Html->script(['back_end/jquery-1.11.0.min', 'back_end/bootstrap.min', 'back_end/commom','jquery.validate']); ?>
 </head>
 <body>
 <div class="body-content">

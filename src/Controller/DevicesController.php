@@ -395,7 +395,7 @@ class DevicesController extends AppController
         $device = $this->Devices->get($device_id, [
             'contain' => []
         ]);
-        if ($this->request->getData()) {
+        if ($this->request->is('post')) {
             $data_update = array(
                 'device_id' => $device_id,
                 'user_id' => $user_id,
@@ -404,12 +404,8 @@ class DevicesController extends AppController
             );
             $device = $this->Devices->patchEntity($device, $data_update);
             $this->set('uploadData', $uploadData);
-//            $files = $this->FileAttachments->find('all', ['order' => ['Files.created' => 'DESC']]);
-//            $filesRowNum = $files->count();
-//            $this->set('files', $files);
-//            $this->set('filesRowNum', $filesRowNum);
             $this->set(compact('device', 'data_update'));
-            $this -> render('/Devices/image_upload');
+            $this->render('/Devices/image_upload');
         }
         $this->set(compact('device', 'device_id', 'user_id'));
     }
@@ -423,8 +419,9 @@ class DevicesController extends AppController
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $this->autoRender = false;
-        if ($this->request->is('post')) {
-            pr($this->request->data);
+        $this->request->allowMethod(['post', 'get']);
+        if ($this->request->data) {
+//            pr($this->request->data);
             $device = $this->Devices->get($this->request->getData('device_id'));
             if (!empty($this->request->data['file']['name'])) {
                 // upload the file to the server

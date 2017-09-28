@@ -11,11 +11,21 @@
     <div class="container-fluid">
         <!-- File Upload | Drag & Drop OR With Click & Choose -->
         <div class="row clearfix">
+            <ol class="breadcrumb">
+                <li>
+                    <a href="javascript:history.back(-1)">
+                        <i class="material-icons">home</i> Trang chủ
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="javascript:void(0);">Cài đặt quảng cáo</a>
+                </li>
+            </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header">
                         <h2>
-                            TẠO ẢNH NỀN CHO THIẾT BỊ
+                            TẠO ẢNH NỀN & TITLE CHO THIẾT BỊ
                         </h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
@@ -31,7 +41,11 @@
                         <?php echo $this->Form->create($uploadData, [
                             'type' => 'file',
                             'url' => ['controller' => 'Devices', 'action' => 'imageUploadQC'],
-                            'id' => 'uploadForm'
+                            'id' => 'uploadForm',
+                            'inputDefaults' => array(
+                                'label' => false,
+                                'div' => false
+                            ),
                         ]); ?>
                         <label for="email_address">Chọn một ảnh</label>
                         <div class="form-group">
@@ -59,68 +73,23 @@
                                 'value' => $data_update['langdingpage_id']
                             ]
                         ); ?>
-                        <label for="password">Tên cơ sở dịch vụ</label>
+                        <label for="tile_name">Tên cơ sở dịch vụ</label>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <input type="text" name="tile_name" id="Title" class="form-control" placeholder="Điền tên..">
+                                <input type="text" name="tile_name" id="tile_name" class="form-control" placeholder="Điền tên..">
                             </div>
                         </div>
                         <?php echo $this->Form->button(__('Cập nhật'), [
                                 'type' => 'submit',
                                 'id' => 'submit',
+                                'onclick' => 'submitContactForm()',
                                 'class' => 'btn btn-danger waves-effect m-t-10']
                         ); ?>
-
                         <?php echo $this->Form->end(); ?>
-                        </div>
                     </div>
                 </div>
             </div>
-<!--        <div class="row clearfix">-->
-<!--            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">-->
-<!--                <div class="card">-->
-<!--                    <div class="header">-->
-<!--                        <h2>Uploaded Files</h2>-->
-<!--                        <ul class="header-dropdown m-r--5">-->
-<!--                            <li class="dropdown">-->
-<!--                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">-->
-<!--                                    <i class="material-icons">more_vert</i>-->
-<!--                                </a>-->
-<!--                                <ul class="dropdown-menu pull-right">-->
-<!--                                    <li><a href="javascript:void(0);" class=" waves-effect waves-block">Action</a></li>-->
-<!--                                    <li><a href="javascript:void(0);" class=" waves-effect waves-block">Another action</a></li>-->
-<!--                                    <li><a href="javascript:void(0);" class=" waves-effect waves-block">Something else here</a></li>-->
-<!--                                </ul>-->
-<!--                            </li>-->
-<!--                        </ul>-->
-<!--                    </div>-->
-<!--                    <div class="body">-->
-<!--                        <div class="content">-->
-<!--                            <!-- Table -->-->
-<!--                            <table class="table">-->
-<!--                                <tr>-->
-<!--                                    <th width="5%">#</th>-->
-<!--                                    <th width="20%">File</th>-->
-<!--                                    <th width="12%">Upload Date</th>-->
-<!--                                </tr>-->
-<!--                                --><?php //if($filesRowNum > 0): $count = 0;
-//                                foreach($files as $file): $count++;?>
-<!--                                    <tr>-->
-<!--                                        <td>--><?php //echo $count; ?><!--</td>-->
-<!--                                        <td class="mhz-news-img">-->
-<!--                                            <img src="--><?//= '/'.$file->path ?><!--" width="220px" height="150px">-->
-<!--                                        </td>-->
-<!--                                        <td>--><?php //echo $file->created; ?><!--</td>-->
-<!--                                    </tr>-->
-<!--                                --><?php //endforeach; else:?>
-<!--                                <tr><td colspan="3">No file(s) found......</td>-->
-<!--                                    --><?php //endif; ?>
-<!--                            </table>-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
+        </div>
     </div>
 </section>
 <style>
@@ -143,4 +112,31 @@
         filePreview(this);
     });
 
+    function submitContactForm(){
+        var tile_name = $('#tile_name').val();
+        var file = $('#file').val();
+        if(file.trim() == '' ){
+            $('#file').focus();
+            $('#file-error').remove();
+            $('#file').parent().parent().append('<label id="file-error" class="error" for="file">Hãy nhập.</label>');
+            $('#submit').attr('disabled', true);
+            return false;
+        } else if (tile_name.trim() == '' ) {
+            $('#tile_name').focus();
+            $('#tile_name-error').remove();
+            $('#tile_name').parent().parent().append('<label id="tile_name-error" class="error" for="tile_name">Hãy nhập.</label>');
+            $('#submit').attr('disabled', true);
+            return false;
+        } else {
+            return true;
+        }
+    }
+    $('#tile_name').keyup(function () {
+        $('#tile_name-error').remove();
+        $('#submit').removeAttr('disabled');
+    });
+    $('#file').keyup(function () {
+        $('#file-error').remove();
+        $('#submit').removeAttr('disabled');
+    })
 </script>

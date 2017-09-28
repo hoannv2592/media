@@ -50,7 +50,7 @@
                             ?>
                             <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey"
                                 <?php if ($device->langdingpage_id == 1 || $device->langdingpage_id == '') { echo 'checked'; } ?> />
-                            <label style="font-weight: bold" for="radio_30">Quảng cáo lấy thông tin khách hàng</label>
+                            <label style="font-weight: bold" for="radio_30">Quảng cáo với password</label>
                             <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" <?php
                             if ($device->langdingpage_id == 2) { echo 'checked'; }
                             ?> />
@@ -58,7 +58,7 @@
                             <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php
                             if ($device->langdingpage_id == 3) { echo 'checked'; }
                             ?> />
-                            <label style="font-weight: bold" for="radio_32">Quảng cáo với password</label>
+                            <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
                         </div>
                         <div class="modal-footer p-l-0 align-left">
                             <button class="btn btn-primary waves-effect" id="submit_delete" type="submit">

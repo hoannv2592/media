@@ -7,7 +7,7 @@ $this->layout = 'landing';
 if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
     echo $this->Html->css('back_end/page1'); ?>
     <div class="landing">
-        <div class="wapper" style="background: url(/webroot/images/entry3.jpg) top center"></div>
+        <div class="wapper" style="background: url(<?php echo '/'.$infor_devices->path;?>) top center"></div>
         <div class="landing__cover-overlay"></div>
         <div class="landing__cover landing__cover--main landing__cover--flexible">
             <div class="u-ui-padding-x-large landing__cover-wrapper">
@@ -17,11 +17,11 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="logo">
                         <div class="logo__inner">
-                            <a class="" href="#"><img src="/webroot/images/logo.png" alt="Foody.vn"></a>
+                            <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt=""></a>
                         </div>
                     </div>
                     <div class="c-spacer--xx-large c-spacer"></div>
-                    <div class="c-text--name c-text--parent c-text--center c-text">Cafe Trung Nguyen</div>
+                    <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="discount">
                         <div class="c-text--discount c-text--center c-text cc">
@@ -68,34 +68,28 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
                         Vui lòng nhập số điện thoại để nhận được voucher giảm 50% qua sms
                     </div>
                     <div class="c-spacer--x-large c-spacer"></div>
-                    <form action="" name="register_form" class="register_form" method="post" onsubmit="javascript: void (0)">
-                        <p><input type="text" id="_reg_full_name" name="_reg_full_name" value="" class="txt_input"
-                                  placeholder="Họ và tên"></p>
-                        <p><input type="text" id="_reg_telephone" name="_reg_telephone" value="" class="txt_input"
-                                  placeholder="Số điện thoại"></p>
-                        <p><input type="text" id="_reg_address" name="_reg_address" value="" class="txt_input"
-                                  placeholder="Địa chỉ"></p>
+                    <form action="" name="register_form" class="register_form" id="register_form" method="post">
+                        <p>
+                            <input type="text" id="_reg_full_name" name="_reg_full_name" value="" class="txt_input" placeholder="Họ và tên">
+                        </p>
+                        <p>
+                            <input type="text" id="_reg_telephone" name="_reg_telephone" value="" class="txt_input" placeholder="Số điện thoại">
+                        </p>
+                        <p><input type="text" id="_reg_address" name="_reg_address" value="" class="txt_input" placeholder="Địa chỉ"></p>
                         <p><input type="submit" class="_btn" value="Đăng ký"></p>
-
                     </form>
                 </div>
 
             </div>
         </div>
     </div>
-<?php } else if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
-    echo $this->Html->css('back_end/page2');
-
-    ?>
+<?php } else if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
+    echo $this->Html->css('back_end/page2'); ?>
     <div class="landing">
-        <?php
-        //pr($infor_devices);
-        $back_ground = $infor_devices->path;
-        ?>
+        <?php $back_ground = $infor_devices->path; ?>
         <div class="wapper" style="background: url(<?php echo '/'.$back_ground;?>) top center"></div>
         <div class="landing__cover-overlay"></div>
         <div class="landing__cover landing__cover--main landing__cover--flexible">
-
             <div class="u-ui-padding-x-large landing__cover-wrapper">
                 <div class="landing__cover-content u-color-white">
                     <div class="c-text--heading c-text--parent c-text--center c-text">Welcome to our <br/> free WiFi!
@@ -119,7 +113,6 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
                             <label class="c-input--default c-input--password c-input" for="user_password">
                                 <div class="c-input__content js-input-content">
                                     <input type="password" name="password" id="user_password" class="c-input__value " placeholder="Nhập mật khẩu">
-
                                 </div>
                             </label>
                             <div class="c-cell">
@@ -138,27 +131,26 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
 <?php } else {
     echo $this->Html->css('back_end/page3'); ?>
     <div class="landing">
-        <div class="wapper" style="background: url(/webroot/images/entry3.jpg) top center"></div>
+        <div class="wapper" style="background: url(<?php echo '/'.$infor_devices->path?>) top center"></div>
         <div class="landing__cover-overlay"></div>
         <div class="landing__cover landing__cover--main landing__cover--flexible">
             <div class="u-ui-padding-x-large landing__cover-wrapper">
                 <div class="landing__cover-content u-color-white">
                     <div class="logo">
                         <div class="logo__inner">
-                            <a class="" href="#"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt="Foody.vn"></a>
+                            <a class="" href="javascript:void(0);"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt="Foody.vn"></a>
                         </div>
                     </div>
-                    <div class="c-text--name c-text--parent c-text--center c-text">Cafe Trung Nguyen</div>
+                    <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
                     <div class="c-spacer--x-large c-spacer"></div>
-                    <div class="c-text--heading c-text--parent c-text--center c-text">Welcome to our <br> <font>free
-                            WiFi!</font></div>
+                    <div class="c-text--heading c-text--parent c-text--center c-text">Welcome to our <br> <font>free WiFi!</font></div>
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="redirect">
                         <a class="btn _face" href="javascript:void (0);"><i class="fa fa-facebook"></i>Login with Facebook</a>
                         <div class=" c-spacer"></div>
-                        <a class="btn _goog" href="javascript:void (0);"><i class="fa fa-google-plus"></i>Login with Facebook</a>
+                        <a class="btn _goog" href="javascript:void (0);"><i class="fa fa-google-plus"></i>Login with Google</a>
                         <div class="c-spacer--x-large c-spacer"></div>
                         <a class="btn _wifi" href="javascript:void (0);"><i class="fa fa-wifi"></i>Connect now - Slow</a>
                     </div>
@@ -181,13 +173,41 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
     }
     $('#user_password').keyup(function () {
         $('#user_password-error').remove();
-    })
+    });
+
+    $('#register_form').validate({
+        rules: {
+            '_reg_full_name': {
+                required: true
+            },
+            '_reg_telephone': {
+                required: true
+            },
+            '_reg_address': {
+                required: true
+            }
+        },
+        messages:{
+            '_reg_full_name': {
+                required: 'Hãy nhập'
+            },
+            '_reg_telephone': {
+                required: 'Hãy nhập'
+            },
+            '_reg_address': {
+                required: 'Hãy nhập'
+            }
+        },
+        highlight: function (input) {
+            $(input).addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).removeClass('error');
+        }
+    });
+
 </script>
 <style>
-    input[placeholder], [placeholder], *[placeholder] {
-        /*color: red !important;*/
-    }
-
     ::-webkit-input-placeholder { /* Chrome/Opera/Safari */
         color: #cccccc;
     }
@@ -202,5 +222,9 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
     }
     .c-text--name {
         color: #ffffff;
+    }
+    .error {
+        color: red;
+        font-weight: inherit;
     }
 </style>
