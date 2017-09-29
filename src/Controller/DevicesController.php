@@ -498,6 +498,13 @@ class DevicesController extends AppController
     }
 
 
+    /**
+     * Add info users
+     * @table logs
+     *
+     * @return json
+     *
+     */
     public function addLog()
     {
         $this->autoRender= false;

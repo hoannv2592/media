@@ -50,6 +50,7 @@
                                                     <th>User quản lý</th>
                                                     <th>Loại quảng cáo</th>
                                                     <th>Mã xác thực</th>
+                                                    <th>Thời gian sử dụng</th>
                                                     <th>Ngày tạo</th>
                                                     <th>Điều hướng</th>
                                                 </tr>
@@ -68,6 +69,7 @@
                                                         </td>
                                                         <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id])? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id]:''; ?></td>
                                                         <td><?php echo nl2br($device->apt_key); ?></td>
+                                                        <td><?php echo nl2br($device->uptime); ?></td>
                                                         <td><?php echo date('d/m/Y H:i', strtotime($device->created)); ?></td>
                                                         <td class="delete_advertise" value="<?php echo h($device->id); ?>">
                                                             <div class="button-demo">

@@ -74,8 +74,9 @@ $(function () {
             { "width": "10%" },
             { "width": "15%"},
             { "width": "10%"},
+            { "width": "10%"},
             { "width": "10%" },
-            { "width": "24%" }
+            { "width": "15%" }
         ],
         "language": {
             "lengthMenu": "Display _MENU_ records per page",

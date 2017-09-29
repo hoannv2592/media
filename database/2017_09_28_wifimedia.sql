@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 100125
 File Encoding         : 65001
 
-Date: 2017-09-29 02:33:02
+Date: 2017-09-29 09:22:25
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -73,7 +73,7 @@ CREATE TABLE `devices` (
   `flag_check` tinyint(1) DEFAULT NULL,
   `splashcheck` tinyint(1) DEFAULT NULL,
   `auth_target` varchar(255) DEFAULT NULL,
-  `uptime` datetime DEFAULT NULL,
+  `uptime` varchar(255) DEFAULT NULL,
   `num_clients` text,
   `client_mac` text,
   `gateway_name` varchar(255) DEFAULT NULL,
@@ -196,5 +196,5 @@ CREATE TABLE `users` (
 -- ----------------------------
 -- Records of users
 -- ----------------------------
-INSERT INTO `users` VALUES ('1', 'admin', 'adim@wifimedia.com', '$2y$10$CmOc3ND5QfhDKmL5vz9pL.JLyM/U6JSPkysZO/Xjj.F9tVkpZ3El6', '0', '0985644301', 'HÀ NỘI', '1', null, '2017-09-28 19:32:02', '2017-09-28 19:32:02');
+INSERT INTO `users` VALUES ('1', 'admin', 'admin@wifimedia.com', '$2y$10$7SfxV0nKbnum7Ajrw9gwe.nx17A5Qx1lQIP11/N60ZuXiEQKJjjZq', '0', '0985644301', 'HA NOI', '1', null, '2017-09-29 02:21:42', '2017-09-29 02:21:42');
 SET FOREIGN_KEY_CHECKS=1;
