@@ -397,23 +397,26 @@ class DevicesController extends AppController
         $device = $this->Devices->get($device_id, [
             'contain' => []
         ]);
+        $apt_device_number = ($device->apt_device_number);
         if ($this->request->is('post')) {
             $data_update = array(
                 'device_id' => $device_id,
                 'user_id' => $user_id,
                 'status' => HAS_LANDING,
+                'apt_device_number' => $apt_device_number,
                 'langdingpage_id' => $this->request->getData('langdingpage_id')
             );
             $device = $this->Devices->patchEntity($device, $data_update);
-            $this->set('uploadData', $uploadData);
             $this->set(compact('device', 'data_update'));
             $this->render('/Devices/image_upload');
         }
 
+            $this->set('uploadData', $uploadData);
         $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
         $filesRowNum = $files->count();
         $this->set('files',$files);
             $this->set('filesRowNum',$filesRowNum);
+            $this->set('apt_device_number',$apt_device_number);
         $this->set(compact('device', 'device_id', 'user_id'));
     }
 
@@ -442,8 +445,9 @@ class DevicesController extends AppController
                 $data_update = array(
                     'user_id' => $this->request->getData('user_id'),
                     'status' => HAS_LANDING,
-                    'langdingpage_id' => $this->request->getData('langdingpage_id'),
                     'tile_name' => $this->request->getData('tile_name'),
+                    'password_device' => $this->request->getData('apt_device_number'),
+                    'langdingpage_id' => $this->request->getData('langdingpage_id'),
                 );
                 $uploadData = $this->FileAttachments->newEntity();
                 if(array_key_exists('urls', $fileOK)) {
@@ -467,7 +471,8 @@ class DevicesController extends AppController
                 }
             } else {
                 $tile_name = array(
-                    'tile_name' => $this->request->data['tile_name']
+                    'tile_name' => $this->request->getData('tile_name'),
+                    'apt_device_number' => $this->request->getData('apt_device_number'),
                 );
                 $device = $this->Devices->patchEntity($device, $tile_name);
                 if (empty($device->errors())) {

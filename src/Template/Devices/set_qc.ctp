@@ -1,5 +1,7 @@
 <?php
 /**
+ * @var  $device_id
+ * @var  $user_id
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $devices
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $device

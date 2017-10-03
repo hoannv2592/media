@@ -236,4 +236,34 @@ class AppController extends Controller
         $role = User::$role;
         $this->set(compact('devices', 'landingpages', 'role', 'users'));
     }
+
+
+    /**
+     * radompassWord mehod
+     * Dispaly ren 8 number....
+     * @return string
+     */
+    public function radompassWord()
+    {
+        $length = 7;
+        $strRandom = "";
+        $sum = 0;
+        $chars = "0123456789";
+        $size = strlen($chars);
+        //xử lý lấy chuỗi có 7 kí tự trước, và tính tổng 7 kí tự này
+        for ($j = 0; $j < $length; $j++) {
+            $rdcheck = $chars[rand(0, $size - 1)];
+            $strRandom .= $rdcheck;
+            $sum += $rdcheck;
+        }
+        // xử lý kí chọn số cuối cùng để đúng quy luat
+        $number_add = substr($sum, -1, 1);
+        if($number_add == 0){
+            $strRandom = $strRandom.$number_add;
+        }else{
+            $number_add = 10 - substr($sum, -1, 1);
+            $strRandom = $strRandom.$number_add;
+        }
+        return $strRandom;
+    }
 }

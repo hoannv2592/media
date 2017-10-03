@@ -82,26 +82,42 @@
                         </div>
                         <?php echo $this->Form->input('device_id', [
                                 'type' => 'hidden',
-                                'value' => $data_update['device_id']
+                                'value' => isset($data_update['device_id']) ? $data_update['device_id']:''
                             ]);
                         echo $this->Form->input('user_id', [
                                 'type' => 'hidden',
-                                'value' => $data_update['user_id']
+                                'value' => isset($data_update['user_id']) ? $data_update['user_id'] :''
                             ]);
                         echo $this->Form->input('status', [
                                 'type' => 'hidden',
-                                'value' => $data_update['status']
+                                'value' => isset($data_update['status']) ? $data_update['status']:''
                             ]);
                         echo $this->Form->input('langdingpage_id', [
                                 'type' => 'hidden',
-                                'value' => $data_update['langdingpage_id']
-                            ]); ?>
+                                'value' => isset($data_update['langdingpage_id']) ? $data_update['langdingpage_id']: ''
+                            ]);
+                        ?>
                         <label for="tile_name">Tên cơ sở dịch vụ</label>
+                        <?php
+                        ?>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($device->tile_name) ? $device->tile_name :'';       ?>" placeholder="Điền tên..">
+                                <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($device->tile_name) ? $device->tile_name :'';?>" placeholder="Điền tên..">
                             </div>
                         </div>
+                        <?php if (isset($data_update['langdingpage_id']) && $data_update['langdingpage_id'] == 1) { ?>
+                            <label for="password_device">Mật khẩu thiết bị</label>
+                            <div class="form-group" id="end_show">
+                                <div class="form-line">
+                                    <input type="text" maxlength="8" name="apt_device_number" id="apt_device_number" class="form-control" value="<?php echo isset($device->apt_device_number) ? $device->apt_device_number :'';?>" placeholder="Điền mật khẩu..">
+                                </div>
+                            </div>
+                        <?php } else {
+                            echo $this->Form->input('apt_device_number', [
+                                'type' => 'hidden',
+                                'value' => isset($data_update['apt_device_number']) ? $data_update['apt_device_number']: ''
+                            ]);
+                        } ?>
                         <?php echo $this->Form->button(__('Cập nhật'), [
                                 'type' => 'submit',
                                 'id' => 'submit',
@@ -121,6 +137,9 @@
     }
 </style>
 <script type="application/javascript">
+	$('#uploadForm').validate({
+		
+	});
     function filePreview(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -138,6 +157,7 @@
     function submitContactForm(){
         var tile_name = $('#tile_name').val();
         var file = $('#file').val();
+        var apt_device_number = $('#apt_device_number').val();
         var path = "<?php echo $device->path;?>";
         if(file.trim() == '' ){
             if (path == '') {
@@ -153,7 +173,13 @@
             $('#tile_name').parent().parent().append('<label id="tile_name-error" class="error" for="tile_name">Hãy nhập.</label>');
             $('#submit').attr('disabled', true);
             return false;
-        } else {
+        } else if (apt_device_number.trim() == '' ) {
+			$('#apt_device_number').focus();
+            $('#apt_device_number-error').remove();
+            $('#apt_device_number').parent().parent().append('<label id="apt_device_number-error" class="error" for="apt_device_number">Hãy nhập.</label>');
+            $('#submit').attr('disabled', true);
+            return false;
+		} else {
             return true;
         }
     }
@@ -167,6 +193,10 @@
     });
     $('#file').change(function () {
         $('#file-error').remove();
+        $('#submit').removeAttr('disabled');
+    });
+	$('#apt_device_number').change(function () {
+        $('#apt_device_number-error').remove();
         $('#submit').removeAttr('disabled');
     })
 </script>

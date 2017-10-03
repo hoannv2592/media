@@ -36,68 +36,79 @@
                                    class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
                             </div>
                         <?php } else { ?>
-                            <a disabled="disabled" href="javascript:void(0);" class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
+                            <a disabled="disabled" href="javascript:void(0);"
+                               class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
                         <?php } ?>
-                            <div class="tab-content">
-                                <div role="tabpanel" class="tab-pane fade in active" id="home">
-                                    <?php if (!empty($devices)) { ?>
-                                        <div class="table-responsive">
-                                            <table class="table table-bordered table-striped table-hover dataTable js-exportable_has">
-                                                <thead>
-                                                <tr class="bg-blue-grey">
-                                                    <th>STT</th>
-                                                    <th>Tên thiết bị</th>
-                                                    <th>User quản lý</th>
-                                                    <th>Loại quảng cáo</th>
-                                                    <th>Mã xác thực</th>
-                                                    <th>Thời gian sử dụng</th>
-                                                    <th>Ngày tạo</th>
-                                                    <th>Điều hướng</th>
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane fade in active" id="home">
+                                <?php if (!empty($devices)) { ?>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped table-hover dataTable js-exportable_has">
+                                            <thead>
+                                            <tr class="bg-blue-grey">
+                                                <th>STT</th>
+                                                <th>Tên thiết bị</th>
+                                                <th>User quản lý</th>
+                                                <th>Loại quảng cáo</th>
+                                                <th>Mã xác thực</th>
+                                                <th>Mật khẩu</th>
+                                                <th>Thời gian sử dụng</th>
+                                                <th>Ngày tạo</th>
+                                                <th>Điều hướng</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php
+                                            $count = 0;
+                                            foreach ($devices as $key => $device) {
+                                                $count++; ?>
+                                                <tr valign="middle">
+                                                    <td><?php echo $count; ?></td>
+                                                    <td class="advertise font-bold col-cyan">
+                                                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device' . '/' . $device->id]) ?>"><?php echo h($device->name); ?></a>
+                                                    </td>
+                                                    <td class="font-bold col-cyan">
+                                                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail_partner' . '/' . $device->user->id]) ?>"><?php echo h($device->user->username); ?></a>
+                                                    </td>
+                                                    <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : ''; ?></td>
+                                                    <td><?php echo nl2br($device->apt_key); ?></td>
+                                                    <td><?php echo nl2br($device->password_device); ?></td>
+                                                    <td><?php echo nl2br($device->uptime); ?></td>
+                                                    <td><?php echo date('d/m/Y H:i', strtotime($device->created)); ?></td>
+                                                    <td class="delete_advertise" value="<?php echo h($device->id); ?>">
+                                                        <div class="button-demo">
+                                                            <?php
+                                                            $langdingpage_id = isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : '';
+                                                            if ($langdingpage_id != '') { ?>
+                                                                <a class="btn btn-success waves-effect"
+                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'view_qc' . '/' . $device->id]) ?>">Xem
+                                                                    QC</a>
+                                                                <a class="btn btn-primary waves-effect"
+                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $device->id . '/' . $device->user->id]) ?>">Sửa
+                                                                    QC</a>
+                                                            <?php } else { ?>
+                                                                <a class="btn btn-primary waves-effect"
+                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $device->id . '/' . $device->user->id]) ?>">Tạo
+                                                                    QC</a>
+                                                            <?php }
+                                                            ?>
+                                                            <a class="btn btn-danger waves-effect" data-toggle="modal"
+                                                               data-target="#modal-03">Xóa TB</a>
+                                                        </div>
+                                                    </td>
                                                 </tr>
-                                                </thead>
-                                                <tbody>
-                                                <?php
-                                                $count = 0;
-                                                foreach ($devices as $key => $device) { $count++; ?>
-                                                    <tr valign="middle">
-                                                        <td><?php echo $count; ?></td>
-                                                        <td class="advertise font-bold col-cyan">
-                                                            <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device' . '/' . $device->id]) ?>"><?php echo h($device->name); ?></a>
-                                                        </td>
-                                                        <td class="font-bold col-cyan">
-                                                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail_partner' . '/' . $device->user->id]) ?>"><?php echo h($device->user->username); ?></a>
-                                                        </td>
-                                                        <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id])? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id]:''; ?></td>
-                                                        <td><?php echo nl2br($device->apt_key); ?></td>
-                                                        <td><?php echo nl2br($device->uptime); ?></td>
-                                                        <td><?php echo date('d/m/Y H:i', strtotime($device->created)); ?></td>
-                                                        <td class="delete_advertise" value="<?php echo h($device->id); ?>">
-                                                            <div class="button-demo">
-                                                                <?php
-                                                                $langdingpage_id = isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id]:'';
-                                                                if ($langdingpage_id != '') { ?>
-                                                                    <a class="btn btn-success waves-effect" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'view_qc' . '/' . $device->id]) ?>">Xem QC</a>
-                                                                    <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $device->id.'/'. $device->user->id]) ?>">Sửa QC</a>
-                                                                <?php } else { ?>
-                                                                    <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $device->id.'/'. $device->user->id]) ?>">Tạo QC</a>
-                                                                <?php }
-                                                                ?>
-                                                                <a class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa TB</a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                <?php } ?>
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    <?php } ?>
-                                </div>
+                                            <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                <?php } ?>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
     </div>
     <?php echo $this->element('device_groups/get_device_group'); ?>
 </section>
