@@ -387,103 +387,63 @@ class DevicesController extends AppController
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $this->loadModel('LangdingDevices');
-        $uploadData = '';
         if (!$this->Users->exists($user_id)) {
             $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
         }
         if (!$this->Devices->exists($device_id)) {
             $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
         }
-        $device = $this->Devices->get($device_id, [
+            $device = $this->Devices->get($device_id, [
             'contain' => []
         ]);
         if ($this->request->is('post')) {
-            $data_update = array(
-                'device_id' => $device_id,
-                'user_id' => $user_id,
-                'status' => HAS_LANDING,
-                'langdingpage_id' => $this->request->getData('langdingpage_id')
-            );
-            $device = $this->Devices->patchEntity($device, $data_update);
-            $this->set('uploadData', $uploadData);
-            $this->set(compact('device', 'data_update'));
-            $this->render('/Devices/image_upload');
-        }
-
-        $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
-        $filesRowNum = $files->count();
-        $this->set('files',$files);
-            $this->set('filesRowNum',$filesRowNum);
-        $this->set(compact('device', 'device_id', 'user_id'));
-    }
-
-
-    /**
-     *
-     * imageUploadQC method
-     * display upload backgroup and title
-     *
-     * @author Hoannv
-     */
-    public function imageUploadQC()
-    {
-        $conn = ConnectionManager::get('default');
-        $conn->begin();
-        $this->autoRender = false;
-        $this->request->allowMethod(['post', 'get']);
-        if ($this->request->data) {
-            $device = $this->Devices->get($this->request->getData('device_id'));
             if (!empty($this->request->data['file']['name'])) {
                 // upload the file to the server
                 $file = array(
-                  'file' => $this->request->data['file']
+                    'file' => $this->request->data['file']
                 );
                 $fileOK = $this->UploadImage->uploadFiles('upload/files', $file);
-                $data_update = array(
-                    'user_id' => $this->request->getData('user_id'),
-                    'status' => HAS_LANDING,
-                    'langdingpage_id' => $this->request->getData('langdingpage_id'),
-                    'tile_name' => $this->request->getData('tile_name'),
-                );
-                $uploadData = $this->FileAttachments->newEntity();
+                unset($this->request->data['file']);
+                unset($this->request->data['device_id']);
                 if(array_key_exists('urls', $fileOK)) {
-                    // save the url in the form data
-                    $uploadData->path = $fileOK['urls'][0];
-                    $data_update['path'] = $fileOK['urls'][0];
-                    $data_update['image_backgroup'] = $file['file']['name'];
+                    $device->path = $fileOK['urls'][0];
+                    $device->image_backgroup = $file['file']['name'];
                 }
-                $device = $this->Devices->patchEntity($device, $data_update);
+                $device = $this->Devices->patchEntity($device, $this->request->data);
                 if (empty($device->errors())) {
                     if ($this->Devices->save($device)) {
                         $conn->commit();
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $data_update['user_id']]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $data_update['user_id']]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
                 }
             } else {
-                $tile_name = array(
-                    'tile_name' => $this->request->data['tile_name']
-                );
-                $device = $this->Devices->patchEntity($device, $tile_name);
+                unset($this->request->data['file']);
+                $device = $this->Devices->patchEntity($device, $this->request->data);
                 if (empty($device->errors())) {
                     if ($this->Devices->save($device)) {
                         $conn->commit();
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $data_update['user_id']]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $data_update['user_id']]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
                 }
             }
         }
+        $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
+        $filesRowNum = $files->count();
+        $this->set('files',$files);
+        $this->set('filesRowNum',$filesRowNum);
+        $this->set(compact('device', 'device_id', 'user_id'));
     }
 
     /**

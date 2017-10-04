@@ -194,6 +194,7 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
     var url = "<?php echo $infor_devices->auth_target?>";
     function submitContactForm(){
         var pass = $('#user_password').val();
+        var __check = "<?php echo $infor_devices->apt_device_number?>";
         if(pass.trim() == '' ){
             $('#user_password').focus();
             $('#user_password-error').remove();
@@ -201,8 +202,16 @@ if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) 
             $('#submit_password').attr('disabled', true);
             return false;
         }else{
-            $("#submit_password").attr("href", url);
-            return true;
+            if (pass == __check) {
+                $("#submit_password").attr("href", url);
+                return true;
+            } else {
+                $('#user_password').focus();
+                $('#user_password-error').remove();
+                $('#user_password').parent().parent().append('<div id="user_password-error" class="c-input c-input__value " style="color: red;display: block;"><?php echo __("Bạn đã nhập sai mật khẩu") ?></div>');
+                $('#submit_password').attr('disabled', true);
+                return false;
+            }
         }
     }
     $('#user_password').keyup(function () {
