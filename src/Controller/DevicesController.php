@@ -393,7 +393,7 @@ class DevicesController extends AppController
         if (!$this->Devices->exists($device_id)) {
             $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
         }
-            $device = $this->Devices->get($device_id, [
+        $device = $this->Devices->get($device_id, [
             'contain' => []
         ]);
         if ($this->request->is('post')) {
