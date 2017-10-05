@@ -164,7 +164,19 @@ class DevicesController extends AppController
                 ->select()
                 ->hydrate(true)
                 ->first();
-            if (empty($apt_key_check)) {
+            if (!empty($apt_key_check)) {
+                $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
+                if (empty($device->errors())) {
+                    if ($this->Devices->save($device)) {
+                        $conn->commit();
+                        $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . $device->id]);
+                    } else {
+                        $conn->rollback();
+                    }
+                } else {
+                    $conn->rollback();
+                }
+            } else {
                 $query = $this->Users->find('all', [])->count();
                 $users = $this->Users->newEntity();
                 $data_user = [
@@ -201,14 +213,10 @@ class DevicesController extends AppController
                         $conn->rollback();
                     }
                 }
-            } else {
-                $this->set(compact('apt_key_check'));
-                $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . $apt_key_check->id]);
             }
         } else {
             $conn->rollback();
         }
-
     }
 
     /**
