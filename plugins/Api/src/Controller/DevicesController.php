@@ -180,6 +180,7 @@ class DevicesController extends AppController
                 $device->status = UN_DELETED;
                 $device->apt_device_number = $this->radompassWord();
                 $device->name = DEVICE.($query + 1);
+                $device->apt_device_number = $this->radompassWord();
                 $device->apt_key = isset($this->request->data['gateway_mac']) ? $this->request->data['gateway_mac'] : $apt_key;
                 $users = $this->Users->patchEntity($users, $data_user);
                 if (empty($users->errors())) {
