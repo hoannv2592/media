@@ -13,6 +13,7 @@ use Cake\Event\Event;
  *
  * @property \App\Model\Table\LangdingDevicesTable $LangdingDevices
  * @property \App\Model\Table\DevicesTable $Devices
+ * @property \App\Model\Table\PartnersTable $Partners
  *
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
  */
@@ -162,9 +163,50 @@ class DevicesController extends AppController
             $this->autoRender= false;
             $apt_key_check = $this->Devices->find()->where(['apt_key' => $apt_key])
                 ->select()
-                ->hydrate(true)
+                ->hydrate(false)
                 ->first();
             if (!empty($apt_key_check)) {
+                $this->loadModel('Partners');
+                $client_mac = $this->request->data['client_mac'];
+                $client_mac = '70:1a:04:64:98:9e';
+                $partner = $this->Partners->find()->where(
+                    array(
+                        'device_id' => $apt_key_check['id'],
+                        'client_mac' => $client_mac
+                    ))
+                    ->hydrate(false)
+                    ;
+                pr($partner); die;
+                $chk = false;
+                if ($partner == 0) {
+                    $new_partner = $this->Partners->newEntity();
+                    $save_new_pa = array(
+                        'device_id' => $apt_key_check['id'],
+                        'client_mac' => $this->request->data['client_mac'],
+                        'auth_target' => $this->request->data['auth_target'],
+                        'num_clients_connect' => 1,
+                    );
+                    $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa);
+                    if (empty($new_partner->errors())) {
+                        if (!$this->Partners->save($new_partner)) {
+                            $chk = true;
+                        }
+                    }
+                } else {
+                    $number = array('num_clients_connect' => $device['num_clients_connect'] + 1);
+                    pr($number); die;
+                    $partner = $this->Partners->patchEntity($partner, $number);
+                }
+                pr($this->request->data);
+                pr($apt_key_check);
+
+
+
+
+
+
+
+                die;
                 $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
                 if (empty($device->errors())) {
                     if ($this->Devices->save($device)) {
