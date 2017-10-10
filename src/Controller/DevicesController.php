@@ -535,6 +535,7 @@ class DevicesController extends AppController
                         'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
                         'num_clients_connect' => 1,
                         'name' => PARTNER.($query + 1),
+                        'apt_device_pass' => $this->radompassWord()
                     );
                     $new_partner = $this->Partners->newEntity();
                     $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa);
@@ -546,7 +547,8 @@ class DevicesController extends AppController
                 } else {
                     $data_update = array(
                         'num_clients_connect' => $partner['num_clients_connect'] + 1,
-                        'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:''
+                        'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+                        'apt_device_pass' => $this->radompassWord()
                     );
                     $partner = $this->Partners->patchEntity($partner, $data_update);
                     if (empty($partner->errors())){
