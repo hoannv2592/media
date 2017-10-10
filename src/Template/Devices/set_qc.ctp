@@ -92,17 +92,14 @@
                                 <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($device->tile_name) ? $device->tile_name :'';?>" placeholder="Điền tên..">
                             </div>
                         </div>
-                        <?php
-                        if ($device->langdingpage_id == 1 || $device->langdingpage_id == '') { ?>
-                            <div class="check_pass_device">
-                                <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="text" name="apt_device_number" id="apt_device_number" value="<?php echo isset($device->apt_device_number) ? $device->apt_device_number:'' ?>" placeholder="Điền mật khẩu.." class="form-control">
-                                    </div>
+                        <div class="check_pass_device">
+                            <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="text" name="apt_device_number" id="apt_device_number" value="<?php echo isset($device->apt_device_number) ? $device->apt_device_number:'' ?>" placeholder="Điền mật khẩu.." class="form-control">
                                 </div>
                             </div>
-                        <?php } ?>
+                        </div>
                         <h2 class="card-inside-title"> Chọn một ảnh </h2>
                         <div class="form-group">
                             <div class="form-line">
@@ -134,6 +131,14 @@
     </div>
 </section>
 <script type="application/javascript">
+    $(document).ready(function () {
+        var langding = "<?php echo $device->langdingpage_id; ?>";
+        if (langding != 1) {
+            $('.check_pass_device').css('display', 'none');
+        } else {
+            $('.check_pass_device').css('display', '');
+        }
+    });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val != 1) {

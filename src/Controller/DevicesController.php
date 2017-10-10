@@ -18,7 +18,7 @@ use Cake\Event\Event;
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
  *
  *  * @property  \App\Controller\Component\UploadImageComponent $UploadImage
- *  * @property  \App\Controller\Component\Partners $Partners
+ * * @property \App\Model\Table\PartnersTable $Partners
  */
 class DevicesController extends AppController
 {
@@ -422,6 +422,7 @@ class DevicesController extends AppController
                     $device->path = $fileOK['urls'][0];
                     $device->image_backgroup = $file['file']['name'];
                 }
+
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 if (empty($device->errors())) {
                     if ($this->Devices->save($device)) {
