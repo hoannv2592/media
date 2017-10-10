@@ -8,6 +8,7 @@ define('HAS_LANDING', 1);
 define('UN_DELETED', 0);
 define('DEVICE', 'Thiết bị_');
 define('USER', 'demo_');
+define('PARTNER', 'Partner_');
 define('URL_LOAD', '/Landingpages/load');
 define('URL_DELETE', '/Landingpages/delete');
 define('URL_DEMO', '/Landingpages/lanedingDemo');

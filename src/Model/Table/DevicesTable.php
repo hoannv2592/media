@@ -44,6 +44,9 @@ class DevicesTable extends Table
             'foreignKey' => 'user_id',
             'joinType' => 'INNER'
         ]);
+        $this->hasMany('Partners', [
+            'foreignKey' => 'device_id'
+        ]);
     }
 
     /**

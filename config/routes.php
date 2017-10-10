@@ -57,7 +57,14 @@ Router::scope('/', function (RouteBuilder $routes) {
      * ...and connect the rest of 'Pages' controller's URLs.
      */
     $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
-    $routes->connect('/back_end/:id', array('controller' => 'Devices', 'action' => 'add', 'plugin' => 'Api'),
+//    $routes->connect('/back_end/:id', array('controller' => 'Devices', 'action' => 'add', 'plugin' => 'Api'),
+//        array(
+//            'pass' => array('id'),
+//            'id' => '[0-9a-z:A-Z]+'
+//        )
+//    );
+
+    $routes->connect('/back_end/:id', array('controller' => 'Devices', 'action' => 'addNewDevice'),
         array(
             'pass' => array('id'),
             'id' => '[0-9a-z:A-Z]+'

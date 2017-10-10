@@ -159,29 +159,29 @@ class DevicesController extends AppController
     {
         $conn = ConnectionManager::get('default');
         $conn->begin();
+        $this->loadModel('Partners');
         if ($apt_key != '') {
             $this->autoRender= false;
-            $apt_key_check = $this->Devices->find()->where(['apt_key' => $apt_key])
+            $apt_key_check = $this->Devices->find()->where(
+                [
+                    'apt_key' => $apt_key,
+                    'delete_flag !=' => DELETED
+                ])
                 ->select()
-                ->hydrate(false)
+                ->hydrate(true)
                 ->first();
+            $chk = false;
             if (!empty($apt_key_check)) {
-                $this->loadModel('Partners');
-                $client_mac = $this->request->data['client_mac'];
-                $client_mac = '70:1a:04:64:98:9e';
                 $partner = $this->Partners->find()->where(
                     array(
-                        'device_id' => $apt_key_check['id'],
-                        'client_mac' => $client_mac
+                        'device_id' => $apt_key_check->id,
+                        'client_mac' => $this->request->data['client_mac']
                     ))
-                    ->hydrate(false)
-                    ;
-                pr($partner); die;
-                $chk = false;
-                if ($partner == 0) {
+                    ->first();
+                if (empty($partner)) {
                     $new_partner = $this->Partners->newEntity();
                     $save_new_pa = array(
-                        'device_id' => $apt_key_check['id'],
+                        'device_id' => $apt_key_check->id,
                         'client_mac' => $this->request->data['client_mac'],
                         'auth_target' => $this->request->data['auth_target'],
                         'num_clients_connect' => 1,
@@ -193,28 +193,26 @@ class DevicesController extends AppController
                         }
                     }
                 } else {
-                    $number = array('num_clients_connect' => $device['num_clients_connect'] + 1);
-                    pr($number); die;
-                    $partner = $this->Partners->patchEntity($partner, $number);
+                    $data_update = array(
+                        'num_clients_connect' => $partner['num_clients_connect'] + 1,
+                        'auth_target' => $this->request->data['auth_target']
+                    );
+                    $partner = $this->Partners->patchEntity($partner, $data_update);
+                    if (empty($partner->errors())){
+                        if (!$this->Partners->save($partner)) {
+                            $chk = true;
+                        }
+                    }
                 }
-                pr($this->request->data);
-                pr($apt_key_check);
-
-
-
-
-
-
-
-                die;
                 $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
                 if (empty($device->errors())) {
-                    if ($this->Devices->save($device)) {
-                        $conn->commit();
-                        $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . $device->id]);
-                    } else {
-                        $conn->rollback();
+                    if (!$this->Devices->save($device)) {
+                        $chk = true;
                     }
+                }
+                if (!$chk) {
+                    $conn->commit();
+                    $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . $device->id]);
                 } else {
                     $conn->rollback();
                 }
@@ -237,6 +235,13 @@ class DevicesController extends AppController
                 $device->apt_device_number = $this->radompassWord();
                 $device->apt_key = isset($this->request->data['gateway_mac']) ? $this->request->data['gateway_mac'] : $apt_key;
                 $users = $this->Users->patchEntity($users, $data_user);
+                $data_new_par = array(
+                    'client_mac' => $this->request->data['client_mac'],
+                    'auth_target' => $this->request->data['auth_target'],
+                    'num_clients_connect' => 1,
+                );
+                $partner = $this->Partners->newEntity();
+                $partner = $this->Partners->patchEntity($partner, $data_new_par);
                 if (empty($users->errors())) {
                     $result = $this->Users->save($users);
                     if ($result) {
@@ -244,8 +249,13 @@ class DevicesController extends AppController
                         if (empty($device->errors())) {
                             $data_device = $this->Devices->save($device);
                             if ($data_device) {
-                                $conn->commit();
-                                $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . $data_device->id]);
+                                $partner->id = $data_device->id;
+                                if (empty($partner->errors())) {
+                                    if ($this->Partners->save($partner)) {
+                                        $conn->commit();
+                                        $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . $data_device->id]);
+                                    }
+                                }
                             } else {
                                 $conn->rollback();
                             }

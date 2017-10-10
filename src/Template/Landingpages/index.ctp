@@ -57,7 +57,7 @@
                                             <td><?php echo nl2br($landingpage->description); ?></td>
                                             <td><?php echo date('d/m/Y H:i', strtotime($landingpage->created)); ?></td>
                                             <td class="delete_advertise" value="<?php echo h($landingpage->id); ?>">
-                                                <button type="button" class="btn btn-danger waves-effect"
+                                                <button type="button" disabled=disabled class="btn btn-danger waves-effect"
                                                         data-toggle="modal" data-target="#modal-03">Xóa quảng cáo
                                                 </button>
                                             </td>

@@ -93,12 +93,13 @@ class UsersController extends AppController
      *
      *
      * @param null $id
+     * @return \Cake\Http\Response|null
      */
     public function detailPartner($id = null)
     {
         $this->getAllData();
         if (!$this->Users->exists($id)) {
-            $this->redirect(array('controller' => 'Users', 'action' => 'index'));
+            return $this->redirect(['action' => 'index']);
         }
         $user = $this->Users->get($id, [
             'contain' => []
@@ -153,7 +154,7 @@ class UsersController extends AppController
         $conn->begin();
         $this->getAllData();
         if (!$this->Users->exists($id)) {
-            $this->redirect(array('controller' => 'Users', 'action' => 'index'));
+            return $this->redirect(array('controller' => 'Users', 'action' => 'index'));
         }
 
         $user = $this->Users->get($id, [

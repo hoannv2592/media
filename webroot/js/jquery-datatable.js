@@ -76,7 +76,6 @@ $(function () {
             { "width": "8%"},
             { "width": "8%"},
             { "width": "8%"},
-            { "width": "8%" },
             { "width": "20%" }
         ],
         "language": {

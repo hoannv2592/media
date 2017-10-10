@@ -1,6 +1,7 @@
 <?php
 /**
   * @var \App\View\AppView $this
+  * @var $flag
   * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $adgroups
   * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $userData
   */
@@ -12,7 +13,7 @@
                 <div class="card">
                     <div class="header bg-green">
                         <h2>
-                            Quản lý nhóm quảng cáo <small>Description text here...</small>
+                            Quản lý nhóm thiết bị quảng cáo <small>Description text here...</small>
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>
@@ -32,7 +33,7 @@
                             <?php if ($userData['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
                                 <div class="button-demo">
                                     <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'add']) ?>"
-                                       class="btn btn-primary waves-effect m-r-20">THÊM NHÓM QUẢNG CÁO</a>
+                                       class="btn btn-primary waves-effect m-r-20" id="add_new">THÊM NHÓM THIẾT BỊ</a>
                                 </div>
                             <?php } else { ?>
                                 <a disabled="disabled" href="javascript:void(0);" class="btn btn-primary waves-effect m-r-20">THÊM NHÓM QUẢNG CÁO</a>
@@ -45,7 +46,7 @@
                                 <tr class="bg-blue-grey">
                                     <th>STT</th>
                                     <th>Tên quảng cáo</th>
-                                    <th>Người dùng</th>
+                                    <th>Thiết bị</th>
                                     <th>Loại quảng cáo</th>
                                     <th>Mô tả</th>
                                     <th>Ngày tạo</th>
@@ -63,13 +64,9 @@
                                         </td>
                                         <td>
                                             <table class="table">
-                                            <?php if (!empty($adgroup->user_id)) {
-                                                foreach (json_decode($adgroup->user_id) as $k =>$user) { ?>
-                                                    <tr>
-                                                        <td><a class="font-bold"
-                                                               href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail-partner' . '/' . $k]) ?>"> <?php echo $user; ?></a>
-                                                        </td>
-                                                    </tr>
+                                            <?php if (!empty($adgroup->device_name)) {
+                                                foreach (json_decode($adgroup->device_name) as $k => $device_name) { ?>
+                                                    <tr><td><?php echo $device_name; ?></td></tr>
                                                 <?php } ?>
                                             <?php } ?>
                                             </table>
@@ -94,3 +91,14 @@
     </div>
     <?php echo $this->element('adgroup/get_ad_group'); ?>
 </section>
+<script type="application/javascript">
+    $(document).ready(function () {
+       var flag = "<?php echo $flag;?>";
+       $('#add_new').click(function () {
+           if (flag) {
+               alert_message('Bạn không thể tạo được nhóm thết bị vì không còn thiết bị để tạo nhóm.');
+               return false;
+           }
+       });
+    });
+</script>

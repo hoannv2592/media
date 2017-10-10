@@ -149,7 +149,7 @@ $cakeDescription = 'Media ';
                     <?php } ?>
                     <a href="<?php echo $this->Url->build(["controller" => "Adgroups", "action" => "index"]); ?>">
                         <i class="material-icons">view_list</i>
-                        <span>Quản lý nhóm </span>
+                        <span>Quản lý nhóm thiết bị</span>
                     </a>
                 </li>
                 <?php if ($controller == 'Landingpages') { ?>

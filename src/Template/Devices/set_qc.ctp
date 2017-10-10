@@ -77,7 +77,7 @@
                             ),
                         ]); ?>
 
-                            <h2 class="card-inside-title"> Chọn loại quảng cáo </h2>
+                        <h2 class="card-inside-title"> Chọn loại quảng cáo </h2>
                         <div class="demo-radio-button">
                             <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($device->langdingpage_id == 1 || $device->langdingpage_id == '') { echo 'checked'; } ?> />
                             <label style="font-weight: bold" for="radio_30">Quảng cáo với password</label>

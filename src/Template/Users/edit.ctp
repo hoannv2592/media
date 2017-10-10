@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var $userData
  * @var \App\View\AppView $user
  * @var \App\View\AppView $devices
  * @var \App\View\AppView $adgroups
@@ -107,7 +108,7 @@
                             </div>
                             <div class="help-info">Loại tài khoản</div>
                         </div>
-                        <button class="btn btn-primary waves-effect" id="submit" type="submit">THÊM MỚI</button>
+                        <button class="btn btn-primary waves-effect" id="submit" type="submit">CẬP NHẬT</button>
                         <?php echo $this->Form->end(); ?>
                         <div id="email_backup"  value="<?php echo $user['email'] ? $user['email']: ''; ?>" ></div>
                     </div>

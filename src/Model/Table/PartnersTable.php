@@ -43,6 +43,7 @@ class PartnersTable extends Table
         $this->belongsTo('Devices', [
             'foreignKey' => 'device_id'
         ]);
+
     }
 
     /**

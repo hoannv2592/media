@@ -49,10 +49,10 @@
                                                 <th>STT</th>
                                                 <th>Tên thiết bị</th>
                                                 <th>User quản lý</th>
+                                                <th>Mã thiết bị</th>
+                                                <th>Khách hàng sử dụng</th>
                                                 <th>Loại quảng cáo</th>
-                                                <th>Mã xác thực</th>
-                                                <th>Mật khẩu thiết bị</th>
-                                                <th>Time sử dụng</th>
+<!--                                                <th>Time sử dụng</th>-->
                                                 <th>Ngày tạo</th>
                                                 <th>Điều hướng</th>
                                             </tr>
@@ -70,10 +70,20 @@
                                                     <td class="font-bold col-cyan">
                                                         <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail_partner' . '/' . $device->user->id]) ?>"><?php echo h($device->user->username); ?></a>
                                                     </td>
-                                                    <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : ''; ?></td>
                                                     <td><?php echo nl2br($device->apt_key); ?></td>
-                                                    <td><?php echo nl2br($device->apt_device_number); ?></td>
-                                                    <td><?php echo nl2br($device->uptime); ?></td>
+                                                    <td>
+                                                        <table class="table">
+                                                            <?php foreach ($device->partners as $partner) {  ?>
+                                                                <tr>
+                                                                    <td><a class="font-bold"
+                                                                           href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . $partner->id]) ?>"> <?php echo $partner->name; ?></a>
+                                                                    </td>
+                                                                </tr>
+                                                            <?php } ?>
+                                                        </table>
+                                                    </td>
+                                                    <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : ''; ?></td>
+<!--                                                    <td>--><?php //echo nl2br($device->uptime); ?><!--</td>-->
                                                     <td><?php echo date('d/m/Y H:i', strtotime($device->created)); ?></td>
                                                     <td class="delete_advertise" value="<?php echo h($device->id); ?>">
                                                         <div class="button-demo">
