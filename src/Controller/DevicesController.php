@@ -527,9 +527,8 @@ class DevicesController extends AppController
                         'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:''
                     ))
                     ->first();
+                $query = $this->Partners->find('all', [])->count();
                 if (empty($partner)) {
-                    $query = $this->Partners->find('all', [])->count();
-                    $new_partner = $this->Partners->newEntity();
                     $save_new_pa = array(
                         'device_id' => $apt_key_check->id,
                         'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
@@ -537,6 +536,7 @@ class DevicesController extends AppController
                         'num_clients_connect' => 1,
                         'name' => PARTNER.($query + 1),
                     );
+                    $new_partner = $this->Partners->newEntity();
                     $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa);
                     if (empty($new_partner->errors())) {
                         if (!$this->Partners->save($new_partner)) {
