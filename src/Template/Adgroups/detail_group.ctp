@@ -6,7 +6,7 @@
  * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $userData
  */
 ?>
-<section class="content" xmlns="">
+<section class="content"  xmlns="">
     <div class="container-fluid">
         <div class="row clearfix">
             <ol class="breadcrumb ">
@@ -50,37 +50,33 @@
                         ?>
                         <input id="cname" name="id" type="hidden">
                         <input id="landingpage" name="landingpage" value="<?php echo isset($adgroup->name) ? $adgroup->name:'' ?>" type="hidden">
-                        <label for="name">Tên loại nhóm quảng cáo</label>
+                        <h2 class="card-inside-title" for="name">Tên loại nhóm quảng cáo</h2>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <input type="text" class="form-control" name="name" id="name" placeholder="Tên loại nhóm quảng cáo" value="<?php echo isset($adgroup->name) ? ($adgroup->name):'' ?>" required>
                             </div>
                             <div class="help-info">Tên loại nhóm quảng cáo</div>
                         </div>
-                        <label for="description">Mô tả quảng cáo</label>
+                        <h2 class="card-inside-title" for="description">Mô tả quảng cáo</h2>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <textarea name="description" cols="30" rows="5" class="form-control no-resize" id="description" placeholder="Mô tả quảng cáo" required><?php echo isset($adgroup->description) ? ($adgroup->description):''; ?></textarea>
                             </div>
                             <div class="help-info">Mô tả quảng cáo</div>
                         </div>
-
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <label for="description">Chọn người dùng cho nhóm</label>
-                                <select id="optgroup" class="ms" multiple="multiple" name="device_id[]">
-                                    <optgroup label="">
-                                        <?php
-                                        $user_de_id = json_decode($adgroup->device_name);
-                                        foreach ($devices as $key => $device) {
-                                            if (isset($user_de_id->$key)) { ?>
-                                                <option selected="selected" value="<?php echo $key; ?>"><?php echo $device ?></option>
-                                            <?php } else { ?>
-                                                <option value="<?php echo $key; ?>"><?php echo $device ?></option>
-                                            <?php }
-                                            ?>
-                                        <?php } ?>
-                                    </optgroup>
+                        <h2 class="card-inside-title">Chọn thiết bị cho nhóm</h2>
+                        <div class="form-group" id="end_show">
+                            <div class="form-line">
+                                <select data-placeholder="Chọn thiết bị" class="chosen-select " multiple tabindex="8" name="device_id[]">
+                                    <?php $user_de_id = json_decode($adgroup->device_name);
+                                    foreach ($devices as $key => $device) {
+                                        if (isset($user_de_id->$key)) { ?>
+                                            <option selected="selected" value="<?php echo $key; ?>"><?php echo $device ?></option>
+                                        <?php } else { ?>
+                                            <option value="<?php echo $key; ?>"><?php echo $device ?></option>
+                                        <?php }
+                                        ?>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
@@ -159,6 +155,7 @@
             $('.check_pass_device').css('display', '');
         }
     });
+    $.validator.setDefaults({ ignore: ":hidden:not(select)" });
     $('#form_advanced_validation').validate({
         onkeyup: false,
         rules: {
@@ -176,7 +173,8 @@
             },
             'tile_name': { required: true },
             'langdingpage_id': { required: true },
-            'apt_device_number': { required: true }
+            'apt_device_number': { required: true },
+            'device_id[]': { required: true }
         },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');
@@ -224,3 +222,8 @@
         }
     });
 </script>
+<style>
+    .chosen-container{
+        width: 100% !important;
+    }
+</style>

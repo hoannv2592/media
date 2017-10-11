@@ -35,6 +35,7 @@ $cakeDescription = 'Media ';
         <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
     </title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js" type="text/javascript"></script>
     <?= $this->Html->meta('icon') ?>
     <?= $this->Html->css(array(
         'bootstrap.min',
@@ -47,6 +48,8 @@ $cakeDescription = 'Media ';
         'sweetalert',
         'multi-select',
         'bootstrap-select.min',
+        'prism',
+        'chosen'
 
     )) ?>
     <?= $this->Html->script(array(
@@ -72,8 +75,7 @@ $cakeDescription = 'Media ';
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
 </head>
-<body class="theme-blue">
-<!-- Page Loader -->
+<body class="theme-blue"> Page Loader
 <div class="page-loader-wrapper">
     <div class="loader">
         <div class="preloader">
@@ -89,8 +91,7 @@ $cakeDescription = 'Media ';
         <p>Please wait...</p>
     </div>
 </div>
-<!-- #END# Page Loader -->
-<!-- Overlay For Sidebars -->
+ #END# Page Loader Overlay For Sidebars
 <div class="overlay"></div>
 <!-- #END# Overlay For Sidebars -->
 <nav class="navbar">
@@ -221,3 +222,8 @@ $cakeDescription = 'Media ';
         color: #2196f3;
     }
 </style>
+
+<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js" type="text/javascript"></script>-->
+<script src="/js/chosen.jquery.js"></script>
+<script src="/js/prism.js"></script>
+<script src="/js/init.js"></script>

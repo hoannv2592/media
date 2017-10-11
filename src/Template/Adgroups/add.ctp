@@ -3,6 +3,7 @@
   * @var \App\View\AppView $this
   * @var $devices
   * @var $device
+  * @var $adgroup
   * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
   */
 ?>
@@ -55,16 +56,19 @@
                             </div>
                             <div class="help-info">Mô tả nhóm thiết bị</div>
                         </div>
-
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <label for="description">Chọn thiết bị cho nhóm</label>
-                                <select id="optgroup" class="ms" multiple="multiple" name="device_id[]">
-                                    <optgroup label="">
-                                        <?php foreach ($devices as $key => $device) { ?>
+                        <h2 class="card-inside-title">Chọn thiết bị cho nhóm</h2>
+                        <div class="form-group" id="end_show">
+                            <div class="form-line">
+                                <select data-placeholder="Chọn thiết bị" class="chosen-select" multiple tabindex="8" name="device_id[]">
+                                    <?php $user_de_id = json_decode($adgroup->device_name);
+                                    foreach ($devices as $key => $device) {
+                                        if (isset($user_de_id->$key)) { ?>
+                                            <option selected="selected" value="<?php echo $key; ?>"><?php echo $device ?></option>
+                                        <?php } else { ?>
                                             <option value="<?php echo $key; ?>"><?php echo $device ?></option>
-                                        <?php } ?>
-                                    </optgroup>
+                                        <?php }
+                                        ?>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
@@ -138,11 +142,7 @@
 
 <script type="application/javascript">
     $(document).ready(function () {
-        $.validator.addMethod("needsSelection", function (value, element) {
-            console.log(element);
-            var count = $(element).find('option:selected').length;
-            return length > 0;
-        });
+        $.validator.setDefaults({ ignore: ":hidden:not(select)" });
         $('#form_advanced_validation').validate({
             onkeyup: false,
             rules: {
@@ -156,10 +156,7 @@
                 'tile_name': {required: true},
                 'langdingpage_id': {required: true},
                 'apt_device_number': {required: true},
-                'device_id[]': {
-                    required: true,
-                    needsSelection : true
-                }
+                "device_id[]": "required"
 
             },
             highlight: function (input) {
@@ -225,3 +222,8 @@
         }
     });
 </script>
+<style>
+    .chosen-container{
+        width: 100% !important;
+    }
+</style>
