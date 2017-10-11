@@ -49,7 +49,8 @@ $cakeDescription = 'Media ';
         'multi-select',
         'bootstrap-select.min',
         'prism',
-        'chosen'
+        'chosen',
+        'bootstrap-material-datetimepicker'
 
     )) ?>
     <?= $this->Html->script(array(
@@ -69,7 +70,9 @@ $cakeDescription = 'Media ';
         'jquery.steps.min',
         'sweetalert.min',
         'form-wizard',
-        'jquery.multi-select'
+        'jquery.multi-select',
+        'moment',
+        'bootstrap-material-datetimepicker'
     ))?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -149,21 +152,30 @@ $cakeDescription = 'Media ';
                 <li class="left_menu ">
                     <?php } ?>
                     <a href="<?php echo $this->Url->build(["controller" => "Adgroups", "action" => "index"]); ?>">
-                        <i class="material-icons">view_list</i>
+                        <i class="material-icons">group_work</i>
                         <span>Quản lý nhóm thiết bị</span>
                     </a>
                 </li>
-                <?php if ($controller == 'Landingpages') { ?>
+                <?php if ($controller == 'CampaignGroups') { ?>
+            <li class="left_menu active ">
+            <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "Partners", "action" => "index"]); ?>">
+                        <i class="material-icons">account_box</i>
+                        <span>Danh sách khách hàng</span>
+                    </a>
+                </li>
+            <?php if ($controller == 'Landingpages') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
                 <li class="left_menu">
                     <?php } ?>
                     <a href="<?php echo $this->Url->build(["controller" => "Landingpages", "action" => "index"]); ?>" >
-                        <i class="material-icons">swap_calls</i>
+                        <i class="material-icons">pages</i>
                         <span>Màn hình quảng cáo</span>
                     </a>
                 </li>
-
             <?php if ($controller == 'CampaignGroups') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
@@ -174,8 +186,7 @@ $cakeDescription = 'Media ';
                         <span>Nhóm chiến dịch</span>
                     </a>
                 </li>
-                <?php
-                if ($controller == 'ServiceGroups') { ?>
+            <?php if ($controller == 'ServiceGroups') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
                 <li class="left_menu">

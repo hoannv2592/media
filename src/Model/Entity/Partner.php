@@ -33,4 +33,12 @@ class Partner extends Entity
         '*' => true,
         'id' => false
     ];
+
+    const ROLE_MALE = 1;
+    const ROLE_FEMALE = 2;
+
+    public static $sex = array(
+        Partner::ROLE_MALE => 'NAM',
+        Partner::ROLE_FEMALE => 'NỮ'
+    );
 }

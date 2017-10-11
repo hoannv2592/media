@@ -1,60 +1,68 @@
 <?php
 /**
-  * @var \App\View\AppView $this
-  */
+ * @var \App\View\AppView $this
+ * @var $userData
+ * @var \App\Model\Entity\Users[]|\Cake\Collection\CollectionInterface $users
+ */
 ?>
-<nav class="large-3 medium-4 columns" id="actions-sidebar">
-    <ul class="side-nav">
-        <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('New Partner'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Devices'), ['controller' => 'Devices', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Device'), ['controller' => 'Devices', 'action' => 'add']) ?></li>
-    </ul>
-</nav>
-<div class="partners index large-9 medium-8 columns content">
-    <h3><?= __('Partners') ?></h3>
-    <table cellpadding="0" cellspacing="0">
-        <thead>
-            <tr>
-                <th scope="col"><?= $this->Paginator->sort('id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('device_id') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('client_mac') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('auth_target') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('apt_device_number') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('num_clients_connect') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('created') ?></th>
-                <th scope="col"><?= $this->Paginator->sort('modified') ?></th>
-                <th scope="col" class="actions"><?= __('Actions') ?></th>
-            </tr>
-        </thead>
-        <tbody>
-            <?php foreach ($partners as $partner): ?>
-            <tr>
-                <td><?= $this->Number->format($partner->id) ?></td>
-                <td><?= $partner->has('device') ? $this->Html->link($partner->device->id, ['controller' => 'Devices', 'action' => 'view', $partner->device->id]) : '' ?></td>
-                <td><?= h($partner->client_mac) ?></td>
-                <td><?= h($partner->auth_target) ?></td>
-                <td><?= h($partner->apt_device_number) ?></td>
-                <td><?= h($partner->num_clients_connect) ?></td>
-                <td><?= h($partner->created) ?></td>
-                <td><?= h($partner->modified) ?></td>
-                <td class="actions">
-                    <?= $this->Html->link(__('View'), ['action' => 'view', $partner->id]) ?>
-                    <?= $this->Html->link(__('Edit'), ['action' => 'edit', $partner->id]) ?>
-                    <?= $this->Form->postLink(__('Delete'), ['action' => 'delete', $partner->id], ['confirm' => __('Are you sure you want to delete # {0}?', $partner->id)]) ?>
-                </td>
-            </tr>
-            <?php endforeach; ?>
-        </tbody>
-    </table>
-    <div class="paginator">
-        <ul class="pagination">
-            <?= $this->Paginator->first('<< ' . __('first')) ?>
-            <?= $this->Paginator->prev('< ' . __('previous')) ?>
-            <?= $this->Paginator->numbers() ?>
-            <?= $this->Paginator->next(__('next') . ' >') ?>
-            <?= $this->Paginator->last(__('last') . ' >>') ?>
-        </ul>
-        <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+<section class="content" xmlns="">
+    <div class="container-fluid">
+        <div class="row clearfix">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="card">
+                    <div class="header bg-green">
+                        <h2>Danh sách khách hàng đang sử dụng dịch vụ</h2>
+                        <ul class="header-dropdown m-r-0">
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="material-icons">info_outline</i>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:void(0);">
+                                    <i class="material-icons">help_outline</i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="body">
+                        <?php if (!empty($partners)) { ?>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped table-hover js-exportable dataTable">
+                                    <thead>
+                                    <tr class="bg-blue-grey">
+                                        <th>STT</th>
+                                        <th>Tên người dùng</th>
+                                        <th>Email</th>
+                                        <th>Số điện thoại</th>
+                                        <th>Ngày sinh</th>
+                                        <th>Địa chỉ</th>
+                                        <th>Giới tính</th>
+                                        <th>Loại thành viên</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php
+                                    $count = 0;
+                                    foreach ($partners as $k => $vl) { $count ++;?>
+                                        <tr>
+                                            <td><?php echo $count;?></td>
+                                            <td class="advertise font-bold col-cyan"><a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . $vl->id]) ?>"><?php echo h($vl->name); ?></a></td>
+                                            <td><?php echo nl2br($vl->email); ?></td>
+                                            <td><?php echo nl2br($vl->phone); ?></td>
+                                            <td><?php echo nl2br($vl->birthday); ?></td>
+                                            <td><?php echo nl2br($vl->address); ?></td>
+                                            <td><?php echo (\App\Model\Entity\Partner::$sex[$vl->sex]); ?></td>
+                                            <td><?php echo $vl->role; ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</div>
+</section>

@@ -112,7 +112,7 @@ class PartnersController extends AppController
                 if ($this->Partners->save($partner)) {
                     $conn->commit();
                     $this->Flash->success(__('The partner has been saved.'));
-                    return $this->redirect(['action' => 'detail-partner'.'/'.$partner->id]);
+                    return $this->redirect(['action' => 'index']);
                 } else {
                     $conn->rollback();
                 }

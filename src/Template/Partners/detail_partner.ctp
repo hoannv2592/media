@@ -95,7 +95,7 @@
                                             </span>
                                         <div class="form-line">
 
-                                            <input type="text" class="form-control datetime" name="birthday" value="<?php echo $partner['birthday'] ? $partner['birthday']: ''; ?>" placeholder="Ex: 30/07/2016 23:59">
+                                            <input type="text" class="form-control datetime" id="datetime_birthday" name="birthday" value="<?php echo $partner['birthday'] ? $partner['birthday']: ''; ?>" placeholder="Ex: 30/07/2016 23:59">
                                         </div>
                                     </div>
                                 </div>
@@ -126,6 +126,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <b>Địa chỉ</b>
+                                    <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">home</i>
+                                            </span>
+                                        <div class="form-line">
+                                            <input type="text" class="form-control" name="address" placeholder="Điền địa chỉ" value="<?php echo $partner['address'] ? $partner['address']: ''; ?>" required>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <button class="btn btn-primary waves-effect" id="submit" type="submit">CẬP NHẬT</button>
@@ -138,6 +149,15 @@
 </section>
 <script type="application/javascript">
     $(document).ready(function () {
+        $('#datetime_birthday').bootstrapMaterialDatePicker({
+            weekStart : 0,
+            time: false,
+            format : 'DD/MM/YYYY'
+        });
+        $(document).ready(function () {
+           var sex = '<?php echo $partner['sex'];?>';
+            $('#sex').val(sex);
+        });
         //Advanced Form Validation
         $('#form_advanced_validation_x').validate({
             rules: {
@@ -148,7 +168,7 @@
                     required: true,
                     number : true,
                     minlength:9,
-                    maxlength:11,
+                    maxlength:11
                 },
                 'email' : {
                     'email' : true
