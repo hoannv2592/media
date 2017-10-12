@@ -23,8 +23,16 @@ class PartnersController extends AppController
         $this->paginate = [
             'contain' => ['Devices']
         ];
-        $partners = $this->paginate($this->Partners);
-
+        $partners = $this->Partners->find('all', [
+            'contain' => [
+//                'Devices' => function ($q) {
+//                return $q
+//                    ->select(['Devices.id', 'Devices.name'])
+//                    ->where(['Devices.delete_flag !=' => 1])
+//                    ->hydrate(false);
+//                }
+            ],
+        ])->toArray();
         $this->set(compact('partners'));
         $this->set('_serialize', ['partners']);
     }

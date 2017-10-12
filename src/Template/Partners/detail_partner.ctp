@@ -9,7 +9,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <ol class="breadcrumb breadcrumb-bg-blue-grey">
                 <li>
-                    <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
+                    <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'index'])?>">
                         <i class="material-icons">home</i> Trang chủ
                     </a>
                 </li>

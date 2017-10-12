@@ -47,12 +47,14 @@
                                     foreach ($partners as $k => $vl) { $count ++;?>
                                         <tr>
                                             <td><?php echo $count;?></td>
-                                            <td class="advertise font-bold col-cyan"><a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . $vl->id]) ?>"><?php echo h($vl->name); ?></a></td>
+                                            <td class="advertise font-bold col-cyan">
+                                                <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . $vl->id]) ?>">
+                                                    <?php echo h($vl->name); ?></a></td>
                                             <td><?php echo nl2br($vl->email); ?></td>
                                             <td><?php echo nl2br($vl->phone); ?></td>
                                             <td><?php echo nl2br($vl->birthday); ?></td>
                                             <td><?php echo nl2br($vl->address); ?></td>
-                                            <td><?php echo (\App\Model\Entity\Partner::$sex[$vl->sex]); ?></td>
+                                            <td><?php echo isset(\App\Model\Entity\Partner::$sex[$vl->sex]) ? \App\Model\Entity\Partner::$sex[$vl->sex] :''; ?></td>
                                             <td><?php echo $vl->role; ?></td>
                                         </tr>
                                     <?php } ?>

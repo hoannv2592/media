@@ -16,17 +16,17 @@
 <section class="content" xmlns="">
     <div class="container-fluid">
         <div class="row clearfix">
-            <ol class="breadcrumb">
-                <li>
-                    <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
-                        <i class="material-icons">home</i> Trang chủ
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="javascript:void(0);">Thông tin các màn hình quảng cáo</a>
-                </li>
-            </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <ol class="breadcrumb breadcrumb-bg-blue-grey">
+                    <li>
+                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
+                            <i class="material-icons">home</i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="javascript:void(0);">Thông tin các màn hình quảng cáo</a>
+                    </li>
+                </ol>
                 <div class="card">
                     <div class="header bg-light-blue">
                         <h2>TẠO ẢNH NỀN & TITLE CHO THIẾT BỊ</h2>
