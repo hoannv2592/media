@@ -39,12 +39,12 @@
                             </div>
                             <div class="help-info">Tên thiết bị</div>
                         </div>
-                        <label for="name">Mã xác thực</label>
+                        <label for="name">Mã thiết bị</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?php echo isset($device['apt_key']) ? $device['apt_key']:''?>
                             </div>
-                            <div class="help-info">Mã xác thực</div>
+                            <div class="help-info">Mã thiết bị</div>
                         </div>
                         <label for="user_id">Người dùng quản lý thiết bị</label>
                         <div class="form-group form-float">

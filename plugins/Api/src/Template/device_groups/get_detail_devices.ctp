@@ -6,7 +6,7 @@
                 <tr class="bg-blue-grey">
                     <th>Tên thiết bị</th>
                     <th>User quản lý</th>
-                    <th>Mã xác thực</th>
+                    <th>Mã thiết bị</th>
                     <th>Ngày tạo</th>
                     <th>Điều hướng</th>
                 </tr>

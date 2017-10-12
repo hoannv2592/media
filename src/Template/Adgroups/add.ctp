@@ -10,18 +10,18 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row clearfix">
-            <ol class="breadcrumb ">
-                <li>
-                    <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'index']) ?>">
-                        <i class="material-icons">home</i> Trang chủ
-                    </a>
-                </li>
-                <li class="active"><a href="javascript:void(0)">Tạo nhóm</a></li>
-            </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <ol class="breadcrumb breadcrumb-bg-blue-grey">
+                    <li>
+                        <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'index']) ?>">
+                            <i class="material-icons">home</i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="active"><a href="javascript:void(0)">Tạo nhóm</a></li>
+                </ol>
                 <div class="card">
                     <div class="header bg-light-blue">
-                        <h2>THÊM MỚI NHÓM THIẾT BỊ QUẢNG CÁO </h2><small>Description text here...</small>
+                        <h2>THÊM MỚI NHÓM THIẾT BỊ QUẢNG CÁO </h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
                                 <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
@@ -52,7 +52,7 @@
                         <label for="description">Mô tả nhóm thiết bị</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <textarea name="description" cols="30" rows="5" class="form-control no-resize" placeholder="Mô tả nhóm thiết bị" required></textarea>
+                                <textarea name="description" cols="30" rows="2" class="form-control no-resize" placeholder="Mô tả nhóm thiết bị" required></textarea>
                             </div>
                             <div class="help-info">Mô tả nhóm thiết bị</div>
                         </div>

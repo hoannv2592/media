@@ -6,7 +6,8 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row clearfix">
-            <ol class="breadcrumb">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <ol class="breadcrumb breadcrumb-bg-blue-grey">
                 <li>
                     <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
                         <i class="material-icons">home</i> Trang chủ
@@ -16,6 +17,7 @@
                     <a href="javascript:void(0)">Thông tin khách hàng</a>
                 </li>
             </ol>
+            </div>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header bg-light-blue">
@@ -104,7 +106,7 @@
                                     <b>Số lần ghé thăm</b>
                                     <div class="input-group">
                                             <span class="input-group-addon">
-                                                <i class="material-icons">phone</i>
+                                                <i class="material-icons">confirmation_number</i>
                                             </span>
                                         <div class="form-line">
                                             <input type="text" readonly="readonly" class="form-control mobile-phone-number" name="num_clients_connect" value="<?php echo isset($partner->num_clients_connect) ? $partner->num_clients_connect:''; ?>" placeholder="Ex: +00 (000) 000-00-00">
@@ -149,10 +151,15 @@
 </section>
 <script type="application/javascript">
     $(document).ready(function () {
-        $('#datetime_birthday').bootstrapMaterialDatePicker({
-            weekStart : 0,
-            time: false,
-            format : 'DD/MM/YYYY'
+        $('#datetime_birthday').datetimepicker({
+            weekStart: 1,
+            todayBtn:  1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+            format: "dd/mm/yyyy"
         });
         $(document).ready(function () {
            var sex = '<?php echo $partner['sex'];?>';

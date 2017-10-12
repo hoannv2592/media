@@ -7,11 +7,11 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row clearfix">
-            <ol class="breadcrumb">
-                <li><a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index'])?>"><i class="material-icons">home</i> Trang chủ</a></li>
-                <li class="active"><a href="javascript:void(0)">Thông tin người dùng</a></li>
-            </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <ol class="breadcrumb breadcrumb-bg-blue-grey">
+                    <li><a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'index'])?>"><i class="material-icons">home</i> Trang chủ</a></li>
+                    <li class="active"><a href="javascript:void(0)">Thông tin người dùng</a></li>
+                </ol>
                 <div class="card">
                     <div class="header bg-light-blue">
                         <h2>THÔNG TIN NGƯỜI DÙNG</h2>

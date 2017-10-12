@@ -28,7 +28,7 @@
                     <div class="body">
                         <?php if (!empty($partners)) { ?>
                             <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover js-exportable dataTable">
+                                <table class="table table-bordered table-striped table-hover js-exportable_partner dataTable">
                                     <thead>
                                     <tr class="bg-blue-grey">
                                         <th>STT</th>

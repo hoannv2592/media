@@ -8,16 +8,16 @@
 <section class="content">
     <div class="container-fluid">
         <div class="row clearfix">
-            <ol class="breadcrumb">
-                <li>
-                    <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
-                        <i class="material-icons">home</i> Trang chủ
-                    </a>
-                </li>
-                <li class="active"><a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device/'.$device['id']])?>">Thông tin</a></li>
-                <li class="active"><a href="javascript:void(0)">Chỉnh sửa thông tin</a></li>
-            </ol>
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <ol class="breadcrumb breadcrumb-bg-blue-grey">
+                    <li>
+                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
+                            <i class="material-icons">home</i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="active"><a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device/'.$device['id']])?>">Thông tin</a></li>
+                    <li class="active"><a href="javascript:void(0)">Chỉnh sửa thông tin</a></li>
+                </ol>
                 <div class="card">
                     <div class="header bg-light-blue">
                         <h2>THÔNG TIN THIẾT BỊ</h2>
@@ -48,12 +48,12 @@
                             </div>
                             <div class="help-info">Tên thiết bị</div>
                         </div>
-                        <label for="name">Mã xác thực</label>
+                        <label for="name">Mã thiết bị</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <input disabled="disabled" type="text" class="form-control" name="apt_key" id="apt_key" value="<?php echo isset($device['apt_key']) ? $device['apt_key']:''?>" required>
                             </div>
-                            <div class="help-info">Mã xác thực</div>
+                            <div class="help-info">Mã thiết bị</div>
                         </div>
                         <label for="user_id">Chọn tài khoản</label>
                         <div class="form-group form-float">

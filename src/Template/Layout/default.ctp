@@ -35,7 +35,6 @@ $cakeDescription = 'Media ';
         <?= $cakeDescription ?>:
         <?= $this->fetch('title') ?>
     </title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js" type="text/javascript"></script>
     <?= $this->Html->meta('icon') ?>
     <?= $this->Html->css(array(
         'bootstrap.min',
@@ -50,7 +49,7 @@ $cakeDescription = 'Media ';
         'bootstrap-select.min',
         'prism',
         'chosen',
-        'bootstrap-material-datetimepicker'
+        'bootstrap-datetimepicker'
 
     )) ?>
     <?= $this->Html->script(array(
@@ -71,8 +70,7 @@ $cakeDescription = 'Media ';
         'sweetalert.min',
         'form-wizard',
         'jquery.multi-select',
-        'moment',
-        'bootstrap-material-datetimepicker'
+        'bootstrap-datetimepicker',
     ))?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -156,7 +154,7 @@ $cakeDescription = 'Media ';
                         <span>Quản lý nhóm thiết bị</span>
                     </a>
                 </li>
-                <?php if ($controller == 'CampaignGroups') { ?>
+            <?php if ($controller == 'Partners') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
                 <li class="left_menu">
@@ -233,8 +231,6 @@ $cakeDescription = 'Media ';
         color: #2196f3;
     }
 </style>
-
-<!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.js" type="text/javascript"></script>-->
 <script src="/js/chosen.jquery.js"></script>
 <script src="/js/prism.js"></script>
 <script src="/js/init.js"></script>
