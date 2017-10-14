@@ -180,9 +180,14 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                             <div class="">
                                 <div class="form-line"></div>
                             </div>
-                            <div class="row m-b-10">
+                            <div class="row ">
                                 <div class="col-xs-6 col-xs-offset-3">
                                     <a href="<?php echo $infor_devices->auth_target;?>" class="btn btn-lg btn-block bg-pink waves-effect" >Connect to wifi</a>
+                                </div>
+                            </div>
+                            <div class="row ">
+                                <div class="col-xs-6 col-xs-offset-3">
+                                    <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $infor_devices->id . '/' . $infor_devices->user_id]);?>" class="btn btn-lg btn-block bg-purple waves-effect" >Setting quảng cáo</a>
                                 </div>
                             </div>
                     </div>
@@ -223,14 +228,23 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
         $('#user_password-error').remove();
     });
 
+    jQuery.validator.addMethod("nonNumeric", function(value, element) {
+        return this.optional(element) || isNaN(parseInt(value));
+    },"Hãy nhập đúng tên");
+    $.validator.addMethod('customphone', function (value, element) {
+        return this.optional(element) || /^[0-9-+]+$/.test(value);
+    }, "Please enter a valid phone number");
     $('#register_form').validate({
         rules: {
             'full_name': {
-                required: true
+                required: true,
+                nonNumeric: true
             },
             'telephone': {
                 required: true,
-                number : true
+                customphone : true,
+                minlength:10,
+                maxlength:11
             },
             'address': {
                 required: true
@@ -242,7 +256,8 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
             },
             'telephone': {
                 required: 'Hãy nhập',
-                number :'Hãy nhập số điện thoại'
+                number :'Hãy nhập số điện thoại',
+                minlength :'Bạn đã nhập sai số điện thoại',
             },
             'address': {
                 required: 'Hãy nhập'
