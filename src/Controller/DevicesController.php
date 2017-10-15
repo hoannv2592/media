@@ -591,7 +591,7 @@ class DevicesController extends AppController
                 }
                 if (!$chk) {
                     $conn->commit();
-                    $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . $device->id]);
+                    $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id)]);
                 } else {
                     $conn->rollback();
                 }
