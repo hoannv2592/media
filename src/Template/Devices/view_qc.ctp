@@ -95,7 +95,7 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
             <div class="landing__cover landing__cover--main landing__cover--flexible">
                 <div class="u-ui-padding-x-large landing__cover-wrapper">
                     <div class="landing__cover-content u-color-white">
-                        <div class="c-text--heading c-text--parent c-text--center c-text"><?echo $slogan; ?>
+                        <div class="c-text--heading c-text--parent c-text--center c-text"><?php echo $slogan; ?>
                         </div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="logo">
