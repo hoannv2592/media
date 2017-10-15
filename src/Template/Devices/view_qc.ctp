@@ -147,7 +147,7 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                         </div>
                         <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
                         <div class="c-spacer--x-large c-spacer"></div>
-                        <div class="c-text--heading c-text--parent c-text--center c-text"><?echo $slogan; ?></div>
+                        <div class="c-text--heading c-text--parent c-text--center c-text"><?php echo $slogan; ?></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
