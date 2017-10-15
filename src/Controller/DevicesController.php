@@ -634,7 +634,7 @@ class DevicesController extends AppController
                                 if (empty($partner->errors())) {
                                     if ($this->Partners->save($partner)) {
                                         $conn->commit();
-                                        $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . $data_device->id]);
+                                        $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id)]);
                                     }
                                 }
                             } else {
