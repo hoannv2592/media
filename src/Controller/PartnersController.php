@@ -25,12 +25,12 @@ class PartnersController extends AppController
         ];
         $partners = $this->Partners->find('all', [
             'contain' => [
-//                'Devices' => function ($q) {
-//                return $q
-//                    ->select(['Devices.id', 'Devices.name'])
-//                    ->where(['Devices.delete_flag !=' => 1])
-//                    ->hydrate(false);
-//                }
+                'Devices' => function ($q) {
+                return $q
+                    ->select(['Devices.name'])
+                    ->where(['Devices.delete_flag !=' => 1])
+                    ->hydrate(false);
+                }
             ],
         ])->toArray();
         $this->set(compact('partners'));
@@ -64,10 +64,9 @@ class PartnersController extends AppController
     public function detailPartner($id = null)
     {
         if (isset($id)) {
-            if (!$this->Partners->exists($id) OR ! is_numeric($id)) {
-                return $this->redirect(array('controller' => 'Devices', 'action' => 'index'));
-            } else {
-
+            $id = \UrlUtil::_decodeUrl($id);
+            if (!$this->Partners->exists(['id' => $id])) {
+                return $this->redirect(array('controller' => 'Partners', 'action' => 'index'));
             }
         }
         $partner = $this->Partners->get($id, [
@@ -109,6 +108,7 @@ class PartnersController extends AppController
      */
     public function edit($id = null)
     {
+        $id = \UrlUtil::_decodeUrl($id);
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $partner = $this->Partners->get($id, [

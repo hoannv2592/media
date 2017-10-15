@@ -38,24 +38,24 @@
                                         <th>Ngày sinh</th>
                                         <th>Địa chỉ</th>
                                         <th>Giới tính</th>
-                                        <th>Loại thành viên</th>
+                                        <th>Thiết bị quản lý</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <?php
                                     $count = 0;
-                                    foreach ($partners as $k => $vl) { $count ++;?>
+                                    foreach ($partners as $k => $vl) {$count ++;?>
                                         <tr>
                                             <td><?php echo $count;?></td>
                                             <td class="advertise font-bold col-cyan">
-                                                <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . $vl->id]) ?>">
+                                                <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($vl->id)]) ?>">
                                                     <?php echo h($vl->name); ?></a></td>
                                             <td><?php echo nl2br($vl->email); ?></td>
                                             <td><?php echo nl2br($vl->phone); ?></td>
                                             <td><?php echo nl2br($vl->birthday); ?></td>
                                             <td><?php echo nl2br($vl->address); ?></td>
                                             <td><?php echo isset(\App\Model\Entity\Partner::$sex[$vl->sex]) ? \App\Model\Entity\Partner::$sex[$vl->sex] :''; ?></td>
-                                            <td><?php echo $vl->role; ?></td>
+                                            <td><?php echo $vl->device->name; ?></td>
                                         </tr>
                                     <?php } ?>
                                     </tbody>

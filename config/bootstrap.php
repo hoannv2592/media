@@ -221,4 +221,6 @@ require(ROOT . DS . 'vendor' . DS . 'Spout' . DS . 'Autoloader' . DS . 'autoload
 require_once  (ROOT . DS . 'vendor' . DS . 'PHPExcel' . DS .'Classes' . DS .'PHPExcel' . DS . 'IOFactory.php');
 require_once  (ROOT . DS . 'vendor' . DS . 'PHPExcel' . DS .'Classes' . DS .'PHPExcel' . DS . 'Style' . DS . 'Fill.php');
 require_once  (ROOT . DS . 'vendor' . DS . 'PHPExcel'. DS .'Classes' . DS . 'PHPExcel.php');
+require_once  (ROOT . DS . 'src' . DS . 'lib'. DS .'UrlUtils.php');
 Plugin::load('Api', ['bootstrap' => false, 'routes' => true]);
+//App::import('Lib', 'UrlUtils');

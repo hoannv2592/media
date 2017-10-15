@@ -33,7 +33,7 @@
                         <?php echo $this->Form->create('Devices', array(
                             'id' => 'form_edit_validation',
                             'type' => 'post',
-                            'url' => array('controller' => 'Devices', 'action' => 'edit'.'/'.$device['id']),
+                            'url' => array('controller' => 'Devices', 'action' => 'edit'.'/'. UrlUtil::_encodeUrl($device['id'])),
                             'inputDefaults' => array(
                                 'label' => false,
                                 'div' => false

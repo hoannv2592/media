@@ -69,7 +69,7 @@
                         <?= $this->Flash->render() ?>
                         <?php echo $this->Form->create('energy_input', [
                             'type' => 'file',
-                            'url' => ['controller' => 'Devices', 'action' => 'set_qc'.'/'.$device_id.'/'.$user_id],
+                            'url' => ['controller' => 'Devices', 'action' => 'set_qc'.'/'. UrlUtil::_encodeUrl($device_id).'/'.UrlUtil::_encodeUrl($user_id)],
                             'id' => 'uploadForm',
                             'inputDefaults' => array(
                                 'label' => false,
@@ -86,10 +86,24 @@
                             <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($device->langdingpage_id == 3) { echo 'checked'; }?> />
                             <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
                         </div>
+                        <h2 class="card-inside-title">Slogan</h2>
+                        <div class="form-group" id="end_show">
+                            <div class="form-line">
+                                <input type="text" name="slogan" id="tile_name" class="form-control" value="<?php echo isset($device->slogan) ? $device->slogan :'';?>" placeholder="Điền slogan..">
+                            </div>
+                        </div>
                         <h2 class="card-inside-title">Tên cơ sở dịch vụ</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
                                 <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($device->tile_name) ? $device->tile_name :'';?>" placeholder="Điền tên..">
+                            </div>
+                        </div>
+                        <div class="message">
+                            <h2 class="card-inside-title">Tin nhắn voucher</h2>
+                            <div class="form-group" id="end_show">
+                                <div class="form-line">
+                                    <input type="text" name="message" id="message" class="form-control" value="<?php echo isset($device->message) ? $device->message :'';?>" placeholder="Điền message..">
+                                </div>
                             </div>
                         </div>
                         <div class="check_pass_device">
@@ -133,18 +147,28 @@
 <script type="application/javascript">
     $(document).ready(function () {
         var langding = "<?php echo $device->langdingpage_id; ?>";
-        if (langding != 1) {
-            $('.check_pass_device').css('display', 'none');
-        } else {
+        if (langding == 1) {
             $('.check_pass_device').css('display', '');
+            $('.message').css('display', 'none');
+        } else if (langding == 3) {
+            $('.check_pass_device').css('display', 'none');
+            $('.message').css('display', '');
+        } else {
+            $('.message').css('display', 'none');
+            $('.check_pass_device').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
-        if (__val != 1) {
-            $('.check_pass_device').css('display', 'none');
-        } else {
+        if (__val == 1) {
             $('.check_pass_device').css('display', '');
+            $('.message').css('display', 'none');
+        } else if (__val == 3) {
+            $('.check_pass_device').css('display', 'none');
+            $('.message').css('display', '');
+        } else {
+            $('.message').css('display', 'none');
+            $('.check_pass_device').css('display', 'none');
         }
     });
     $('#uploadForm').validate({

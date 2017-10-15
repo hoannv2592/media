@@ -11,6 +11,9 @@ use Cake\Utility\Hash;
  *
  * @property \App\Model\Table\AdgroupsTable $Adgroups
  * @property \App\Model\Table\DevicesTable $Devices
+ * @property \App\Model\Table\DeviceGroupsTable $DeviceGroups
+ * @property \App\Model\Table\AdgroupChangeHistoriesTable $AdgroupChangeHistories
+ * @property \App\Model\Table\AdgroupChangeHistory $AdgroupChangeHistory
  * @property  \App\Controller\Component\UploadImageComponent $UploadImage
  *
  * @method \App\Model\Entity\Adgroup[] paginate($object = null, array $settings = [])
@@ -27,8 +30,10 @@ class AdgroupsController extends AppController
         $this->loadComponent('UploadImage');
 
         // Load Files model
-        $this->loadModel('FileAttachments');
         $this->loadModel('Logs');
+        $this->loadModel('DeviceGroups');
+        $this->loadModel('FileAttachments');
+        $this->loadModel('AdgroupChangeHistories');
     }
 
     public function beforeRender(Event $event)
@@ -83,7 +88,8 @@ class AdgroupsController extends AppController
     }
 
     /**
-     * Add method
+     * Add method group
+     * @author hoannv
      *
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
@@ -92,25 +98,33 @@ class AdgroupsController extends AppController
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $this->getAllData();
-        $groups = $this->Adgroups->find()->select(['id', 'device_id'])->where(['delete_flag !=' => DELETED])->hydrate(false)->combine('id', 'device_id')->toList();
+        $groups = $this->Adgroups->find()
+            ->select(['id', 'device_id'])
+            ->where(['delete_flag !=' => DELETED])
+            ->hydrate(false)
+            ->combine('id', 'device_id')->toList();
         if (!empty($groups)) {
             $device_id = array();
             foreach ($groups as $k => $vl) {
                 $device_id[] = json_decode($vl);
             }
             $merged = call_user_func_array('array_merge', $device_id);
-            $devices = $this->Devices->find('all') ->where(['id NOT IN' => $merged])->combine('id','name')->toArray();
+            $devices = $this->Devices->find('all')
+                ->where(['id NOT IN' => $merged])
+                ->combine('id','name')->toArray();
         } else {
-            $devices = $this->Devices->find()->where(['Devices.delete_flag !=' => DELETED])->select(['Devices.id', 'Devices.name'])->order(['Devices.id'=> 'DESC'])->combine('id', 'name')->toArray();
+            $devices = $this->Devices->find()
+                ->where(['Devices.delete_flag !=' => DELETED])
+                ->select(['Devices.id', 'Devices.name'])
+                ->order(['Devices.id'=> 'DESC'])
+                ->combine('id', 'name')->toArray();
         }
         $adgroup = $this->Adgroups->newEntity();
         if ($this->request->is('post')) {
             $listNameDevice = ($this->getNameDevice($this->request->getData()['device_id']));
-            $devices = $this->Devices->find('all')
-                ->where(['id IN' => $this->request->getData()['device_id']])
-                ->select(['id'])
-                ->hydrate(false)
-                ->toList();
+            $devices = $this->Devices->find()
+                ->where(['id IN' => $this->request->getData()['device_id']])->select(['id'])
+                ->hydrate(false)->toList();
             // Common Usage:
             $result_id_devices = Hash::extract($devices, '{n}.id');
             $data_service = array();
@@ -126,9 +140,22 @@ class AdgroupsController extends AppController
                 }
             }
             $data_service['tile_name'] = $this->request->getData()['tile_name'];
-            $data_service['langdingpage_id'] = $this->request->getData()['langdingpage_id'];
+            $data_service['landing_group_id'] = $this->request->getData()['langdingpage_id'];
             $data_service['apt_device_number'] = $this->request->getData()['apt_device_number'];
-            $this->publishall($result_id_devices, $data_service);
+            //$this->publishall($result_id_devices, $data_service);
+            $data_group_devices = array(
+                'device_id' => json_encode(array_values($this->request->getData()['device_id'])),
+                'langdingpage_id' => $this->request->getData()['langdingpage_id'],
+                'back_ground' => isset($data_service['image_backgroup']) ? $data_service['image_backgroup']:'',
+                'number_pass' => $this->request->getData()['apt_device_number'],
+                'tile_name' => $this->request->getData()['tile_name'],
+                'device_name' => ($listNameDevice),
+                'path' => isset($data_service['path']) ? $data_service['path'] : '',
+                'slogan' => $this->request->getData()['slogan'],
+                'message' => $this->request->getData()['message'],
+            );
+            $device_group = $this->DeviceGroups->newEntity();
+            $device_group= $this->DeviceGroups->patchEntity($device_group, $data_group_devices );
             $data_group = array(
                 'name' => $this->request->getData()['name'],
                 'device_id' => json_encode(array_values($this->request->getData()['device_id'])),
@@ -139,13 +166,30 @@ class AdgroupsController extends AppController
                 'image_backgroup' => isset($data_service['image_backgroup']) ? $data_service['image_backgroup']:'',
                 'tile_name' => $this->request->getData()['tile_name'],
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
+                'slogan' => $this->request->getData()['slogan'],
+                'message' => $this->request->getData()['message'],
             );
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             $adgroup->delete_flag = UN_DELETED;
             if (empty($adgroup->errors())) {
-                if ($this->Adgroups->save($adgroup)) {
-                    $conn->commit();
-                    $this->redirect(['action' => 'index']);
+                $save_ad = $this->Adgroups->save($adgroup);
+                if ($save_ad) {
+                    $group_id = $save_ad->id;
+                    //todo update data devices add to group
+                    $device_adgroup = array(
+                        'adgroup_id' => $group_id
+                    );
+                    $this->publishall($result_id_devices, $device_adgroup);
+                    $device_group->adgroup_id = $group_id;
+                    if (empty($device_group->errors())) {
+                        if ($this->DeviceGroups->save($device_group)) {
+                            $conn->commit();
+                            $this->redirect(['action' => 'index']);
+                        } else {
+                            $conn->rollback();
+                            $this->redirect(['action' => 'add']);
+                        }
+                    }
                 } else {
                     $conn->rollback();
                     $this->redirect(['action' => 'add']);
@@ -220,10 +264,44 @@ class AdgroupsController extends AppController
         $this->request->allowMethod(['post', 'delete']);
         if ($this->request->getData()) {
             $adgroups = $this->Adgroups->get($this->request->getData('id'));
+            $device_group = $this->DeviceGroups->find()
+                ->where(['adgroup_id' => $this->request->getData('id'), 'device_id' => $adgroups->device_id, 'delete_flag !=' => DELETED])
+                ->select('id')
+                ->first()
+                ->toArray()
+            ;
+
+            $result_change[] = array(
+                'fields' => 'delete_flag',
+                'from' => 'chưa xóa',
+                'to' => 'đã xóa'
+            );
+            $change_log = array(
+                'adgroup_id' => $adgroups->id,
+                'contents' => json_encode($result_change, true)
+            );
+            $group = $this->DeviceGroups->get($device_group['id']);
+            $group->delete_flag = true;
             $adgroups->delete_flag = true;
+            $AdgroupChangeHistoriesTable = $this->AdgroupChangeHistories->newEntity();
+            $AdgroupChangeHistoriesTable = $this->AdgroupChangeHistories->patchEntity($AdgroupChangeHistoriesTable, $change_log);
+            $chk = true;
             if($this->Adgroups->save($adgroups)){
-                $conn->commit();
-                die(json_encode(true));
+                if (!$this->AdgroupChangeHistories->save($AdgroupChangeHistoriesTable)) {
+                    $chk = false;
+                }
+                if (!$this->DeviceGroups->save($group)) {
+                    $chk = false;
+                }
+
+                if ($chk) {
+                    $conn->commit();
+                    die(json_encode(true));
+                } else {
+                    $conn->rollback();
+                    die(json_encode(false));
+                }
+
             } else {
                 $conn->rollback();
                 die(json_encode(false));
@@ -320,19 +398,26 @@ class AdgroupsController extends AppController
     }
 
     /**
+     * update for group ...
+     * @author hoannv
+     *
      * @param null $id
      * @return \Cake\Http\Response|null
      */
     public function detailGroup($id =null)
     {
+        $id = \UrlUtil::_decodeUrl($id);
         $conn = ConnectionManager::get('default');
         $conn->begin();
-        if (!$this->Adgroups->exists($id)) {
+        if (!$this->Adgroups->exists(['id' => $id])) {
             return $this->redirect(['action' => 'index']);
         }
         $this->getAllData();
         $adgroup = $this->Adgroups->get($id);
-        if ($this->request->getData()) {
+        $device_group_id = $this->DeviceGroups->find()
+            ->where(['adgroup_id' => $id, 'device_id' => $adgroup->device_id, 'delete_flag !=' => DELETED])
+            ->select(['id'])->first()->toArray();
+        if ($this->request->is('post')) {
             $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
             $data_group = array(
                 'device_name' => $listUserid,
@@ -342,8 +427,9 @@ class AdgroupsController extends AppController
                 'description' => $this->request->getData()['description'],
                 'langdingpage_id' => $this->request->getData()['langdingpage_id'],
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
+                'message' => $this->request->getData()['message'],
+                'slogan' => $this->request->getData()['slogan'],
             );
-            $data_device = array();
             if (!empty($this->request->data['file']['name'])) {
                 // upload the file to the server
                 $file = array(
@@ -353,38 +439,76 @@ class AdgroupsController extends AppController
                 unset($this->request->data['file']);
 
                 if(array_key_exists('urls', $fileOK)) {
-                    $data_device['path'] = $fileOK['urls'][0];
-                    $data_device['image_backgroup'] = $file['file']['name'];
                     $data_group['path'] = $fileOK['urls'][0];
                     $data_group['image_backgroup'] = $file['file']['name'];
                 }
             }
-            $devices = $this->Devices->find('all')
-                ->where(['id IN' => $this->request->getData()['device_id']])
-                ->select(['id'])
-                ->hydrate(false)
-                ->toList();
             // Common Usage:
-            $data_device['langdingpage_id'] = $this->request->getData()['langdingpage_id'];
-            $data_device['apt_device_number'] = $this->request->getData()['apt_device_number'];
-            $data_device['tile_name'] = $this->request->getData()['tile_name'];
-            $result_id_devices = Hash::extract($devices, '{n}.id');
-            $this->publishall($result_id_devices, $data_device);
-            //$this->publishall($result_id_devices, $this->request->getData()['langdingpage_id']);
+            $device_group = array(
+                'id' => $device_group_id['id'],
+                'adgroup_id' => $id,
+                'device_id' => json_encode($this->request->getData()['device_id']),
+                'langdingpage_id' => $this->request->getData()['langdingpage_id'],
+                'back_ground' => isset($data_group['image_backgroup']) ? $data_group['image_backgroup'] : $adgroup->image_backgroup ,
+                'path' => isset($data_group['path']) ? $data_group['path']: $adgroup->path ,
+                'number_pass' => $this->request->getData()['apt_device_number'],
+                'tile_name' => $this->request->getData()['tile_name'],
+                'device_name' => $listUserid,
+                'message' => $this->request->getData()['message'],
+                'slogan' => $this->request->getData()['slogan'],
+
+            );
+            //$this->publishall($result_id_devices, $data_device);
+            $log_before = $adgroup->toArray();
+            pr($log_before);
+            unset($log_before['created']);
+            unset($log_before['modified']);
+            $group = $this->DeviceGroups->get($device_group_id['id']);
+            $group = $this->DeviceGroups->patchEntity($group, $device_group);
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
+            $log_after = $adgroup->toArray();
+            unset($log_after['created']);
+            unset($log_after['modified']);
+            pr($log_after);
+            $diffs = array_diff_assoc($log_before, $log_after);
+            $result_change = array();
+            if (!empty($diffs)) {
+                foreach ($diffs as $k => $vl) {
+                    $result_change[] = array(
+                        'fields' => $k,
+                        'from' => $vl,
+                        'to' => $log_after[$k]
+                    );
+                }
+            }
+            $change_log = array(
+                'adgroup_id' => $adgroup->id,
+                'contents' => json_encode($result_change, true)
+            );
+            $AdgroupChangeHistoriesTable = $this->AdgroupChangeHistories->newEntity();
+            $AdgroupChangeHistoriesTable = $this->AdgroupChangeHistories->patchEntity($AdgroupChangeHistoriesTable, $change_log);
+            $chk = true;
             if (empty($adgroup->errors())) {
                 if ($this->Adgroups->save($adgroup)) {
-                    $conn->commit();
-                    $this->Flash->success(__('The user has been saved.'));
-                    return $this->redirect(['action' => 'index']);
+                    if (!$this->AdgroupChangeHistories->save($AdgroupChangeHistoriesTable)) {
+                        $chk = false;
+                    }
+                    if (!$this->DeviceGroups->save($group)) {
+                        $chk = false;
+                    }
+                    if ($chk) {
+                        $conn->commit();
+                        return $this->redirect(['action' => 'index']);
+                    } else {
+                        $conn->rollback();
+                        return $this->redirect(['action' => 'edit'.'/'.$id]);
+                    }
                 } else {
                     $conn->rollback();
-                    $this->Flash->error(__('The device could not be saved. Please, try again.'));
                     return $this->redirect(['action' => 'edit'.'/'.$id]);
                 }
             } else {
                 $conn->rollback();
-                $this->Flash->error(__('The device could not be saved. Please, try again.'));
                 return $this->redirect(['action' => 'edit'.'/'.$id]);
             }
         }
@@ -392,6 +516,13 @@ class AdgroupsController extends AppController
         $this->set(compact('adgroup','apt_device_number'));
     }
 
+    /**
+     * Update langding group_id_ for devices
+     *
+     * @param $list_id
+     * @param $lan
+     * @return bool
+     */
     public function publishall($list_id, $lan)
     {
         $conn = ConnectionManager::get('default');

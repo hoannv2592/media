@@ -117,7 +117,7 @@
                         <?php echo $this->Form->create('Landingpages', array(
                             'id' => 'form_validation',
                             'type' => 'post',
-                            'url' => array('controller' => 'Landingpages', 'action' => 'delete'),
+                            'url' => array('controller' => 'Adgroups', 'action' => 'delete'),
                             'inputDefaults' => array(
                                 'label' => false,
                                 'div' => false
@@ -125,9 +125,9 @@
                             'onsubmit'=>"event.returnValue = false; return false;",
                         ));
                         ?>
-                        <p>Bạn có chắc chắn muốn xóa nhóm quảng cáo này không? </p>
+                        <p>Bạn có chắc chắn muốn xóa nhóm thiết bị quảng cáo này không? </p>
                         <div class="modal-footer">
-                            <button class="btn btn-primary waves-effect" id = "submit_delete" type="submit">XÓA NHÓM QUẢNG CÁO</button>
+                            <button class="btn btn-primary waves-effect" id = "submit_delete" type="submit">XÓA</button>
                             <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
                         </div>
                         <?php echo $this->Form->end(); ?>

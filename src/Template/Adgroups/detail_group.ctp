@@ -41,7 +41,7 @@
                         echo $this->Form->create('adgroups', array(
                             'id' => 'form_advanced_validation',
                             'type' => 'file',
-                            'url' => array('controller' => 'Adgroups', 'action' => 'detail_group'.'/'.$adgroup->id),
+                            'url' => array('controller' => 'Adgroups', 'action' => 'detail_group'.'/'. UrlUtil::_encodeUrl($adgroup->id)),
                             'inputDefaults' => array(
                                 'label' => false,
                                 'div' => false
@@ -60,7 +60,7 @@
                         <h2 class="card-inside-title" for="description">Mô tả quảng cáo</h2>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <textarea name="description" cols="30" rows="5" class="form-control no-resize" id="description" placeholder="Mô tả quảng cáo" required><?php echo isset($adgroup->description) ? ($adgroup->description):''; ?></textarea>
+                                <textarea name="description" cols="30" rows="2" class="form-control no-resize" id="description" placeholder="Mô tả quảng cáo" required><?php echo isset($adgroup->description) ? ($adgroup->description):''; ?></textarea>
                             </div>
                             <div class="help-info">Mô tả quảng cáo</div>
                         </div>
@@ -97,6 +97,20 @@
                         <div class="form-group" id="end_show">
                             <div class="form-line">
                                 <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($adgroup->tile_name) ? $adgroup->tile_name :'';?>" placeholder="Điền tên..">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">Slogan</h2>
+                        <div class="form-group" id="end_show">
+                            <div class="form-line">
+                                <input type="text" name="slogan" id="tile_name" class="form-control" value="<?php echo isset($adgroup->slogan) ? $adgroup->slogan :'';?>" placeholder="Điền slogan..">
+                            </div>
+                        </div>
+                        <div class="message">
+                            <h2 class="card-inside-title">Tin nhắn voucher</h2>
+                            <div class="form-group" id="end_show">
+                                <div class="form-line">
+                                    <input type="text" name="message" id="message" class="form-control" value="<?php echo isset($adgroup->message) ? $adgroup->message :'';?>" placeholder="Điền message..">
+                                </div>
                             </div>
                         </div>
                         <div class="check_pass_device">
@@ -148,11 +162,29 @@
 </section>
 <script type="application/javascript">
     $(document).ready(function () {
-       var langding = "<?php echo $adgroup->langdingpage_id; ?>";
-        if (langding != 1) {
-            $('.check_pass_device').css('display', 'none');
-        } else {
+        var langding = "<?php echo $adgroup->langdingpage_id; ?>";
+        if (langding == 1) {
             $('.check_pass_device').css('display', '');
+            $('.message').css('display', 'none');
+        } else if (langding == 3) {
+            $('.check_pass_device').css('display', 'none');
+            $('.message').css('display', '');
+        } else {
+            $('.message').css('display', 'none');
+            $('.check_pass_device').css('display', 'none');
+        }
+    });
+    $('.radio-col-grey').change(function () {
+        var __val = $(this).val();
+        if (__val == 1) {
+            $('.check_pass_device').css('display', '');
+            $('.message').css('display', 'none');
+        } else if (__val == 3) {
+            $('.check_pass_device').css('display', 'none');
+            $('.message').css('display', '');
+        } else {
+            $('.message').css('display', 'none');
+            $('.check_pass_device').css('display', 'none');
         }
     });
     $.validator.setDefaults({ ignore: ":hidden:not(select)" });
@@ -174,7 +206,7 @@
             'tile_name': { required: true },
             'langdingpage_id': { required: true },
             'apt_device_number': { required: true },
-            'device_id[]': { required: true }
+            'device_id[]': { required: true },
         },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');

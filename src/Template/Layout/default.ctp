@@ -164,6 +164,16 @@ $cakeDescription = 'Media ';
                         <span>Danh sách khách hàng</span>
                     </a>
                 </li>
+                <?php if ($controller == 'AdgroupChangeHistories') { ?>
+            <li class="left_menu active ">
+            <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "AdgroupChangeHistories", "action" => "index"]); ?>">
+                        <i class="material-icons">change_history</i>
+                        <span>Lịch sử thay đổi nhóm thiết bị</span>
+                    </a>
+                </li>
             <?php if ($controller == 'Landingpages') { ?>
             <li class="left_menu active ">
             <?php } else { ?>

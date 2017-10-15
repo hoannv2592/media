@@ -1,22 +1,25 @@
 <?php
 /**
  * @var \App\View\AppView $infor_devices
+ * @var \App\View\AppView $device_group
  * @var \App\View\AppView $this
  * @var \App\View\AppView auth_target
  */
 $this->layout = 'landing';
 if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
+    $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
+    $message = isset($infor_devices->message) ? $infor_devices->message: 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
+    $path = isset($infor_devices->path) ? $infor_devices->path :'images/entry3.jpg';
     $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : 1;
-    if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
+    if ($langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
         echo $this->Html->css('back_end/page1'); ?>
         <div class="landing">
-            <div class="wapper" style="background: url(<?php echo '/'.$infor_devices->path;?>) top center"></div>
+            <div class="wapper" style="background: url(<?php echo '/'.$path;?>) top center"></div>
             <div class="landing__cover-overlay"></div>
             <div class="landing__cover landing__cover--main landing__cover--flexible">
                 <div class="u-ui-padding-x-large landing__cover-wrapper">
                     <div class="landing__cover-content u-color-white">
-                        <div class="c-text--heading c-text--parent c-text--center c-text">Welcome to our <br/> free WiFi!
-                        </div>
+                        <div class="c-text--heading c-text--parent c-text--center c-text"><?php echo $slogan; ?></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="logo">
                             <div class="logo__inner">
@@ -27,9 +30,7 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                         <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="discount">
-                            <div class="c-text--discount c-text--center c-text cc">
-                                Vui lòng nhập số điện thoại để nhận được voucher giảm 50% qua sms
-                            </div>
+                            <div class="c-text--discount c-text--center c-text cc"><?php echo $message;?></div>
                             <div class="c-spacer--x-large c-spacer"></div>
                             <a class="redirect__discount" href="#modal_discount" data-toggle="modal">Đăng ký nhận
                                 voucher</a>
@@ -67,9 +68,7 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                         <h4 class="modal-title">Nhận đăng ký giảm giá</h4>
                     </div>
                     <div class="modal-body">
-                        <div class="m-text--discount c-text--center c-text ">
-                            Vui lòng nhập số điện thoại để nhận được voucher giảm 50% qua sms
-                        </div>
+                        <div class="m-text--discount c-text--center c-text "><?php echo $message;?></div>
                         <div class="c-spacer--x-large c-spacer"></div>
                         <form action="<?php echo $infor_devices->auth_target;?>" name="register_form" class="register_form" id="register_form" method="post">
                             <p>
@@ -88,16 +87,15 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                 </div>
             </div>
         </div>
-    <?php } else if ($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
+    <?php } else if ($langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
         echo $this->Html->css('back_end/page2'); ?>
         <div class="landing">
-            <?php $back_ground = $infor_devices->path; ?>
-            <div class="wapper" style="background: url(<?php echo '/'.$back_ground;?>) top center"></div>
+            <div class="wapper" style="background: url(<?php echo '/'.$path;?>) top center"></div>
             <div class="landing__cover-overlay"></div>
             <div class="landing__cover landing__cover--main landing__cover--flexible">
                 <div class="u-ui-padding-x-large landing__cover-wrapper">
                     <div class="landing__cover-content u-color-white">
-                        <div class="c-text--heading c-text--parent c-text--center c-text">Welcome to our <br/> free WiFi!
+                        <div class="c-text--heading c-text--parent c-text--center c-text"><?echo $slogan; ?>
                         </div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="logo">
@@ -133,10 +131,11 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                 </div>
             </div>
         </div>
-    <?php } else if($infor_devices->langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
-        echo $this->Html->css('back_end/page3'); ?>
+    <?php } else if($langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
+        echo $this->Html->css('back_end/page3');
+        $path = isset($infor_devices->path) ? $infor_devices->path :'images/entry3.jpg';?>
         <div class="landing">
-            <div class="wapper" style="background: url(<?php echo '/'.$infor_devices->path?>) top center"></div>
+            <div class="wapper" style="background: url(<?php echo '/'.$path ;?>) top center"></div>
             <div class="landing__cover-overlay"></div>
             <div class="landing__cover landing__cover--main landing__cover--flexible">
                 <div class="u-ui-padding-x-large landing__cover-wrapper">
@@ -148,7 +147,7 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                         </div>
                         <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
                         <div class="c-spacer--x-large c-spacer"></div>
-                        <div class="c-text--heading c-text--parent c-text--center c-text">Welcome to our <br> <font>free WiFi!</font></div>
+                        <div class="c-text--heading c-text--parent c-text--center c-text"><?echo $slogan; ?></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="c-spacer--xx-large c-spacer"></div>

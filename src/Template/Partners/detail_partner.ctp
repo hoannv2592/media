@@ -35,7 +35,7 @@
                         echo $this->Form->create('Partners', array(
                             'id' => 'form_advanced_validation_x',
                             'type' => 'post',
-                            'url' => array('controller' => 'Partners', 'action' => 'edit'.'/'. $partner['id']),
+                            'url' => array('controller' => 'Partners', 'action' => 'edit'.'/'. UrlUtil::_encodeUrl($partner['id'])),
                             'inputDefaults' => array(
                                 'label' => false,
                                 'div' => false,

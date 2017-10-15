@@ -64,10 +64,10 @@
                                                 <tr valign="middle">
                                                     <td><?php echo $count; ?></td>
                                                     <td class="advertise font-bold col-cyan">
-                                                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device' . '/' . $device->id]) ?>"><?php echo h($device->name); ?></a>
+                                                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>"><?php echo h($device->name); ?></a>
                                                     </td>
                                                     <td class="font-bold col-cyan">
-                                                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail_partner' . '/' . $device->user->id]) ?>"><?php echo h($device->user->username); ?></a>
+                                                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>"><?php echo h($device->user->username); ?></a>
                                                     </td>
                                                     <td><?php echo nl2br($device->apt_key); ?></td>
                                                     <td> <?php echo isset($device->partners) ? count($device->partners): 0; ?></td>
@@ -80,14 +80,14 @@
                                                             $langdingpage_id = isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : '';
                                                             if ($langdingpage_id != '') { ?>
                                                                 <a class="btn btn-success waves-effect"
-                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'view_qc' . '/' . $device->id]) ?>">Xem
+                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'view_qc' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>">Xem
                                                                     QC</a>
                                                                 <a class="btn btn-primary waves-effect"
-                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $device->id . '/' . $device->user->id]) ?>">Sửa
+                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Sửa
                                                                     QC</a>
                                                             <?php } else { ?>
                                                                 <a class="btn btn-primary waves-effect"
-                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $device->id . '/' . $device->user->id]) ?>">Tạo
+                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Tạo
                                                                     QC</a>
                                                             <?php }
                                                             ?>

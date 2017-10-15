@@ -57,12 +57,15 @@ Router::scope('/', function (RouteBuilder $routes) {
      * ...and connect the rest of 'Pages' controller's URLs.
      */
     $routes->connect('/pages/*', ['controller' => 'Pages', 'action' => 'display']);
-//    $routes->connect('/back_end/:id', array('controller' => 'Devices', 'action' => 'add', 'plugin' => 'Api'),
-//        array(
-//            'pass' => array('id'),
-//            'id' => '[0-9a-z:A-Z]+'
-//        )
-//    );
+    $routes->connect('view_qc/:id', ['controller' => 'Devices', 'action' => 'viewQc'], array(
+        'pass' => array('id'),
+        'id' => '[0-9]{4,}'
+    ));
+    $routes->connect('set_qc/:device_id/:user_id', ['controller' => 'Devices', 'action' => 'setQc'], array(
+        'pass' => array('device_id', 'user_id'),
+        'device_id' => '[0-9]{4,}',
+        'user_id' => '[0-9]{4,}',
+    ));
 
     $routes->connect('/back_end/:id', array('controller' => 'Devices', 'action' => 'addNewDevice'),
         array(

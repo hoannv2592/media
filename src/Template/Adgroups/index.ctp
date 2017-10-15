@@ -60,7 +60,7 @@
                                     <tr>
                                         <td><?php echo $count; ?></td>
                                         <td class="advertise font-bold col-cyan">
-                                            <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'detail_group' . '/' . $adgroup->id]) ?>"><?php echo h($adgroup->name); ?></a>
+                                            <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'detail_group' . '/' . UrlUtil::_encodeUrl($adgroup->id)]) ?>"><?php echo h($adgroup->name); ?></a>
                                         </td>
                                         <td>
                                             <table class="table">

@@ -53,7 +53,7 @@
                             </div>
                             <div class="help-info">Người dùng quản lý thiết bị</div>
                         </div>
-                        <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit/'.$device['id']])?>">CHỈNH SỬA</a>
+                        <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit/'. UrlUtil::_encodeUrl($device['id'])])?>">CHỈNH SỬA</a>
                     </div>
                 </div>
             </div>

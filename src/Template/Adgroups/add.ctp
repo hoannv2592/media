@@ -91,14 +91,28 @@
                             </div>
                             </div>
                         </div>
-                            <div class="check_pass_device m-t-15">
-                                <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <input type="text" name="apt_device_number" maxlength="8" id="apt_device_number" value="<?php echo isset($apt_device_number) ? $apt_device_number:'' ?>" placeholder="Điền mật khẩu.." class="form-control">
-                                    </div>
+                        <h2 class="card-inside-title">Slogan</h2>
+                        <div class="form-group" id="end_show">
+                            <div class="form-line">
+                                <input type="text" name="slogan" id="slogan" class="form-control" value="<?php echo isset($device->slogan) ? $device->slogan :'';?>" placeholder="Điền slogan..">
+                            </div>
+                        </div>
+                        <div class="check_pass_device m-t-15">
+                            <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="text" name="apt_device_number" maxlength="8" id="apt_device_number" value="<?php echo isset($apt_device_number) ? $apt_device_number:'' ?>" placeholder="Điền mật khẩu.." class="form-control">
                                 </div>
                             </div>
+                        </div>
+                        <div class="message">
+                            <h2 class="card-inside-title">Tin nhắn voucher</h2>
+                            <div class="form-group" id="end_show">
+                                <div class="form-line">
+                                    <input type="text" name="message" id="message" class="form-control" value="<?php echo isset($device->message) ? $device->message :'';?>" placeholder="Điền message..">
+                                </div>
+                            </div>
+                        </div>
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped dataTable table-hover">
                                 <thead>
@@ -156,6 +170,8 @@
                 'tile_name': {required: true},
                 'langdingpage_id': {required: true},
                 'apt_device_number': {required: true},
+                'slogan': {required: true},
+                'message': {required: true},
                 "device_id[]": "required"
 
             },
@@ -176,25 +192,44 @@
     });
 </script>
 <script type="application/javascript">
+    $(document).ready(function () {
+        var langding = "<?php echo isset($device->langdingpage_id) ? $device->langdingpage_id:''; ?>";
+        if (langding == 1) {
+            $('.check_pass_device').css('display', '');
+            $('.message').css('display', 'none');
+        } else if (langding == 3) {
+            $('.check_pass_device').css('display', 'none');
+            $('.message').css('display', '');
+        } else {
+            $('.message').css('display', 'none');
+            $('.check_pass_device').css('display', 'none');
+        }
+    });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
-        console.log(__val);
-        if (__val != 1) {
-            $('.check_pass_device').css('display', 'none');
-        } else {
+        if (__val == 1) {
             $('.check_pass_device').css('display', '');
+            $('.message').css('display', 'none');
+        } else if (__val == 3) {
+            $('.check_pass_device').css('display', 'none');
+            $('.message').css('display', '');
+        } else {
+            $('.message').css('display', 'none');
+            $('.check_pass_device').css('display', 'none');
         }
     });
     $('#uploadForm').validate({
         rules: {
             'tile_name': { required: true },
             'langdingpage_id': { required: true },
-            'apt_device_number': { required: true }
+            'apt_device_number': { required: true },
+            'slogan': {required: true},
         },
         messages:{
             'tile_name': { required: 'Hãy nhập' },
             'langdingpage_id': { required: 'Hãy nhập' },
-            'apt_device_number': { required: 'Hãy nhập' }
+            'apt_device_number': { required: 'Hãy nhập' },
+            'slogan': { required: 'Hãy nhập' }
         }
     });
     function filePreview(input) {
@@ -213,8 +248,6 @@
 
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
-        console.log(__val);
-        alert('xxx');
         if ($(this).is(':checked')){
             $(this).prop('checked', true).attr('checked', 'checked');
         } else {
