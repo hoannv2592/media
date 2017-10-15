@@ -186,7 +186,7 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                             </div>
                             <div class="row ">
                                 <div class="col-xs-6 col-xs-offset-3">
-                                    <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . $infor_devices->id . '/' . $infor_devices->user_id]);?>" class="btn btn-lg btn-block bg-purple waves-effect" >Setting quảng cáo</a>
+                                    <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($infor_devices->id) . '/' . UrlUtil::_encodeUrl($infor_devices->user_id)]);?>" class="btn btn-lg btn-block bg-purple waves-effect" >Setting quảng cáo</a>
                                 </div>
                             </div>
                     </div>
@@ -256,13 +256,13 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
             'telephone': {
                 required: 'Hãy nhập',
                 number :'Hãy nhập số điện thoại',
-                minlength :'Bạn đã nhập sai số điện thoại',
+                minlength :'Bạn đã nhập sai số điện thoại'
             },
             'address': {
                 required: 'Hãy nhập'
             }
         },
-        submitHandler: function(form) {
+        submitHandler: function(form) { 
             $.ajax({
                 url: "/Devices/add_log",
                 type: "POST",

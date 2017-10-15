@@ -509,7 +509,7 @@ class DevicesController extends AppController
         $this->autoRender= false;
         if ($this->request->getData()) {
             $log = $this->Logs->newEntity();
-            if ($this->request->is('post')) {
+            if ($this->request->data) {
                 $log = $this->Logs->patchEntity($log, $this->request->data);
                 if (empty($log->errors())) {
                     if ($this->Logs->save($log)) {
