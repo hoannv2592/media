@@ -70,7 +70,7 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                     <div class="modal-body">
                         <div class="m-text--discount c-text--center c-text "><?php echo $message;?></div>
                         <div class="c-spacer--x-large c-spacer"></div>
-                        <form action="<?php echo $infor_devices->auth_target;?>" name="register_form" class="register_form" id="register_form" method="post">
+                        <form action="#" name="register_form" class="register_form" id="register_form" method="post">
                             <p>
                                 <input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên">
                             </p>
@@ -278,6 +278,7 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                    }
                 }
             });
+            window.location.href = url;
             return false;
         }
     });
