@@ -180,9 +180,10 @@ class LandingpagesController extends AppController
      */
     public function edit($id = null)
     {
+        $id = \UrlUtil::_decodeUrl($id);
         $conn = ConnectionManager::get('default');
         $conn->begin();
-        if (!$this->Landingpages->exists($id)) {
+        if (!$this->Landingpages->exists(['id' => $id])) {
             $this->redirect(array('controller' => 'Landingpages', 'action' => 'index'));
         }
         $landingpage = $this->Landingpages->get($id, [
@@ -293,7 +294,8 @@ class LandingpagesController extends AppController
 
     public function detailLangdingpage($id = null)
     {
-        if (!$this->Landingpages->exists($id)) {
+        $id = \UrlUtil::_decodeUrl($id);
+        if (!$this->Landingpages->exists(['id' => $id])) {
             $this->redirect(array('controller' => 'Landingpages', 'action' => 'index'));
         }
         $landingpage = $this->Landingpages->get($id,[
@@ -305,7 +307,8 @@ class LandingpagesController extends AppController
 
     public function lanedingDemo($id = null)
     {
-        if (!$this->Landingpages->exists($id)) {
+        $id = \UrlUtil::_decodeUrl($id);
+        if (!$this->Landingpages->exists(['id' => $id])) {
             $this->redirect(array('controller' => 'Landingpages', 'action' => 'index'));
         }
         $landingpage = $this->Landingpages->get($id,[

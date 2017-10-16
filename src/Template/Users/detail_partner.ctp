@@ -59,7 +59,8 @@
                             </div>
                             <div class="help-info">Loại tài khoản</div>
                         </div>
-                        <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit'.'/'.$user['id']]);?>" >CHỈNH SỬA</a>                        <?php echo $this->Form->end(); ?>
+                        <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit'.'/'. UrlUtil::_encodeUrl($user['id'])]);?>" >CHỈNH SỬA</a>
+                        <?php echo $this->Form->end(); ?>
                     </div>
                 </div>
             </div>

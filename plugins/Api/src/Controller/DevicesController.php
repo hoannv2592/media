@@ -281,9 +281,10 @@ class DevicesController extends AppController
      */
     public function edit($id = null)
     {
+        $id = \UrlUtil::_decodeUrl($id);
         $conn = ConnectionManager::get('default');
         $conn->begin();
-        if (!$this->Devices->exists($id)) {
+        if (!$this->Devices->exists(['id' => $id])) {
             $this->redirect(array('controller' => 'Devices', 'action' => 'index'));
         }
         $device = $this->Devices->get($id, [
@@ -434,8 +435,9 @@ class DevicesController extends AppController
 
     public function detailDevice($id = null)
     {
+        $id = \UrlUtil::_decodeUrl($id);
         $this->getAllData();
-        if (!$this->Devices->exists($id)) {
+        if (!$this->Devices->exists(['id' => $id])) {
             $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
         }
         $device = $this->Devices->get($id,[
@@ -454,13 +456,15 @@ class DevicesController extends AppController
      */
     public function setQc($device_id = null, $user_id = null)
     {
+        $device_id = \UrlUtil::_decodeUrl($device_id);
+        $user_id = \UrlUtil::_decodeUrl($user_id);
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $this->loadModel('LangdingDevices');
-        if (!$this->Users->exists($user_id)) {
+        if (!$this->Users->exists(['id' => $user_id])) {
             $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
         }
-        if (!$this->Devices->exists($device_id)) {
+        if (!$this->Devices->exists(['id' => $device_id])) {
             $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
         }
         $device = $this->Devices->get($device_id, [

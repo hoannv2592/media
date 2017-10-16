@@ -28,7 +28,7 @@
         </tr>
         <tr>
             <th scope="row"><?= __('User') ?></th>
-            <td><?= $device->has('user') ? $this->Html->link($device->user->id, ['controller' => 'Users', 'action' => 'view', $device->user->id]) : '' ?></td>
+            <td><?= $device->has('user') ? $this->Html->link($device->user->id, ['controller' => 'Users', 'action' => 'view', UrlUtil::_encodeUrl($device->user->id)]) : '' ?></td>
         </tr>
         <tr>
             <th scope="row"><?= __('Id') ?></th>

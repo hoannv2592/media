@@ -32,8 +32,8 @@ CREATE TABLE `partners` (
   `role` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
   `sex` tinyint(2) DEFAULT NULL,
   `num_clients_connect` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL,
-  `created` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-  `modified` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `created` datetime DEFAULT NULL ,
+  `modified` datetime DEFAULT NULL ,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 SET FOREIGN_KEY_CHECKS=1;

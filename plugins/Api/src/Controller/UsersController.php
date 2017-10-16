@@ -96,8 +96,9 @@ class UsersController extends AppController
      */
     public function detailPartner($id = null)
     {
+        $id = \UrlUtil::_decodeUrl($id);
         $this->getAllData();
-        if (!$this->Users->exists($id)) {
+        if (!$this->Users->exists(['id' => $id])) {
             $this->redirect(array('controller' => 'Users', 'action' => 'index'));
         }
         $user = $this->Users->get($id, [
@@ -149,10 +150,11 @@ class UsersController extends AppController
 
     public function edit($id = null)
     {
+        $id = \UrlUtil::_decodeUrl($id);
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $this->getAllData();
-        if (!$this->Users->exists($id)) {
+        if (!$this->Users->exists(['id' => $id])) {
             $this->redirect(array('controller' => 'Users', 'action' => 'index'));
         }
 
@@ -405,8 +407,9 @@ class UsersController extends AppController
      */
     public function profileUser($id = null)
     {
+        $id = \UrlUtil::_decodeUrl($id);
         $this->getAllData();
-        if (!$this->Users->exists($id)) {
+        if (!$this->Users->exists(['id' => $id])) {
             $this->redirect(array('controller' => 'Users', 'action' => 'index'));
         }
 
@@ -422,7 +425,7 @@ class UsersController extends AppController
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $this->getAllData();
-        if (!$this->Users->exists($id)) {
+        if (!$this->Users->exists(['id' => $id])) {
             $this->redirect(array('controller' => 'Users', 'action' => 'index'));
         }
         $user = $this->Users->get($id,[

@@ -61,7 +61,7 @@
                                         <tr>
                                             <td><?php echo $count;?></td>
                                             <td class="advertise font-bold col-cyan">
-                                                <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail_partner' . '/' . $user->id]) ?>"><?php echo h($user->username); ?></a>
+                                                <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($user->id)]) ?>"><?php echo h($user->username); ?></a>
                                             </td>
                                             <td><?php echo nl2br($user->email); ?></td>
                                             <td>
@@ -69,7 +69,7 @@
                                                     <?php foreach ($user->devices as $device) { ?>
                                                         <tr>
                                                             <td><a class="font-bold"
-                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail_device' . '/' . $device->id]) ?>"> <?php echo $device->name; ?></a>
+                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail_device' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>"> <?php echo $device->name; ?></a>
                                                             </td>
                                                         </tr>
                                                     <?php } ?>

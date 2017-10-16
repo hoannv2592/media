@@ -22,7 +22,7 @@
                         </a>
                     </li>
                     <li class="active">
-                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail-partner/'.$user['id']])?>">Thông tin</a>
+                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail-partner/'. UrlUtil::_encodeUrl($user['id'])])?>">Thông tin</a>
                     </li>
                     <li class="active">
                         <a href="javascript:void(0)">Chỉnh sửa thông tin</a>
@@ -43,7 +43,7 @@
                         <?php echo $this->Form->create('Users', array(
                             'id' => 'form_advanced_validation',
                             'type' => 'post',
-                            'url' => array('controller' => 'Users', 'action' => 'edit'.'/'. $user['id']),
+                            'url' => array('controller' => 'Users', 'action' => 'edit'.'/'. UrlUtil::_encodeUrl($user['id'])),
                             'inputDefaults' => array(
                                 'label' => false,
                                 'div' => false,

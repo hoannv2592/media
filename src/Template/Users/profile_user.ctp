@@ -39,7 +39,7 @@
                         <?php echo $this->Form->create('Users', array(
                             'id' => 'form_edit_validation_profile',
                             'type' => 'post',
-                            'url' => array('controller' => 'Users', 'action' => 'updateProfile'.'/'. $user['id']),
+                            'url' => array('controller' => 'Users', 'action' => 'updateProfile'.'/'. UrlUtil::_encodeUrl($user['id'])),
                             'inputDefaults' => array(
                                 'label' => false,
                                 'div' => false

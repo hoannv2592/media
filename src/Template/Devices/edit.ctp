@@ -15,7 +15,7 @@
                             <i class="material-icons">home</i> Trang chủ
                         </a>
                     </li>
-                    <li class="active"><a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device/'.$device['id']])?>">Thông tin</a></li>
+                    <li class="active"><a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device/'.UrlUtil::_encodeUrl($device['id'])])?>">Thông tin</a></li>
                     <li class="active"><a href="javascript:void(0)">Chỉnh sửa thông tin</a></li>
                 </ol>
                 <div class="card">
