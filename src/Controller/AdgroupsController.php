@@ -431,16 +431,28 @@ class AdgroupsController extends AppController
             foreach ($list_device_id as $k => $vl) {
                 $device_id[] = json_decode($vl);
             }
-            $merged = call_user_func_array('array_merge', $device_id);
-            $devices = $this->Devices->find('all')
-                ->where(['id NOT IN' => $merged])
-                ->combine('id','name')->toArray();
+            if (!empty($device_id)) {
+                $merged = call_user_func_array('array_merge', $device_id);
+                $devices = $this->Devices->find('all')
+                    ->where(['id NOT IN' => $merged])
+                    ->combine('id','name')->toArray()
+                ;
+            } else {
+                $devices = $this->Devices->find()
+                    ->where(['Devices.delete_flag !=' => DELETED])
+                    ->select(['Devices.id', 'Devices.name'])
+                    ->order(['Devices.id'=> 'DESC'])
+                    ->combine('id', 'name')
+                    ->toArray()
+                ;
+            }
         } else {
             $devices = $this->Devices->find()
                 ->where(['Devices.delete_flag !=' => DELETED])
                 ->select(['Devices.id', 'Devices.name'])
                 ->order(['Devices.id'=> 'DESC'])
-                ->combine('id', 'name')->toArray();
+                ->combine('id', 'name')->toArray()
+            ;
         }
         $device_group_id = $this->DeviceGroups->find()
             ->where(['adgroup_id' => $id, 'device_id' => $adgroup->device_id, 'delete_flag !=' => DELETED])
