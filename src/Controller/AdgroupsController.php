@@ -270,7 +270,7 @@ class AdgroupsController extends AppController
                 ->first()
                 ->toArray()
             ;
-
+            $this->removeAdgroupIdDevice(json_decode($adgroups->device_id));
             $result_change[] = array(
                 'fields' => 'delete_flag',
                 'from' => 'chưa xóa',
@@ -414,6 +414,34 @@ class AdgroupsController extends AppController
         }
         $this->getAllData();
         $adgroup = $this->Adgroups->get($id);
+        $groups = $this->Adgroups->find()
+            ->select(['id', 'device_id'])
+            ->where(['delete_flag !=' => DELETED])
+            ->hydrate(false)
+            ->combine('id', 'device_id')->toList();
+        if (!empty($groups)) {
+            $list_device_id = array();
+            foreach ($groups as $group) {
+                if ($adgroup->device_id != $group) {
+                    $list_device_id[] = ($group);
+                }
+            }
+
+            $device_id = array();
+            foreach ($list_device_id as $k => $vl) {
+                $device_id[] = json_decode($vl);
+            }
+            $merged = call_user_func_array('array_merge', $device_id);
+            $devices = $this->Devices->find('all')
+                ->where(['id NOT IN' => $merged])
+                ->combine('id','name')->toArray();
+        } else {
+            $devices = $this->Devices->find()
+                ->where(['Devices.delete_flag !=' => DELETED])
+                ->select(['Devices.id', 'Devices.name'])
+                ->order(['Devices.id'=> 'DESC'])
+                ->combine('id', 'name')->toArray();
+        }
         $device_group_id = $this->DeviceGroups->find()
             ->where(['adgroup_id' => $id, 'device_id' => $adgroup->device_id, 'delete_flag !=' => DELETED])
             ->select(['id'])->first()->toArray();
@@ -524,7 +552,7 @@ class AdgroupsController extends AppController
             }
         }
         $apt_device_number = $this->radompassWord();
-        $this->set(compact('adgroup','apt_device_number'));
+        $this->set(compact('adgroup','apt_device_number', 'devices'));
     }
 
     /**

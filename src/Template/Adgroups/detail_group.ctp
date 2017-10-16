@@ -68,7 +68,9 @@
                         <div class="form-group" id="end_show">
                             <div class="form-line">
                                 <select data-placeholder="Chọn thiết bị" class="chosen-select " multiple tabindex="8" name="device_id[]">
-                                    <?php $user_de_id = json_decode($adgroup->device_name);
+                                    <?php
+                                    $user_de_id = json_decode($adgroup->device_name);
+
                                     foreach ($devices as $key => $device) {
                                         if (isset($user_de_id->$key)) { ?>
                                             <option selected="selected" value="<?php echo $key; ?>"><?php echo $device ?></option>

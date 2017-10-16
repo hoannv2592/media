@@ -6,7 +6,6 @@
  * @var \App\View\AppView auth_target
  */
 $this->layout = 'landing';
-if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
     $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
     $message = isset($infor_devices->message) ? $infor_devices->message: 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
     $path = isset($infor_devices->path) ? $infor_devices->path :'images/entry3.jpg';
@@ -194,10 +193,7 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
             </div>
         </body>
 
-    <?php }
-} else {
-    $this->layout = 'error';
-} ?>
+    <?php } ?>
 <script type="application/javascript">
     var url = "<?php echo $infor_devices->auth_target?>";
     function submitContactForm(){
