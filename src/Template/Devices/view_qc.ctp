@@ -262,7 +262,7 @@ if (isset($infor_devices->splashcheck) && $infor_devices->splashcheck == 1) {
                 required: 'Hãy nhập'
             }
         },
-        submitHandler: function(form) { 
+        submitHandler: function(form) {
             $.ajax({
                 url: "/Devices/add_log",
                 type: "POST",

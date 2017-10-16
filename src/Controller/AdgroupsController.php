@@ -417,6 +417,7 @@ class AdgroupsController extends AppController
         $device_group_id = $this->DeviceGroups->find()
             ->where(['adgroup_id' => $id, 'device_id' => $adgroup->device_id, 'delete_flag !=' => DELETED])
             ->select(['id'])->first()->toArray();
+        $before_device = json_decode($adgroup->device_id);
         if ($this->request->is('post')) {
             $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
             $data_group = array(
@@ -458,9 +459,20 @@ class AdgroupsController extends AppController
                 'slogan' => $this->request->getData()['slogan'],
 
             );
-            //$this->publishall($result_id_devices, $data_device);
+            $list_remove_device_id = array();
+            foreach ($before_device as $k => $vl) {
+                if (!in_array($vl, $this->request->getData()['device_id'])) {
+                    $list_remove_device_id[] = $vl;
+                }
+            }
+            //todo update data devices add to group
+            $result_id_devices = $this->request->getData()['device_id'];
+            $device_adgroup = array(
+                'adgroup_id' => $id
+            );
+            $this->publishall($result_id_devices, $device_adgroup);
+            $this->removeAdgroupIdDevice($list_remove_device_id);
             $log_before = $adgroup->toArray();
-            pr($log_before);
             unset($log_before['created']);
             unset($log_before['modified']);
             $group = $this->DeviceGroups->get($device_group_id['id']);
@@ -469,7 +481,6 @@ class AdgroupsController extends AppController
             $log_after = $adgroup->toArray();
             unset($log_after['created']);
             unset($log_after['modified']);
-            pr($log_after);
             $diffs = array_diff_assoc($log_before, $log_after);
             $result_change = array();
             if (!empty($diffs)) {
@@ -544,6 +555,36 @@ class AdgroupsController extends AppController
             $conn->rollback();
              return false;
          }
+    }
+
+    /**
+     * @param $device_id
+     * @return bool
+     */
+    public function removeAdgroupIdDevice($device_id)
+    {
+        $conn = ConnectionManager::get('default');
+        $conn->begin();
+        $chk = true;
+        $adgroup = array(
+            'adgroup_id' => ''
+        );
+        foreach ($device_id as $item) {
+            $device = $this->Devices->get($item);
+            $device = $this->Devices->patchEntity($device, $adgroup);
+            if (empty($device->errors())) {
+                if (!$this->Devices->save($device)) {
+                    $chk = false;
+                }
+            }
+        }
+        if ($chk) {
+            $conn->commit();
+            return true;
+        } else {
+            $conn->rollback();
+            return false;
+        }
     }
 }
 
