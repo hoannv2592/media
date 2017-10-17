@@ -65,6 +65,9 @@ class DevicesController extends AppController
                         ])
                         ;
                 }],
+                'conditions' => [
+//                    'Devices.delete_flag !=' => DELETED
+                ]
             ])->toArray();
         } else {
             $devices = $this->Devices->find('all', [
@@ -82,7 +85,8 @@ class DevicesController extends AppController
                     ;
                 }],
                 'conditions' => [
-                    'Devices.user_id ' => $login['id']
+                    'Devices.user_id ' => $login['id'],
+                    'Devices.delete_flag !=' => DELETED
                 ]
             ])->toArray();
         }
@@ -273,6 +277,7 @@ class DevicesController extends AppController
         if ($this->request->getData()) {
             $device = $this->Devices->get($this->request->getData('id'));
             $device->delete_flag = true;
+            $device->langdingpage_id = '';
             if ($this->Devices->save($device)) {
                 $conn->commit();
                 die(json_encode(true));
@@ -479,16 +484,18 @@ class DevicesController extends AppController
                 return $this->redirect(['action' => 'index']);
             }
             $infor_devices = $this->Devices->get($device_id);
-            $device_group = $this->DeviceGroups->find()
-                ->where(['adgroup_id' => $infor_devices->adgroup_id, 'delete_flag !=' => DELETED])
-                ->first();
-            if (!empty($device_group)) {
-                $infor_devices->langdingpage_id = $device_group->langdingpage_id;
-                $infor_devices->path = $device_group->path;
-                $infor_devices->tile_name = $device_group->tile_name;
-                $infor_devices->apt_device_number = $device_group->number_pass;
-                $infor_devices->message = $device_group->message;
-                $infor_devices->slogan = $device_group->slogan;
+            if (!empty($infor_devices)) {
+                $device_group = $this->DeviceGroups->find()
+                    ->where(['adgroup_id' => $infor_devices->adgroup_id, 'delete_flag !=' => DELETED])
+                    ->first();
+                if (!empty($device_group)) {
+                    $infor_devices->langdingpage_id = $device_group->langdingpage_id;
+                    $infor_devices->path = $device_group->path;
+                    $infor_devices->tile_name = $device_group->tile_name;
+                    $infor_devices->apt_device_number = $device_group->number_pass;
+                    $infor_devices->message = $device_group->message;
+                    $infor_devices->slogan = $device_group->slogan;
+                }
             }
             $this->set(compact('infor_devices'));
         } else {

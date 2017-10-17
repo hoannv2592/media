@@ -9,7 +9,7 @@ $this->layout = 'landing';
     $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
     $message = isset($infor_devices->message) ? $infor_devices->message: 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
     $path = isset($infor_devices->path) ? $infor_devices->path :'images/entry3.jpg';
-    $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : 1;
+    $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
     if ($langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
         echo $this->Html->css('back_end/page1'); ?>
         <div class="landing">
@@ -183,11 +183,11 @@ $this->layout = 'landing';
                                     <a href="<?php echo $infor_devices->auth_target;?>" class="btn btn-lg btn-block bg-pink waves-effect" >Connect to wifi</a>
                                 </div>
                             </div>
-                            <div class="row ">
-                                <div class="col-xs-6 col-xs-offset-3">
-                                    <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($infor_devices->id) . '/' . UrlUtil::_encodeUrl($infor_devices->user_id)]);?>" class="btn btn-lg btn-block bg-purple waves-effect" >Setting quảng cáo</a>
-                                </div>
-                            </div>
+<!--                            <div class="row ">-->
+<!--                                <div class="col-xs-6 col-xs-offset-3">-->
+<!--                                    <a href="--><?php //echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($infor_devices->id) . '/' . UrlUtil::_encodeUrl($infor_devices->user_id)]);?><!--" class="btn btn-lg btn-block bg-purple waves-effect" >Setting quảng cáo</a>-->
+<!--                                </div>-->
+<!--                            </div>-->
                     </div>
                 </div>
             </div>
