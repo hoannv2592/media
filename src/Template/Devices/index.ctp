@@ -73,7 +73,7 @@ $this->assign('title', 'Quản lý thiết bị');
                                                         <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>"><?php echo h($device->user->username); ?></a>
                                                     </td>
                                                     <td><?php
-                                                        echo isset($Adgroups[$device->adgroup_id]) ? $Adgroups[$device->adgroup_id]: $device->address;
+                                                        echo isset($Adgroups[$device->adgroup_id]) ? $Adgroups[$device->adgroup_id]: '';
                                                         ?></td>
                                                     <td><?php echo nl2br($device->apt_key); ?></td>
                                                     <td> <?php echo isset($device->partners) ? count($device->partners): 0; ?></td>

@@ -471,7 +471,8 @@ class DevicesController extends AppController
         $filesRowNum = $files->count();
         $this->set('files',$files);
         $this->set('filesRowNum',$filesRowNum);
-        $this->set(compact('device', 'device_id', 'user_id'));
+        $apt = $this->radompassWord();
+        $this->set(compact('device', 'device_id', 'user_id', 'apt'));
     }
 
     /**

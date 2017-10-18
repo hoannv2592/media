@@ -7,6 +7,7 @@
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $device
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $userData
  */
+$this->assign('title', 'Tạo quảng cáo thiết bị');
 ?>
 <style>
     .form-control {
@@ -86,31 +87,38 @@
                             <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($device->langdingpage_id == 3) { echo 'checked'; }?> />
                             <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
                         </div>
-                        <h2 class="card-inside-title">Slogan</h2>
-                        <div class="form-group" id="end_show">
-                            <div class="form-line">
-                                <input type="text" name="slogan" id="tile_name" class="form-control" value="<?php echo isset($device->slogan) ? $device->slogan :'';?>" placeholder="Điền slogan..">
-                            </div>
-                        </div>
+<!--                        <h2 class="card-inside-title">Slogan</h2>-->
+<!--                        <div class="form-group" id="end_show">-->
+<!--                            <div class="form-line">-->
+<!--                                <input type="text" name="slogan" id="tile_name" class="form-control" value="--><?php //echo isset($device->slogan) ? $device->slogan :'';?><!--" placeholder="Điền slogan..">-->
+<!--                            </div>-->
+<!--                        </div>-->
                         <h2 class="card-inside-title">Tên cơ sở dịch vụ</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
                                 <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($device->tile_name) ? $device->tile_name :'';?>" placeholder="Điền tên..">
                             </div>
                         </div>
-                        <div class="message">
-                            <h2 class="card-inside-title">Tin nhắn voucher</h2>
-                            <div class="form-group" id="end_show">
-                                <div class="form-line">
-                                    <input type="text" name="message" id="message" class="form-control" value="<?php echo isset($device->message) ? $device->message :'';?>" placeholder="Điền message..">
-                                </div>
+                        <h2 class="card-inside-title">Địa chỉ đặt thiết bị</h2>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="address" placeholder="Địa chỉ đặt thiết bị" id="address" value="<?php echo isset($device['address']) ? $device['address']:''?>" required>
                             </div>
+                            <div class="help-info">Địa chỉ đặt thiết bị</div>
                         </div>
+<!--                        <div class="message">-->
+<!--                            <h2 class="card-inside-title">Tin nhắn voucher</h2>-->
+<!--                            <div class="form-group" id="end_show">-->
+<!--                                <div class="form-line">-->
+<!--                                    <input type="text" name="message" id="message" class="form-control" value="--><?php //echo isset($device->message) ? $device->message :'';?><!--" placeholder="Điền message..">-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                         <div class="check_pass_device">
                             <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
                             <div class="form-group">
                                 <div class="form-line">
-                                    <input type="text" name="apt_device_number" id="apt_device_number" value="<?php echo isset($device->apt_device_number) ? $device->apt_device_number:'' ?>" placeholder="Điền mật khẩu.." class="form-control">
+                                    <input type="text" name="apt_device_number" id="apt_device_number" value="<?php echo isset($device->apt_device_number) ? $device->apt_device_number: $apt ?>" placeholder="Điền mật khẩu.." class="form-control">
                                 </div>
                             </div>
                         </div>
@@ -147,14 +155,14 @@
 <script type="application/javascript">
     $(document).ready(function () {
         var langding = "<?php echo $device->langdingpage_id; ?>";
-        if (langding == 1) {
+        if (langding == 1 || langding == '') {
             $('.check_pass_device').css('display', '');
-            $('.message').css('display', 'none');
+//            $('.message').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
-            $('.message').css('display', '');
+//            $('.message').css('display', '');
         } else {
-            $('.message').css('display', 'none');
+//            $('.message').css('display', 'none');
             $('.check_pass_device').css('display', 'none');
         }
     });

@@ -4,7 +4,9 @@
  * @var \App\View\AppView $device_group
  * @var \App\View\AppView $this
  * @var \App\View\AppView auth_target
+ *
  */
+$this->assign('title', 'view cáo thiết bị');
 $this->layout = 'landing';
 $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
 $message = isset($infor_devices->message) ? $infor_devices->message: 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
