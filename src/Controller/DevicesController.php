@@ -6,6 +6,7 @@ use App\Controller\AppController;
 use App\Model\Entity\User;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
+use Cake\Utility\Hash;
 
 /**
  * Devices Controller
@@ -14,6 +15,7 @@ use Cake\Event\Event;
  * @property \App\Model\Table\DevicesTable $Devices
  * @property \App\Model\Table\LogsTable $Logs
  * @property \App\Model\Table\DeviceGroupsTable $DeviceGroups
+ * @property \App\Model\Table\AdgroupsTable $Adgroups
  * @property \App\Model\Table\FileAttachmentsTable $FileAttachments
  *
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
@@ -34,6 +36,7 @@ class DevicesController extends AppController
 
         // Include the FlashComponent
         $this->loadComponent('Flash');
+        $this->loadModel('Adgroup');
         $this->loadComponent('UploadImage');
         $this->loadModel('DeviceGroups');
 
@@ -90,9 +93,10 @@ class DevicesController extends AppController
                 ]
             ])->toArray();
         }
-        $this->set(compact('devices'));
-
-
+        $result = Hash::combine($devices, '{n}.id', '{n}.adgroup_id');
+        $Adgroups = $this->Adgroups->find()->where(['id IN' => array_unique($result)])->combine('id', 'name')->toArray();
+        $this->set(compact('Adgroups','devices'));
+//        pr($devices); die;
     }
 
 
@@ -250,12 +254,12 @@ class DevicesController extends AppController
                 } else {
                     $conn->rollback();
                     $this->Flash->error(__('The device could not be saved. Please, try again.'));
-                    return $this->redirect(['action' => 'edit' . '/' . $id]);
+                    return $this->redirect(['action' => 'edit' . '/' . \UrlUtil::_encodeUrl($id)]);
                 }
             } else {
                 $conn->rollback();
                 $this->Flash->error(__('The device could not be saved. Please, try again.'));
-                return $this->redirect(['action' => 'edit' . '/' . $id]);
+                return $this->redirect(['action' => 'edit' . '/' . \UrlUtil::_encodeUrl($id)]);
             }
         }
         $this->set(compact('device'));

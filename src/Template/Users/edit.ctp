@@ -10,6 +10,7 @@
  * @var \App\View\AppView $campaignGroups
  * @var \App\View\AppView $role
  */
+$this->assign('title', 'Chỉnh sửa người dùng');
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -21,9 +22,9 @@
                             <i class="material-icons">home</i> Trang chủ
                         </a>
                     </li>
-                    <li class="active">
-                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail-partner/'. UrlUtil::_encodeUrl($user['id'])])?>">Thông tin</a>
-                    </li>
+<!--                    <li class="active">-->
+<!--                        <a href="--><?php //echo $this->Url->build(['controller' => 'Users', 'action' => 'detail-partner/'. UrlUtil::_encodeUrl($user['id'])])?><!--">Thông tin</a>-->
+<!--                    </li>-->
                     <li class="active">
                         <a href="javascript:void(0)">Chỉnh sửa thông tin</a>
                     </li>

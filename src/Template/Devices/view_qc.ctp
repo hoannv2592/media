@@ -6,194 +6,186 @@
  * @var \App\View\AppView auth_target
  */
 $this->layout = 'landing';
-    $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
-    $message = isset($infor_devices->message) ? $infor_devices->message: 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
-    $path = isset($infor_devices->path) ? $infor_devices->path :'images/entry3.jpg';
-    $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
-    if ($langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
-        echo $this->Html->css('back_end/page1'); ?>
-        <div class="landing">
-            <div class="wapper" style="background: url(<?php echo '/'.$path;?>) top center"></div>
-            <div class="landing__cover-overlay"></div>
-            <div class="landing__cover landing__cover--main landing__cover--flexible">
-                <div class="u-ui-padding-x-large landing__cover-wrapper">
-                    <div class="landing__cover-content u-color-white">
-                        <div class="c-text--heading c-text--parent c-text--center c-text"><?php echo $slogan; ?></div>
-                        <div class="c-spacer--xx-large c-spacer"></div>
-                        <div class="logo">
-                            <div class="logo__inner">
-                                <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt=""></a>
-                            </div>
-                        </div>
-                        <div class="c-spacer--xx-large c-spacer"></div>
-                        <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
-                        <div class="c-spacer--xx-large c-spacer"></div>
-                        <div class="discount">
-                            <div class="c-text--discount c-text--center c-text cc"><?php echo $message;?></div>
-                            <div class="c-spacer--x-large c-spacer"></div>
-                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal">Đăng ký nhận
-                                voucher</a>
-                        </div>
-                        <div class="c-spacer--x-large c-spacer"></div>
-                        <div class="redirect">
-                            <a class="redirect__normal" href="<?php echo $infor_devices->auth_target;?>">Connect now - Slow</a>
+$slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
+$message = isset($infor_devices->message) ? $infor_devices->message: 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
+$path = isset($infor_devices->path) ? $infor_devices->path :'images/entry3.jpg';
+$langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : 1;
+if ($langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
+    echo $this->Html->css('back_end/page1'); ?>
+    <div class="landing">
+        <div class="wapper" style="background: url(<?php echo '/'.$path;?>) top center"></div>
+        <div class="landing__cover-overlay"></div>
+        <div class="landing__cover landing__cover--main landing__cover--flexible">
+            <div class="u-ui-padding-x-large landing__cover-wrapper">
+                <div class="landing__cover-content u-color-white">
+                    <div class="c-spacer--xx-large c-spacer"></div>
+                    <div class="logo">
+                        <div class="logo__inner">
+                            <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt=""></a>
                         </div>
                     </div>
-                </div>
-                <div class="u-ui-padding-x-large landing__cover-wrapper">
-                    <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
-                    <ul class="icons mbl">
-                        <li class="facebook">
-                            <a href="" target="_blank"><i class="fa fa-facebook"></i></a>
-                        </li>
-                        <li class="youtube">
-                            <a href="" target="_blank"><i class="fa fa-youtube"></i></a>
-                        </li>
-                        <li class="googleplus">
-                            <a href="" target="_blank"><i class="fa fa-google-plus"></i></a>
-                        </li>
-                        <li class="twitter">
-                            <a href="" target="_blank"><i class="fa fa-twitter"></i></a>
-                        </li>
-                    </ul>
+                    <div class="c-spacer--xx-large c-spacer"></div>
+                    <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
+                    <div class="c-spacer--xx-large c-spacer"></div>
+                    <div class="discount">
+                        <div class="c-spacer--x-large c-spacer"></div>
+                        <a class="redirect__discount" href="#modal_discount" data-toggle="modal">Đăng ký nhận
+                            voucher</a>
+                    </div>
+                    <div class="c-spacer--x-large c-spacer"></div>
+                    <div class="redirect">
+                        <a class="redirect__normal" href="<?php echo $infor_devices->auth_target;?>">Connect now - Slow</a>
+                    </div>
                 </div>
             </div>
+            <div class="u-ui-padding-x-large landing__cover-wrapper">
+                <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
+                <ul class="icons mbl">
+                    <li class="facebook">
+                        <a href="" target="_blank"><i class="fa fa-facebook"></i></a>
+                    </li>
+                    <li class="youtube">
+                        <a href="" target="_blank"><i class="fa fa-youtube"></i></a>
+                    </li>
+                    <li class="googleplus">
+                        <a href="" target="_blank"><i class="fa fa-google-plus"></i></a>
+                    </li>
+                    <li class="twitter">
+                        <a href="" target="_blank"><i class="fa fa-twitter"></i></a>
+                    </li>
+                </ul>
+            </div>
         </div>
-        <div id="modal_discount" class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">Nhận đăng ký giảm giá</h4>
-                    </div>
-                    <div class="modal-body">
-                        <div class="m-text--discount c-text--center c-text "><?php echo $message;?></div>
-                        <div class="c-spacer--x-large c-spacer"></div>
-                        <form action="#" name="register_form" class="register_form" id="register_form" method="post">
-                            <p>
-                                <input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên">
-                            </p>
-                            <p>
-                                <input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại">
-                            </p>
-                            <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
-                            <input type="hidden" name="device_id" value="<?php echo $infor_devices->id;?>" >
-                            <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id;?>" >
-                            <p><input type="submit" class="_btn" value="Đăng ký"></p>
-                        </form>
-                    </div>
+    </div>
+    <div id="modal_discount" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Nhận đăng ký giảm giá</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="c-spacer--x-large c-spacer"></div>
+                    <form action="#" name="register_form" class="register_form" id="register_form" method="post">
+                        <p>
+                            <input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên">
+                        </p>
+                        <p>
+                            <input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại">
+                        </p>
+                        <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                        <input type="hidden" name="device_id" value="<?php echo $infor_devices->id;?>" >
+                        <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id;?>" >
+                        <p><input type="submit" class="_btn" value="Đăng ký"></p>
+                    </form>
+                </div>
 
-                </div>
             </div>
         </div>
-    <?php } else if ($langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
-        echo $this->Html->css('back_end/page2'); ?>
-        <div class="landing">
-            <div class="wapper" style="background: url(<?php echo '/'.$path;?>) top center"></div>
-            <div class="landing__cover-overlay"></div>
-            <div class="landing__cover landing__cover--main landing__cover--flexible">
-                <div class="u-ui-padding-x-large landing__cover-wrapper">
-                    <div class="landing__cover-content u-color-white">
-                        <div class="c-text--heading c-text--parent c-text--center c-text"><?php echo $slogan; ?>
-                        </div>
-                        <div class="c-spacer--xx-large c-spacer"></div>
-                        <div class="logo">
-                            <div class="logo__inner">
-                                <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo"></a>
-                            </div>
-                        </div>
-                        <div class="c-spacer--xx-large c-spacer"></div>
-                        <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
-                        <div class="redirect">
-                            <div class="c-spacer--xx-large c-spacer"></div>
-                            <div class="c-spacer--xx-large c-spacer"></div>
-                            <div class="redirect-wrapper">
-                                <div class="m-text--desc ">Việc truy cập vào mạng wifi này đồng nghĩa với điều khoản sử dụng
-                                    của chúng tôi
-                                </div>
-                                <div class=" c-spacer"></div>
-                                <label class="c-input--default c-input--password c-input" for="user_password">
-                                    <div class="c-input__content js-input-content">
-                                        <input type="password" name="password" id="user_password" class="c-input__value " placeholder="Nhập mật khẩu">
-                                    </div>
-                                </label>
-                                <div class="c-cell">
-                                    <div class="c-cell__content">
-                                        <div class="c-cell__body">
-                                            <a id="submit_password" href="javascript:void (0);" class="redirect__normal c-button--filled c-button--normal c-button " onclick="submitContactForm()"><span class="c-button__content">Connect now</span></a>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+    </div>
+<?php } else if ($langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
+    echo $this->Html->css('back_end/page2'); ?>
+    <div class="landing">
+        <div class="wapper" style="background: url(<?php echo '/'.$path;?>) top center"></div>
+        <div class="landing__cover-overlay"></div>
+        <div class="landing__cover landing__cover--main landing__cover--flexible">
+            <div class="u-ui-padding-x-large landing__cover-wrapper">
+                <div class="landing__cover-content u-color-white">
                 </div>
-            </div>
-        </div>
-    <?php } else if($langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
-        echo $this->Html->css('back_end/page3');
-        $path = isset($infor_devices->path) ? $infor_devices->path :'images/entry3.jpg';?>
-        <div class="landing">
-            <div class="wapper" style="background: url(<?php echo '/'.$path ;?>) top center"></div>
-            <div class="landing__cover-overlay"></div>
-            <div class="landing__cover landing__cover--main landing__cover--flexible">
-                <div class="u-ui-padding-x-large landing__cover-wrapper">
-                    <div class="landing__cover-content u-color-white">
-                        <div class="logo">
-                            <div class="logo__inner">
-                                <a class="" href="javascript:void(0);"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt="Foody.vn"></a>
-                            </div>
-                        </div>
-                        <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
-                        <div class="c-spacer--x-large c-spacer"></div>
-                        <div class="c-text--heading c-text--parent c-text--center c-text"><?php echo $slogan; ?></div>
-                        <div class="c-spacer--xx-large c-spacer"></div>
-                        <div class="c-spacer--xx-large c-spacer"></div>
-                        <div class="c-spacer--xx-large c-spacer"></div>
-                        <div class="redirect">
-                            <a class="btn _face" href="<?php echo $infor_devices->auth_target;?>"><i class="fa fa-facebook"></i>Login with Facebook</a>
-                            <div class=" c-spacer"></div>
-                            <a class="btn _goog" href="<?php echo $infor_devices->auth_target;?>"><i class="fa fa-google-plus"></i>Login with Google</a>
-                            <div class="c-spacer--x-large c-spacer"></div>
-                            <a class="btn _wifi" href="<?php echo $infor_devices->auth_target;?>"><i class="fa fa-wifi"></i>Connect now - Slow</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    <?php } else { ?>
-       <?php $this->layout = 'demo'; ?>
-        <body class="login-page">
-            <div class="login-box">
+                <div class="c-spacer--xx-large c-spacer"></div>
                 <div class="logo">
-                    <a href="javascript:void(0);"><b>WIFI</b></a>
-                    <small>Demo by wifi - media </small>
+                    <div class="logo__inner">
+                        <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo"></a>
+                    </div>
                 </div>
-                <div class="card">
-                    <div class="body">
-                            <div class="msg"></div>
-                            <div class="">
-                                <div class="form-line"></div>
+                <div class="c-spacer--xx-large c-spacer"></div>
+                <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
+                <div class="redirect">
+                    <div class="c-spacer--xx-large c-spacer"></div>
+                    <div class="c-spacer--xx-large c-spacer"></div>
+                    <div class="redirect-wrapper">
+                        <div class="m-text--desc ">Việc truy cập vào mạng wifi này đồng nghĩa với điều khoản sử dụng
+                            của chúng tôi
+                        </div>
+                        <div class=" c-spacer"></div>
+                        <label class="c-input--default c-input--password c-input" for="user_password">
+                            <div class="c-input__content js-input-content">
+                                <input type="password" name="password" id="user_password" class="c-input__value " placeholder="Nhập mật khẩu">
                             </div>
-                            <div class="">
-                                <div class="form-line"></div>
-                            </div>
-                            <div class="row ">
-                                <div class="col-xs-6 col-xs-offset-3">
-                                    <a href="<?php echo $infor_devices->auth_target;?>" class="btn btn-lg btn-block bg-pink waves-effect" >Connect to wifi</a>
+                        </label>
+                        <div class="c-cell">
+                            <div class="c-cell__content">
+                                <div class="c-cell__body">
+                                    <a id="submit_password" href="javascript:void (0);" class="redirect__normal c-button--filled c-button--normal c-button " onclick="submitContactForm()"><span class="c-button__content">Connect now</span></a>
                                 </div>
                             </div>
-<!--                            <div class="row ">-->
-<!--                                <div class="col-xs-6 col-xs-offset-3">-->
-<!--                                    <a href="--><?php //echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($infor_devices->id) . '/' . UrlUtil::_encodeUrl($infor_devices->user_id)]);?><!--" class="btn btn-lg btn-block bg-purple waves-effect" >Setting quảng cáo</a>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                        </div>
                     </div>
                 </div>
             </div>
-        </body>
+        </div>
+    </div>
+    </div>
+<?php } else if($langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
+    echo $this->Html->css('back_end/page3');
+    $path = isset($infor_devices->path) ? $infor_devices->path :'images/entry3.jpg';?>
+    <div class="landing">
+        <div class="wapper" style="background: url(<?php echo '/'.$path ;?>) top center"></div>
+        <div class="landing__cover-overlay"></div>
+        <div class="landing__cover landing__cover--main landing__cover--flexible">
+            <div class="u-ui-padding-x-large landing__cover-wrapper">
+                <div class="landing__cover-content u-color-white">
+                    <div class="logo">
+                        <div class="logo__inner">
+                            <a class="" href="javascript:void(0);"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt="Foody.vn"></a>
+                        </div>
+                    </div>
+                    <div class="c-text--heading c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name;?></div>
+                    <div class="c-spacer--x-large c-spacer"></div>
+                    <div class="redirect">
+                        <a class="btn _face" href="<?php echo $infor_devices->auth_target;?>"><i class="fa fa-facebook"></i>Login with Facebook</a>
+                        <div class=" c-spacer"></div>
+                        <a class="btn _goog" href="<?php echo $infor_devices->auth_target;?>"><i class="fa fa-google-plus"></i>Login with Google</a>
+                        <div class="c-spacer--x-large c-spacer"></div>
+                        <a class="btn _wifi" href="<?php echo $infor_devices->auth_target;?>"><i class="fa fa-wifi"></i>Connect now - Slow</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php } else { ?>
+    <?php $this->layout = 'demo'; ?>
+    <body class="login-page">
+    <div class="login-box">
+        <div class="logo">
+            <a href="javascript:void(0);"><b>WIFI</b></a>
+            <small>Demo by wifi - media </small>
+        </div>
+        <div class="card">
+            <div class="body">
+                <div class="msg"></div>
+                <div class="">
+                    <div class="form-line"></div>
+                </div>
+                <div class="">
+                    <div class="form-line"></div>
+                </div>
+                <div class="row ">
+                    <div class="col-xs-6 col-xs-offset-3">
+                        <a href="<?php echo $infor_devices->auth_target;?>" class="btn btn-lg btn-block bg-pink waves-effect" >Connect to wifi</a>
+                    </div>
+                </div>
+                <div class="row ">
+                    <div class="col-xs-6 col-xs-offset-3">
+                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($infor_devices->id) . '/' . UrlUtil::_encodeUrl($infor_devices->user_id)]);?>" class="btn btn-lg btn-block bg-purple waves-effect" >Setting quảng cáo</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </body>
 
-    <?php } ?>
+<?php } ?>
 <script type="application/javascript">
     var url = "<?php echo $infor_devices->auth_target?>";
     function submitContactForm(){
@@ -266,12 +258,12 @@ $this->layout = 'landing';
                 cache: false,
                 processData: false,
                 success: function(data) {
-                   if (data == 'true') {
-                       window.location.href = url;
+                    if (data == 'true') {
+                        window.location.href = url;
                         return true;
-                   } else {
-                       return false;
-                   }
+                    } else {
+                        return false;
+                    }
                 }
             });
             window.location.href = url;

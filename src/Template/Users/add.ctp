@@ -8,6 +8,7 @@
  * @var \App\View\AppView $serviceGroups
  * @var \App\View\AppView $campaignGroups
  */
+$this->assign('title', 'Thêm mới người dùng');
 ?>
 <section class="content">
     <div class="container-fluid">

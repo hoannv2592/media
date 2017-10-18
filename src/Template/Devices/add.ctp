@@ -3,6 +3,7 @@
   * @var \App\View\AppView $this
   * @var \App\Model\Entity\Devices[]|\Cake\Collection\CollectionInterface $users
   */
+$this->assign('title', 'Thêm mới thiết bị');
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -54,6 +55,14 @@
                                 <label class="form-label"></label>
                             </div>
                             <div class="help-info">Mã apt_key</div>
+                        </div>
+                        <label for="name">Địa chỉ đặt thiết bị</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="address" placeholder="Địa chỉ đặt thiết bị" required>
+                                <label class="form-label"></label>
+                            </div>
+                            <div class="help-info">Địa chỉ đặt thiết bị</div>
                         </div>
                         <label for="name">Chọn tài khoản</label>
                         <div class="form-group form-float">

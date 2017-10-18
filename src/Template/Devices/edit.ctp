@@ -1,9 +1,11 @@
 <?php
 /**
-  * @var \App\View\AppView $this
+ * @var $userData
+ * @var \App\View\AppView $this
  * @var \App\View\AppView $device
  * @var \App\View\AppView $users
   */
+$this->assign('title', 'Chỉnh sửa thiết bị');
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -15,7 +17,7 @@
                             <i class="material-icons">home</i> Trang chủ
                         </a>
                     </li>
-                    <li class="active"><a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device/'.UrlUtil::_encodeUrl($device['id'])])?>">Thông tin</a></li>
+<!--                    <li class="active"><a href="--><?php //echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device/'.UrlUtil::_encodeUrl($device['id'])])?><!--">Thông tin</a></li>-->
                     <li class="active"><a href="javascript:void(0)">Chỉnh sửa thông tin</a></li>
                 </ol>
                 <div class="card">
@@ -44,7 +46,7 @@
                         <label for="name">Tên thiết bị</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="name" id="name"  value="<?php echo isset($device['name']) ? $device['name'] :''?>" required>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Điền tên thiết bị" value="<?php echo isset($device['name']) ? $device['name'] :''?>" required>
                             </div>
                             <div class="help-info">Tên thiết bị</div>
                         </div>
@@ -54,6 +56,13 @@
                                 <input disabled="disabled" type="text" class="form-control" name="apt_key" id="apt_key" value="<?php echo isset($device['apt_key']) ? $device['apt_key']:''?>" required>
                             </div>
                             <div class="help-info">Mã thiết bị</div>
+                        </div>
+                        <label for="name">Địa chỉ đặt thiết bị</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="address" placeholder="Địa chỉ đặt thiết bị" id="address" value="<?php echo isset($device['address']) ? $device['address']:''?>" required>
+                            </div>
+                            <div class="help-info">Địa chỉ đặt thiết bị</div>
                         </div>
                         <label for="user_id">Chọn tài khoản</label>
                         <div class="form-group form-float">

@@ -6,6 +6,7 @@
   * @var $adgroup
   * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
   */
+$this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
 ?>
 <section class="content">
     <div class="container-fluid">
@@ -91,10 +92,10 @@
                             </div>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">Slogan</h2>
+                        <h2 class="card-inside-title">Địa chỉ nhóm thiết bị</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <input type="text" name="slogan" id="slogan" class="form-control" value="<?php echo isset($device->slogan) ? $device->slogan :'';?>" placeholder="Điền slogan..">
+                                <input type="text" name="address" id="slogan" class="form-control" value="<?php echo isset($device->address) ? $device->address :'';?>" placeholder="Điền địa chỉ nhóm thiết bị..">
                             </div>
                         </div>
                         <div class="check_pass_device m-t-15">
@@ -105,14 +106,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="message">
-                            <h2 class="card-inside-title">Tin nhắn voucher</h2>
-                            <div class="form-group" id="end_show">
-                                <div class="form-line">
-                                    <input type="text" name="message" id="message" class="form-control" value="<?php echo isset($device->message) ? $device->message :'';?>" placeholder="Điền message..">
-                                </div>
-                            </div>
-                        </div>
+<!--                        <div class="message">-->
+<!--                            <h2 class="card-inside-title">Tin nhắn voucher</h2>-->
+<!--                            <div class="form-group" id="end_show">-->
+<!--                                <div class="form-line">-->
+<!--                                    <input type="text" name="message" id="message" class="form-control" value="--><?php //echo isset($device->message) ? $device->message :'';?><!--" placeholder="Điền message..">-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped dataTable table-hover">
                                 <thead>
@@ -196,26 +197,26 @@
         var langding = "<?php echo isset($device->langdingpage_id) ? $device->langdingpage_id:''; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
-            $('.message').css('display', 'none');
+//            $('.message').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
-            $('.message').css('display', '');
+//            $('.message').css('display', '');
         } else {
-            $('.message').css('display', 'none');
             $('.check_pass_device').css('display', 'none');
+//            $('.message').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
-            $('.message').css('display', 'none');
+//            $('.message').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
-            $('.message').css('display', '');
+//            $('.message').css('display', '');
         } else {
-            $('.message').css('display', 'none');
             $('.check_pass_device').css('display', 'none');
+//            $('.message').css('display', 'none');
         }
     });
     $('#uploadForm').validate({

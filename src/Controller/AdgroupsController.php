@@ -151,8 +151,8 @@ class AdgroupsController extends AppController
                 'tile_name' => $this->request->getData()['tile_name'],
                 'device_name' => ($listNameDevice),
                 'path' => isset($data_service['path']) ? $data_service['path'] : '',
-                'slogan' => $this->request->getData()['slogan'],
-                'message' => $this->request->getData()['message'],
+//                'slogan' => $this->request->getData()['slogan'],
+                'address' => $this->request->getData()['address'],
             );
             $device_group = $this->DeviceGroups->newEntity();
             $device_group= $this->DeviceGroups->patchEntity($device_group, $data_group_devices );
@@ -166,8 +166,8 @@ class AdgroupsController extends AppController
                 'image_backgroup' => isset($data_service['image_backgroup']) ? $data_service['image_backgroup']:'',
                 'tile_name' => $this->request->getData()['tile_name'],
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
-                'slogan' => $this->request->getData()['slogan'],
-                'message' => $this->request->getData()['message'],
+//                'slogan' => $this->request->getData()['slogan'],
+                'address' => $this->request->getData()['address'],
             );
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             $adgroup->delete_flag = UN_DELETED;
@@ -468,8 +468,8 @@ class AdgroupsController extends AppController
                 'description' => $this->request->getData()['description'],
                 'langdingpage_id' => $this->request->getData()['langdingpage_id'],
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
-                'message' => $this->request->getData()['message'],
-                'slogan' => $this->request->getData()['slogan'],
+//                'message' => $this->request->getData()['message'],
+                'address' => $this->request->getData()['address'],
             );
             if (!empty($this->request->data['file']['name'])) {
                 // upload the file to the server
@@ -495,8 +495,8 @@ class AdgroupsController extends AppController
                 'number_pass' => $this->request->getData()['apt_device_number'],
                 'tile_name' => $this->request->getData()['tile_name'],
                 'device_name' => $listUserid,
-                'message' => $this->request->getData()['message'],
-                'slogan' => $this->request->getData()['slogan'],
+//                'message' => $this->request->getData()['message'],
+                'address' => $this->request->getData()['address'],
 
             );
             $list_remove_device_id = array();
@@ -552,15 +552,15 @@ class AdgroupsController extends AppController
                         return $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        return $this->redirect(['action' => 'edit'.'/'.$id]);
+                        return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
                     }
                 } else {
                     $conn->rollback();
-                    return $this->redirect(['action' => 'edit'.'/'.$id]);
+                    return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
                 }
             } else {
                 $conn->rollback();
-                return $this->redirect(['action' => 'edit'.'/'.$id]);
+                return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
             }
         }
         $apt_device_number = $this->radompassWord();

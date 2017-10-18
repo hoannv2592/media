@@ -5,6 +5,7 @@
   * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $adgroups
   * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $userData
   */
+$this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
 ?>
 <section class="content" xmlns="">
     <div class="container-fluid">
@@ -46,7 +47,8 @@
                                 <tr class="bg-blue-grey">
                                     <th>STT</th>
                                     <th>Tên quảng cáo</th>
-                                    <th>Thiết bị</th>
+                                    <th>Số lượng thiết bị</th>
+                                    <th>Địa chỉ</th>
                                     <th>Loại quảng cáo</th>
                                     <th>Mô tả</th>
                                     <th>Ngày tạo</th>
@@ -56,20 +58,22 @@
                                 <tbody>
                                 <?php
                                 $count = 0;
+
                                 foreach ($adgroups as $key => $adgroup) { $count++;?>
                                     <tr>
-                                        <td><?php echo $count; ?></td>
+                                        <td> <?php echo $count; ?></td>
                                         <td class="advertise font-bold col-cyan">
                                             <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'detail_group' . '/' . UrlUtil::_encodeUrl($adgroup->id)]) ?>"><?php echo h($adgroup->name); ?></a>
                                         </td>
+
                                         <td>
-                                            <table class="table">
                                             <?php if (!empty($adgroup->device_name)) {
-                                                foreach (json_decode($adgroup->device_name) as $k => $device_name) { ?>
-                                                    <tr><td><?php echo $device_name; ?></td></tr>
-                                                <?php } ?>
-                                            <?php } ?>
-                                            </table>
+                                                $array =  (array) json_decode($adgroup->device_name);
+                                                echo count($array);
+                                             } ?>
+                                        </td>
+                                        <td>
+                                            <?php echo  nl2br($adgroup->address);?>
                                         </td>
                                         <td>
                                             <?php echo isset(\App\Model\Entity\Device::$langding_page[$adgroup->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$adgroup->langdingpage_id]:''; ?>

@@ -1,10 +1,12 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var \App\View\AppView $Adgroups
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $devices
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $userData
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $action
  */
+$this->assign('title', 'Quản lý thiết bị');
 ?>
 <section class="content" xmlns="">
     <div class="container-fluid">
@@ -49,6 +51,7 @@
                                                 <th>STT</th>
                                                 <th>Tên thiết bị</th>
                                                 <th>User quản lý</th>
+                                                <th>Nhóm thiết bị</th>
                                                 <th>Mã thiết bị</th>
                                                 <th>Khách hàng sử dụng</th>
                                                 <th>Loại quảng cáo</th>
@@ -64,15 +67,17 @@
                                                 <tr valign="middle">
                                                     <td><?php echo $count; ?></td>
                                                     <td class="advertise font-bold col-cyan">
-                                                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>"><?php echo h($device->name); ?></a>
+                                                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>"><?php echo h($device->name); ?></a>
                                                     </td>
                                                     <td class="font-bold col-cyan">
-                                                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>"><?php echo h($device->user->username); ?></a>
+                                                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>"><?php echo h($device->user->username); ?></a>
                                                     </td>
+                                                    <td><?php
+                                                        echo isset($Adgroups[$device->adgroup_id]) ? $Adgroups[$device->adgroup_id]: $device->address;
+                                                        ?></td>
                                                     <td><?php echo nl2br($device->apt_key); ?></td>
                                                     <td> <?php echo isset($device->partners) ? count($device->partners): 0; ?></td>
                                                     <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : ''; ?></td>
-<!--                                                    <td>--><?php //echo nl2br($device->uptime); ?><!--</td>-->
                                                     <td><?php echo date('d/m/Y H:i', strtotime($device->created)); ?></td>
                                                     <td class="delete_advertise" value="<?php echo h($device->id); ?>">
                                                         <div class="button-demo">

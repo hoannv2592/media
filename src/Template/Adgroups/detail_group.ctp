@@ -5,6 +5,7 @@
  * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $adgroup
  * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $userData
  */
+$this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
 ?>
 <section class="content"  xmlns="">
     <div class="container-fluid">
@@ -101,20 +102,20 @@
                                 <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($adgroup->tile_name) ? $adgroup->tile_name :'';?>" placeholder="Điền tên..">
                             </div>
                         </div>
-                        <h2 class="card-inside-title">Slogan</h2>
+                        <h2 class="card-inside-title">Địa chỉ nhóm thiết bị</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <input type="text" name="slogan" id="tile_name" class="form-control" value="<?php echo isset($adgroup->slogan) ? $adgroup->slogan :'';?>" placeholder="Điền slogan..">
+                                <input type="text" name="address" id="tile_name" class="form-control" value="<?php echo isset($adgroup->address) ? $adgroup->address :'';?>" placeholder="Điền địa chỉ nhóm thiết bị..">
                             </div>
                         </div>
-                        <div class="message">
-                            <h2 class="card-inside-title">Tin nhắn voucher</h2>
-                            <div class="form-group" id="end_show">
-                                <div class="form-line">
-                                    <input type="text" name="message" id="message" class="form-control" value="<?php echo isset($adgroup->message) ? $adgroup->message :'';?>" placeholder="Điền message..">
-                                </div>
-                            </div>
-                        </div>
+<!--                        <div class="message">-->
+<!--                            <h2 class="card-inside-title">Tin nhắn voucher</h2>-->
+<!--                            <div class="form-group" id="end_show">-->
+<!--                                <div class="form-line">-->
+<!--                                    <input type="text" name="message" id="message" class="form-control" value="--><?php //echo isset($adgroup->message) ? $adgroup->message :'';?><!--" placeholder="Điền message..">-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                         <div class="check_pass_device">
                         <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
                         <div class="form-group">
@@ -167,26 +168,26 @@
         var langding = "<?php echo $adgroup->langdingpage_id; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
-            $('.message').css('display', 'none');
+//            $('.message').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
-            $('.message').css('display', '');
+//            $('.message').css('display', '');
         } else {
-            $('.message').css('display', 'none');
             $('.check_pass_device').css('display', 'none');
+//            $('.message').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
-            $('.message').css('display', 'none');
+//            $('.message').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
-            $('.message').css('display', '');
+//            $('.message').css('display', '');
         } else {
-            $('.message').css('display', 'none');
             $('.check_pass_device').css('display', 'none');
+//            $('.message').css('display', 'none');
         }
     });
     $.validator.setDefaults({ ignore: ":hidden:not(select)" });
