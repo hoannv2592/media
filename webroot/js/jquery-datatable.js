@@ -27,7 +27,8 @@ $(function () {
         responsive: true,
         "columns": [
             { "width": "1%" },
-            { "width": "15%" },
+            { "width": "10%" },
+            { "width": "10%" },
             { "width": "10%" },
             { "width": "15%" },
             { "width": "15%" },

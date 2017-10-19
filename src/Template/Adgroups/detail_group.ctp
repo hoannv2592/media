@@ -1,6 +1,7 @@
 <?php
 /**
  * @var $devices
+ * @var $users
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $adgroup
  * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $userData
@@ -68,10 +69,9 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                         <h2 class="card-inside-title">Chọn thiết bị cho nhóm</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <select data-placeholder="Chọn thiết bị" class="chosen-select " multiple tabindex="8" name="device_id[]">
+                                <select data-placeholder="Chọn thiết bị" id="select_device" class="chosen-select " multiple tabindex="8" name="device_id[]">
                                     <?php
                                     $user_de_id = json_decode($adgroup->device_name);
-
                                     foreach ($devices as $key => $device) {
                                         if (isset($user_de_id->$key)) { ?>
                                             <option selected="selected" value="<?php echo $key; ?>"><?php echo $device ?></option>
@@ -82,6 +82,22 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                     <?php } ?>
                                 </select>
                             </div>
+                        </div>
+                        <h2 class="card-inside-title" for="description">User quản lý nhóm thiết bị</h2>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <select class="form-control required" name="user_id_group" id="role">
+                                        <option disabled selected value> --- Chọn user --- </option>
+                                        <?php foreach ($users as $key => $item) {
+                                            if (isset($adgroup->user_id_group) && $adgroup->user_id_group ) { ?>
+                                                <option selected="selected" value="<?php echo $key; ?>"><?php echo $item ?></option>
+                                            <?php } else { ?>
+                                                <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
+                                            <?php }?>
+                                        <?php  } ?>
+                                    </select>
+                                </div>
+                            <div class="help-info">User quản lý nhóm thiết bị</div>
                         </div>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -108,14 +124,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 <input type="text" name="address" id="tile_name" class="form-control" value="<?php echo isset($adgroup->address) ? $adgroup->address :'';?>" placeholder="Điền địa chỉ nhóm thiết bị..">
                             </div>
                         </div>
-<!--                        <div class="message">-->
-<!--                            <h2 class="card-inside-title">Tin nhắn voucher</h2>-->
-<!--                            <div class="form-group" id="end_show">-->
-<!--                                <div class="form-line">-->
-<!--                                    <input type="text" name="message" id="message" class="form-control" value="--><?php //echo isset($adgroup->message) ? $adgroup->message :'';?><!--" placeholder="Điền message..">-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
                         <div class="check_pass_device">
                         <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
                         <div class="form-group">
@@ -135,7 +143,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php if (isset($adgroup->path)) { ?>
+                                <?php
+                                if (isset($adgroup->path)) { ?>
                                     <tr>
                                         <td><?php echo $adgroup->id; ?></td>
                                         <td><?php echo $adgroup->tile_name; ?></td>

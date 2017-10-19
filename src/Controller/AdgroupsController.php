@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\User;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 use Cake\Utility\Hash;
@@ -66,6 +67,8 @@ class AdgroupsController extends AppController
                 $flag = true;
             }
         }
+
+        $this->getAllData();
         $this->set(compact('adgroups', 'flag'));
         $this->set('_serialize', ['adgroups']);
     }
@@ -110,7 +113,7 @@ class AdgroupsController extends AppController
             }
             $merged = call_user_func_array('array_merge', $device_id);
             $devices = $this->Devices->find('all')
-                ->where(['id NOT IN' => $merged])
+                ->where(['id NOT IN' => $merged, 'delete_flag !=' => DELETED])
                 ->combine('id','name')->toArray();
         } else {
             $devices = $this->Devices->find()
@@ -119,6 +122,8 @@ class AdgroupsController extends AppController
                 ->order(['Devices.id'=> 'DESC'])
                 ->combine('id', 'name')->toArray();
         }
+//        $user_id = $this->Devices->find()->select(['user_id', 'id'])->where(['id IN' => array_keys($devices)])->combine('id', 'user_id')->toArray();
+//        $info_users = $this->Users->find()->where(['id IN' => $user_id, 'delete_flag !=' => DELETED])->select(['id', 'username'])->hydrate(false)->combine('id', 'username')->toArray();
         $adgroup = $this->Adgroups->newEntity();
         if ($this->request->is('post')) {
             $listNameDevice = ($this->getNameDevice($this->request->getData()['device_id']));
@@ -151,8 +156,8 @@ class AdgroupsController extends AppController
                 'tile_name' => $this->request->getData()['tile_name'],
                 'device_name' => ($listNameDevice),
                 'path' => isset($data_service['path']) ? $data_service['path'] : '',
-//                'slogan' => $this->request->getData()['slogan'],
                 'address' => $this->request->getData()['address'],
+                'user_id_group' => $this->request->getData()['user_id_group'],
             );
             $device_group = $this->DeviceGroups->newEntity();
             $device_group= $this->DeviceGroups->patchEntity($device_group, $data_group_devices );
@@ -166,8 +171,8 @@ class AdgroupsController extends AppController
                 'image_backgroup' => isset($data_service['image_backgroup']) ? $data_service['image_backgroup']:'',
                 'tile_name' => $this->request->getData()['tile_name'],
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
-//                'slogan' => $this->request->getData()['slogan'],
                 'address' => $this->request->getData()['address'],
+                'user_id_group' => $this->request->getData()['user_id_group'],
             );
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             $adgroup->delete_flag = UN_DELETED;
@@ -406,6 +411,13 @@ class AdgroupsController extends AppController
      */
     public function detailGroup($id =null)
     {
+        $users = $this->Users->find()
+            ->where(['Users.delete_flag !=' => DELETED])
+            ->select(['Users.id', 'Users.username'])
+            ->order(['Users.id'=> 'ASC'])
+            ->combine('id', 'username')
+            ->toArray();
+
         $id = \UrlUtil::_decodeUrl($id);
         $conn = ConnectionManager::get('default');
         $conn->begin();
@@ -414,6 +426,8 @@ class AdgroupsController extends AppController
         }
         $this->getAllData();
         $adgroup = $this->Adgroups->get($id);
+//        $user_id = $this->Devices->find()->select(['user_id', 'id'])->where(['id IN' => json_decode($adgroup->device_id)])->combine('id', 'user_id')->toArray();
+//        $info_users = $this->Users->find()->where(['id IN' => $user_id, 'delete_flag !=' => DELETED])->select(['id', 'username'])->hydrate(false)->combine('id', 'username')->toArray();
         $groups = $this->Adgroups->find()
             ->select(['id', 'device_id'])
             ->where(['delete_flag !=' => DELETED])
@@ -468,8 +482,8 @@ class AdgroupsController extends AppController
                 'description' => $this->request->getData()['description'],
                 'langdingpage_id' => $this->request->getData()['langdingpage_id'],
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
-//                'message' => $this->request->getData()['message'],
                 'address' => $this->request->getData()['address'],
+                'user_id_group' => $this->request->getData()['user_id_group'],
             );
             if (!empty($this->request->data['file']['name'])) {
                 // upload the file to the server
@@ -495,8 +509,8 @@ class AdgroupsController extends AppController
                 'number_pass' => $this->request->getData()['apt_device_number'],
                 'tile_name' => $this->request->getData()['tile_name'],
                 'device_name' => $listUserid,
-//                'message' => $this->request->getData()['message'],
                 'address' => $this->request->getData()['address'],
+                'user_id_group' => $this->request->getData()['user_id_group'],
 
             );
             $list_remove_device_id = array();

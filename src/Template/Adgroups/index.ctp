@@ -48,6 +48,7 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                     <th>STT</th>
                                     <th>Tên quảng cáo</th>
                                     <th>Số lượng thiết bị</th>
+                                    <th>User quản lý</th>
                                     <th>Địa chỉ</th>
                                     <th>Loại quảng cáo</th>
                                     <th>Mô tả</th>
@@ -72,6 +73,7 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                                 echo count($array);
                                              } ?>
                                         </td>
+                                        <td><?php echo isset($users[$adgroup->user_id_group]) ? $users[$adgroup->user_id_group]: ''?></td>
                                         <td>
                                             <?php echo  nl2br($adgroup->address);?>
                                         </td>

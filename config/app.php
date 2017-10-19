@@ -342,6 +342,6 @@ return [
      */
     'Session' => [
         'defaults' => 'php',
-        'timeout'=>43200 /*30 day*/
+        'timeout'=> 432000 /*30 day*/
     ],
 ];
