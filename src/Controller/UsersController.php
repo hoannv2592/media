@@ -14,6 +14,8 @@ use PHPExcel_Style_Border;
 use PHPExcel_Cell;
 use PHPExcel_Style_Fill;
 use Cake\Validation\Validator;
+use Cake\Auth\DefaultPasswordHasher;
+use Cake\Controller\Component\FlashComponent;
 
 /**
  * Users Controller
@@ -475,7 +477,6 @@ class UsersController extends AppController
                     $this->Flash->error(__('Có lỗi xảy ra vui lòng thử lại.'));
                 }
             } else {
-                pr($user->errors()); die;
                 $this->set('errors', $user->errors());
             }
         }

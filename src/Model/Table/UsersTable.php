@@ -6,6 +6,7 @@ use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
 use Cake\ORM\TableRegistry;
+use Cake\Auth\DefaultPasswordHasher;
 
 /**
  * Users Model
@@ -122,8 +123,7 @@ class UsersTable extends Table
                                 'id' => $context['data']['id']
                             ])
                             ->first();
-                        $data = $query->toArray();
-                        return (new DefaultPasswordHasher)->check($value, $data['password']);
+                        return (new DefaultPasswordHasher)->check($value, $query->password);
                     },
                 'message' => 'Mật khẩu hiện tại không đúng' ]);
         return $validator;

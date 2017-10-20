@@ -54,9 +54,15 @@ $this->assign('title', 'Đổi mật khẩu user');
                         <div class="form-group form-float">
                             <div class="form-line" id="email_user">
                                 <div class="form-line">
-                                    <label>
-                                        <input type="password" class="form-control" name="password" placeholder="Mật khẩu hiện tại..." >
-                                    </label>
+                                    <?php echo $this->Form->input('password', array(
+                                            'id' => 'password',
+                                            'type' => 'password',
+                                            'class' => 'form-control',
+                                            'placeholder' => 'Mật khẩu cũ...',
+                                            'label' => false,
+                                            'required' => false
+                                        )
+                                    );?>
                                 </div>
                             </div>
                             <div class="help-info">Mật khẩu hiện tại</div>
@@ -64,9 +70,15 @@ $this->assign('title', 'Đổi mật khẩu user');
                         <label for="username">Mật khẩu mới</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <label>
-                                    <input type="password" name="password_new" class="form-control" placeholder="Mật khẩu mới..." >
-                                </label>
+                                <?php echo $this->Form->input('password_new', array(
+                                        'id' => 'password_new',
+                                        'type' => 'password',
+                                        'class' => 'form-control',
+                                        'placeholder' => 'Mật khẩu mới...',
+                                        'label' => false,
+                                        'required' => false
+                                    )
+                                );?>
                             </div>
                             <div class="help-info">Mật khẩu mới</div>
                         </div>
@@ -74,22 +86,28 @@ $this->assign('title', 'Đổi mật khẩu user');
                         <?php echo $this->Form->end(); ?>
                     </div>
                 </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 <script type="application/javascript">
-//    $('#form_advanced_validation_change_password').validate({
-//        onkeyup: false,
-//        rules: {},
-//        highlight: function (input) {
-//            $(input).parents('.form-line').addClass('error');
-//        },
-//        unhighlight: function (input) {
-//            $(input).parents('.form-line').removeClass('error');
-//        },
-//        errorPlacement: function (error, element) {
-//            $(element).parents('.form-group').append(error);
-//        }
-//    });
+    $('#form_advanced_validation_change_password').validate({
+        onkeyup: false,
+        rules: {},
+        highlight: function (input) {
+            $(input).parents('.form-line').addClass('error');
+        },
+        unhighlight: function (input) {
+            $(input).parents('.form-line').removeClass('error');
+        },
+        errorPlacement: function (error, element) {
+            $(element).parents('.form-group').append(error);
+        }
+    });
 </script>
+<style>
+    .error-message{
+        color: red;
+    }
+</style>

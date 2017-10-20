@@ -104,9 +104,6 @@ $cakeDescription = 'Media ';
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user"."/". UrlUtil::_encodeUrl($userData['id'])]); ?>" ><?php echo $userData['email'];?></a>
-                </li>
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
                         <?php echo $userData['email'];?>
