@@ -86,10 +86,10 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                         <h2 class="card-inside-title" for="description">User quản lý nhóm thiết bị</h2>
                             <div class="form-group form-float">
                                 <div class="form-line">
-                                    <select class="form-control required" name="user_id_group" id="role">
+                                    <select class="form-control required" name="user_id_group" id="user_id_group">
                                         <option disabled selected value> --- Chọn user --- </option>
                                         <?php foreach ($users as $key => $item) {
-                                            if (isset($adgroup->user_id_group) && $adgroup->user_id_group ) { ?>
+                                            if (isset($adgroup->user_id_group) && $adgroup->user_id_group == $key) { ?>
                                                 <option selected="selected" value="<?php echo $key; ?>"><?php echo $item ?></option>
                                             <?php } else { ?>
                                                 <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
@@ -143,8 +143,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php
-                                if (isset($adgroup->path)) { ?>
+                                <?php if (isset($adgroup->path)) { ?>
                                     <tr>
                                         <td><?php echo $adgroup->id; ?></td>
                                         <td><?php echo $adgroup->tile_name; ?></td>
@@ -152,8 +151,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                         <td><?php echo $adgroup->created; ?></td>
                                     </tr>
                                 <?php } else { ?>
-                                <tr><td colspan="4" class="image">No file(s) found......</td>
-                                    <?php } ?>
+                                    <tr><td colspan="4" class="image">No file(s) found......</td></tr>
+                                <?php } ?>
                                 </tbody>
                             </table>
                         </div>
@@ -177,26 +176,25 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         var langding = "<?php echo $adgroup->langdingpage_id; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
-//            $('.message').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
-//            $('.message').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
-//            $('.message').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
-//            $('.message').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
-//            $('.message').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
-//            $('.message').css('display', 'none');
+        }
+        if ($(this).is(':checked')){
+            $(this).prop('checked', true).attr('checked', 'checked');
+        } else {
+            $(this).prop('checked', false).removeAttr('checked');
         }
     });
     $.validator.setDefaults({ ignore: ":hidden:not(select)" });
@@ -234,16 +232,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         //Multi-select
         $('#optgroup').multiSelect({ selectableOptgroup: true });
     });
-</script>
-<script type="application/javascript">
-    $('.radio-col-grey').change(function () {
-        var __val = $(this).val();
-        if (__val != 1) {
-            $('.check_pass_device').css('display', 'none');
-        } else {
-            $('.check_pass_device').css('display', '');
-        }
-    });
     function filePreview(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -257,14 +245,24 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
     $("#file").change(function () {
         filePreview(this);
     });
-
-    $('.radio-col-grey').change(function () {
-        if ($(this).is(':checked')){
-            $(this).prop('checked', true).attr('checked', 'checked');
-        } else {
-            $(this).prop('checked', false).removeAttr('checked');
-        }
+    $(document).ready(function () {
+       $('#user_id_group').val();
     });
+    removeElementOption = function(editId, assistant_1, assistant_2, select , assistantId) {
+        for (var i = 0; i < select.length; i++) {
+            if (select[i].value !== '') {
+                if (select[i].value === assistant_1) {
+                    $(assistantId + " option[value='" + select[i].value + "']").remove();
+                }
+                if (select[i].value === assistant_2) {
+                    $(assistantId + " option[value='" + select[i].value + "']").remove();
+                }
+                if (select[i].value === editId) {
+                    $(assistantId +" option[value='" + select[i].value + "']").remove();
+                }
+            }
+        }
+    }
 </script>
 <style>
     .chosen-container{
