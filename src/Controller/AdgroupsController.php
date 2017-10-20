@@ -50,7 +50,21 @@ class AdgroupsController extends AppController
      */
     public function index()
     {
-        $adgroups = $this->Adgroups->find()->where(['delete_flag !=' => DELETED])->order(['id' => 'DESC'])->toArray();
+        $users = $this->Auth->user();
+        if ($users['role'] == User::ROLE_ONE) {
+            $condition = array(
+                'delete_flag !=' => DELETED,
+            );
+        } else {
+            $condition = array(
+                'delete_flag !=' => DELETED,
+                'user_id_group' => $users['id']
+            );
+        }
+        $adgroups = $this->Adgroups->find()
+            ->where($condition)
+            ->order(['id' => 'DESC'])
+            ->toArray();
         $flag = false;
         if (!empty($adgroups)) {
             $device_id = array();
@@ -578,7 +592,7 @@ class AdgroupsController extends AppController
             }
         }
         $apt_device_number = $this->radompassWord();
-        $this->set(compact('adgroup','apt_device_number', 'devices'));
+        $this->set(compact('adgroup','apt_device_number', 'devices', 'info_users', 'list_users'));
     }
 
     /**
