@@ -105,14 +105,23 @@ $cakeDescription = 'Media ';
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user"."/". $userData['id']]); ?>" ><?php echo $userData['email'];?></a>
+                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user"."/". UrlUtil::_encodeUrl($userData['id'])]); ?>" ><?php echo $userData['email'];?></a>
+                </li>
+                <li class="dropdown">
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
+                        <?php echo $userData['email'];?>
+                    </a>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a href="<?php echo $this->Url->build(["controller" => "users", "action" => "change_password"."/". UrlUtil::_encodeUrl($userData['id'])]); ?>">Đổi mật khẩu</a></li>
+                        <li><a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user"."/". UrlUtil::_encodeUrl($userData['id'])]); ?>">Thông tin acount</a></li>
+                    </ul>
                 </li>
                 <li >
                     <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "logout"]); ?>" ><span>Đăng xuất</span></a>
                 </li>
                 <!-- Tasks -->
                 <!-- #END# Tasks -->
-                <li class="pull-right"><a href="javascript:void(0);" class="js-right-sidebar" data-close="true"><i class="material-icons">more_vert</i></a></li>
+
             </ul>
         </div>
     </div>

@@ -104,4 +104,28 @@ class UsersTable extends Table
 
         return $rules;
     }
+
+    public function validationUpdate($validator)
+    {
+        $validator
+            ->requirePresence('password_new','create')
+            ->notEmpty('password_new','Hãy nhập mật khẩu mơi');
+
+        $validator
+            ->requirePresence('password','create')
+            ->notEmpty('password','Hãy nhập mật khẩu hiện tại')
+            ->add('password', 'custom', [
+                'rule' =>
+                    function($value, $context) {
+                        $query = $this->find()
+                            ->where([
+                                'id' => $context['data']['id']
+                            ])
+                            ->first();
+                        $data = $query->toArray();
+                        return (new DefaultPasswordHasher)->check($value, $data['password']);
+                    },
+                'message' => 'Mật khẩu hiện tại không đúng' ]);
+        return $validator;
+    }
 }

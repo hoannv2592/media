@@ -13,6 +13,7 @@ use PHPExcel_IOFactory;
 use PHPExcel_Style_Border;
 use PHPExcel_Cell;
 use PHPExcel_Style_Fill;
+use Cake\Validation\Validator;
 
 /**
  * Users Controller
@@ -454,5 +455,30 @@ class UsersController extends AppController
         $this->set(compact('user'));
         $this->set('_serialize', ['user']);
 
+    }
+
+    public function changePassword ()
+    {
+        $user = $this->Users->newEntity();
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $user_id = $this->Auth->user('id');
+            $dataPassword = $this->request->getData();
+            $dataPassword['id'] = $user_id;
+            $user = $this->Users->newEntity($dataPassword, ['validate' => 'update']);
+            if (empty($user->errors())) {
+                $dataPassword['password'] = $dataPassword['password_new'];
+                $user = $this->Users->get($user_id);
+                $user->password = $dataPassword['password'];
+                if ($this->Users->save($user)) {
+                    return $this->redirect(['controller' => 'users', 'action' => 'logout']);
+                } else {
+                    $this->Flash->error(__('Có lỗi xảy ra vui lòng thử lại.'));
+                }
+            } else {
+                pr($user->errors()); die;
+                $this->set('errors', $user->errors());
+            }
+        }
+        $this->set(compact('user'));
     }
 }

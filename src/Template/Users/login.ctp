@@ -1,4 +1,7 @@
-<?php $this->layout = 'login'; ?>
+<?php $this->layout = 'login';
+$this->assign('title', 'Đăng nhập hệ thống');
+?>
+
 <div class="login-box">
     <div class="card">
         <div class="body">
