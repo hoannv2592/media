@@ -83,22 +83,24 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 </select>
                             </div>
                         </div>
-<!--                        <h2 class="card-inside-title" for="description">User quản lý nhóm thiết bị</h2>-->
-<!--                            <div class="form-group form-float">-->
-<!--                                <div class="form-line">-->
-<!--                                    <select class="form-control required" name="user_id_group" id="user_id_group">-->
-<!--                                        <option disabled selected value> --- Chọn user --- </option>-->
-<!--                                        --><?php //foreach ($users as $key => $item) {
-//                                            if (isset($adgroup->user_id_group) && $adgroup->user_id_group == $key) { ?>
-<!--                                                <option selected="selected" value="--><?php //echo $key; ?><!--">--><?php //echo $item ?><!--</option>-->
-<!--                                            --><?php //} else { ?>
-<!--                                                <option  value="--><?php //echo $key; ?><!--" >--><?php //echo $item;?><!--</option>-->
-<!--                                            --><?php //}?>
-<!--                                        --><?php // } ?>
-<!--                                    </select>-->
-<!--                                </div>-->
-<!--                            <div class="help-info">User quản lý nhóm thiết bị</div>-->
-<!--                        </div>-->
+                        <?php if ($user_login['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
+                            <h2 class="card-inside-title" for="description">User quản lý nhóm thiết bị</h2>
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <select class="form-control required" name="user_id_group" id="user_id_group">
+                                            <option disabled selected value> --- Chọn user --- </option>
+                                            <?php foreach ($users as $key => $item) {
+                                                if (isset($adgroup->user_id_group) && $adgroup->user_id_group == $key) { ?>
+                                                    <option selected="selected" value="<?php echo $key; ?>"><?php echo $item ?></option>
+                                                <?php } else { ?>
+                                                    <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
+                                                <?php }?>
+                                            <?php  } ?>
+                                        </select>
+                                    </div>
+                                <div class="help-info">User quản lý nhóm thiết bị</div>
+                            </div>
+                        <?php }?>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                 <h2 class="card-inside-title"> Chọn loại quảng cáo </h2>
@@ -174,6 +176,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
 </section>
 <script type="application/javascript">
     $(document).ready(function () {
+        var role = "<?php echo $user_login['role'];?>";
         var user_id_group = '<?php echo $adgroup->user_id_group;?>';
         var devceid = $('#select_device').val();
         $.ajax({
@@ -181,7 +184,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             type: "POST",
             cache: false,
             data: {
-                id : devceid
+                id : devceid,
+                role : role
             },
             success: function (responce) {
                 $('#user_id_group').find('option').remove().end()
@@ -204,13 +208,15 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         });
     });
     $('#select_device').change(function () {
+        var role = "<?php echo $user_login['role'];?>";
        var val = $(this).val();
         $.ajax({
             url: "/Adgroups/getUser",
             type: "POST",
             cache: false,
             data: {
-                id : val
+                id : val,
+                role : role
             },
             success: function (responce) {
                 $('#user_id_group').find('option').remove().end()

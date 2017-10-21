@@ -58,6 +58,7 @@ class AdgroupsController extends AppController
         } else {
             $condition = array(
                 'delete_flag !=' => DELETED,
+                'user_id_group' => $users['id']
             );
         }
         $adgroups = $this->Adgroups->find()
@@ -193,6 +194,7 @@ class AdgroupsController extends AppController
                 'address' => $this->request->getData()['address'],
                 'user_id_group' => isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'',
             );
+
             $device_group = $this->DeviceGroups->newEntity();
             $device_group= $this->DeviceGroups->patchEntity($device_group, $data_group_devices );
             $data_group = array(
@@ -216,7 +218,8 @@ class AdgroupsController extends AppController
                     $group_id = $save_ad->id;
                     //todo update data devices add to group
                     $device_adgroup = array(
-                        'adgroup_id' => $group_id
+                        'adgroup_id' => $group_id,
+                        'user_id' => $data_group['user_id_group']
                     );
                     $this->publishall($result_id_devices, $device_adgroup);
                     $device_group->adgroup_id = $group_id;
@@ -580,7 +583,8 @@ class AdgroupsController extends AppController
             //todo update data devices add to group
             $result_id_devices = $this->request->getData()['device_id'];
             $device_adgroup = array(
-                'adgroup_id' => $id
+                'adgroup_id' => $id,
+                'user_id' => $device_group['user_id_group']
             );
             $this->publishall($result_id_devices, $device_adgroup);
             $this->removeAdgroupIdDevice($list_remove_device_id);
@@ -704,15 +708,27 @@ class AdgroupsController extends AppController
         $this->autoRender = false;
         if ($this->request->data) {
             $list_device_id = $this->request->getData('id');
+            $role = $this->request->getData('role');
             if (!empty($list_device_id)) {
                 $user_id = $this->Devices->find()
                     ->where(['id In' => $list_device_id, 'delete_flag !=' => DELETED])
                     ->select(['id','user_id'])
                     ->combine('id', 'user_id')
                     ->toArray();
+                if ($role == User::ROLE_ONE) {
+                    $conditions = array(
+                        'delete_flag !=' => DELETED,
+                        'id NOT IN' => 1,
+                    );
+                } else {
+                    $conditions = array(
+                        'id IN' => $user_id,
+                        'delete_flag !=' => DELETED
+                    );
+                }
                 $username = $this->Users->find()
                     ->select(['id', 'username'])
-                    ->where(['id IN' => $user_id, 'delete_flag !=' => DELETED])
+                    ->where($conditions)
                     ->combine('id', 'username')
                     ->toArray();
                 die(json_encode($username));

@@ -69,7 +69,7 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                                 echo count($array);
                                              } ?>
                                         </td>
-                                        <td><?php echo isset($user_login['username']) ? $user_login['username']: ''?></td>
+                                        <td><?php echo isset($users[$adgroup->user_id_group]) ? $users[$adgroup->user_id_group]: ''?></td>
                                         <td>
                                             <?php echo  nl2br($adgroup->address);?>
                                         </td>
