@@ -53,7 +53,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php if (isset($device->path)) { ?>
+                                <?php if (isset($device->path) && $device->path != '') { ?>
                                     <tr>
                                         <td><?php echo $device->id; ?></td>
                                         <td><?php echo $device->tile_name; ?></td>
@@ -87,12 +87,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($device->langdingpage_id == 3) { echo 'checked'; }?> />
                             <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
                         </div>
-<!--                        <h2 class="card-inside-title">Slogan</h2>-->
-<!--                        <div class="form-group" id="end_show">-->
-<!--                            <div class="form-line">-->
-<!--                                <input type="text" name="slogan" id="tile_name" class="form-control" value="--><?php //echo isset($device->slogan) ? $device->slogan :'';?><!--" placeholder="Điền slogan..">-->
-<!--                            </div>-->
-<!--                        </div>-->
                         <h2 class="card-inside-title">Tên cơ sở dịch vụ</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
@@ -106,14 +100,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             </div>
                             <div class="help-info">Địa chỉ đặt thiết bị</div>
                         </div>
-<!--                        <div class="message">-->
-<!--                            <h2 class="card-inside-title">Tin nhắn voucher</h2>-->
-<!--                            <div class="form-group" id="end_show">-->
-<!--                                <div class="form-line">-->
-<!--                                    <input type="text" name="message" id="message" class="form-control" value="--><?php //echo isset($device->message) ? $device->message :'';?><!--" placeholder="Điền message..">-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
                         <div class="check_pass_device">
                             <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
                             <div class="form-group">
@@ -157,12 +143,9 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         var langding = "<?php echo $device->langdingpage_id; ?>";
         if (langding == 1 || langding == '') {
             $('.check_pass_device').css('display', '');
-//            $('.message').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
-//            $('.message').css('display', '');
         } else {
-//            $('.message').css('display', 'none');
             $('.check_pass_device').css('display', 'none');
         }
     });
@@ -170,12 +153,9 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
-            $('.message').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
-            $('.message').css('display', '');
         } else {
-            $('.message').css('display', 'none');
             $('.check_pass_device').css('display', 'none');
         }
     });

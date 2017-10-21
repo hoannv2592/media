@@ -136,8 +136,6 @@ class AdgroupsController extends AppController
                 ->order(['Devices.id'=> 'DESC'])
                 ->combine('id', 'name')->toArray();
         }
-//        $user_id = $this->Devices->find()->select(['user_id', 'id'])->where(['id IN' => array_keys($devices)])->combine('id', 'user_id')->toArray();
-//        $info_users = $this->Users->find()->where(['id IN' => $user_id, 'delete_flag !=' => DELETED])->select(['id', 'username'])->hydrate(false)->combine('id', 'username')->toArray();
         $adgroup = $this->Adgroups->newEntity();
         if ($this->request->is('post')) {
             $listNameDevice = ($this->getNameDevice($this->request->getData()['device_id']));
@@ -425,13 +423,6 @@ class AdgroupsController extends AppController
      */
     public function detailGroup($id =null)
     {
-        $users = $this->Users->find()
-            ->where(['Users.delete_flag !=' => DELETED])
-            ->select(['Users.id', 'Users.username'])
-            ->order(['Users.id'=> 'ASC'])
-            ->combine('id', 'username')
-            ->toArray();
-
         $id = \UrlUtil::_decodeUrl($id);
         $conn = ConnectionManager::get('default');
         $conn->begin();
@@ -440,8 +431,6 @@ class AdgroupsController extends AppController
         }
         $this->getAllData();
         $adgroup = $this->Adgroups->get($id);
-//        $user_id = $this->Devices->find()->select(['user_id', 'id'])->where(['id IN' => json_decode($adgroup->device_id)])->combine('id', 'user_id')->toArray();
-//        $info_users = $this->Users->find()->where(['id IN' => $user_id, 'delete_flag !=' => DELETED])->select(['id', 'username'])->hydrate(false)->combine('id', 'username')->toArray();
         $groups = $this->Adgroups->find()
             ->select(['id', 'device_id'])
             ->where(['delete_flag !=' => DELETED])
@@ -592,7 +581,7 @@ class AdgroupsController extends AppController
             }
         }
         $apt_device_number = $this->radompassWord();
-        $this->set(compact('adgroup','apt_device_number', 'devices', 'info_users', 'list_users'));
+        $this->set(compact('adgroup','apt_device_number', 'devices', 'list_users'));
     }
 
     /**
@@ -652,6 +641,29 @@ class AdgroupsController extends AppController
         } else {
             $conn->rollback();
             return false;
+        }
+    }
+
+    public function getUser()
+    {
+        $this->autoRender = false;
+        if ($this->request->data) {
+            $list_device_id = $this->request->getData('id');
+            if (!empty($list_device_id)) {
+                $user_id = $this->Devices->find()
+                    ->where(['id In' => $list_device_id, 'delete_flag !=' => DELETED])
+                    ->select(['id','user_id'])
+                    ->combine('id', 'user_id')
+                    ->toArray();
+                $username = $this->Users->find()
+                    ->select(['id', 'username'])
+                    ->where(['id IN' => $user_id, 'delete_flag !=' => DELETED])
+                    ->combine('id', 'username')
+                    ->toArray();
+                die(json_encode($username));
+            } else {
+                die(json_encode(array()));
+            }
         }
     }
 }

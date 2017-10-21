@@ -143,7 +143,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php if (isset($adgroup->path)) { ?>
+                                <?php
+                                if (isset($adgroup->path) && $adgroup->path != '') { ?>
                                     <tr>
                                         <td><?php echo $adgroup->id; ?></td>
                                         <td><?php echo $adgroup->tile_name; ?></td>
@@ -172,6 +173,77 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
     </div>
 </section>
 <script type="application/javascript">
+    $(document).ready(function () {
+        var user_id_group = '<?php echo $adgroup->user_id_group;?>';
+        var devceid = $('#select_device').val();
+        $.ajax({
+            url: "/Adgroups/getUser",
+            type: "POST",
+            cache: false,
+            data: {
+                id : devceid
+            },
+            success: function (responce) {
+                $('#user_id_group').find('option').remove().end()
+                    .append('<option disabled selected value>--- Chọn user ---</option>')
+                    .val('')
+                ;
+                var resp = [JSON.parse(responce)];
+                $.each(resp, function () {
+                    $.each(this, function (name, value) {
+                        $('#user_id_group').append($('<option>',
+                            {
+                                value: name,
+                                text : value
+                            })
+                        );
+                    });
+                });
+                $('#user_id_group option[value=' + user_id_group + ']').prop('selected', 'selected');
+            }
+        });
+    });
+    $('#select_device').change(function () {
+       var val = $(this).val();
+        $.ajax({
+            url: "/Adgroups/getUser",
+            type: "POST",
+            cache: false,
+            data: {
+                id : val
+            },
+            success: function (responce) {
+                $('#user_id_group').find('option').remove().end()
+                    .append('<option disabled selected value>--- Chọn user ---</option>')
+                    .val('')
+                ;
+                var resp = [JSON.parse(responce)];
+                $.each(resp, function () {
+                    $.each(this, function (name, value) {
+                        $('#user_id_group').append($('<option>',
+                            {
+                                value: name,
+                                text : value
+                            })
+                        );
+                    });
+                });
+            }
+        });
+    });
+    function remove(value) {
+        var select = $('select#user_id_group option');
+        var assistantId = '#user_id_group';
+        for (var i = 0; i < select.length; i++) {
+            if (select[i].value !== '') {
+                if (select[i].value === value) {
+                    $(assistantId + " option[value='" + select[i].value + "']").remove();
+                }
+            }
+        }
+    }
+
+
     $(document).ready(function () {
         var langding = "<?php echo $adgroup->langdingpage_id; ?>";
         if (langding == 1) {

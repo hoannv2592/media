@@ -60,7 +60,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                         <h2 class="card-inside-title">Chọn thiết bị cho nhóm</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <select data-placeholder="Chọn thiết bị" class="chosen-select" multiple tabindex="8" name="device_id[]">
+                                <select data-placeholder="Chọn thiết bị" id="select_device" class="chosen-select" multiple tabindex="8" name="device_id[]">
                                     <?php $user_de_id = json_decode($adgroup->device_name);
                                     foreach ($devices as $key => $device) {
                                         if (isset($user_de_id->$key)) { ?>
@@ -76,7 +76,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                         <h2 class="card-inside-title" for="description">User quản lý nhóm thiết bị</h2>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <select class="form-control required" name="user_id_group" id="role">
+                                <select  class="form-control required" name="user_id_group" id="user_id_group">
                                     <option disabled selected value> --- Chọn user --- </option>
                                     <?php foreach ($users as $key => $item) {
                                         if (isset($adgroup->user_id_group) && $adgroup->user_id_group ) { ?>
@@ -122,14 +122,6 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                 </div>
                             </div>
                         </div>
-<!--                        <div class="message">-->
-<!--                            <h2 class="card-inside-title">Tin nhắn voucher</h2>-->
-<!--                            <div class="form-group" id="end_show">-->
-<!--                                <div class="form-line">-->
-<!--                                    <input type="text" name="message" id="message" class="form-control" value="--><?php //echo isset($device->message) ? $device->message :'';?><!--" placeholder="Điền message..">-->
-<!--                                </div>-->
-<!--                            </div>-->
-<!--                        </div>-->
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped dataTable table-hover">
                                 <thead>
@@ -172,6 +164,35 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
 </section>
 
 <script type="application/javascript">
+
+    $('#select_device').change(function () {
+        var val = $(this).val();
+        $.ajax({
+            url: "/Adgroups/getUser",
+            type: "POST",
+            cache: false,
+            data: {
+                id : val
+            },
+            success: function (responce) {
+                $('#user_id_group').find('option').remove().end()
+                    .append('<option disabled selected value>--- Chọn user ---</option>')
+                    .val('')
+                ;
+                var resp = [JSON.parse(responce)];
+                $.each(resp, function () {
+                    $.each(this, function (name, value) {
+                        $('#user_id_group').append($('<option>',
+                            {
+                                value: name,
+                                text : value
+                            })
+                        );
+                    });
+                });
+            }
+        });
+    });
     $(document).ready(function () {
         $.validator.setDefaults({ ignore: ":hidden:not(select)" });
         $('#form_advanced_validation').validate({
@@ -213,26 +234,20 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
         var langding = "<?php echo isset($device->langdingpage_id) ? $device->langdingpage_id:''; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
-//            $('.message').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
-//            $('.message').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
-//            $('.message').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
-//            $('.message').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
-//            $('.message').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
-//            $('.message').css('display', 'none');
         }
     });
     $('#uploadForm').validate({
