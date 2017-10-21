@@ -58,7 +58,6 @@ class AdgroupsController extends AppController
         } else {
             $condition = array(
                 'delete_flag !=' => DELETED,
-                'user_id_group' => $users['id']
             );
         }
         $adgroups = $this->Adgroups->find()
@@ -115,6 +114,7 @@ class AdgroupsController extends AppController
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $this->getAllData();
+        $user = $this->Auth->user();
         $groups = $this->Adgroups->find()
             ->select(['id', 'device_id'])
             ->where(['delete_flag !=' => DELETED])
@@ -126,12 +126,34 @@ class AdgroupsController extends AppController
                 $device_id[] = json_decode($vl);
             }
             $merged = call_user_func_array('array_merge', $device_id);
+            if ($user['role'] == User::ROLE_ONE) {
+                $conditions = array(
+                    'id NOT IN' => $merged,
+                    'Devices.delete_flag !=' => DELETED,
+                );
+            } else {
+                $conditions = array(
+                    'id NOT IN' => $merged,
+                    'delete_flag !=' => DELETED,
+                    'user_id' => $user['id']
+                );
+            }
             $devices = $this->Devices->find('all')
-                ->where(['id NOT IN' => $merged, 'delete_flag !=' => DELETED])
+                ->where($conditions)
                 ->combine('id','name')->toArray();
         } else {
+            if ($user['role'] == User::ROLE_ONE) {
+                $conditions = array(
+                    'Devices.delete_flag !=' => DELETED,
+                );
+            } else {
+                $conditions = array(
+                    'Devices.delete_flag !=' => DELETED,
+                    'user_id' => $user['id']
+                );
+            }
             $devices = $this->Devices->find()
-                ->where(['Devices.delete_flag !=' => DELETED])
+                ->where($conditions)
                 ->select(['Devices.id', 'Devices.name'])
                 ->order(['Devices.id'=> 'DESC'])
                 ->combine('id', 'name')->toArray();
@@ -169,7 +191,7 @@ class AdgroupsController extends AppController
                 'device_name' => ($listNameDevice),
                 'path' => isset($data_service['path']) ? $data_service['path'] : '',
                 'address' => $this->request->getData()['address'],
-                'user_id_group' => $this->request->getData()['user_id_group'],
+                'user_id_group' => isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'',
             );
             $device_group = $this->DeviceGroups->newEntity();
             $device_group= $this->DeviceGroups->patchEntity($device_group, $data_group_devices );
@@ -184,7 +206,7 @@ class AdgroupsController extends AppController
                 'tile_name' => $this->request->getData()['tile_name'],
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
                 'address' => $this->request->getData()['address'],
-                'user_id_group' => $this->request->getData()['user_id_group'],
+                'user_id_group' => isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'',
             );
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             $adgroup->delete_flag = UN_DELETED;
@@ -429,6 +451,7 @@ class AdgroupsController extends AppController
         if (!$this->Adgroups->exists(['id' => $id])) {
             return $this->redirect(['action' => 'index']);
         }
+        $user = $this->Auth->user();
         $this->getAllData();
         $adgroup = $this->Adgroups->get($id);
         $groups = $this->Adgroups->find()
@@ -450,13 +473,35 @@ class AdgroupsController extends AppController
             }
             if (!empty($device_id)) {
                 $merged = call_user_func_array('array_merge', $device_id);
+                if ($user['role'] == User::ROLE_ONE) {
+                    $conditions = array(
+                        'id NOT IN' => $merged,
+                        'delete_flag !=' => DELETED,
+                    );
+                } else {
+                    $conditions = array(
+                        'id NOT IN' => $merged,
+                        'delete_flag !=' => DELETED,
+                        'user_id' => $user['id']
+                    );
+                }
                 $devices = $this->Devices->find('all')
-                    ->where(['id NOT IN' => $merged])
+                    ->where($conditions)
                     ->combine('id','name')->toArray()
                 ;
             } else {
+                if ($user['role'] == User::ROLE_ONE) {
+                    $conditions = array(
+                        'Devices.delete_flag !=' => DELETED,
+                    );
+                } else {
+                    $conditions = array(
+                        'Devices.delete_flag !=' => DELETED,
+                        'user_id' => $user['id']
+                    );
+                }
                 $devices = $this->Devices->find()
-                    ->where(['Devices.delete_flag !=' => DELETED])
+                    ->where($conditions)
                     ->select(['Devices.id', 'Devices.name'])
                     ->order(['Devices.id'=> 'DESC'])
                     ->combine('id', 'name')
@@ -464,8 +509,18 @@ class AdgroupsController extends AppController
                 ;
             }
         } else {
+            if ($user['role'] == User::ROLE_ONE) {
+                $conditions = array(
+                    'Devices.delete_flag !=' => DELETED,
+                );
+            } else {
+                $conditions = array(
+                    'Devices.delete_flag !=' => DELETED,
+                    'user_id' => $user['id']
+                );
+            }
             $devices = $this->Devices->find()
-                ->where(['Devices.delete_flag !=' => DELETED])
+                ->where($conditions)
                 ->select(['Devices.id', 'Devices.name'])
                 ->order(['Devices.id'=> 'DESC'])
                 ->combine('id', 'name')->toArray()
@@ -486,7 +541,7 @@ class AdgroupsController extends AppController
                 'langdingpage_id' => $this->request->getData()['langdingpage_id'],
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
                 'address' => $this->request->getData()['address'],
-                'user_id_group' => $this->request->getData()['user_id_group'],
+                'user_id_group' => isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'',
             );
             if (!empty($this->request->data['file']['name'])) {
                 // upload the file to the server
@@ -513,7 +568,7 @@ class AdgroupsController extends AppController
                 'tile_name' => $this->request->getData()['tile_name'],
                 'device_name' => $listUserid,
                 'address' => $this->request->getData()['address'],
-                'user_id_group' => $this->request->getData()['user_id_group'],
+                'user_id_group' => isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'',
 
             );
             $list_remove_device_id = array();

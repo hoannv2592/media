@@ -234,7 +234,8 @@ class AppController extends Controller
             ->combine('id', 'username')
             ->toArray();
         $role = User::$role;
-        $this->set(compact('devices', 'landingpages', 'role', 'users'));
+        $user_login = $this->Auth->user();
+        $this->set(compact('devices', 'landingpages', 'role', 'users', 'user_login'));
     }
 
     /**

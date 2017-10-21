@@ -31,14 +31,10 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                     </div>
                     <div class="body">
                         <div class="button-demo">
-                            <?php if ($userData['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
-                                <div class="button-demo">
-                                    <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'add']) ?>"
-                                       class="btn btn-primary waves-effect m-r-20" id="add_new">THÊM NHÓM THIẾT BỊ</a>
-                                </div>
-                            <?php } else { ?>
-                                <a disabled="disabled" href="javascript:void(0);" class="btn btn-primary waves-effect m-r-20">THÊM NHÓM QUẢNG CÁO</a>
-                            <?php } ?>
+                            <div class="button-demo">
+                                <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'add']) ?>"
+                                   class="btn btn-primary waves-effect m-r-20" id="add_new">THÊM NHÓM THIẾT BỊ</a>
+                            </div>
                         </div>
                         <?php if (!empty($adgroups)) { ?>
                             <div class="table-responsive">
@@ -73,7 +69,7 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                                 echo count($array);
                                              } ?>
                                         </td>
-                                        <td><?php echo isset($users[$adgroup->user_id_group]) ? $users[$adgroup->user_id_group]: ''?></td>
+                                        <td><?php echo isset($user_login['username']) ? $user_login['username']: ''?></td>
                                         <td>
                                             <?php echo  nl2br($adgroup->address);?>
                                         </td>

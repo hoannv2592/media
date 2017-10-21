@@ -73,22 +73,22 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                 </select>
                             </div>
                         </div>
-                        <h2 class="card-inside-title" for="description">User quản lý nhóm thiết bị</h2>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <select  class="form-control required" name="user_id_group" id="user_id_group">
-                                    <option disabled selected value> --- Chọn user --- </option>
-                                    <?php foreach ($users as $key => $item) {
-                                        if (isset($adgroup->user_id_group) && $adgroup->user_id_group ) { ?>
-                                            <option selected="selected" value="<?php echo $key; ?>"><?php echo $item ?></option>
-                                        <?php } else { ?>
-                                            <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
-                                        <?php }?>
-                                    <?php  } ?>
-                                </select>
-                            </div>
-                            <div class="help-info">User quản lý nhóm thiết bị</div>
-                        </div>
+<!--                        <h2 class="card-inside-title" for="description">User quản lý nhóm thiết bị</h2>-->
+<!--                        <div class="form-group form-float">-->
+<!--                            <div class="form-line">-->
+<!--                                <select  class="form-control required" name="user_id_group" id="user_id_group">-->
+<!--                                    <option disabled selected value> --- Chọn user --- </option>-->
+<!--                                    --><?php //foreach ($users as $key => $item) {
+//                                        if (isset($adgroup->user_id_group) && $adgroup->user_id_group ) { ?>
+<!--                                            <option selected="selected" value="--><?php //echo $key; ?><!--">--><?php //echo $item ?><!--</option>-->
+<!--                                        --><?php //} else { ?>
+<!--                                            <option  value="--><?php //echo $key; ?><!--" >--><?php //echo $item;?><!--</option>-->
+<!--                                        --><?php //}?>
+<!--                                    --><?php // } ?>
+<!--                                </select>-->
+<!--                            </div>-->
+<!--                            <div class="help-info">User quản lý nhóm thiết bị</div>-->
+<!--                        </div>-->
 
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
