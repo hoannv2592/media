@@ -13,7 +13,8 @@ use Cake\Utility\Hash;
  *
  * @property \App\Model\Table\LangdingDevicesTable $LangdingDevices
  * @property \App\Model\Table\DevicesTable $Devices
- * @property \App\Model\Table\LogsTable $Logs
+ * @property \App\Model\Table\LogAuthsTable $LogAuths
+ * @property \App\Model\Table\AuthsTable $Auths
  * @property \App\Model\Table\DeviceGroupsTable $DeviceGroups
  * @property \App\Model\Table\AdgroupsTable $Adgroups
  * @property \App\Model\Table\FileAttachmentsTable $FileAttachments
@@ -37,6 +38,7 @@ class DevicesController extends AppController
         // Include the FlashComponent
         $this->loadComponent('Flash');
         $this->loadModel('Adgroup');
+        $this->loadModel('LogAuths');
         $this->loadComponent('UploadImage');
         $this->loadModel('DeviceGroups');
 
@@ -479,12 +481,12 @@ class DevicesController extends AppController
 
     /**
      * @param null $device_id
-     * @internal param null $user_id
-     * @internal param null $langdingpage_id
+     * @param null $auth_id
      * @return \Cake\Http\Response|null
      */
-    public function viewQc($device_id = null)
+    public function viewQc($device_id = null, $auth_id = null)
     {
+        $auth_id = \UrlUtil::_decodeUrl($auth_id);
         if (isset($device_id)) {
             $device_id = \UrlUtil::_decodeUrl($device_id);
             if (!$this->Devices->exists(['Devices.id' => $device_id])) {
@@ -495,6 +497,8 @@ class DevicesController extends AppController
                 $device_group = $this->DeviceGroups->find()
                     ->where(['adgroup_id' => $infor_devices->adgroup_id, 'delete_flag !=' => DELETED])
                     ->first();
+                $auths = $this->LogAuths->find()->where(['id' => $auth_id])->select('auth')->first()->toArray();
+                $infor_devices->auth_target = $auths['auth'];
                 if (!empty($device_group)) {
                     $infor_devices->langdingpage_id = $device_group->langdingpage_id;
                     $infor_devices->path = $device_group->path;
@@ -597,6 +601,17 @@ class DevicesController extends AppController
                         }
                     }
                 }
+                $data_auth = array(
+                    'auth' =>  isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+                    'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: ''
+                );
+                $auths = $this->LogAuths->newEntity();
+                $auths = $this->LogAuths->patchEntity($auths, $data_auth);
+                if (empty($auths->errors())) {
+                    if (!$this->LogAuths->save($auths)) {
+                        $chk = true;
+                    }
+                }
                 $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
                 if (empty($device->errors())) {
                     if (!$this->Devices->save($device)) {
@@ -605,7 +620,13 @@ class DevicesController extends AppController
                 }
                 if (!$chk) {
                     $conn->commit();
-                    $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id)]);
+                    $result = $this->LogAuths->find('all',['fields'=>'id'])->last();
+                    $record_log_auth_id = $result->id;
+                    $this->redirect([
+                        'plugin' => null,
+                        'controller' => 'Devices',
+                        'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl($record_log_auth_id)
+                    ]);
                 } else {
                     $conn->rollback();
                 }
@@ -648,7 +669,11 @@ class DevicesController extends AppController
                                 if (empty($partner->errors())) {
                                     if ($this->Partners->save($partner)) {
                                         $conn->commit();
-                                        $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id)]);
+                                        $this->redirect([
+                                            'plugin' => null,
+                                            'controller' => 'Devices',
+                                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id)
+                                        ]);
                                     }
                                 }
                             } else {
