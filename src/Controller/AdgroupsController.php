@@ -446,7 +446,7 @@ class AdgroupsController extends AppController
      * @param null $id
      * @return \Cake\Http\Response|null
      */
-    public function detailGroup($id =null)
+    public function detailGroup($id = null)
     {
         $id = \UrlUtil::_decodeUrl($id);
         $conn = ConnectionManager::get('default');
@@ -457,6 +457,7 @@ class AdgroupsController extends AppController
         $user = $this->Auth->user();
         $this->getAllData();
         $adgroup = $this->Adgroups->get($id);
+
         $groups = $this->Adgroups->find()
             ->select(['id', 'device_id'])
             ->where(['delete_flag !=' => DELETED])
@@ -543,8 +544,7 @@ class AdgroupsController extends AppController
                 'description' => $this->request->getData()['description'],
                 'langdingpage_id' => $this->request->getData()['langdingpage_id'],
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
-                'address' => $this->request->getData()['address'],
-                'user_id_group' => isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'',
+                'address' => $this->request->getData()['address']
             );
             if (!empty($this->request->data['file']['name'])) {
                 // upload the file to the server
@@ -570,10 +570,16 @@ class AdgroupsController extends AppController
                 'number_pass' => $this->request->getData()['apt_device_number'],
                 'tile_name' => $this->request->getData()['tile_name'],
                 'device_name' => $listUserid,
-                'address' => $this->request->getData()['address'],
-                'user_id_group' => isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'',
+                'address' => $this->request->getData()['address']
 
             );
+            if ($user['role'] == User::ROLE_ONE) {
+                $data_group['user_id_group'] = isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'';
+                $device_group['user_id_group'] = isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'';
+            } else {
+                $data_group['user_id_group'] =  isset($adgroup->user_id_group) ? $adgroup->user_id_group:'';
+                $device_group['user_id_group'] =  isset($adgroup->user_id_group) ? $adgroup->user_id_group:'';
+            }
             $list_remove_device_id = array();
             foreach ($before_device as $k => $vl) {
                 if (!in_array($vl, $this->request->getData()['device_id'])) {
