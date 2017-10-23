@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\User;
 use Cake\Datasource\ConnectionManager;
 
 
@@ -20,19 +21,35 @@ class PartnersController extends AppController
      */
     public function index()
     {
-        $this->paginate = [
-            'contain' => ['Devices']
-        ];
-        $partners = $this->Partners->find('all', [
-            'contain' => [
-                'Devices' => function ($q) {
-                return $q
-                    ->select(['Devices.name'])
-                    ->where(['Devices.delete_flag !=' => 1])
-                    ->hydrate(false);
-                }
-            ],
-        ])->toArray();
+        $user = $this->Auth->user();
+        if ($user['role'] == User::ROLE_ONE) {
+            $partners = $this->Partners->find('all', [
+                'contain' => [
+                    'Devices' => function ($q) {
+                        return $q
+                            ->select(['Devices.name'])
+                            ->where(['Devices.delete_flag !=' => 1])
+                            ->hydrate(false);
+                    }
+                ],
+            ])->toArray();
+        } else {
+            $device = $this->Devices->find()->where(['user_id' => $user['id']])->select(['id'])->combine('id', 'id')->toArray();
+            $partners = array();
+            if (!empty($device)) {
+                $partners = $this->Partners->find('all', [
+                    'contain' => [
+                        'Devices' => function ($q) {
+                            return $q
+                                ->select(['Devices.name'])
+                                ->where(['Devices.delete_flag !=' => 1])
+                                ->hydrate(false);
+                        }
+                    ],
+                    'conditions' => array('device_id IN' => $device)
+                ])->toArray();
+            }
+        }
         $this->set(compact('partners'));
         $this->set('_serialize', ['partners']);
     }

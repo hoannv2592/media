@@ -61,6 +61,8 @@
                                     </tbody>
                                 </table>
                             </div>
+                        <?php } else { ?>
+                            <div class="text-left">Chưa có khách hàng sử dụng thiết bị này</div>
                         <?php } ?>
                     </div>
                 </div>

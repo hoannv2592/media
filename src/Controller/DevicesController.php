@@ -94,9 +94,11 @@ class DevicesController extends AppController
             ])->toArray();
         }
         $result = Hash::combine($devices, '{n}.id', '{n}.adgroup_id');
-        $Adgroups = $this->Adgroups->find()->where(['id IN' => array_unique($result)])->combine('id', 'name')->toArray();
+        $Adgroups = array();
+        if (!empty($result)) {
+            $Adgroups = $this->Adgroups->find()->where(['id IN' => array_unique($result)])->combine('id', 'name')->toArray();
+        }
         $this->set(compact('Adgroups','devices'));
-//        pr($devices); die;
     }
 
 
