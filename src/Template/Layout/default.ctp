@@ -76,7 +76,7 @@ $cakeDescription = 'Media ';
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
 </head>
-<body class="theme-blue"> Page Loader
+<body class="theme-blue">
 <div class="page-loader-wrapper">
     <div class="loader">
         <div class="preloader">
@@ -92,9 +92,7 @@ $cakeDescription = 'Media ';
         <p>Please wait...</p>
     </div>
 </div>
- #END# Page Loader Overlay For Sidebars
 <div class="overlay"></div>
-<!-- #END# Overlay For Sidebars -->
 <nav class="navbar">
     <div class="container-fluid">
         <div class="navbar-header">
