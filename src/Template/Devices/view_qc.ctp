@@ -366,7 +366,7 @@ $this->layout = 'mirkotic';
                                             <input type="submit" style="width: 100%" value="Login" class="btn btn-greensea b-0 br-2 mr-5 block"/>
                                         </div>
                                     </form>
-
+                                    <p class="text-hotpink" style="font-size: 14px;"><?php echo $infor_devices->error; ?></p>
                                 </div>
                             </div>
                             <div class="bg-slategray lt wrap-reset mt-0 text-center">
