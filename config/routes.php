@@ -68,10 +68,11 @@ Router::scope('/', function (RouteBuilder $routes) {
         'user_id' => '[0-9]{4,}',
     ));
 
-    $routes->connect('/back_end/:id', array('controller' => 'Devices', 'action' => 'addNewDevice'),
+    $routes->connect('/back_end/:id/:flag_id', array('controller' => 'Devices', 'action' => 'addNewDevice'),
         array(
-            'pass' => array('id'),
-            'id' => '[0-9a-z:A-Z]+'
+            'pass' => array('id', 'flag_id'),
+            'id' => '[0-9a-z:A-Z]+',
+            'flag_id' => '[0-9]+'
         )
     );
     $routes->connect('/random', array('controller' => 'Devices', 'action' => 'radom', 'plugin' => 'Api'));

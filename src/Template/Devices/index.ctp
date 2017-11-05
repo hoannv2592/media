@@ -54,6 +54,7 @@ $this->assign('title', 'Quản lý thiết bị');
                                                 <th>Nhóm thiết bị</th>
                                                 <th>Mã thiết bị</th>
                                                 <th>Khách hàng sử dụng</th>
+                                                <th>Loại thiết bị</th>
                                                 <th>Loại quảng cáo</th>
                                                 <th>Ngày tạo</th>
                                                 <th>Điều hướng</th>
@@ -77,25 +78,30 @@ $this->assign('title', 'Quản lý thiết bị');
                                                         ?></td>
                                                     <td><?php echo nl2br($device->apt_key); ?></td>
                                                     <td> <?php echo isset($device->partners) ? count($device->partners): 0; ?></td>
+                                                    <td> <?php
+                                                        echo isset($device->type) ? \App\Model\Entity\Device::$category[$device->type] : 'Thiết bị thường'; ?>
+                                                    </td>
                                                     <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : ''; ?></td>
                                                     <td><?php echo date('d/m/Y H:i', strtotime($device->created)); ?></td>
                                                     <td class="delete_advertise" value="<?php echo h($device->id); ?>">
                                                         <div class="button-demo">
                                                             <?php
-                                                            $langdingpage_id = isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : '';
-                                                            if ($langdingpage_id != '') { ?>
-                                                                <a class="btn btn-success waves-effect"
-                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'view_qc' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>">Xem
-                                                                    QC</a>
-                                                                <a class="btn btn-primary waves-effect"
-                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Sửa
-                                                                    QC</a>
-                                                            <?php } else { ?>
-                                                                <a class="btn btn-primary waves-effect"
-                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Tạo
-                                                                    QC</a>
-                                                            <?php }
-                                                            ?>
+                                                            if ($device->type != \App\Model\Entity\Device::TB_MIRKOTIC) {
+                                                                $langdingpage_id = isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : '';
+                                                                if ($langdingpage_id != '') { ?>
+                                                                    <a class="btn btn-success waves-effect"
+                                                                       href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'view_qc' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>">Xem
+                                                                        QC</a>
+                                                                    <a class="btn btn-primary waves-effect"
+                                                                       href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Sửa
+                                                                        QC</a>
+                                                                <?php } else { ?>
+                                                                    <a class="btn btn-primary waves-effect"
+                                                                       href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Tạo
+                                                                        QC</a>
+                                                                <?php }
+
+                                                            } ?>
                                                             <a class="btn btn-danger waves-effect" data-toggle="modal"
                                                                data-target="#modal-03">Xóa TB</a>
                                                         </div>

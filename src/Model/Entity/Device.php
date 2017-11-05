@@ -52,4 +52,11 @@ class Device extends Entity
         Device::LANDING_TOW => 'Quảng cáo Facebook-Login',
         Device::LANDING_THREE => 'Quảng cáo lấy thông tin khách hàng',
     );
+
+    const TB_NORMAR = 1;
+    const TB_MIRKOTIC = 2;
+    public static $category = array(
+        Device::TB_NORMAR => 'Thiết bị thường',
+        Device::TB_MIRKOTIC => 'Thiết bị Mirkotic',
+    );
 }

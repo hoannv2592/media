@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Controller\AppController;
+use App\Model\Entity\Device;
 use App\Model\Entity\User;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
@@ -497,8 +498,10 @@ class DevicesController extends AppController
                 $device_group = $this->DeviceGroups->find()
                     ->where(['adgroup_id' => $infor_devices->adgroup_id, 'delete_flag !=' => DELETED])
                     ->first();
-                $auths = $this->LogAuths->find()->where(['id' => $auth_id])->select('auth')->first()->toArray();
-                $infor_devices->auth_target = $auths['auth'];
+                if ($auth_id) {
+                    $auths = $this->LogAuths->find()->where(['id' => $auth_id])->select('auth')->first()->toArray();
+                    $infor_devices->auth_target = $auths['auth'];
+                }
                 if (!empty($device_group)) {
                     $infor_devices->langdingpage_id = $device_group->langdingpage_id;
                     $infor_devices->path = $device_group->path;
@@ -545,15 +548,16 @@ class DevicesController extends AppController
      * Add method
      *
      * @param null $apt_key
+     * @param null $flag_id
      * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
      */
-    public function addNewDevice($apt_key = null)
+    public function addNewDevice($apt_key = null, $flag_id = null)
     {
-        $this->autoRender = false;
-        $conn = ConnectionManager::get('default');
-        $conn->begin();
-        $this->loadModel('Partners');
-        if ($apt_key != '') {
+        if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
+            $this->autoRender = false;
+            $conn = ConnectionManager::get('default');
+            $conn->begin();
+            $this->loadModel('Partners');
             $this->autoRender= false;
             $apt_key_check = $this->Devices->find()->where(
                 [
@@ -565,10 +569,12 @@ class DevicesController extends AppController
                 ->first();
             $chk = false;
             if (!empty($apt_key_check)) {
+                // data test
+//                $this->request->data['mac'] = 'f0:4d:a2:8e:1b:37';
                 $partner = $this->Partners->find()->where(
                     array(
                         'device_id' => $apt_key_check->id,
-                        'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:''
+                        'client_mac' => isset($this->request->data['mac']) ? $this->request->data['mac']:'',
                     ))
                     ->first();
                 $query = $this->Partners->find('all', [])->count();
@@ -576,10 +582,8 @@ class DevicesController extends AppController
                     $save_new_pa = array(
                         'device_id' => $apt_key_check->id,
                         'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
-                        'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
                         'num_clients_connect' => 1,
                         'name' => PARTNER.($query + 1),
-                        'apt_device_pass' => $this->radompassWord()
                     );
                     $new_partner = $this->Partners->newEntity();
                     $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa);
@@ -591,25 +595,12 @@ class DevicesController extends AppController
                 } else {
                     $data_update = array(
                         'num_clients_connect' => $partner['num_clients_connect'] + 1,
-                        'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
-                        'apt_device_pass' => $this->radompassWord()
                     );
                     $partner = $this->Partners->patchEntity($partner, $data_update);
                     if (empty($partner->errors())){
                         if (!$this->Partners->save($partner)) {
                             $chk = true;
                         }
-                    }
-                }
-                $data_auth = array(
-                    'auth' =>  isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
-                    'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: ''
-                );
-                $auths = $this->LogAuths->newEntity();
-                $auths = $this->LogAuths->patchEntity($auths, $data_auth);
-                if (empty($auths->errors())) {
-                    if (!$this->LogAuths->save($auths)) {
-                        $chk = true;
                     }
                 }
                 $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
@@ -620,12 +611,10 @@ class DevicesController extends AppController
                 }
                 if (!$chk) {
                     $conn->commit();
-                    $result = $this->LogAuths->find('all',['fields'=>'id'])->last();
-                    $record_log_auth_id = $result->id;
                     $this->redirect([
                         'plugin' => null,
                         'controller' => 'Devices',
-                        'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl($record_log_auth_id)
+                        'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id)
                     ]);
                 } else {
                     $conn->rollback();
@@ -640,21 +629,33 @@ class DevicesController extends AppController
                     'delete_flag' => UN_DELETED,
                     'role' => User::ROLE_TOW
                 ];
+//                $this->request->data['gateway_mac'] = $apt_key;
+//                $this->request->data['apt_key'] = $apt_key;
+//                $this->request->data['reg'] = 'xxx';
+//                $this->request->data['client_mac'] = 'f0:4d:a2:8e:1b:37';
+//                $this->request->data['ip'] = '192.168.0.1';
+//                $this->request->data['username'] = 'hoan_nv';
+//                $this->request->data['link_login'] = 'http://crm.wifimedia.vn/';
+//                $this->request->data['link_orig'] = 'https://www.facebook.com/';
+//                $this->request->data['error'] = 'no_error';
+//                $this->request->data['chap_id'] = '12';
+//                $this->request->data['chap_challenge'] = 'hoan_nv';
+//                $this->request->data['link_login_only'] = 'http://crm.wifimedia.vn/';
+//                $this->request->data['link_orig_esc'] = 'http://crm.wifimedia.vn/';
+//                $this->request->data['mac_esc'] = 'f0:4d:a2:8e:1b:37';
+//                $this->request->data['type'] = $flag_id;
                 $device = $this->Devices->newEntity();
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 $device->delete_flag = UN_DELETED;
                 $device->status = UN_DELETED;
                 $device->name = DEVICE.($query + 1);
-                $device->apt_device_number = $this->radompassWord();
-                $device->apt_key = isset($this->request->data['gateway_mac']) ? $this->request->data['gateway_mac'] : $apt_key;
                 $users = $this->Users->patchEntity($users, $data_user);
                 $query = $this->Partners->find('all', [])->count();
                 $data_new_par = array(
                     'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:'',
-                    'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+                    'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only']:'',
                     'num_clients_connect' => 1,
                     'name' => PARTNER.($query + 1),
-                    'apt_device_pass' => $this->radompassWord()
                 );
                 $partner = $this->Partners->newEntity();
                 $partner = $this->Partners->patchEntity($partner, $data_new_par);
@@ -688,7 +689,148 @@ class DevicesController extends AppController
                 }
             }
         } else {
-            $conn->rollback();
+            $this->autoRender = false;
+            $conn = ConnectionManager::get('default');
+            $conn->begin();
+            $this->loadModel('Partners');
+            if ($apt_key != '') {
+                $this->autoRender= false;
+                $apt_key_check = $this->Devices->find()->where(
+                    [
+                        'apt_key' => $apt_key,
+                        'delete_flag !=' => DELETED
+                    ])
+                    ->select()
+                    ->hydrate(true)
+                    ->first();
+                $chk = false;
+                if (!empty($apt_key_check)) {
+                    $partner = $this->Partners->find()->where(
+                        array(
+                            'device_id' => $apt_key_check->id,
+                            'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:''
+                        ))
+                        ->first();
+                    $query = $this->Partners->find('all', [])->count();
+                    if (empty($partner)) {
+                        $save_new_pa = array(
+                            'device_id' => $apt_key_check->id,
+                            'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
+                            'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+                            'num_clients_connect' => 1,
+                            'name' => PARTNER.($query + 1),
+                            'apt_device_pass' => $this->radompassWord()
+                        );
+                        $new_partner = $this->Partners->newEntity();
+                        $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa);
+                        if (empty($new_partner->errors())) {
+                            if (!$this->Partners->save($new_partner)) {
+                                $chk = true;
+                            }
+                        }
+                    } else {
+                        $data_update = array(
+                            'num_clients_connect' => $partner['num_clients_connect'] + 1,
+                            'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+                            'apt_device_pass' => $this->radompassWord()
+                        );
+                        $partner = $this->Partners->patchEntity($partner, $data_update);
+                        if (empty($partner->errors())){
+                            if (!$this->Partners->save($partner)) {
+                                $chk = true;
+                            }
+                        }
+                    }
+                    $data_auth = array(
+                        'auth' =>  isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+                        'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: ''
+                    );
+                    $auths = $this->LogAuths->newEntity();
+                    $auths = $this->LogAuths->patchEntity($auths, $data_auth);
+                    if (empty($auths->errors())) {
+                        if (!$this->LogAuths->save($auths)) {
+                            $chk = true;
+                        }
+                    }
+                    $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
+                    if (empty($device->errors())) {
+                        if (!$this->Devices->save($device)) {
+                            $chk = true;
+                        }
+                    }
+                    if (!$chk) {
+                        $conn->commit();
+                        $result = $this->LogAuths->find('all',['fields'=>'id'])->last();
+                        $record_log_auth_id = $result->id;
+                        $this->redirect([
+                            'plugin' => null,
+                            'controller' => 'Devices',
+                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl($record_log_auth_id)
+                        ]);
+                    } else {
+                        $conn->rollback();
+                    }
+                } else {
+                    $query = $this->Users->find('all', [])->count();
+                    $users = $this->Users->newEntity();
+                    $data_user = [
+                        'username' => USER.($query + 1),
+                        'email' => USER.($query + 1).'@wifimedia.com',
+                        'password' => '123456',
+                        'delete_flag' => UN_DELETED,
+                        'role' => User::ROLE_TOW
+                    ];
+                    $device = $this->Devices->newEntity();
+                    $device = $this->Devices->patchEntity($device, $this->request->data);
+                    $device->delete_flag = UN_DELETED;
+                    $device->status = UN_DELETED;
+                    $device->name = DEVICE.($query + 1);
+                    $device->apt_device_number = $this->radompassWord();
+                    $device->apt_key = isset($this->request->data['gateway_mac']) ? $this->request->data['gateway_mac'] : $apt_key;
+                    $users = $this->Users->patchEntity($users, $data_user);
+                    $query = $this->Partners->find('all', [])->count();
+                    $data_new_par = array(
+                        'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:'',
+                        'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+                        'num_clients_connect' => 1,
+                        'name' => PARTNER.($query + 1),
+                        'apt_device_pass' => $this->radompassWord()
+                    );
+                    $partner = $this->Partners->newEntity();
+                    $partner = $this->Partners->patchEntity($partner, $data_new_par);
+                    if (empty($users->errors())) {
+                        $result = $this->Users->save($users);
+                        if ($result) {
+                            $device->user_id = $result->id;
+                            if (empty($device->errors())) {
+                                $data_device = $this->Devices->save($device);
+                                if ($data_device) {
+                                    $partner->device_id = $data_device->id;
+                                    if (empty($partner->errors())) {
+                                        if ($this->Partners->save($partner)) {
+                                            $conn->commit();
+                                            $this->redirect([
+                                                'plugin' => null,
+                                                'controller' => 'Devices',
+                                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id)
+                                            ]);
+                                        }
+                                    }
+                                } else {
+                                    $conn->rollback();
+                                }
+                            } else {
+                                $conn->rollback();
+                            }
+                        } else {
+                            $conn->rollback();
+                        }
+                    }
+                }
+            } else {
+                $conn->rollback();
+            }
         }
+
     }
 }
