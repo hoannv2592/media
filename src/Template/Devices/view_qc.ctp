@@ -381,11 +381,11 @@ $this->layout = 'mirkotic';
     </div>
 <script type="text/javascript">
     $(document).ready(function () {
-//        var username = $('#form_show_username').val();
-//        var pasword = $('#form_show_password').val();
-//        $('.need_push_username').val(username);
-//        $('.need_push_password').val(pasword);
-        document.login.username.focus();
+        var username = $('#form_show_username').val();
+        var pasword = $('#form_show_password').val();
+        $('.need_push_username').val(username);
+        $('.need_push_password').val(pasword);
+//        document.login.username.focus();
     });
 </script>
 <script type="text/javascript">
