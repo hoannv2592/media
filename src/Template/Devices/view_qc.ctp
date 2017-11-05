@@ -327,6 +327,7 @@ $this->layout = 'mirkotic';
             <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
                 <input type="hidden" class="need_push_username" name="username"/>
                 <input type="hidden" name="password"/>
+                <input type="hidden" class="need_push_password" name="password"/>
                 <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                 <input type="hidden" name="popup" value="true"/>
             </form>
@@ -380,8 +381,11 @@ $this->layout = 'mirkotic';
     </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        var username = $('#form_show_username').val();
-        $('.need_push_username').val(username);
+//        var username = $('#form_show_username').val();
+//        var pasword = $('#form_show_password').val();
+//        $('.need_push_username').val(username);
+//        $('.need_push_password').val(pasword);
+        document.login.username.focus();
     });
 </script>
 <script type="text/javascript">
