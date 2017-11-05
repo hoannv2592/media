@@ -101,7 +101,20 @@ $this->assign('title', 'Quản lý thiết bị');
                                                                         QC</a>
                                                                 <?php }
 
-                                                            } ?>
+                                                            } else {
+                                                                if ($device->path != '') { ?>
+                                                                    <a class="btn btn-success waves-effect"
+                                                                       href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'view_qc' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>">Xem
+                                                                        QC</a>
+                                                                    <a class="btn btn-primary waves-effect"
+                                                                       href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc_mirkotic' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Sửa
+                                                                        QC</a>
+                                                                <?php } else { ?>
+                                                                    <a class="btn btn-primary waves-effect"
+                                                                       href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Tạo
+                                                                        QC</a>
+                                                                <?php } ?>
+                                                            <?php } ?>
                                                             <a class="btn btn-danger waves-effect" data-toggle="modal"
                                                                data-target="#modal-03">Xóa TB</a>
                                                         </div>

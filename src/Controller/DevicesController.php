@@ -833,4 +833,71 @@ class DevicesController extends AppController
         }
 
     }
+
+    public function setQcMirkotic($device_id = null, $user_id = null)
+    {
+        $device_id = \UrlUtil::_decodeUrl($device_id);
+        $user_id = \UrlUtil::_decodeUrl($user_id);
+        $conn = ConnectionManager::get('default');
+        $conn->begin();
+        $this->loadModel('LangdingDevices');
+        if (!$this->Users->exists(['id' => $user_id])) {
+            $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
+        }
+        if (!$this->Devices->exists(['id' => $device_id])) {
+            $this->redirect(['Controller' => 'Devices', 'action' => 'index']);
+        }
+        $device = $this->Devices->get($device_id, [
+            'contain' => []
+        ]);
+        if ($this->request->is('post')) {
+            if (!empty($this->request->data['file']['name'])) {
+                // upload the file to the server
+                $file = array(
+                    'file' => $this->request->data['file']
+                );
+                $fileOK = $this->UploadImage->uploadFiles('upload/files', $file);
+                unset($this->request->data['file']);
+                unset($this->request->data['device_id']);
+                if(array_key_exists('urls', $fileOK)) {
+                    $device->path = $fileOK['urls'][0];
+                    $device->image_backgroup = $file['file']['name'];
+                }
+                $device = $this->Devices->patchEntity($device, $this->request->data);
+                if (empty($device->errors())) {
+                    if ($this->Devices->save($device)) {
+                        $conn->commit();
+                        $this->redirect(['action' => 'index']);
+                    } else {
+                        $conn->rollback();
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                    }
+                } else {
+                    $conn->rollback();
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                }
+            } else {
+                unset($this->request->data['file']);
+                $device = $this->Devices->patchEntity($device, $this->request->data);
+                if (empty($device->errors())) {
+                    if ($this->Devices->save($device)) {
+                        $conn->commit();
+                        $this->redirect(['action' => 'index']);
+                    } else {
+                        $conn->rollback();
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                    }
+                } else {
+                    $conn->rollback();
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                }
+            }
+        }
+        $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
+        $filesRowNum = $files->count();
+        $this->set('files',$files);
+        $this->set('filesRowNum',$filesRowNum);
+        $apt = $this->radompassWord();
+        $this->set(compact('device', 'device_id', 'user_id', 'apt'));
+    }
 }

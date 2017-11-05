@@ -319,9 +319,11 @@ if ($type == '' ||  $type == \App\Model\Entity\Device::TB_NORMAR) {
     </style>
 
 <?php } else {
-$this->layout = 'mirkotic'; ?>
+$this->layout = 'mirkotic';
+
+?>
     <div id="fullpage">
-        <div class="section" id="section0" style="background-image: url('/images/bg4.jpg');">
+        <div class="section" id="section0" style="background-image: url(<?php echo '/' . $path; ?>);">
             <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="get">
                 <input type="hidden" name="username"/>
                 <input type="hidden" name="password"/>
