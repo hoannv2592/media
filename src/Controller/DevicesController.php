@@ -604,6 +604,7 @@ class DevicesController extends AppController
                     }
                 }
                 $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
+                $device->type = Device::TB_MIRKOTIC;
                 if (empty($device->errors())) {
                     if (!$this->Devices->save($device)) {
                         $chk = true;
@@ -643,7 +644,7 @@ class DevicesController extends AppController
 //                $this->request->data['link_login_only'] = 'http://crm.wifimedia.vn/';
 //                $this->request->data['link_orig_esc'] = 'http://crm.wifimedia.vn/';
 //                $this->request->data['mac_esc'] = 'f0:4d:a2:8e:1b:37';
-//                $this->request->data['type'] = $flag_id;
+                $this->request->data['type'] = $flag_id;
                 $device = $this->Devices->newEntity();
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 $device->delete_flag = UN_DELETED;
