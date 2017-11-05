@@ -324,12 +324,21 @@ $this->layout = 'mirkotic';
 ?>
     <div id="fullpage">
         <div class="section" id="section0" style="background-image: url(<?php echo '/' . $path; ?>);">
-            <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="get">
-                <input type="hidden" name="username"/>
+            <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
+                <input type="hidden" class="need_push_username" name="username"/>
                 <input type="hidden" name="password"/>
                 <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                 <input type="hidden" name="popup" value="true"/>
             </form>
+            <script type="text/javascript">
+                function doLogin() {
+                    <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
+                    document.sendin.username.value = document.login.username.value;
+                    document.sendin.password.value = hexMD5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+                    document.sendin.submit();
+                    return false;
+                }
+            </script>
             <h1>
                 <div id="wrap" class="animsition">
                     <div class="page-locked">
@@ -343,14 +352,14 @@ $this->layout = 'mirkotic';
                                 </div>
                                 <div class="media-body">
 
-                                    <form class="form-validation" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="get" onSubmit="return doLogin()">
+                                    <form class="form-validation" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                         <input type="hidden" name="popup" value="true"/>
                                         <div class="form-group mt-10">
-                                            <input type="text" placeholder="uesrnme" value="wifimedia" class="form-control underline-input">
+                                            <input type="text" placeholder="uesrnme" id="form_show_username" value="wifimedia" class="form-control underline-input">
                                         </div>
                                         <div class="form-group mt-10">
-                                            <input type="password" placeholder="Password" value="wifimedia" class="form-control underline-input">
+                                            <input type="password" placeholder="Password" id="form_show_password" value="wifimedia" class="form-control underline-input">
                                         </div>
                                         <div class="form-group text-left">
                                             <input type="submit" style="width: 100%" value="Login" class="btn btn-greensea b-0 br-2 mr-5 block"/>
@@ -370,17 +379,10 @@ $this->layout = 'mirkotic';
         </div>
     </div>
 <script type="text/javascript">
-    function doLogin() {
-        <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
-        document.sendin.username.value = document.login.username.value;
-        document.sendin.password.value = hexMD5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
-        alert(document.sendin.password.value);
-        document.sendin.submit();
-        return false;
-    }
-</script>
-<script type="text/javascript">
-    //document.login.username.focus();
+    $(document).ready(function () {
+        var username = $('#form_show_username').val();
+        $('.need_push_username').val(username);
+    });
 </script>
 <script type="text/javascript">
     $(document).ready(function() {
