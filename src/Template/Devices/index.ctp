@@ -111,7 +111,7 @@ $this->assign('title', 'Quản lý thiết bị');
                                                                         QC</a>
                                                                 <?php } else { ?>
                                                                     <a class="btn btn-primary waves-effect"
-                                                                       href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Tạo
+                                                                       href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc_mirkotic' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Tạo
                                                                         QC</a>
                                                                 <?php } ?>
                                                             <?php } ?>
