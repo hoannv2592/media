@@ -318,10 +318,7 @@ if ($type == '' ||  $type == \App\Model\Entity\Device::TB_NORMAR) {
         }
     </style>
 
-<?php } else {
-$this->layout = 'mirkotic';
-
-?>
+<?php } else { $this->layout = 'mirkotic'; ?>
     <div id="fullpage">
         <div class="section" id="section0" style="background-image: url(<?php echo '/' . $path; ?>);">
             <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
@@ -352,18 +349,17 @@ $this->layout = 'mirkotic';
                                     <img class="media-object img-circle" src="assets/images/ici-avatar.jpg" alt="">
                                 </div>
                                 <div class="media-body">
-
                                     <form class="form-validation" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                         <input type="hidden" name="popup" value="true"/>
                                         <div class="form-group mt-10">
-                                            <input type="text" placeholder="uesrnme" id="form_show_username" value="wifimedia" class="form-control underline-input">
+                                            <input style="width: 80px;display: none;" name="username" type="text" value="wifimedia"/>
                                         </div>
                                         <div class="form-group mt-10">
-                                            <input type="password" placeholder="Password" id="form_show_password" value="wifimedia" class="form-control underline-input">
+                                            <input style="width: 80px; display: none;" name="password" type="password" value="wifimedia" />
                                         </div>
-                                        <div class="form-group text-left">
-                                            <input type="submit" style="width: 100%" value="Login" class="btn btn-greensea b-0 br-2 mr-5 block"/>
+                                        <div>
+                                            <input style="width: 100%" type="submit" value="Connect" class="btn btn-greensea b-0 br-2 mr-5 block /">
                                         </div>
                                     </form>
                                     <p class="text-hotpink" style="font-size: 14px;"><?php echo $infor_devices->error; ?></p>
@@ -385,7 +381,6 @@ $this->layout = 'mirkotic';
         var pasword = $('#form_show_password').val();
         $('.need_push_username').val(username);
         $('.need_push_password').val(pasword);
-//        document.login.username.focus();
     });
 </script>
 <script type="text/javascript">
