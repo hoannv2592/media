@@ -47,15 +47,15 @@ class LogAuthsTable extends Table
      */
     public function validationDefault(Validator $validator)
     {
-        $validator
-            ->integer('id')
-            ->allowEmpty('id', 'create');
-
-        $validator
-            ->allowEmpty('auth');
-
-        $validator
-            ->allowEmpty('client_mac');
+//        $validator
+//            ->integer('id')
+//            ->allowEmpty('id', 'create');
+//
+//        $validator
+//            ->allowEmpty('auth');
+//
+//        $validator
+//            ->allowEmpty('client_mac');
 
         return $validator;
     }
