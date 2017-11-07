@@ -43,16 +43,3 @@ $(function() {
 	initialize();
 
 });
-
-$(window).resize(centeringModalSyncer);
-function centeringModalSyncer() {
-    if (nowModalSyncer == null)
-        return false;//モーダルウィンドウが開いてなければ終了
-    var w = $(window).width();//画面(ウィンドウ)の幅、高さを取得
-    var h = $(window).height();
-    //コンテンツ(#modal-content)の幅、高さを取得
-    var cw = $(nowModalSyncer).outerWidth();//outerWidth({margin:true});
-    var ch = $(nowModalSyncer).outerHeight();//outerHeight({margin:true});
-    //console.log('centering : ' + nowModalSyncer + ' ::: cw : ' + ((w - cw)/2) + ' ::: ch : ' + ((h - ch)/2));
-    $(nowModalSyncer).css({"left": ((w - cw) / 2) + "px", "top": ((h - ch) / 2) + "px"});//センタリングを実行する
-}

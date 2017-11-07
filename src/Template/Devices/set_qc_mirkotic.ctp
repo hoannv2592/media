@@ -142,7 +142,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
 <script type="application/javascript">
     function checkuploadfile() {
         var $fileUpload = $("input[type='file']");
-        if (parseInt($fileUpload.get(0).files.length)>2){
+        if (parseInt($fileUpload.get(0).files.length) > 5){
             alert("You can only upload a maximum of 5 files");
             return false;
         } else {

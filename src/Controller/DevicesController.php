@@ -430,18 +430,25 @@ class DevicesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is('post')) {
-            if (!empty($this->request->data['file']['name'])) {
+            if (!empty($this->request->data['file'][0]['error'] != 4)) {
                 // upload the file to the server
-                $file = array(
-                    'file' => $this->request->data['file']
-                );
-                $fileOK = $this->UploadImage->uploadFiles('upload/files', $file);
+                $new_arr = array();
+                $list_file = $this->request->getData('file');
+                foreach ($list_file as $k => $vl) {
+                    $new_arr[]['file'] = $vl;
+
+                }
+                $fileOK = array();
+                foreach ($new_arr as $k => $vl) {
+                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                }
+                $result = Hash::extract($fileOK, '{n}.urls');
+                $path = call_user_func_array('array_merge', $result);
+                $image_up_load = Hash::extract($list_file, '{n}.name');
                 unset($this->request->data['file']);
                 unset($this->request->data['device_id']);
-                if(array_key_exists('urls', $fileOK)) {
-                    $device->path = $fileOK['urls'][0];
-                    $device->image_backgroup = $file['file']['name'];
-                }
+                $device->path = implode(',', $path);
+                $device->image_backgroup = implode(',', $image_up_load);
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 if (empty($device->errors())) {
                     if ($this->Devices->save($device)) {
