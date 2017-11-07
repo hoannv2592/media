@@ -1,0 +1,37 @@
+
+label.error {
+    color: red;
+    font-size: 14px;
+    float: left;
+    padding-left: 20px;
+}
+.fp-next,.fp-prev {
+    display: none;
+}
+h1 {
+    font-size: 5em;
+    font-family: arial, helvetica;
+    color: #fff;
+    margin: 0;
+    padding: 0;
+}
+
+/* Centered texts in each section
+* --------------------------------------- */
+.section {
+    text-align: center;
+}
+
+/* Backgrounds will cover all the section
+* --------------------------------------- */
+.section {
+    background-size: cover;
+}
+
+.slide {
+    background-size: cover;
+}
+
+button.btn > i {
+
+}

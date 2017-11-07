@@ -53,13 +53,17 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php if (isset($device->path) && $device->path != '') { ?>
-                                    <tr>
-                                        <td><?php echo $device->id; ?></td>
-                                        <td><?php echo $device->tile_name; ?></td>
-                                        <td class="image"><embed src="<?= '/'.$device->path ?>" width="450" height="300"></td>
-                                        <td><?php echo $device->created; ?></td>
-                                    </tr>
+                                <?php if (isset($device->path) && $device->path != '') {
+                                    $list_background = explode(',', $device->path);
+                                    foreach ($list_background as $k => $vl) { ?>
+                                        <tr>
+                                            <td><?php echo $device->id; ?></td>
+                                            <td><?php echo $device->tile_name; ?></td>
+                                            <td class="image"><embed src="<?= '/'.$vl ?>" width="450" height="300"></td>
+                                            <td><?php echo $device->created; ?></td>
+                                        </tr>
+                                    <?php }
+                                ?>
                                 <?php } else { ?>
                                 <tr><td colspan="4" class="image">No file(s) found......</td>
                                     <?php } ?>
@@ -72,12 +76,18 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             'type' => 'file',
                             'url' => ['controller' => 'Devices', 'action' => 'set_qc_mirkotic'.'/'. UrlUtil::_encodeUrl($device_id).'/'.UrlUtil::_encodeUrl($user_id)],
                             'id' => 'uploadForm',
-                            'inputDefaults' => array(
-                                'label' => false,
-                                'div' => false
-                            ),
-                        ]); ?>
+                            'onsubmit'=>"event.returnValue = checkuploadfile()",
 
+                        ]); ?>
+                        <h2 class="card-inside-title"> Chọn loại quảng cáo </h2>
+                        <div class="demo-radio-button">
+                            <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($device->langdingpage_id == 1 || $device->langdingpage_id == '') { echo 'checked'; } ?> />
+                            <label style="font-weight: bold" for="radio_30">Quảng cáo với password</label>
+                            <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" <?php if ($device->langdingpage_id == 2) { echo 'checked'; }?> />
+                            <label style="font-weight: bold" for="radio_31">Quảng cáo Facebook-Login</label>
+                            <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($device->langdingpage_id == 3) { echo 'checked'; }?> />
+                            <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
+                        </div>
                         <h2 class="card-inside-title">Tên cơ sở dịch vụ</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
@@ -90,6 +100,14 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                 <input type="text" class="form-control" name="address" placeholder="Địa chỉ đặt thiết bị" id="address" value="<?php echo isset($device['address']) ? $device['address']:''?>" required>
                             </div>
                             <div class="help-info">Địa chỉ đặt thiết bị</div>
+                        </div>
+                        <div class="check_pass_device">
+                            <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="text" name="apt_device_number" id="apt_device_number" value="<?php echo isset($device->apt_device_number) ? $device->apt_device_number: $apt ?>" placeholder="Điền mật khẩu.." class="form-control">
+                                </div>
+                            </div>
                         </div>
                         <h2 class="card-inside-title"> Chọn một ảnh </h2>
                         <div class="form-group">
@@ -122,6 +140,35 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
     </div>
 </section>
 <script type="application/javascript">
+    function checkuploadfile() {
+        var $fileUpload = $("input[type='file']");
+        if (parseInt($fileUpload.get(0).files.length)>2){
+            alert("You can only upload a maximum of 5 files");
+            return false;
+        } else {
+            return true;
+        }
+    }
+    $(document).ready(function () {
+        var langding = "<?php echo $device->langdingpage_id; ?>";
+        if (langding == 1 || langding == '') {
+            $('.check_pass_device').css('display', '');
+        } else if (langding == 3) {
+            $('.check_pass_device').css('display', 'none');
+        } else {
+            $('.check_pass_device').css('display', 'none');
+        }
+    });
+    $('.radio-col-grey').change(function () {
+        var __val = $(this).val();
+        if (__val == 1) {
+            $('.check_pass_device').css('display', '');
+        } else if (__val == 3) {
+            $('.check_pass_device').css('display', 'none');
+        } else {
+            $('.check_pass_device').css('display', 'none');
+        }
+    });
     $('#uploadForm').validate({
         rules: {
             'tile_name': { required: true },
@@ -134,19 +181,19 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             'apt_device_number': { required: 'Hãy nhập' }
         }
     });
-    function filePreview(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('.image').html('');
-                $('.image').append('<div class="text-center"><img src="'+e.target.result+'" width="450" height="300"/></div>');
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    $("#file").change(function () {
-        filePreview(this);
-    });
+//    function filePreview(input) {
+//        if (input.files && input.files[0]) {
+//            var reader = new FileReader();
+//            reader.onload = function (e) {
+//                $('.image').html('');
+//                $('.image').append('<div class="text-center"><img src="'+e.target.result+'" width="450" height="300"/></div>');
+//            };
+//            reader.readAsDataURL(input.files[0]);
+//        }
+//    }
+//    $("#file").change(function () {
+//        filePreview(this);
+//    });
 
     $('.radio-col-grey').change(function () {
         if ($(this).is(':checked')){

@@ -122,7 +122,7 @@
                         async: false,
                         url: '/Users/isEmaiEditlExist',
                         data: {
-                            backup_email: function () {
+                            password: function () {
                                 return $('#email_backup').val();
                             }
                         }

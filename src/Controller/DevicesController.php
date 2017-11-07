@@ -570,7 +570,7 @@ class DevicesController extends AppController
             $chk = false;
             if (!empty($apt_key_check)) {
                 // data test
-                $this->request->data['mac'] = 'f0:4d:a2:8e:1b:37';
+                //$this->request->data['mac'] = 'f0:4d:a2:8e:1b:37';
                 $partner = $this->Partners->find()->where(
                     array(
                         'device_id' => $apt_key_check->id,
@@ -630,20 +630,20 @@ class DevicesController extends AppController
                     'delete_flag' => UN_DELETED,
                     'role' => User::ROLE_TOW
                 ];
-                $this->request->data['gateway_mac'] = $apt_key;
-                $this->request->data['apt_key'] = $apt_key;
-                $this->request->data['reg'] = 'xxx';
-                $this->request->data['client_mac'] = 'f0:4d:a2:8e:1b:37';
-                $this->request->data['ip'] = '192.168.0.1';
-                $this->request->data['username'] = 'hoan_nv';
-                $this->request->data['link_login'] = 'http://crm.wifimedia.vn/';
-                $this->request->data['link_orig'] = 'https://www.facebook.com/';
-                $this->request->data['error'] = 'no_error';
-                $this->request->data['chap_id'] = '12';
-                $this->request->data['chap_challenge'] = 'hoan_nv';
-                $this->request->data['link_login_only'] = 'http://crm.wifimedia.vn/';
-                $this->request->data['link_orig_esc'] = 'http://crm.wifimedia.vn/';
-                $this->request->data['mac_esc'] = 'f0:4d:a2:8e:1b:37';
+//                $this->request->data['gateway_mac'] = $apt_key;
+//                $this->request->data['apt_key'] = $apt_key;
+//                $this->request->data['reg'] = 'xxx';
+//                $this->request->data['client_mac'] = 'f0:4d:a2:8e:1b:37';
+//                $this->request->data['ip'] = '192.168.0.1';
+//                $this->request->data['username'] = 'hoan_nv';
+//                $this->request->data['link_login'] = 'http://crm.wifimedia.vn/';
+//                $this->request->data['link_orig'] = 'https://www.facebook.com/';
+//                $this->request->data['error'] = 'no_error';
+//                $this->request->data['chap_id'] = '12';
+//                $this->request->data['chap_challenge'] = 'hoan_nv';
+//                $this->request->data['link_login_only'] = 'http://crm.wifimedia.vn/';
+//                $this->request->data['link_orig_esc'] = 'http://crm.wifimedia.vn/';
+//                $this->request->data['mac_esc'] = 'f0:4d:a2:8e:1b:37';
                 $this->request->data['type'] = $flag_id;
                 $device = $this->Devices->newEntity();
                 $device = $this->Devices->patchEntity($device, $this->request->data);
@@ -852,7 +852,7 @@ class DevicesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is('post')) {
-            if (!empty($this->request->data['file'])) {
+            if (!empty($this->request->data['file'][0]['error'] != 4)) {
                 // upload the file to the server
                 $new_arr = array();
                 $list_file = $this->request->getData('file');
@@ -878,11 +878,11 @@ class DevicesController extends AppController
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
                 }
             } else {
                 unset($this->request->data['file']);
@@ -893,11 +893,11 @@ class DevicesController extends AppController
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
                 }
             }
         }
@@ -907,5 +907,30 @@ class DevicesController extends AppController
         $this->set('filesRowNum',$filesRowNum);
         $apt = $this->radompassWord();
         $this->set(compact('device', 'device_id', 'user_id', 'apt'));
+    }
+
+    public function checkPassword()
+    {
+        $this->autoRender = false;
+        if ($this->request->getData()) {
+            if ($this->request->getData('device_id')) {
+                $query = $this->Devices->find('all', array(
+                        'recursive' => -1,
+                        'conditions' => array(
+                            'id' => $this->request->getData('device_id'),
+                            'apt_device_number' => $this->request->getData('password_x'),
+                            'delete_flag !=' => DELETED
+                        ))
+                );
+                $number = $query->count();
+                if ($number > 0) {
+                    die(json_encode(true));
+                } else {
+                    die(json_encode(false));
+                }
+            } else {
+                die(json_encode(true));
+            }
+        }
     }
 }
