@@ -560,6 +560,9 @@ class DevicesController extends AppController
      */
     public function addNewDevice($apt_key = null, $flag_id = null)
     {
+        $url = $this->request;
+        $apt_key = $url->params['id'];
+        $flag_id = $url->params['flag_id'];
         if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
             $this->autoRender = false;
             $conn = ConnectionManager::get('default');

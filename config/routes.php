@@ -70,9 +70,9 @@ Router::scope('/', function (RouteBuilder $routes) {
 
     $routes->connect('/back_end/:id/:flag_id', array('controller' => 'Devices', 'action' => 'addNewDevice'),
         array(
-            'pass' => array('id', 'flag_id'),
-            'id' => '[0-9a-z:A-Z]+',
-            'flag_id' => '[0-9]+'
+//            'pass' => array('id', 'flag_id'),
+//            'id' => '[0-9a-z:A-Z%]+',
+//            'flag_id' => '[0-9]+'
         )
     );
     $routes->connect('/random', array('controller' => 'Devices', 'action' => 'radom', 'plugin' => 'Api'));
