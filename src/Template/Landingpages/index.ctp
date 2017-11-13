@@ -52,7 +52,7 @@
                                         <tr>
                                             <td><?php echo $count; ?></td>
                                             <td class="advertise font-bold col-cyan">
-                                                <a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'detail_langdingpage' . '/' . $landingpage->id]) ?>"><?php echo h($landingpage->name); ?></a>
+                                                <a href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'detail_langdingpage' . '/' . UrlUtil::_encodeUrl($landingpage->id)]) ?>"><?php echo h($landingpage->name); ?></a>
                                             </td>
                                             <td><?php echo nl2br($landingpage->description); ?></td>
                                             <td><?php echo date('d/m/Y H:i', strtotime($landingpage->created)); ?></td>

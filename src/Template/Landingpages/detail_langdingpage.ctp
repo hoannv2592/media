@@ -41,7 +41,7 @@
                             </div>
                             <div class="help-info">Mô tả quảng cáo</div>
                         </div>
-                        <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'edit/'.$landingpage['id']])?>">CHỈNH SỬA</a>
+                        <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Landingpages', 'action' => 'edit/'. UrlUtil::_encodeUrl($landingpage['id'])])?>">CHỈNH SỬA</a>
                     </div>
                 </div>
             </div>
