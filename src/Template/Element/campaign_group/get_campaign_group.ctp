@@ -208,23 +208,6 @@
         });
     });
 
-    $(function () {
-        //Textare auto growth
-        autosize($('textarea.auto-growth'));
-        $('.end_date').bootstrapMaterialDatePicker({
-            format: 'DD/MM/YYYY',
-            weekStart : 0,
-            time: false
-        });
-        $('.start_date').bootstrapMaterialDatePicker({
-            format: 'DD/MM/YYYY',
-            weekStart : 0,
-            time: false
-        }).on('change', function(e, date) {
-            $('.end_date').bootstrapMaterialDatePicker('setMinDate', date);
-        });
-
-    });
     $('#form_advanced_validation').validate({
         rules: {
             'name': {

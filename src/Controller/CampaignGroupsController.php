@@ -63,7 +63,6 @@ class CampaignGroupsController extends AppController
     {
         $conn = ConnectionManager::get('default');
         $conn->begin();
-        $this->autoRender = false;
         $campaignGroup = $this->CampaignGroups->newEntity();
         if ($this->request->is('post')) {
             $campaignGroup = $this->CampaignGroups->patchEntity($campaignGroup, $this->request->getData());

@@ -4,7 +4,7 @@
 /tmp/*
 /logs/*
 /tmp/*
-/config/*
+/config/app.php
 /webroot/upload/*
 
 # OS generated files #

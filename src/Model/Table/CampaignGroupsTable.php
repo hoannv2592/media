@@ -39,7 +39,7 @@ class CampaignGroupsTable extends Table
             'events' => [
                 'Model.beforeSave' => [
                     'created' => 'new',
-                    'updated' => 'always',
+                    'modified' => 'always',
                 ],
                 'Users.afterLogin' => [
                     'lastLogin' => 'always'

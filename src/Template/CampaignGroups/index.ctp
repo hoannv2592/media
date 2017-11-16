@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var \App\View\AppView $userData
  * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $campaignGroups
  */
 ?>
@@ -28,28 +29,42 @@
                     </div>
                     <div class="body">
                         <div class="button-demo">
-                            <button type="button" class="btn btn-primary waves-effect m-r-20" data-toggle="modal" data-target="#defaultModal">THÊM MỚI CHIẾN DỊCH </button>
+                            <?php if ($userData['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
+                                <div class="button-demo">
+                                    <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'add']) ?>"
+                                       class="btn btn-primary waves-effect m-r-20">THÊM MỚI CHIẾN DỊCH</a>
+                                </div>
+                            <?php } else { ?>
+                                <a disabled="disabled" href="javascript:void(0);"
+                                   class="btn btn-primary waves-effect m-r-20">THÊM MỚI CHIẾN DỊCH</a>
+                            <?php } ?>
                         </div>
 
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-exportable dataTable">
+                            <table class="table table-bordered table-striped table-hover js-exportable_c dataTable">
                                 <thead>
                                 <tr class="bg-blue-grey">
+                                    <th>STT</th>
                                     <th>Tên chiến dịch</th>
                                     <th>Mô tả chiến dịch</th>
                                     <th>Ngày bắt đầu</th>
                                     <th>Ngày kết thúc</th>
+                                    <th>Số lượng voucher</th>
                                     <th>Ngày tạo</th>
                                     <th>Điều hướng</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php foreach ($campaignGroups as $key => $campaignGroup) { ?>
+                                <?php
+                                $count = 0;
+                                foreach ($campaignGroups as $key => $campaignGroup) { $count++; ?>
                                     <tr>
+                                        <td><?php echo $count;?></td>
                                         <td class="advertise font-bold col-cyan" value="<?php echo h($campaignGroup->id); ?>"><a href="javascript:void(0);" data-toggle="modal" data-target="#modal-02"> <?php echo h($campaignGroup->name); ?></a></td>
                                         <td><?php echo nl2br($campaignGroup->description); ?></td>
                                         <td><?php echo $campaignGroup->start_date;?></td>
                                         <td><?php echo $campaignGroup->end_date;?></td>
+                                        <td><?php echo $campaignGroup->number_voucher;?></td>
                                         <td><?php echo date('d/m/Y H:i', strtotime($campaignGroup->created));?></td>
                                         <td class="delete_advertise" value="<?php echo h($campaignGroup->id); ?>"><button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa chiến dịch</button></td>
                                     </tr>

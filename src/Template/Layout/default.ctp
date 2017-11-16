@@ -49,7 +49,8 @@ $cakeDescription = 'Media ';
         'bootstrap-select.min',
         'prism',
         'chosen',
-        'bootstrap-datetimepicker'
+        'bootstrap-datetimepicker',
+        'daterangepicker'
 
     )) ?>
     <?= $this->Html->script(array(
@@ -71,7 +72,9 @@ $cakeDescription = 'Media ';
         'form-wizard',
         'jquery.multi-select',
         'bootstrap-datetimepicker',
-    ))?>
+        'moment',
+        'daterangepicker'
+    )) ?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
@@ -96,23 +99,31 @@ $cakeDescription = 'Media ';
 <nav class="navbar">
     <div class="container-fluid">
         <div class="navbar-header">
-            <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse" aria-expanded="false"></a>
+            <a href="javascript:void(0);" class="navbar-toggle collapsed" data-toggle="collapse"
+               data-target="#navbar-collapse" aria-expanded="false"></a>
             <a href="javascript:void(0);" class="bars"></a>
-            <a class="navbar-brand" href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>">WIFI MAKETTING</a>
+            <a class="navbar-brand"
+               href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>">WIFI
+                MAKETTING</a>
         </div>
         <div class="collapse navbar-collapse" id="navbar-collapse">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">
-                        <?php echo $userData['email'];?>
+                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">
+                        <?php echo $userData['email']; ?>
                     </a>
                     <ul class="dropdown-menu pull-right">
-                        <li><a href="<?php echo $this->Url->build(["controller" => "users", "action" => "change_password"."/". UrlUtil::_encodeUrl($userData['id'])]); ?>">Đổi mật khẩu</a></li>
-                        <li><a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user"."/". UrlUtil::_encodeUrl($userData['id'])]); ?>">Thông tin acount</a></li>
+                        <li>
+                            <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "change_password" . "/" . UrlUtil::_encodeUrl($userData['id'])]); ?>">Đổi
+                                mật khẩu</a></li>
+                        <li>
+                            <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user" . "/" . UrlUtil::_encodeUrl($userData['id'])]); ?>">Thông
+                                tin acount</a></li>
                     </ul>
                 </li>
-                <li >
-                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "logout"]); ?>" ><span>Đăng xuất</span></a>
+                <li>
+                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "logout"]); ?>"><span>Đăng xuất</span></a>
                 </li>
                 <!-- Tasks -->
                 <!-- #END# Tasks -->
@@ -133,7 +144,7 @@ $cakeDescription = 'Media ';
             <?php } else { ?>
                 <li class="left_menu ac">
                     <?php } ?>
-                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>" >
+                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>">
                         <i class="material-icons">supervisor_account</i>
                         <span>Quản lý người dùng</span>
                     </a>
@@ -143,7 +154,8 @@ $cakeDescription = 'Media ';
             <?php } else { ?>
                 <li class="left_menu ">
                     <?php } ?>
-                    <a href="<?php echo $this->Url->build(["controller" => "Devices", "action" => "index"]); ?>"  class="waves-effect waves-block">
+                    <a href="<?php echo $this->Url->build(["controller" => "Devices", "action" => "index"]); ?>"
+                       class="waves-effect waves-block">
                         <i class="material-icons">business</i>
                         <span>Quản lý thiết bị</span>
                     </a>
@@ -158,7 +170,17 @@ $cakeDescription = 'Media ';
                         <span>Quản lý nhóm thiết bị</span>
                     </a>
                 </li>
-            <?php if ($controller == 'Partners') { ?>
+                <?php if ($controller == 'CampaignGroups') { ?>
+            <li class="left_menu active ">
+            <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "CampaignGroups", "action" => "index"]); ?>">
+                        <i class="material-icons">trending_up</i>
+                        <span>Nhóm chiến dịch</span>
+                    </a>
+                </li>
+                <?php if ($controller == 'Partners') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
                 <li class="left_menu">
@@ -178,32 +200,22 @@ $cakeDescription = 'Media ';
                         <span>Lịch sử thay đổi nhóm thiết bị</span>
                     </a>
                 </li>
-            <?php if ($controller == 'Landingpages') { ?>
+                <?php if ($controller == 'Landingpages') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
                 <li class="left_menu">
                     <?php } ?>
-                    <a href="<?php echo $this->Url->build(["controller" => "Landingpages", "action" => "index"]); ?>" >
+                    <a href="<?php echo $this->Url->build(["controller" => "Landingpages", "action" => "index"]); ?>">
                         <i class="material-icons">pages</i>
                         <span>Màn hình quảng cáo</span>
                     </a>
                 </li>
-            <?php if ($controller == 'CampaignGroups') { ?>
+                <?php if ($controller == 'ServiceGroups') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
                 <li class="left_menu">
                     <?php } ?>
                     <a href="javascript:void(0);">
-                        <i class="material-icons">trending_up</i>
-                        <span>Nhóm chiến dịch</span>
-                    </a>
-                </li>
-            <?php if ($controller == 'ServiceGroups') { ?>
-            <li class="left_menu active ">
-            <?php } else { ?>
-                <li class="left_menu">
-                    <?php } ?>
-                    <a href="javascript:void(0);" >
                         <i class="material-icons">widgets</i>
                         <span>Nhóm dịch vụ</span>
                     </a>
@@ -213,7 +225,7 @@ $cakeDescription = 'Media ';
                     <?php } else { ?>
                 <li class="left_menu">
                     <?php } ?>
-                    <a href="javascript:void(0);" >
+                    <a href="javascript:void(0);">
                         <i class="material-icons">present_to_all</i>
                         <span>Báo cáo</span>
                     </a>
@@ -241,6 +253,7 @@ $cakeDescription = 'Media ';
     .sidebar .menu .list a:hover {
         color: #2196f3;
     }
+
     .sidebar .menu .list a span:hover {
         color: #2196f3;
     }

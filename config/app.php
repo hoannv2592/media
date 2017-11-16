@@ -231,7 +231,7 @@ return [
             //'port' => 'non_standard_port_number',
             'username' => 'root',
             'password' => '',
-            'database' => 'wifimedia',
+            'database' => 'media',
             'encoding' => 'utf8',
             'timezone' => 'UTC',
             'flags' => [],

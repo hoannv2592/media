@@ -55,7 +55,7 @@
                                             <td><?php echo nl2br($vl->birthday); ?></td>
                                             <td><?php echo nl2br($vl->address); ?></td>
                                             <td><?php echo isset(\App\Model\Entity\Partner::$sex[$vl->sex]) ? \App\Model\Entity\Partner::$sex[$vl->sex] :''; ?></td>
-                                            <td><?php echo $vl->device->name; ?></td>
+                                            <td><?php echo isset($vl->device->name) ? $vl->device->name: ''; ?></td>
                                         </tr>
                                     <?php } ?>
                                     </tbody>
