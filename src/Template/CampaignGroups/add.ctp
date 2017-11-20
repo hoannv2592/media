@@ -1,6 +1,9 @@
 <?php
 /**
   * @var \App\View\AppView $this
+  * @var $devices
+  * @var $user_login
+  * @var $users
   */
 ?>
 <section class="content">
@@ -34,7 +37,7 @@
                         <?php
                         echo $this->Form->create('CampaignGroups', array(
                             'id' => 'form_advanced',
-                            'type' => 'post',
+                            'type' => 'file',
                             'url' => array('controller' => 'CampaignGroups', 'action' => 'add'),
                             'inputDefaults' => array(
                                 'label' => false,
@@ -45,32 +48,24 @@
                         <div class="form-group">
                             <div class="form-line">
                                 <?php echo $this->Form->control('name', array(
-                                        'class' => 'form-control',
-                                        'id' => 'name_address',
-                                        'label' => 'Tên chiến dịch',
+                                    'class' => 'form-control',
+                                    'id' => 'name_address',
+                                    'label' => 'Tên chiến dịch',
                                 ));
                                 ?>
+                                <div class="help-info">Tên chiến dịch</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-line">
                                 <?php
-                                    echo $this->Form->control('start_date', array(
-                                        'label' => 'Ngày bắt đầu chiến dịch',
-                                        'class' => 'form-control datetime',
-                                    ));
-                                ?>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="form-line">
-                                <?php
-                                echo $this->Form->control('end_date', array(
-                                    'label' => 'Ngày kết thúc chiến dịch',
-                                    'class' => 'form-control datetime',
+                                echo $this->Form->control('time', array(
+                                    'label' => 'Thời gian bắt đầu và kết thúc chiến dịch',
+                                    'class' => 'form-control',
+                                    'id' => 'config-demo'
                                 ));
                                 ?>
+                                <div class="help-info">hời gian bắt đầu và kết thúc chiến dịch</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -81,8 +76,10 @@
                                     'class' => 'form-control',
                                 ));
                                 ?>
+                                <div class="help-info">Số lượng voucher phát ra</div>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="form-line">
                                 <?php
@@ -93,14 +90,79 @@
                                     'type' => 'textarea'
                                 ));
                                 ?>
+                                <div class="help-info">Mô tả chiến dịch</div>
                             </div>
                         </div>
+                        <h2 class="card-inside-title">Chọn thiết bị cho nhóm</h2>
+                        <div class="form-group" id="end_show">
+                            <div class="form-line">
+                                <select data-placeholder="Chọn thiết bị"
+                                        id="select_device" class="chosen-select" multiple tabindex="8" name="device_id[]">
+                                    <?php $user_de_id = json_decode($adgroup->device_name);
+                                    foreach ($devices as $key => $device) { ?>
+                                        <option value="<?php echo $key; ?>"><?php echo $device ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <?php if ($user_login['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
+                            <h2 class="card-inside-title" >User quản lý nhóm thiết bị</h2>
+                            <div class="form-group form-float">
+                                <div class="form-line">
+                                    <select  class="form-control required" name="user_id_campaign_group" id="user_id_group">
+                                        <option disabled selected value> --- Chọn user --- </option>
+                                        <?php foreach ($users as $key => $item) {
+                                            if (isset($adgroup->user_id_group) && $adgroup->user_id_group ) { ?>
+                                                <option selected="selected" value="<?php echo $key; ?>"><?php echo $item ?></option>
+                                            <?php } else { ?>
+                                                <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
+                                            <?php }?>
+                                        <?php  } ?>
+                                    </select>
+                                </div>
+                                <div class="help-info">User quản lý nhóm thiết bị</div>
+                            </div>
+                        <?php } ?>
+                        <div class="row clearfix">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="demo-radio-button">
+                                    <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" checked/>
+                                    <label style="font-weight: bold" for="radio_30">Quảng cáo với password</label>
+                                    <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" />
+                                    <label style="font-weight: bold" for="radio_31">Quảng cáo Facebook-Login</label>
+                                    <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey"  />
+                                    <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
+                                </div>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">Tên cơ sở dịch vụ</h2>
+                        <div class="form-group" id="end_show">
+                            <div class="form-line">
+                                <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($device->tile_name) ? $device->tile_name :'';?>" placeholder="Điền tên..">
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title">Địa chỉ nhóm thiết bị</h2>
+                        <div class="form-group" id="end_show">
+                            <div class="form-line">
+                                <input type="text" name="address" id="slogan" class="form-control" value="<?php echo isset($device->address) ? $device->address :'';?>" placeholder="Điền địa chỉ nhóm thiết bị..">
+                            </div>
+                        </div>
+                        <div class="check_pass_device m-t-15">
+                            <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <input type="text" name="apt_device_number" maxlength="8" id="apt_device_number" value="<?php echo isset($apt_device_number) ? $apt_device_number:'' ?>" placeholder="Điền mật khẩu.." class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <h2 class="card-inside-title"> Chọn một ảnh </h2>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="text" id="config-demo" class="form-control">
+                                <input type="file" name="file[]" multiple = multiple id="file" value="<?php echo isset($device->path) ? '/'.$device->path: '';?>" class="form-control">
                             </div>
                         </div>
-                        <button class="btn btn-primary waves-effect" id="submit" type="submit">TẠO MỚI</button>
+                        <!-- #END# Multi Select -->
+                        <button class="btn btn-primary waves-effect" id = "submit" type="submit">THÊM MỚI</button>
                         <?php echo $this->Form->end(); ?>
                     </div>
                 </div>
@@ -110,17 +172,8 @@
 </section>
 <script type="application/javascript">
     $(document).ready(function () {
-        $('.datetime').datetimepicker({
-            weekStart: 1,
-            todayBtn:  1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            minView: 2,
-            forceParse: 0,
-            format: "dd/mm/yyyy"
-        });
         //Advanced Form Validation
+        $.validator.setDefaults({ ignore: ":hidden:not(select)" });
         $('#form_advanced').validate({
             onkeyup: false,
             rules: {
@@ -132,18 +185,68 @@
                         url: '/CampaignGroups/isNameExistAdd'
                     }
                 },
-                'start_date' :{
-                    required: true
-                },
-                'end_date' :{
+                'time' :{
                     required: true
                 },
                 'number_voucher' :{
                     required: true,
                     number : true
+                },
+                'device_id[]': {
+                    required : true
+                },
+                'tile_name': {
+                    required : true
+                },
+                'address': {
+                    required : true
+                },
+                'apt_device_number': {
+                    required : true
+                },
+                'langdingpage_id': {
+                    required: true
                 }
             }
         });
     });
     $('#config-demo').daterangepicker({}, function(start, end, label) {});
+
+
+    $(document).ready(function () {
+        var langding = "<?php echo isset($device->langdingpage_id) ? $device->langdingpage_id:''; ?>";
+        if (langding == 1) {
+            $('.check_pass_device').css('display', '');
+        } else if (langding == 3) {
+            $('.check_pass_device').css('display', 'none');
+        } else {
+            $('.check_pass_device').css('display', 'none');
+        }
+    });
+    $('.radio-col-grey').change(function () {
+        var __val = $(this).val();
+        if (__val == 1) {
+            $('.check_pass_device').css('display', '');
+        } else if (__val == 3) {
+            $('.check_pass_device').css('display', 'none');
+        } else {
+            $('.check_pass_device').css('display', 'none');
+        }
+    });
+    $('.radio-col-grey').change(function () {
+        var __val = $(this).val();
+        if ($(this).is(':checked')){
+            $(this).prop('checked', true).attr('checked', 'checked');
+        } else {
+            $(this).prop('checked', false).removeAttr('checked');
+        }
+    });
 </script>
+<style>
+    .chosen-container {
+        width: 100% !important;
+    }
+    label {
+        color: black;
+    }
+</style>

@@ -19,6 +19,7 @@ use Cake\Utility\Hash;
  * @property \App\Model\Table\DeviceGroupsTable $DeviceGroups
  * @property \App\Model\Table\AdgroupsTable $Adgroups
  * @property \App\Model\Table\FileAttachmentsTable $FileAttachments
+ * @property \App\Model\Table\PartnerVouchers $PartnerVouchers
  *
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
  *
@@ -42,6 +43,7 @@ class DevicesController extends AppController
         $this->loadModel('LogAuths');
         $this->loadComponent('UploadImage');
         $this->loadModel('DeviceGroups');
+        $this->loadModel('PartnerVouchers');
 
         // Load Files model
         $this->loadModel('FileAttachments');
@@ -502,23 +504,44 @@ class DevicesController extends AppController
             }
             $infor_devices = $this->Devices->get($device_id);
             if (!empty($infor_devices)) {
-                $device_group = $this->DeviceGroups->find()
-                    ->where(['adgroup_id' => $infor_devices->adgroup_id, 'delete_flag !=' => DELETED])
-                    ->first();
+                if (isset($infor_devices->campaign_group_id) &&  $infor_devices->campaign_group_id != '') {
+                    $device_campaign = $this->CampaignGroups->find()
+                        ->where(['id' => $infor_devices->campaign_group_id, 'delete_flag !=' => DELETED])
+                        ->first();
+                    if (!empty($device_campaign)) {
+                        $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
+                        $infor_devices->path = $device_campaign->path;
+                        $infor_devices->tile_name = $device_campaign->tile_name;
+                        $infor_devices->apt_device_number = $device_campaign->number_pass;
+                        $infor_devices->message = $device_campaign->message;
+                        $infor_devices->slogan = $device_campaign->slogan;
+                    }
+                } elseif (isset($infor_devices->adgroup_id) && $infor_devices->adgroup_id != '') {
+                    $device_group = $this->DeviceGroups->find()
+                        ->where(['adgroup_id' => $infor_devices->adgroup_id, 'delete_flag !=' => DELETED])
+                        ->first();
+                    if (!empty($device_group)) {
+                        $infor_devices->langdingpage_id = $device_group->langdingpage_id;
+                        $infor_devices->path = $device_group->path;
+                        $infor_devices->tile_name = $device_group->tile_name;
+                        $infor_devices->apt_device_number = $device_group->number_pass;
+                        $infor_devices->message = $device_group->message;
+                        $infor_devices->slogan = $device_group->slogan;
+                    }
+                }
+                $string ='ABCDEFGHIJKLMOPQRSTUVXYZabcdefghijklmnopqrstuvxyz';
+
+                $rest = substr($infor_devices->client_mac, 0, 1);
+                $flag_voucher = false;
+                if (strpos($string, $rest) !== false) {
+                    $flag_voucher = true;
+                }
                 if ($auth_id) {
                     $auths = $this->LogAuths->find()->where(['id' => $auth_id])->select('auth')->first()->toArray();
                     $infor_devices->auth_target = $auths['auth'];
                 }
-                if (!empty($device_group)) {
-                    $infor_devices->langdingpage_id = $device_group->langdingpage_id;
-                    $infor_devices->path = $device_group->path;
-                    $infor_devices->tile_name = $device_group->tile_name;
-                    $infor_devices->apt_device_number = $device_group->number_pass;
-                    $infor_devices->message = $device_group->message;
-                    $infor_devices->slogan = $device_group->slogan;
-                }
             }
-            $this->set(compact('infor_devices'));
+            $this->set(compact('infor_devices', 'flag_voucher'));
         } else {
             return $this->redirect(['action' => 'index']);
         }
@@ -941,6 +964,66 @@ class DevicesController extends AppController
             } else {
                 die(json_encode(true));
             }
+        }
+    }
+
+    public function addLogVoucher()
+    {
+        $conn = ConnectionManager::get('default');
+        $conn->begin();
+        $this->loadModel('PartnerVouchers');
+        $this->autoRender = false;
+        if ($this->request->data) {
+            $PartnerVouchers = $this->PartnerVouchers->newEntity();
+            $PartnerVouchers = $this->PartnerVouchers->patchEntity($PartnerVouchers, $this->request->data);
+            if ($this->PartnerVouchers->save($PartnerVouchers)) {
+                $conn->commit();
+                die(json_encode(true));
+            } else {
+                $conn->rollback();
+                die(json_encode(false));
+            }
+        }
+    }
+
+    public function viewQcVoucher($device_id)
+    {
+        if (isset($device_id)) {
+            $device_id = \UrlUtil::_decodeUrl($device_id);
+            if (!$this->Devices->exists(['Devices.id' => $device_id])) {
+                return $this->redirect(['action' => 'index']);
+            }
+            $infor_devices = $this->Devices->get($device_id);
+            if (!empty($infor_devices)) {
+                if (isset($infor_devices->campaign_group_id) &&  $infor_devices->campaign_group_id != '') {
+                    $device_campaign = $this->CampaignGroups->find()
+                        ->where(['id' => $infor_devices->campaign_group_id, 'delete_flag !=' => DELETED])
+                        ->first();
+                    if (!empty($device_campaign)) {
+                        $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
+                        $infor_devices->path = $device_campaign->path;
+                        $infor_devices->tile_name = $device_campaign->tile_name;
+                        $infor_devices->apt_device_number = $device_campaign->number_pass;
+                        $infor_devices->message = $device_campaign->message;
+                        $infor_devices->slogan = $device_campaign->slogan;
+                    }
+                } elseif (isset($infor_devices->adgroup_id) && $infor_devices->adgroup_id != '') {
+                    $device_group = $this->DeviceGroups->find()
+                        ->where(['adgroup_id' => $infor_devices->adgroup_id, 'delete_flag !=' => DELETED])
+                        ->first();
+                    if (!empty($device_group)) {
+                        $infor_devices->langdingpage_id = $device_group->langdingpage_id;
+                        $infor_devices->path = $device_group->path;
+                        $infor_devices->tile_name = $device_group->tile_name;
+                        $infor_devices->apt_device_number = $device_group->number_pass;
+                        $infor_devices->message = $device_group->message;
+                        $infor_devices->slogan = $device_group->slogan;
+                    }
+                }
+            }
+            $this->set(compact('infor_devices'));
+        } else {
+            return $this->redirect(['action' => 'index']);
         }
     }
 }

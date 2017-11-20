@@ -171,13 +171,15 @@ $(function () {
         responsive: true,
         "columns": [
             { "width": "1%" },
+            { "width": "8%" },
             { "width": "10%" },
             { "width": "10%" },
             { "width": "10%" },
+            { "width": "5%" },
             { "width": "10%" },
             { "width": "10%" },
             { "width": "10%" },
-            { "width": "10%" },
+            { "width": "10%" }
         ],
         "language": {
             "lengthMenu": "Display _MENU_ records per page",

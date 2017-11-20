@@ -23,6 +23,7 @@ use Cake\Core\Configure;
 use Cake\Test\TestCase\I18n\PluralRulesTest;
 use Cake\Utility\Inflector;
 use Cake\Routing\Exception\MissingControllerException;
+use Cake\Datasource\ConnectionManager;
 
 /**
  * Application Controller
@@ -270,4 +271,33 @@ class AppController extends Controller
         return strtolower(trim(preg_replace('~[^0-9a-z]+~i', '-', html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8')), '-'));
     }
 
+    /**
+     * Update langding group_id_ for devices
+     *
+     * @param $list_id
+     * @param $lan
+     * @return bool
+     */
+    public function publishall($list_id, $lan)
+    {
+        $conn = ConnectionManager::get('default');
+        $conn->begin();
+        $chk = true;
+        $device = $this->Devices->find('all')->where(['id IN' => $list_id])->toArray();
+        foreach ($device as $item) {
+            $device = $this->Devices->patchEntity($item, $lan);
+            if (empty($device->errors())) {
+                if (!$this->Devices->save($device)) {
+                    $chk = false;
+                }
+            }
+        }
+        if ($chk) {
+            $conn->commit();
+            return true;
+        } else {
+            $conn->rollback();
+            return false;
+        }
+    }
 }

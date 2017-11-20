@@ -29,7 +29,14 @@ $cakeDescription = 'Media ';
         'scrolloverflow.min',
         'jquery.fullpage',
         'md5',
-        'examples'
+        'examples',
+        'bootstrap-datetimepicker',
+        'jquery.validate.min',
+        'back_end/jquery.slimscroll',
+        'back_end/bootstrap-notify',
+        'back_end/waves',
+        'back_end/sweetalert.min',
+        'back_end/dialogs'
     ]);
     echo $this->Html->css([
         'bootstrap.min',
@@ -39,7 +46,9 @@ $cakeDescription = 'Media ';
         'main',
         'jquery.fullPage',
         'examples',
-        'back_end/my_style'
+        'back_end/my_style',
+        'bootstrap-datetimepicker',
+        'sweetalert'
     ]);
     ?>
 </head>

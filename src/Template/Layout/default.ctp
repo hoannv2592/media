@@ -50,7 +50,7 @@ $cakeDescription = 'Media ';
         'prism',
         'chosen',
         'bootstrap-datetimepicker',
-        'daterangepicker'
+        'daterangepicker',
 
     )) ?>
     <?= $this->Html->script(array(
@@ -78,6 +78,9 @@ $cakeDescription = 'Media ';
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>
+    <?php
+
+    ?>
 </head>
 <body class="theme-blue">
 <div class="page-loader-wrapper">
@@ -138,7 +141,6 @@ $cakeDescription = 'Media ';
         <!-- Menu -->
         <div class="menu">
             <ul class="list">
-                <li class="header">MAIN NAVIGATION</li>
                 <?php if ($controller == 'Users') { ?>
             <li class="left_menu active ac">
             <?php } else { ?>

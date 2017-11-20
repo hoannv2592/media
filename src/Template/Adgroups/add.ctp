@@ -2,6 +2,7 @@
 /**
   * @var \App\View\AppView $this
   * @var $devices
+  * @var $user_login
   * @var $device
   * @var $adgroup
   * @var \App\Model\Entity\User[]|\Cake\Collection\CollectionInterface $users
@@ -60,7 +61,8 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                         <h2 class="card-inside-title">Chọn thiết bị cho nhóm</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <select data-placeholder="Chọn thiết bị" id="select_device" class="chosen-select" multiple tabindex="8" name="device_id[]">
+                                <select data-placeholder="Chọn thiết bị"
+                                        id="select_device" class="chosen-select" multiple tabindex="8" name="device_id[]">
                                     <?php $user_de_id = json_decode($adgroup->device_name);
                                     foreach ($devices as $key => $device) {
                                         if (isset($user_de_id->$key)) { ?>
@@ -74,7 +76,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                             </div>
                         </div>
                         <?php if ($user_login['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
-                            <h2 class="card-inside-title" for="description">User quản lý nhóm thiết bị</h2>
+                            <h2 class="card-inside-title" >User quản lý nhóm thiết bị</h2>
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <select  class="form-control required" name="user_id_group" id="user_id_group">
@@ -209,7 +211,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                     }
                 },
                 'tile_name': {required: true},
-                'langdingpage_id': {required: true},
+
                 'apt_device_number': {required: true},
                 'slogan': {required: true},
                 'message': {required: true},

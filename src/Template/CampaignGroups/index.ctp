@@ -46,10 +46,12 @@
                                 <tr class="bg-blue-grey">
                                     <th>STT</th>
                                     <th>Tên chiến dịch</th>
-                                    <th>Mô tả chiến dịch</th>
-                                    <th>Ngày bắt đầu</th>
-                                    <th>Ngày kết thúc</th>
+                                    <th>Thời gian</th>
+                                    <th>Địa chỉ</th>
+                                    <th>Thiết bị</th>
                                     <th>Số lượng voucher</th>
+                                    <th>Landing page</th>
+                                    <th>Mô tả chiến dịch</th>
                                     <th>Ngày tạo</th>
                                     <th>Điều hướng</th>
                                 </tr>
@@ -60,11 +62,27 @@
                                 foreach ($campaignGroups as $key => $campaignGroup) { $count++; ?>
                                     <tr>
                                         <td><?php echo $count;?></td>
-                                        <td class="advertise font-bold col-cyan" value="<?php echo h($campaignGroup->id); ?>"><a href="javascript:void(0);" data-toggle="modal" data-target="#modal-02"> <?php echo h($campaignGroup->name); ?></a></td>
-                                        <td><?php echo nl2br($campaignGroup->description); ?></td>
-                                        <td><?php echo $campaignGroup->start_date;?></td>
-                                        <td><?php echo $campaignGroup->end_date;?></td>
+                                        <td class="advertise font-bold col-cyan">
+                                            <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'detail_campaig'. '/' . UrlUtil::_encodeUrl($campaignGroup->id)])?>">
+                                                <?php echo  $campaignGroup->name ;?>
+                                            </a>
+                                        </td>
+
+                                        <td><?php echo $campaignGroup->time;?></td>
+                                        <td><?php echo $campaignGroup->address;?></td>
+                                        <td>
+                                            <table class="table">
+                                            <?php foreach (json_decode($campaignGroup->device_name) as $k => $vl) { ?>
+                                                <tr>
+                                                    <td><?php echo  $vl; ?></td>
+                                                </tr>
+                                            <?php } ?>
+
+                                            </table>
+                                        </td>
                                         <td><?php echo $campaignGroup->number_voucher;?></td>
+                                        <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$campaignGroup->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$campaignGroup->langdingpage_id] : ''; ?></td>
+                                        <td><?php echo nl2br($campaignGroup->description); ?></td>
                                         <td><?php echo date('d/m/Y H:i', strtotime($campaignGroup->created));?></td>
                                         <td class="delete_advertise" value="<?php echo h($campaignGroup->id); ?>"><button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa chiến dịch</button></td>
                                     </tr>

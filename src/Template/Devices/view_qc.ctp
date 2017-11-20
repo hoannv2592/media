@@ -1,5 +1,6 @@
 <?php
 /**
+ * @var \App\View\AppView $flag_voucher
  * @var \App\View\AppView $infor_devices
  * @var \App\View\AppView $device_group
  * @var \App\View\AppView $this
@@ -13,11 +14,281 @@ $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng
 $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
+$flag_voucher = true;
+if ($flag_voucher) {
+    echo $this->Html->css('back_end/page1');
+    $list_path = explode(',', $infor_devices->path);
+    if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
+        <div id="fullpage">
+            <div class="section" id="section1">
+                <?php foreach ($list_path as $k => $vl) { ?>
+                    <div class="slide" id="slide<?php echo $k + 1; ?>" style="background-image: url('/<?php echo $vl; ?>')">
+                        <div class="landing">
+                            <div class="landing__cover-overlay"></div>
+                            <div class="landing__cover landing__cover--main landing__cover--flexible">
+                                <div class="u-ui-padding-x-large landing__cover-wrapper">
+                                    <div class="landing__cover-content u-color-white">
+                                        <div class="c-spacer--xx-large c-spacer"></div>
+                                        <div class="logo">
+                                            <div class="logo__inner">
+                                                <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt=""></a>
+                                            </div>
+                                        </div>
+                                        <div class="c-spacer--xx-large c-spacer"></div>
+                                        <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name; ?></div>
+                                        <div class="c-spacer--xx-large c-spacer"></div>
+                                        <div class="discount">
+                                            <div class="c-spacer--x-large c-spacer"></div>
+                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal">Nhận voucher</a>
+                                        </div>
+                                        <div class="c-spacer--x-large c-spacer"></div>
+                                        <div class="redirect">
+                                            <a class="redirect__normal" href="<?php echo $infor_devices->auth_target; ?>">Connect now -
+                                                Slow</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="u-ui-padding-x-large landing__cover-wrapper">
+                                    <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
+                                    <ul class="icons mbl">
+                                        <li class="facebook">
+                                            <a href="" target="_blank"><i class="fa fa-facebook"></i></a>
+                                        </li>
+                                        <li class="youtube">
+                                            <a href="" target="_blank"><i class="fa fa-youtube"></i></a>
+                                        </li>
+                                        <li class="googleplus">
+                                            <a href="" target="_blank"><i class="fa fa-google-plus"></i></a>
+                                        </li>
+                                        <li class="twitter">
+                                            <a href="" target="_blank"><i class="fa fa-twitter"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+            </div>
+            <div id="modal_discount" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h4 class="modal-title">Vui lòng điền thông tin khảo sát</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="c-spacer--x-large c-spacer"></div>
+                            <form action="#" name="register_form" class="register_form" id="register_form" method="post">
+                                <p><input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
+                                <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
+                                <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
+                                <p><input type="submit" class="_btn" value="Đăng ký"></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script type="application/javascript">
+            $(document).ready(function () {
+                $('.datetime_birthday').datetimepicker({
+                    weekStart: 1,
+                    todayBtn:  1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 2,
+                    forceParse: 0,
+                    format: "dd/mm/yyyy"
+                });
+                jQuery.validator.addMethod("nonNumeric", function (value, element) {
+                    return this.optional(element) || isNaN(parseInt(value));
+                }, "Hãy nhập đúng tên");
+                $.validator.addMethod('customphone', function (value, element) {
+                    return this.optional(element) || /^[0-9-+]+$/.test(value);
+                }, "Please enter a valid phone number");
+                var url = "<?php echo $infor_devices->auth_target?>";
+                var X_url = "<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'viewQcVoucher' . '/' . UrlUtil::_encodeUrl($infor_devices->id)])?>";
+                $('#register_form').validate({
+                    onkeyup : false,
+                    rules: {
+                        'full_name': {
+                            required: true,
+                            nonNumeric: true
+                        },
+                        'telephone': {
+                            required: true,
+                            customphone: true,
+                            minlength: 10,
+                            maxlength: 11
+                        },
+                        'address': {
+                            required: true
+                        },
+                        'birthday' : {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        'full_name': {
+                            required: 'Hãy nhập'
+                        },
+                        'telephone': {
+                            required: 'Hãy nhập',
+                            number: 'Hãy nhập số điện thoại',
+                            minlength: 'Bạn đã nhập sai số điện thoại'
+                        },
+                        'address': {
+                            required: 'Hãy nhập'
+                        },
+                        'birthday' : {
+                            required: 'Hãy nhập'
+                        }
+                    },
+                    submitHandler: function (form) {
+                        $.ajax({
+                            url: "/Devices/add_log_voucher",
+                            type: "POST",
+                            data: $("#register_form").serialize(),
+                            cache: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data == 'true') {
+                                    window.location.href = url;
+                                    return false;
+                                } else {
+                                    return false;
+                                }
+                            }
+                        });
+                        window.location.href = url;
+                        return false;
+                    }
+                });
+
+            });
+        </script>
+        <style>
+            .txt_input{
+                margin-bottom: 10px;
+            }
+            h4.modal-title{
+                text-align: center;
+            }
+        </style>
+    <?php } else { ?>
+        <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
+            <input type="hidden" class="need_push_username" name="username"/>
+            <input type="hidden" name="password"/>
+            <input type="hidden" class="need_push_password" name="password"/>
+            <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+            <input type="hidden" name="popup" value="true"/>
+        </form>
+        <?php echo $this->Html->script(['md5']); ?>
+        <script type="application/javascript">
+            function doLogin_popup2() {
+                <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
+                document.sendin.username.value = document.login_popup.username.value;
+                document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login_popup.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+                document.sendin.submit();
+                return false;
+            }
+        </script>
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var username = $('#form_show_username').val();
+                var pasword = $('#form_show_password').val();
+                $('.need_push_username').val(username);
+                $('.need_push_password').val(pasword);
+            });
+        </script>
+        <div id="fullpage">
+            <div class="section" id="section1">
+                <?php foreach ($list_path as $k => $vl) { ?>
+                    <div class="slide" id="slide<?php echo $k + 1; ?>" style="background-image: url('/<?php echo $vl; ?>')">
+                        <div class="landing">
+                            <div class="landing__cover-overlay"></div>
+                            <div class="landing__cover landing__cover--main landing__cover--flexible">
+                                <div class="u-ui-padding-x-large landing__cover-wrapper">
+                                    <div class="landing__cover-content u-color-white">
+                                        <div class="c-spacer--xx-large c-spacer"></div>
+                                        <div class="logo">
+                                            <div class="logo__inner">
+                                                <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt=""></a>
+                                            </div>
+                                        </div>
+                                        <div class="c-spacer--xx-large c-spacer"></div>
+                                        <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name; ?></div>
+                                        <div class="c-spacer--xx-large c-spacer"></div>
+                                        <div class="discount">
+                                            <div class="c-spacer--x-large c-spacer"></div>
+                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal">Nhận voucher</a>
+                                        </div>
+                                        <div class="c-spacer--x-large c-spacer"></div>
+                                        <div class="redirect">
+                                            <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                                                <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                                <input type="hidden" name="popup" value="true"/>
+                                                <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                                <input style="display: none;" name="password" type="password" value="wifimedia" />
+                                                <button class="redirect__normal">Connect now - Slow</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="u-ui-padding-x-large landing__cover-wrapper">
+                                    <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
+                                    <ul class="icons mbl">
+                                        <li class="facebook"><a href="" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                                        <li class="youtube"><a href="" target="_blank"><i class="fa fa-youtube"></i></a></li>
+                                        <li class="googleplus"><a href="" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+                                        <li class="twitter"><a href="" target="_blank"><i class="fa fa-twitter"></i></a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <?php } ?>
+                <div id="modal_discount" class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h4 class="modal-title">Vui lòng điền thông tin khảo sát</h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="c-spacer--x-large c-spacer"></div>
+                                <form class="form-validation" style="width: 100%" name="login_popup" id="info" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin_popup2()">
+                                    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                    <input type="hidden" name="popup" value="true"/>
+                                    <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                    <input style="display: none;" name="password" type="password" value="wifimedia" />
+                                    <p><input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                    <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                    <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                    <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
+                                    <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
+                                    <p><input type="submit" class="_btn" value="Đăng ký"></p>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    <?php } ?>
+
+<?php } else {
 if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) {
     if ($langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
         echo $this->Html->css('back_end/page1');
         $list_path = explode(',', $infor_devices->path);
-        ?>
+    ?>
 <div id="fullpage">
     <div class="section" id="section1">
         <?php foreach ($list_path as $k => $vl) { ?>
@@ -70,7 +341,7 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) {
         </div>
         <?php } ?>
     </div>
-        <div id="modal_discount" class="modal fade">
+    <div id="modal_discount" class="modal fade">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -488,8 +759,7 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) {
                             </div>
                         </div>
                     </div>
-                <?php
-                } ?>
+                <?php } ?>
                 <div id="modal_discount" class="modal fade">
                     <div class="modal-dialog">
                         <div class="modal-content">
@@ -558,6 +828,7 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) {
         </div>
         </body>
     <?php }?>
+
         <?php echo $this->Html->script(['md5']); ?>
     <script type="application/javascript">
         function doLogin_popup2() {
@@ -662,3 +933,4 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) {
             }
         });
     </script>
+<?php } ?>
