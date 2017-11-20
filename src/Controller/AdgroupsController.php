@@ -168,16 +168,31 @@ class AdgroupsController extends AppController
             // Common Usage:
             $result_id_devices = Hash::extract($devices, '{n}.id');
             $data_service = array();
-            if (!empty($this->request->data['file']['name'])) {
-                $file = array(
-                    'file' => $this->request->data['file']
-                );
-                $fileOK = $this->UploadImage->uploadFiles('upload/files', $file);
-                unset($this->request->data['file']);
-                if(array_key_exists('urls', $fileOK)) {
-                    $data_service['path'] = $fileOK['urls'][0];
-                    $data_service['image_backgroup'] = $file['file']['name'];
+
+            if (!empty($this->request->data['file'][0]['error'] != 4)) {
+                $new_arr = array();
+                $list_file = $this->request->getData('file');
+                foreach ($list_file as $k => $vl) {
+                    $new_arr[]['file'] = $vl;
+
                 }
+                $fileOK = array();
+                foreach ($new_arr as $k => $vl) {
+                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                }
+                $result = Hash::extract($fileOK, '{n}.urls');
+                $path = call_user_func_array('array_merge', $result);
+                $image_up_load = Hash::extract($list_file, '{n}.name');
+                unset($this->request->data['file']);
+            } else {
+                $path = '';
+                $image_up_load = '';
+            }
+            if ($path != '') {
+                $data_service['path'] = implode(',', $path);
+            }
+            if ($image_up_load != '') {
+                $data_service['image_backgroup'] = implode(',', $image_up_load);
             }
             $data_service['tile_name'] = $this->request->getData()['tile_name'];
             $data_service['landing_group_id'] = $this->request->getData()['langdingpage_id'];
@@ -546,18 +561,31 @@ class AdgroupsController extends AppController
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
                 'address' => $this->request->getData()['address']
             );
-            if (!empty($this->request->data['file']['name'])) {
-                // upload the file to the server
-                $file = array(
-                    'file' => $this->request->data['file']
-                );
-                $fileOK = $this->UploadImage->uploadFiles('upload/files', $file);
-                unset($this->request->data['file']);
 
-                if(array_key_exists('urls', $fileOK)) {
-                    $data_group['path'] = $fileOK['urls'][0];
-                    $data_group['image_backgroup'] = $file['file']['name'];
+
+            if (!empty($this->request->data['file'][0]['error'] != 4)) {
+                $new_arr = array();
+                $list_file = $this->request->getData('file');
+                foreach ($list_file as $k => $vl) {
+                    $new_arr[]['file'] = $vl;
+
                 }
+                $fileOK = array();
+                foreach ($new_arr as $k => $vl) {
+                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                }
+                $result = Hash::extract($fileOK, '{n}.urls');
+                $path = call_user_func_array('array_merge', $result);
+                $image_up_load = Hash::extract($list_file, '{n}.name');
+                if ($path != '') {
+                    $data_group['path'] = implode(',', $path);
+                }
+                if ($image_up_load != '') {
+                    $data_group['image_backgroup'] = implode(',', $image_up_load);
+                }
+                unset($this->request->data['file']);
+            } else {
+                unset($this->request->data['file']);
             }
             // Common Usage:
             $device_group = array(

@@ -152,7 +152,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                         <h2 class="card-inside-title"> Chọn một ảnh </h2>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="file" name="file" id="file" value="<?php echo isset($device->path) ? '/'.$device->path: '';?>" class="form-control">
+                                <input type="file" name="file[]" id="file" multiple="multiple" value="<?php echo isset($device->path) ? '/'.$device->path: '';?>" class="form-control">
                             </div>
                         </div>
                         <!-- #END# Multi Select -->

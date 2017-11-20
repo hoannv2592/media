@@ -145,14 +145,17 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <?php
-                                if (isset($adgroup->path) && $adgroup->path != '') { ?>
-                                    <tr>
-                                        <td><?php echo $adgroup->id; ?></td>
-                                        <td><?php echo $adgroup->tile_name; ?></td>
-                                        <td class="image"><embed src="<?= '/'.$adgroup->path ?>" width="450" height="300"></td>
-                                        <td><?php echo $adgroup->created; ?></td>
-                                    </tr>
+                                <?php if (isset($adgroup->path) && $adgroup->path != '') {
+                                    $list_background = explode(',', $adgroup->path);
+                                    foreach ($list_background as $k => $vl) { ?>
+                                        <tr>
+                                            <td><?php echo $adgroup->id; ?></td>
+                                            <td><?php echo $adgroup->tile_name; ?></td>
+                                            <td class="image"><embed src="<?= '/'.$vl ?>" width="450" height="300"></td>
+                                            <td><?php echo $adgroup->created; ?></td>
+                                        </tr>
+                                    <?php }
+                                    ?>
                                 <?php } else { ?>
                                     <tr><td colspan="4" class="image">No file(s) found......</td></tr>
                                 <?php } ?>
@@ -162,7 +165,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                         <h2 class="card-inside-title"> Chọn một ảnh </h2>
                         <div class="form-group">
                             <div class="form-line">
-                                <input type="file" name="file" id="file" value="<?php echo isset($adgroup->path) ? '/'.$adgroup->path: '';?>" class="form-control">
+                                <input type="file" name="file[]" id="file" multiple="multiple" value="<?php echo isset($adgroup->path) ? '/'.$adgroup->path: '';?>" class="form-control">
                             </div>
                         </div>
                         <!-- #END# Multi Select -->
