@@ -19,7 +19,7 @@ use Cake\Utility\Hash;
  * @property \App\Model\Table\DeviceGroupsTable $DeviceGroups
  * @property \App\Model\Table\AdgroupsTable $Adgroups
  * @property \App\Model\Table\FileAttachmentsTable $FileAttachments
- * @property \App\Model\Table\PartnerVouchers $PartnerVouchers
+ * @property \App\Model\Table\PartnerVouchersTable $PartnerVouchers
  *
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
  *
@@ -529,11 +529,43 @@ class DevicesController extends AppController
                         $infor_devices->slogan = $device_group->slogan;
                     }
                 }
-                $string ='ABCDEFGHIJKLMOPQRSTUVXYZabcdefghijklmnopqrstuvxyz';
-
                 $rest = substr($infor_devices->client_mac, 0, 1);
+                $arr_number = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+                if (in_array($rest, $arr_number)) {
+                    $result_string_1 = intval($rest);
+                } else {
+                    $string1 ='ABCDEFGHIJKLMOPQRSTUVXYZ';
+                    $string2 ='abcdefghijklmnopqrstuvxyz';
+                    if (strpos($string1, $rest) !== false) {
+                        $result_string_1 = 1;
+                    } elseif (strpos($string2, $rest) !== false) {
+                        $result_string_1 = 2;
+                    } else {
+                        $result_string_1 = 3;
+                    }
+                }
+                $rest_2 = substr($infor_devices->client_mac, 1, 1);
+                if (in_array($rest_2, $arr_number)) {
+                    $result_string_2 = intval($rest_2);
+                } else {
+                    $string1 ='ABCDEFGHIJKLMOPQRSTUVXYZ';
+                    $string2 ='abcdefghijklmnopqrstuvxyz';
+                    if (strpos($string1, $rest_2) !== false) {
+                        $result_string_2 = 1;
+                    } elseif (strpos($string2, $rest_2) !== false) {
+                        $result_string_2 = 2;
+                    } else {
+                        $result_string_2 = 3;
+                    }
+                }
+                if ($result_string_1 == '0' && $result_string_2 !== '0' ) {
+                    $number_check = intval($result_string_2.$result_string_1);
+                } else {
+                    $number_check = intval($result_string_1.$result_string_2);
+                }
+                $rand_check = rand(10, 15);
                 $flag_voucher = false;
-                if (strpos($string, $rest) !== false) {
+                if ($rand_check == $number_check) {
                     $flag_voucher = true;
                 }
                 if ($auth_id) {
@@ -600,10 +632,16 @@ class DevicesController extends AppController
                 ->select()
                 ->hydrate(true)
                 ->first();
+            $id_device = $apt_key_check->id;
             $chk = false;
             if (!empty($apt_key_check)) {
                 // data test
-                //$this->request->data['mac'] = 'f0:4d:a2:8e:1b:37';
+//                $vouchers = $this->CampaignGroups->find()
+//                    ->select(['device_id'])
+//                    ->where(['delete_flag !=' => 1])
+//                    ->hydrate(false)
+//                    ->toArray();
+//                pr($vouchers); die;
                 $partner = $this->Partners->find()->where(
                     array(
                         'device_id' => $apt_key_check->id,
@@ -685,12 +723,23 @@ class DevicesController extends AppController
                 $device->name = DEVICE.($query + 1);
                 $users = $this->Users->patchEntity($users, $data_user);
                 $query = $this->Partners->find('all', [])->count();
+                $client_mac = $this->request->data['client_mac'];
+                $flag_voucher = $this->getVoucher($client_mac);
+//                $this->loadModel('Partners');
+//                $data_flag = $this->Partners->find()
+//                    ->where(['flag_voucher' => 1])
+//                    ->hydrate(false)
+//                    ->select(['flag_voucher'])->count()
+//                ;
+
                 $data_new_par = array(
                     'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:'',
                     'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only']:'',
                     'num_clients_connect' => 1,
                     'name' => PARTNER.($query + 1),
+                    'flag_voucher' => $flag_voucher
                 );
+
                 $partner = $this->Partners->newEntity();
                 $partner = $this->Partners->patchEntity($partner, $data_new_par);
                 if (empty($users->errors())) {

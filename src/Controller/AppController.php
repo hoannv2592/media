@@ -300,4 +300,49 @@ class AppController extends Controller
             return false;
         }
     }
+
+    public function getVoucher($client_mac)
+    {
+        $rest = substr($client_mac, 0, 1);
+        $arr_number = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+        if (in_array($rest, $arr_number)) {
+            $result_string_1 = intval($rest);
+        } else {
+            $string1 ='ABCDEFGHIJKLMOPQRSTUVXYZ';
+            $string2 ='abcdefghijklmnopqrstuvxyz';
+            if (strpos($string1, $rest) !== false) {
+                $result_string_1 = 1;
+            } elseif (strpos($string2, $rest) !== false) {
+                $result_string_1 = 2;
+            } else {
+                $result_string_1 = 3;
+            }
+        }
+        $rest_2 = substr($client_mac, 1, 1);
+        if (in_array($rest_2, $arr_number)) {
+            $result_string_2 = intval($rest_2);
+        } else {
+            $string1 ='ABCDEFGHIJKLMOPQRSTUVXYZ';
+            $string2 ='abcdefghijklmnopqrstuvxyz';
+            if (strpos($string1, $rest_2) !== false) {
+                $result_string_2 = 1;
+            } elseif (strpos($string2, $rest_2) !== false) {
+                $result_string_2 = 2;
+            } else {
+                $result_string_2 = 3;
+            }
+        }
+        if ($result_string_1 == '0' && $result_string_2 !== '0' ) {
+            $number_check = intval($result_string_2.$result_string_1);
+        } else {
+            $number_check = intval($result_string_1.$result_string_2);
+        }
+        $rand_check = rand(10, 15);
+        $flag_voucher = false;
+        if ($rand_check == $number_check) {
+            $flag_voucher = true;
+        }
+
+        return $flag_voucher;
+    }
 }

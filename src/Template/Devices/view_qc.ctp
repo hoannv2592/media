@@ -14,7 +14,6 @@ $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng
 $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
-$flag_voucher = true;
 if ($flag_voucher) {
     echo $this->Html->css('back_end/page1');
     $list_path = explode(',', $infor_devices->path);
@@ -51,18 +50,10 @@ if ($flag_voucher) {
                                 <div class="u-ui-padding-x-large landing__cover-wrapper">
                                     <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
                                     <ul class="icons mbl">
-                                        <li class="facebook">
-                                            <a href="" target="_blank"><i class="fa fa-facebook"></i></a>
-                                        </li>
-                                        <li class="youtube">
-                                            <a href="" target="_blank"><i class="fa fa-youtube"></i></a>
-                                        </li>
-                                        <li class="googleplus">
-                                            <a href="" target="_blank"><i class="fa fa-google-plus"></i></a>
-                                        </li>
-                                        <li class="twitter">
-                                            <a href="" target="_blank"><i class="fa fa-twitter"></i></a>
-                                        </li>
+                                        <li class="facebook"><a href="" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                                        <li class="youtube"><a href="" target="_blank"><i class="fa fa-youtube"></i></a></li>
+                                        <li class="googleplus"><a href="" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+                                        <li class="twitter"><a href="" target="_blank"><i class="fa fa-twitter"></i></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -158,14 +149,14 @@ if ($flag_voucher) {
                             processData: false,
                             success: function (data) {
                                 if (data == 'true') {
-                                    window.location.href = url;
+                                    window.location.href = X_url;
                                     return false;
                                 } else {
                                     return false;
                                 }
                             }
                         });
-                        window.location.href = url;
+                        window.location.href = X_url;
                         return false;
                     }
                 });
