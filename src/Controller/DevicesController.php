@@ -724,7 +724,7 @@ class DevicesController extends AppController
                 $users = $this->Users->patchEntity($users, $data_user);
                 $query = $this->Partners->find('all', [])->count();
                 $client_mac = $this->request->data['client_mac'];
-                $flag_voucher = $this->getVoucher($client_mac);
+//                $flag_voucher = $this->getVoucher($client_mac);
 //                $this->loadModel('Partners');
 //                $data_flag = $this->Partners->find()
 //                    ->where(['flag_voucher' => 1])
@@ -737,7 +737,7 @@ class DevicesController extends AppController
                     'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only']:'',
                     'num_clients_connect' => 1,
                     'name' => PARTNER.($query + 1),
-                    'flag_voucher' => $flag_voucher
+//                    'flag_voucher' => $flag_voucher
                 );
 
                 $partner = $this->Partners->newEntity();
