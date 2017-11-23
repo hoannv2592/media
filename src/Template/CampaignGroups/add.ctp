@@ -135,6 +135,26 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
+                                $random = isset($campaign_group->random) ? $campaign_group->random: '';
+                                echo  $this->Form->input('random', array(
+                                    'type' => 'select',
+                                    'options' => [
+                                        '1' => 'Random thông thường',
+                                        '2' => 'Random Fix cứng'
+                                    ],
+                                    'empty'=>'--- Chọn loại Random ---',
+                                    'label'=> 'Chọn loại Random chiến dịch',
+                                    'value' => $random,
+                                    'escape' => false,
+                                    'error' => false,
+                                    'class' => 'form-control required input_select_medium'
+                                ));
+                                ?>
+                            </div>
+                        </div>
                         <h2 class="card-inside-title">Tên cơ sở dịch vụ</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
@@ -205,6 +225,9 @@
                     required : true
                 },
                 'langdingpage_id': {
+                    required: true
+                },
+                'random': {
                     required: true
                 }
             }

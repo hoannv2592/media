@@ -2,7 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\View\AppView $userData
- * @var \App\Model\Entity\Adgroup[]|\Cake\Collection\CollectionInterface $campaignGroups
+ * @var \App\Model\Entity\CampaignGroup[]|\Cake\Collection\CollectionInterface $campaignGroups
  */
 ?>
 <section class="content" xmlns="">
@@ -12,7 +12,8 @@
                 <div class="card">
                     <div class="header bg-green">
                         <h2>
-                            Quản lý chiến dịch <small>Description text here...</small>
+                            Quản lý chiến dịch
+                            <small>Description text here...</small>
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>
@@ -50,6 +51,7 @@
                                     <th>Địa chỉ</th>
                                     <th>Thiết bị</th>
                                     <th>Số lượng voucher</th>
+                                    <th>Loại random</th>
                                     <th>Landing page</th>
                                     <th>Mô tả chiến dịch</th>
                                     <th>Ngày tạo</th>
@@ -59,32 +61,38 @@
                                 <tbody>
                                 <?php
                                 $count = 0;
-                                foreach ($campaignGroups as $key => $campaignGroup) { $count++; ?>
+                                foreach ($campaignGroups as $key => $campaignGroup) {
+                                    $count++; ?>
                                     <tr>
-                                        <td><?php echo $count;?></td>
+                                        <td><?php echo $count; ?></td>
                                         <td class="advertise font-bold col-cyan">
-                                            <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'detail_campaig'. '/' . UrlUtil::_encodeUrl($campaignGroup->id)])?>">
-                                                <?php echo  $campaignGroup->name ;?>
+                                            <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'detail_campaig' . '/' . UrlUtil::_encodeUrl($campaignGroup->id)]) ?>">
+                                                <?php echo $campaignGroup->name; ?>
                                             </a>
                                         </td>
 
-                                        <td><?php echo $campaignGroup->time;?></td>
-                                        <td><?php echo $campaignGroup->address;?></td>
+                                        <td><?php echo $campaignGroup->time; ?></td>
+                                        <td><?php echo $campaignGroup->address; ?></td>
                                         <td>
                                             <table class="table">
-                                            <?php foreach (json_decode($campaignGroup->device_name) as $k => $vl) { ?>
-                                                <tr>
-                                                    <td><?php echo  $vl; ?></td>
-                                                </tr>
-                                            <?php } ?>
+                                                <?php foreach (json_decode($campaignGroup->device_name) as $k => $vl) { ?>
+                                                    <tr>
+                                                        <td><?php echo $vl; ?></td>
+                                                    </tr>
+                                                <?php } ?>
 
                                             </table>
                                         </td>
-                                        <td><?php echo $campaignGroup->number_voucher;?></td>
+                                        <td><?php echo $campaignGroup->number_voucher; ?></td>
+                                        <td><?php echo isset(\App\Model\Entity\CampaignGroup::$random[$campaignGroup->random]) ? \App\Model\Entity\CampaignGroup::$random[$campaignGroup->random] : '' ?></td>
                                         <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$campaignGroup->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$campaignGroup->langdingpage_id] : ''; ?></td>
                                         <td><?php echo nl2br($campaignGroup->description); ?></td>
-                                        <td><?php echo date('d/m/Y H:i', strtotime($campaignGroup->created));?></td>
-                                        <td class="delete_advertise" value="<?php echo h($campaignGroup->id); ?>"><button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa chiến dịch</button></td>
+                                        <td><?php echo date('d/m/Y H:i', strtotime($campaignGroup->created)); ?></td>
+                                        <td class="delete_advertise" value="<?php echo h($campaignGroup->id); ?>">
+                                            <button type="button" class="btn btn-danger waves-effect"
+                                                    data-toggle="modal" data-target="#modal-03">Xóa chiến dịch
+                                            </button>
+                                        </td>
                                     </tr>
                                 <?php } ?>
                                 </tbody>

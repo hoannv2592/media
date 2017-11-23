@@ -70,7 +70,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 <div class="help-info">Tên chiến dịch</div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $time = isset($campaign_group->time) ? ($campaign_group->time):'' ?>
@@ -85,7 +84,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 <div class="help-info">hời gian bắt đầu và kết thúc chiến dịch</div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $number_voucher = isset($campaign_group->number_voucher) ? ($campaign_group->number_voucher):'' ?>
@@ -98,7 +96,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 <div class="help-info">Số lượng voucher phát ra</div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $description = isset($campaign_group->description) ? ($campaign_group->description):'' ?>
@@ -131,7 +128,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                             </div>
                         </div>
                         <?php if ($user_login['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
-                            <h2 class="card-inside-title" for="description">User quản lý nhóm thiết bị</h2>
+                            <label for="description">User quản lý nhóm thiết bị</label>
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <select class="form-control required" name="user_id_campaign_group" id="user_id_group">
@@ -148,20 +145,39 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 <div class="help-info">User quản lý nhóm thiết bị</div>
                             </div>
                         <?php }?>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <h2 class="card-inside-title"> Chọn loại quảng cáo </h2>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <label> Chọn loại quảng cáo </label>
                                 <div class="demo-radio-button">
-                                    <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($campaign_group->langdingpage_id == 1 || $campaign_group->langdingpage_id == '') { echo 'checked'; } ?> />
+                                    <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey langding" <?php if ($campaign_group->langdingpage_id == 1 || $campaign_group->langdingpage_id == '') { echo 'checked'; } ?> />
                                     <label style="font-weight: bold" for="radio_30">Quảng cáo với password</label>
-                                    <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" <?php if ($campaign_group->langdingpage_id == 2) { echo 'checked'; }?> />
+                                    <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey langding" <?php if ($campaign_group->langdingpage_id == 2) { echo 'checked'; }?> />
                                     <label style="font-weight: bold" for="radio_31">Quảng cáo Facebook-Login</label>
-                                    <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($campaign_group->langdingpage_id == 3) { echo 'checked'; }?> />
+                                    <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey langding" <?php if ($campaign_group->langdingpage_id == 3) { echo 'checked'; }?> />
                                     <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
                                 </div>
                             </div>
                         </div>
-
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
+                                $random = isset($campaign_group->random) ? $campaign_group->random: '';
+                                echo  $this->Form->input('random', array(
+                                    'type' => 'select',
+                                    'options' => [
+                                        '1' => 'Random thông thường',
+                                        '2' => 'Random Fix cứng'
+                                        ],
+                                    'empty' => '--- Chọn loại Random ---',
+                                    'label'=> 'Chọn loại Random',
+                                    'value' => $random,
+                                    'escape' => false,
+                                    'error' => false,
+                                    'class' => 'form-control required input_select_medium'
+                                ));
+                                ?>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $tile_name = isset($campaign_group->tile_name) ? ($campaign_group->tile_name):'' ?>
@@ -232,7 +248,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 </tbody>
                             </table>
                         </div>
-                        <h2 class="card-inside-title"> Chọn một ảnh </h2>
+                        <label> Chọn một ảnh </label>
                         <div class="form-group">
                             <div class="form-line">
                                 <input type="file" name="file[]" id="file" multiple="multiple" value="<?php echo isset($campaign_group->path) ? '/'.$campaign_group->path: '';?>" class="form-control">
@@ -333,7 +349,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             $('.check_pass_device').css('display', 'none');
         }
     });
-    $('.radio-col-grey').change(function () {
+    $('.langding').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
@@ -369,7 +385,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             'langdingpage_id': { required: true },
             'apt_device_number': { required: true },
             'device_id[]': { required: true },
-            'number_voucher': { required: true }
+            'number_voucher': { required: true },
+            'random': { required: true }
         },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');
@@ -385,23 +402,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         //Multi-select
         $('#optgroup').multiSelect({ selectableOptgroup: true });
     });
-//    function filePreview(input) {
-//        if (input.files && input.files[0]) {
-//            var reader = new FileReader();
-//            reader.onload = function (e) {
-//                $('.image').html('');
-//                $('.image').append('<div class="text-center"><img src="'+e.target.result+'" width="450" height="300"/></div>');
-//            };
-//            reader.readAsDataURL(input.files[0]);
-//        }
-//    }
-//    $("#file").change(function () {
-//        filePreview(this);
-//    });
-    $(document).ready(function () {
-//        $('#user_id_group').val();
-    });
-
     $('#config-demo').daterangepicker({}, function(start, end, label) {});
 </script>
 <style>

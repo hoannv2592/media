@@ -31,4 +31,12 @@ class CampaignGroup extends Entity
         '*' => true,
         'id' => false
     ];
+
+    const RANDOM_ONE = 1;
+    const RANDOM_TOW = 2;
+
+    public static $random = array(
+        CampaignGroup::RANDOM_ONE => 'Random thông thường',
+        CampaignGroup::RANDOM_TOW => 'Random Fix cứng',
+    );
 }

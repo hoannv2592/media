@@ -1,6 +1,6 @@
 <?php
 /**
- * @var \App\View\AppView $flag_voucher
+ * @var \App\View\AppView $voucher_flag
  * @var \App\View\AppView $infor_devices
  * @var \App\View\AppView $device_group
  * @var \App\View\AppView $this
@@ -14,7 +14,7 @@ $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng
 $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
-if ($flag_voucher) {
+if ($voucher_flag) {
     echo $this->Html->css('back_end/page1');
     $list_path = explode(',', $infor_devices->path);
     if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
@@ -259,6 +259,7 @@ if ($flag_voucher) {
                                     <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                     <input style="display: none;" name="password" type="password" value="wifimedia" />
                                     <p><input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                    <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
                                     <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                                     <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
                                     <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
@@ -272,6 +273,93 @@ if ($flag_voucher) {
                 </div>
             </div>
         </div>
+        <script type="application/javascript">
+            $(document).ready(function () {
+                $('.datetime_birthday').datetimepicker({
+                    weekStart: 1,
+                    todayBtn:  1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 2,
+                    minView: 2,
+                    forceParse: 0,
+                    format: "dd/mm/yyyy"
+                });
+                jQuery.validator.addMethod("nonNumeric", function (value, element) {
+                    return this.optional(element) || isNaN(parseInt(value));
+                }, "Hãy nhập đúng tên");
+                $.validator.addMethod('customphone', function (value, element) {
+                    return this.optional(element) || /^[0-9-+]+$/.test(value);
+                }, "Please enter a valid phone number");
+                var url = "<?php echo $infor_devices->auth_target?>";
+                var X_url = "<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'viewQcVoucher' . '/' . UrlUtil::_encodeUrl($infor_devices->id)])?>";
+                $('#info').validate({
+                    onkeyup : false,
+                    rules: {
+                        'full_name': {
+                            required: true,
+                            nonNumeric: true
+                        },
+                        'telephone': {
+                            required: true,
+                            customphone: true,
+                            minlength: 10,
+                            maxlength: 11
+                        },
+                        'address': {
+                            required: true
+                        },
+                        'birthday' : {
+                            required: true
+                        }
+                    },
+                    messages: {
+                        'full_name': {
+                            required: 'Hãy nhập'
+                        },
+                        'telephone': {
+                            required: 'Hãy nhập',
+                            number: 'Hãy nhập số điện thoại',
+                            minlength: 'Bạn đã nhập sai số điện thoại'
+                        },
+                        'address': {
+                            required: 'Hãy nhập'
+                        },
+                        'birthday' : {
+                            required: 'Hãy nhập'
+                        }
+                    },
+                    submitHandler: function (form) {
+                        $.ajax({
+                            url: "/Devices/add_log_voucher",
+                            type: "POST",
+                            data: $("#register_form").serialize(),
+                            cache: false,
+                            processData: false,
+                            success: function (data) {
+                                if (data == 'true') {
+                                    window.location.href = X_url;
+                                    return false;
+                                } else {
+                                    return false;
+                                }
+                            }
+                        });
+                        window.location.href = X_url;
+                        return false;
+                    }
+                });
+
+            });
+        </script>
+        <style>
+            .txt_input{
+                margin-bottom: 10px;
+            }
+            h4.modal-title{
+                text-align: center;
+            }
+        </style>
     <?php } ?>
 
 <?php } else {
