@@ -11,6 +11,8 @@ use Cake\Utility\Hash;
  *
  * @property \App\Model\Table\CampaignGroupsTable $CampaignGroups
  * @property  \App\Controller\Component\UploadImageComponent $UploadImage
+ * @property \App\Model\Table\PartnerVouchersTable $PartnerVouchers
+ * @property \App\Model\Table\PartnerVoucherLogsTable $PartnerVoucherLogs
  *
  * @method \App\Model\Entity\CampaignGroup[] paginate($object = null, array $settings = [])
  */
@@ -34,7 +36,9 @@ class CampaignGroupsController extends AppController
         // Load Files model
         $this->loadModel('Logs');
         $this->loadModel('DeviceGroups');
+        $this->loadModel('PartnerVouchers');
         $this->loadModel('FileAttachments');
+        $this->loadModel('PartnerVoucherLogs');
         $this->loadModel('AdgroupChangeHistories');
     }
     /**
@@ -44,12 +48,21 @@ class CampaignGroupsController extends AppController
      */
     public function index()
     {
-        $query = $this->CampaignGroups
-            ->find()
-            ->select()
-            ->where(['delete_flag !=' => DELETED])
-            ->order(['id' => 'DESC']);
-        $campaignGroups = $query->toArray();
+        $campaignGroups = $this->CampaignGroups->find('all',[
+            'contain'  => ['PartnerVoucherLogs' => function ($q) {
+                return $q
+                    ->where([
+                        'PartnerVoucherLogs.confirm ' => 1
+                    ])
+                    ->select([
+                        'campaign_group_id','id'
+                    ]);
+            }],
+            'conditions' => [
+                'CampaignGroups.delete_flag !=' => 1
+            ]
+        ])->toArray();
+
         $this->set(compact('campaignGroups'));
         $this->set('_serialize', ['campaignGroups']);
     }
@@ -170,7 +183,7 @@ class CampaignGroupsController extends AppController
                     $campaign_group_id = $save_ad->id;
                     //todo update data devices add to group
                     $device_adgroup = array(
-                        'adgroup_id' => $campaign_group_id,
+                        'campaign_group_id' => $campaign_group_id,
                         'user_id_campaign' => $this->request->getData('user_id_campaign_group')
                     );
                     $this->publishall($result_id_devices, $device_adgroup);

@@ -370,7 +370,7 @@ class UsersController extends AppController
         $this->autoRender = false;
         $this->loadModel('Sys_User');
         $conn = ConnectionManager::get('default');
-        $stmt = $conn->execute('SELECT usr_email, usr_pass, usr_address, usr_service_name, usr_phone from sys_user  WHERE usr_email != "0" limit 100');
+        $stmt = $conn->execute('SELECT full_name,birthday,telephone,address  from partner_voucher_logs');
         $first_row = $stmt->fetch('assoc');
         $objPHPExcel = $this->PhpExcel->createWorksheet();
         $objPHPExcel->setActiveSheet(0);
@@ -395,6 +395,7 @@ class UsersController extends AppController
         $objPHPExcel->addTableFooter();
         // all rows
         $rows = $stmt->fetchAll('assoc');
+        $rows = array_merge(array($first_row), $rows);
         foreach ($rows as $k => $row) {
             $objPHPExcel->addTableRow($k, $row);
         }

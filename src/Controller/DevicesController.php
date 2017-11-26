@@ -20,6 +20,7 @@ use Cake\Utility\Hash;
  * @property \App\Model\Table\AdgroupsTable $Adgroups
  * @property \App\Model\Table\FileAttachmentsTable $FileAttachments
  * @property \App\Model\Table\PartnerVouchersTable $PartnerVouchers
+ * @property \App\Model\Table\PartnerVoucherLogsTable $PartnerVoucherLogs
  *
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
  *
@@ -44,6 +45,7 @@ class DevicesController extends AppController
         $this->loadComponent('UploadImage');
         $this->loadModel('DeviceGroups');
         $this->loadModel('PartnerVouchers');
+        $this->loadModel('PartnerVoucherLogs');
 
         // Load Files model
         $this->loadModel('FileAttachments');
@@ -500,6 +502,28 @@ class DevicesController extends AppController
         $voucher_flag = \UrlUtil::_decodeUrl($voucher_flag);
         if (isset($device_id)) {
             $device_id = \UrlUtil::_decodeUrl($device_id);
+            $vouchers = $this->CampaignGroups->find()
+                ->select(['id','device_id'])
+                ->where(['delete_flag !=' => 1])
+                ->hydrate(false)
+                ->combine('id', 'device_id')
+                ->toArray()
+            ;
+            if (!empty($vouchers)) {
+                foreach ($vouchers as $k => $voucher) {
+                    $list_device_id_voucher[$k] = json_decode($voucher);
+                }
+                if (!empty($list_device_id_voucher)) {
+                    $id_campaign = '';
+                    foreach ($list_device_id_voucher as $k =>  $vl) {
+                        foreach ($vl as $key => $item) {
+                            if ($device_id == $item) {
+                                $id_campaign = $k;
+                            }
+                        }
+                    }
+                }
+            }
             if (!$this->Devices->exists(['Devices.id' => $device_id])) {
                 return $this->redirect(['action' => 'index']);
             }
@@ -530,51 +554,8 @@ class DevicesController extends AppController
                         $infor_devices->slogan = $device_group->slogan;
                     }
                 }
-                $rest = substr($infor_devices->client_mac, 0, 1);
-                $arr_number = array('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-                if (in_array($rest, $arr_number)) {
-                    $result_string_1 = intval($rest);
-                } else {
-                    $string1 ='ABCDEFGHIJKLMOPQRSTUVXYZ';
-                    $string2 ='abcdefghijklmnopqrstuvxyz';
-                    if (strpos($string1, $rest) !== false) {
-                        $result_string_1 = 1;
-                    } elseif (strpos($string2, $rest) !== false) {
-                        $result_string_1 = 2;
-                    } else {
-                        $result_string_1 = 3;
-                    }
-                }
-                $rest_2 = substr($infor_devices->client_mac, 1, 1);
-                if (in_array($rest_2, $arr_number)) {
-                    $result_string_2 = intval($rest_2);
-                } else {
-                    $string1 ='ABCDEFGHIJKLMOPQRSTUVXYZ';
-                    $string2 ='abcdefghijklmnopqrstuvxyz';
-                    if (strpos($string1, $rest_2) !== false) {
-                        $result_string_2 = 1;
-                    } elseif (strpos($string2, $rest_2) !== false) {
-                        $result_string_2 = 2;
-                    } else {
-                        $result_string_2 = 3;
-                    }
-                }
-                if ($result_string_1 == '0' && $result_string_2 !== '0' ) {
-                    $number_check = intval($result_string_2.$result_string_1);
-                } else {
-                    $number_check = intval($result_string_1.$result_string_2);
-                }
-                $rand_check = rand(10, 15);
-                $flag_voucher = false;
-                if ($rand_check == $number_check) {
-                    $flag_voucher = true;
-                }
-//                if ($auth_id) {
-//                    $auths = $this->LogAuths->find()->where(['id' => $auth_id])->select('auth')->first()->toArray();
-//                    $infor_devices->auth_target = $auths['auth'];
-//                }
             }
-            $this->set(compact('infor_devices', 'voucher_flag'));
+            $this->set(compact('infor_devices', 'voucher_flag', 'id_campaign'));
         } else {
             return $this->redirect(['action' => 'index']);
         }
@@ -645,6 +626,7 @@ class DevicesController extends AppController
                     ->combine('id', 'device_id')
                     ->toArray()
                 ;
+                $flag_normal = true;
                 if (!empty($vouchers)) {
                     foreach ($vouchers as $k => $voucher) {
                         $list_device_id_voucher[$k] = json_decode($voucher);
@@ -678,6 +660,7 @@ class DevicesController extends AppController
                             ;
 
                             $query = $this->PartnerVouchers->find('all', [])->count();
+
                             if ($campaign->random == 2) {
                                 if ($number_voucher_userd <= $campaign->number_voucher) {
                                     if (empty($pa_voucher)) {
@@ -686,9 +669,9 @@ class DevicesController extends AppController
                                             'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
                                             'num_clients_connect' => 1,
                                             'name' => PARTNER.($query + 1),
-                                            'confirm' => '1'
+                                            'confirm' => '1',
+                                            'campaign_group_id' => $id_campaign
                                         );
-
                                         $new_partner_vou = $this->PartnerVouchers->newEntity();
                                         $new_partner_vou = $this->PartnerVouchers->patchEntity($new_partner_vou, $save_new_pa_vou);
                                         if (empty($new_partner_vou->errors())) {
@@ -713,7 +696,6 @@ class DevicesController extends AppController
                             } else {
                                 $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '';
                                 // data test
-                                $client_mac = '30:5a:3a:77:ca:00';
                                 $flag_get_voucher = $this->getVoucher($client_mac);
                                 if ($flag_get_voucher) {
                                     if ($number_voucher_userd <= $campaign->number_voucher) {
@@ -723,6 +705,7 @@ class DevicesController extends AppController
                                                 'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
                                                 'num_clients_connect' => 1,
                                                 'name' => PARTNER.($query + 1),
+                                                'campaign_group_id' => $id_campaign
                                             );
                                             $new_partner_vou = $this->PartnerVouchers->newEntity();
                                             $new_partner_vou = $this->PartnerVouchers->patchEntity($new_partner_vou, $save_new_pa_vou);
@@ -747,7 +730,11 @@ class DevicesController extends AppController
                                     }
                                 }
                             }
+                        } else {
+                            $flag_normal = false;
                         }
+                    } else {
+                        $flag_normal = false;
                     }
                 } else {
                     $partner = $this->Partners->find()->where(
@@ -793,7 +780,7 @@ class DevicesController extends AppController
                 }
                 if (!$chk) {
                     $conn->commit();
-                    if (!$flag_true) {
+                    if (!$flag_true && $flag_normal) {
                         $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1)]);
                     } else {
                         $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id). '/' . \UrlUtil::_encodeUrl(2)]);
@@ -847,8 +834,7 @@ class DevicesController extends AppController
                     'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:'',
                     'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only']:'',
                     'num_clients_connect' => 1,
-                    'name' => PARTNER.($query + 1),
-//                    'flag_voucher' => $flag_voucher
+                    'name' => PARTNER.($query + 1)
                 );
 
                 $partner = $this->Partners->newEntity();
@@ -900,6 +886,7 @@ class DevicesController extends AppController
                 $id_device = $apt_key_check->id;
                 $flag_true = false;
                 $chk = false;
+                $flag_normal = true;
                 if (!empty($apt_key_check)) {
                     $vouchers = $this->CampaignGroups->find()
                         ->select(['id','device_id'])
@@ -948,7 +935,8 @@ class DevicesController extends AppController
                                                 'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '',
                                                 'num_clients_connect' => 1,
                                                 'name' => PARTNER . ($query + 1),
-                                                'confirm' => '1'
+                                                'confirm' => '1',
+                                                'campaign_group_id' => $id_campaign
                                             );
 
                                             $new_partner_vou = $this->PartnerVouchers->newEntity();
@@ -975,7 +963,6 @@ class DevicesController extends AppController
                                 } else {
                                     $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
                                     // data test
-//                                    $client_mac = '30:5a:3a:77:ca:00';
                                     $flag_get_voucher = $this->getVoucher($client_mac);
                                     if ($flag_get_voucher) {
                                         if ($number_voucher_userd <= $campaign->number_voucher) {
@@ -985,6 +972,7 @@ class DevicesController extends AppController
                                                     'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '',
                                                     'num_clients_connect' => 1,
                                                     'name' => PARTNER . ($query + 1),
+                                                    'campaign_group_id' => $id_campaign
                                                 );
                                                 $new_partner_vou = $this->PartnerVouchers->newEntity();
                                                 $new_partner_vou = $this->PartnerVouchers->patchEntity($new_partner_vou, $save_new_pa_vou);
@@ -1009,6 +997,8 @@ class DevicesController extends AppController
                                         }
                                     }
                                 }
+                            } else {
+                                $flag_normal = true;
                             }
                         }
                     } else {
@@ -1048,23 +1038,23 @@ class DevicesController extends AppController
                                 }
                             }
                         }
-                        $data_auth = array(
-                            'auth' =>  isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
-                            'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: ''
-                        );
-                        $auths = $this->LogAuths->newEntity();
-                        $auths = $this->LogAuths->patchEntity($auths, $data_auth);
-                        if (empty($auths->errors())) {
-                            if (!$this->LogAuths->save($auths)) {
-                                $chk = true;
-                            }
-                        }
-                        $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
-                        if (empty($device->errors())) {
-                            if (!$this->Devices->save($device)) {
-                                $chk = true;
-                            }
-                        }
+//                        $data_auth = array(
+//                            'auth' =>  isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+//                            'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: ''
+//                        );
+//                        $auths = $this->LogAuths->newEntity();
+//                        $auths = $this->LogAuths->patchEntity($auths, $data_auth);
+//                        if (empty($auths->errors())) {
+//                            if (!$this->LogAuths->save($auths)) {
+//                                $chk = true;
+//                            }
+//                        }
+//                        $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
+//                        if (empty($device->errors())) {
+//                            if (!$this->Devices->save($device)) {
+//                                $chk = true;
+//                            }
+//                        }
                     }
                     $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
                     if (empty($device->errors())) {
@@ -1076,7 +1066,7 @@ class DevicesController extends AppController
                         $conn->commit();
                         $result = $this->LogAuths->find('all',['fields'=>'id'])->last();
                         $record_log_auth_id = $result->id;
-                        if (!$flag_true) {
+                        if (!$flag_true && $flag_normal) {
                             $this->redirect([ 'plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1)]);
                         } else {
                             $this->redirect([ 'plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2)]);
@@ -1250,9 +1240,9 @@ class DevicesController extends AppController
         $this->loadModel('PartnerVouchers');
         $this->autoRender = false;
         if ($this->request->data) {
-            $PartnerVouchers = $this->PartnerVouchers->newEntity();
-            $PartnerVouchers = $this->PartnerVouchers->patchEntity($PartnerVouchers, $this->request->data);
-            if ($this->PartnerVouchers->save($PartnerVouchers)) {
+            $PartnerVouchers = $this->PartnerVoucherLogs->newEntity();
+            $PartnerVouchers = $this->PartnerVoucherLogs->patchEntity($PartnerVouchers, $this->request->data);
+            if ($this->PartnerVoucherLogs->save($PartnerVouchers)) {
                 $conn->commit();
                 die(json_encode(true));
             } else {
@@ -1274,7 +1264,8 @@ class DevicesController extends AppController
                 if (isset($infor_devices->campaign_group_id) &&  $infor_devices->campaign_group_id != '') {
                     $device_campaign = $this->CampaignGroups->find()
                         ->where(['id' => $infor_devices->campaign_group_id, 'delete_flag !=' => DELETED])
-                        ->first();
+                        ->first()
+                    ;
                     if (!empty($device_campaign)) {
                         $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
                         $infor_devices->path = $device_campaign->path;
@@ -1282,6 +1273,7 @@ class DevicesController extends AppController
                         $infor_devices->apt_device_number = $device_campaign->number_pass;
                         $infor_devices->message = $device_campaign->message;
                         $infor_devices->slogan = $device_campaign->slogan;
+                        $infor_devices->tile_congratulations = $device_campaign->tile_congratulations;
                     }
                 } elseif (isset($infor_devices->adgroup_id) && $infor_devices->adgroup_id != '') {
                     $device_group = $this->DeviceGroups->find()

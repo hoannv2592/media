@@ -4,6 +4,7 @@
   * @var $devices
   * @var $user_login
   * @var $users
+  * @var $campaign_group
   */
 ?>
 <section class="content">
@@ -138,7 +139,7 @@
                         <div class="form-group">
                             <div class="form-line">
                                 <?php
-                                $random = isset($campaign_group->random) ? $campaign_group->random: '';
+                                $random = isset($campaign_group->random) ? $campaign_group->random: '1';
                                 echo  $this->Form->input('random', array(
                                     'type' => 'select',
                                     'options' => [
@@ -160,6 +161,15 @@
                             <div class="form-line">
                                 <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($device->tile_name) ? $device->tile_name :'';?>" placeholder="Điền tên..">
                             </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line"
+                            <?php echo $this->Form->control('tile_congratulations', array(
+                                'label' => 'Nội dung tin nhắn chúc mừng',
+                                'class' => 'form-control'
+                            ));
+                            ?>
+                            <div class="help-info">Nội dung tin nhắn chúc mừng</div>
                         </div>
                         <h2 class="card-inside-title">Địa chỉ nhóm thiết bị</h2>
                         <div class="form-group" id="end_show">
@@ -216,9 +226,6 @@
                     required : true
                 },
                 'tile_name': {
-                    required : true
-                },
-                'address': {
                     required : true
                 },
                 'apt_device_number': {

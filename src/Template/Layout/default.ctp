@@ -182,6 +182,16 @@ $cakeDescription = 'Media ';
                         <span>Nhóm chiến dịch</span>
                     </a>
                 </li>
+                <?php if ($controller == 'reports' || $controller == 'Reports') { ?>
+            <li class="left_menu active ">
+            <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "reports", "action" => "index"]); ?>">
+                        <i class="material-icons">present_to_all</i>
+                        <span>Báo cáo chiến dịch</span>
+                    </a>
+                </li>
                 <?php if ($controller == 'Partners') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
@@ -220,16 +230,6 @@ $cakeDescription = 'Media ';
                     <a href="javascript:void(0);">
                         <i class="material-icons">widgets</i>
                         <span>Nhóm dịch vụ</span>
-                    </a>
-                </li>
-                <?php if ($controller == 'reports') { ?>
-                <li class="left_menu active ">
-                    <?php } else { ?>
-                <li class="left_menu">
-                    <?php } ?>
-                    <a href="javascript:void(0);">
-                        <i class="material-icons">present_to_all</i>
-                        <span>Báo cáo</span>
                     </a>
                 </li>
             </ul>

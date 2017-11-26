@@ -52,7 +52,6 @@
                                     <th>Thiết bị</th>
                                     <th>Số lượng voucher</th>
                                     <th>Loại random</th>
-                                    <th>Landing page</th>
                                     <th>Mô tả chiến dịch</th>
                                     <th>Ngày tạo</th>
                                     <th>Điều hướng</th>
@@ -83,9 +82,12 @@
 
                                             </table>
                                         </td>
-                                        <td><?php echo $campaignGroup->number_voucher; ?></td>
+                                        <td>
+                                            <?php
+                                                $number = count($campaignGroup->partner_voucher_logs);
+                                            echo $number.'/'.$campaignGroup->number_voucher; ?>
+                                        </td>
                                         <td><?php echo isset(\App\Model\Entity\CampaignGroup::$random[$campaignGroup->random]) ? \App\Model\Entity\CampaignGroup::$random[$campaignGroup->random] : '' ?></td>
-                                        <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$campaignGroup->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$campaignGroup->langdingpage_id] : ''; ?></td>
                                         <td><?php echo nl2br($campaignGroup->description); ?></td>
                                         <td><?php echo date('d/m/Y H:i', strtotime($campaignGroup->created)); ?></td>
                                         <td class="delete_advertise" value="<?php echo h($campaignGroup->id); ?>">

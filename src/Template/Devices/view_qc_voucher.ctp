@@ -14,7 +14,8 @@ $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng
 $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
-$type = 2;
+$tile_congratulations = isset($infor_devices->tile_congratulations) ? $infor_devices->tile_congratulations : 'Chúc mừng bạn đã nhận được voucher Bạn hãy đem hình ảnh này đến quầy thu ngân để được nhận khuyến mại.!';
+
 echo $this->Html->css('back_end/page2');
 $list_path = explode(',', $infor_devices->path);
 if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
@@ -39,7 +40,9 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
                                     <div class="c-spacer--xx-large c-spacer"></div>
                                     <div class="c-spacer--xx-large c-spacer"></div>
                                     <div class="redirect-wrapper">
-                                        <div class="m-text--desc " style="text-align: center;color: red">Chúc mừng bạn đã nhận được voucher Bạn hãy đem hình ảnh này đến quầy thu ngân để được nhận khuyến mại.!</div>
+                                        <div class="m-text--desc " style="text-align: center;color: red">
+                                            <?php echo $tile_congratulations; ?>
+                                        </div>
                                         <div class=" c-spacer"></div>
                                         <div class="c-cell">
                                             <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->auth_target; ?>" method="post">
@@ -94,7 +97,9 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
                                     <div class="c-spacer--xx-large c-spacer"></div>
                                     <div class="c-spacer--xx-large c-spacer"></div>
                                     <div class="redirect-wrapper">
-                                        <div class="m-text--desc " style="text-align: center;color: red">Chúc mừng bạn đã nhận được voucher Bạn hãy đem hình ảnh này đến quầy thu ngân để được nhận khuyến mại.!</div>
+                                        <div class="m-text--desc " style="text-align: center;color: red">
+                                            <?php echo $tile_congratulations; ?>
+                                        </div>
                                         <div class=" c-spacer"></div>
                                         <div class="c-cell">
                                             <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">

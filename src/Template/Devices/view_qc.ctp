@@ -14,7 +14,7 @@ $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng
 $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
-if ($voucher_flag) {
+if ($voucher_flag == 1) {
     echo $this->Html->css('back_end/page1');
     $list_path = explode(',', $infor_devices->path);
     if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
@@ -258,6 +258,7 @@ if ($voucher_flag) {
                                     <input type="hidden" name="popup" value="true"/>
                                     <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                     <input style="display: none;" name="password" type="password" value="wifimedia" />
+                                    <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign: '';?>"/>
                                     <p><input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                     <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
                                     <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
@@ -300,43 +301,44 @@ if ($voucher_flag) {
                             required: true,
                             nonNumeric: true
                         },
-                        'telephone': {
-                            required: true,
-                            customphone: true,
-                            minlength: 10,
-                            maxlength: 11
-                        },
-                        'address': {
-                            required: true
-                        },
-                        'birthday' : {
-                            required: true
-                        }
+//                        'telephone': {
+//                            required: true,
+//                            customphone: true,
+//                            minlength: 10,
+//                            maxlength: 11
+//                        },
+//                        'address': {
+//                            required: true
+//                        },
+//                        'birthday' : {
+//                            required: true
+//                        }
                     },
                     messages: {
                         'full_name': {
                             required: 'Hãy nhập'
                         },
-                        'telephone': {
-                            required: 'Hãy nhập',
-                            number: 'Hãy nhập số điện thoại',
-                            minlength: 'Bạn đã nhập sai số điện thoại'
-                        },
-                        'address': {
-                            required: 'Hãy nhập'
-                        },
-                        'birthday' : {
-                            required: 'Hãy nhập'
-                        }
+//                        'telephone': {
+//                            required: 'Hãy nhập',
+//                            number: 'Hãy nhập số điện thoại',
+//                            minlength: 'Bạn đã nhập sai số điện thoại'
+//                        },
+//                        'address': {
+//                            required: 'Hãy nhập'
+//                        },
+//                        'birthday' : {
+//                            required: 'Hãy nhập'
+//                        }
                     },
                     submitHandler: function (form) {
                         $.ajax({
                             url: "/Devices/add_log_voucher",
                             type: "POST",
-                            data: $("#register_form").serialize(),
+                            data: $("#info").serialize(),
                             cache: false,
                             processData: false,
                             success: function (data) {
+                                console.log(data);
                                 if (data == 'true') {
                                     window.location.href = X_url;
                                     return false;
@@ -345,7 +347,7 @@ if ($voucher_flag) {
                                 }
                             }
                         });
-                        window.location.href = X_url;
+//                        window.location.href = X_url;
                         return false;
                     }
                 });

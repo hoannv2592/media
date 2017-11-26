@@ -191,4 +191,30 @@ $(function () {
         },
         'rowsGroup': [1]
     });
+    //Exportable table
+    $('.exportable_partner_voucher').DataTable({
+        dom: 'Bfrtip',
+        "scrollX": false,
+        responsive: true,
+        "columns": [
+            { "width": "1%" },
+            { "width": "8%" },
+            { "width": "10%" },
+            { "width": "10%" },
+            { "width": "10%" },
+            { "width": "10%" }
+        ],
+        buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        "language": {
+            "lengthMenu": "Display _MENU_ records per page",
+            "zeroRecords": "Không tìm thấy dữ liệu",
+            "info": "Hiển thị trang _PAGE_ / _PAGES_",
+            "infoEmpty": "Không có dữ liệu nào phù hợp",
+            "infoFiltered": "(_MAX_ dữ liệu)",
+            "search": "Tìm kiếm :"
+        },
+        'rowsGroup': [1]
+    });
 });

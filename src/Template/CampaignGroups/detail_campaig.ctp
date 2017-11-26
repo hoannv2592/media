@@ -180,6 +180,19 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                         </div>
                         <div class="form-group">
                             <div class="form-line">
+                                <?php $tile_congratulations = isset($campaign_group->tile_congratulations) ? ($campaign_group->tile_congratulations):'' ?>
+                                <?php echo $this->Form->control('tile_name', array(
+                                    'label' => 'Nội dung tin nhắn chúc mừng',
+                                    'class' => 'form-control',
+                                    'escape' => false,
+                                    'value' => $tile_congratulations
+                                ));
+                                ?>
+                                <div class="help-info">Nội dung tin nhắn chúc mừng</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
                                 <?php $tile_name = isset($campaign_group->tile_name) ? ($campaign_group->tile_name):'' ?>
                                 <?php echo $this->Form->control('tile_name', array(
                                     'label' => 'Tên cơ sở dịch vụ',
@@ -191,7 +204,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 <div class="help-info">Tên cơ sở dịch vụ</div>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $address = isset($campaign_group->address) ? ($campaign_group->address):'' ?>

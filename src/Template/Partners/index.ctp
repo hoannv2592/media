@@ -49,7 +49,9 @@
                                             <td><?php echo $count;?></td>
                                             <td class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($vl->id)]) ?>">
-                                                    <?php echo h($vl->name); ?></a></td>
+                                                    <?php echo h($vl->name); ?>
+                                                </a>
+                                            </td>
                                             <td><?php echo nl2br($vl->email); ?></td>
                                             <td><?php echo nl2br($vl->phone); ?></td>
                                             <td><?php echo nl2br($vl->birthday); ?></td>

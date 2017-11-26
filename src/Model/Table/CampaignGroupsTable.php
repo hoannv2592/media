@@ -46,6 +46,9 @@ class CampaignGroupsTable extends Table
                 ]
             ]
         ]);
+        $this->hasMany('PartnerVoucherLogs', [
+            'foreignKey' => 'campaign_group_id'
+        ]);
     }
 
     /**
