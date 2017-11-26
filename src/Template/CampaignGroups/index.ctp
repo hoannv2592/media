@@ -30,15 +30,15 @@
                     </div>
                     <div class="body">
                         <div class="button-demo">
-                            <?php if ($userData['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
                                 <div class="button-demo">
                                     <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'add']) ?>"
                                        class="btn btn-primary waves-effect m-r-20">THÊM MỚI CHIẾN DỊCH</a>
                                 </div>
-                            <?php } else { ?>
-                                <a disabled="disabled" href="javascript:void(0);"
-                                   class="btn btn-primary waves-effect m-r-20">THÊM MỚI CHIẾN DỊCH</a>
-                            <?php } ?>
+<!--                            --><?php //if ($userData['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
+<!--                            --><?php //} else { ?>
+<!--                                <a disabled="disabled" href="javascript:void(0);"-->
+<!--                                   class="btn btn-primary waves-effect m-r-20">THÊM MỚI CHIẾN DỊCH</a>-->
+<!--                            --><?php //} ?>
                         </div>
 
                         <div class="table-responsive">
