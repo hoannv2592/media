@@ -148,19 +148,19 @@ class ReportsController extends AppController
                 'CampaignGroups.id' => $campaign_id
             ]
         ])->toArray();
-
         $campaignGroups_title = $this->CampaignGroups->find('all',[
             'contain'  => ['PartnerVoucherLogs' => function ($q) {
                 return $q
                     ->where([
-                        'PartnerVoucherLogs.confirm ' => 1
+                        'PartnerVoucherLogs.confirm ' => 1,
                     ])
                     ->select([
                         'campaign_group_id','id'
                     ]);
             }],
             'conditions' => [
-                'CampaignGroups.delete_flag !=' => 1
+                'CampaignGroups.delete_flag !=' => 1,
+                'CampaignGroups.id' => $campaign_id
             ]
         ])->toArray();
         $this->set(compact('campaigns', 'campaign_id', 'campaignGroups_title'));

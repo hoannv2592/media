@@ -72,6 +72,7 @@ if ($voucher_flag == 1) {
                             <div class="c-spacer--x-large c-spacer"></div>
                             <form action="#" name="register_form" class="register_form" id="register_form" method="post">
                                 <p><input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign: '';?>"/>
                                 <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
                                 <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                                 <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
@@ -111,34 +112,34 @@ if ($voucher_flag == 1) {
                             required: true,
                             nonNumeric: true
                         },
-                        'telephone': {
-                            required: true,
-                            customphone: true,
-                            minlength: 10,
-                            maxlength: 11
-                        },
-                        'address': {
-                            required: true
-                        },
-                        'birthday' : {
-                            required: true
-                        }
+//                        'telephone': {
+//                            required: true,
+//                            customphone: true,
+//                            minlength: 10,
+//                            maxlength: 11
+//                        },
+//                        'address': {
+//                            required: true
+//                        },
+//                        'birthday' : {
+//                            required: true
+//                        }
                     },
                     messages: {
                         'full_name': {
                             required: 'Hãy nhập'
                         },
-                        'telephone': {
-                            required: 'Hãy nhập',
-                            number: 'Hãy nhập số điện thoại',
-                            minlength: 'Bạn đã nhập sai số điện thoại'
-                        },
-                        'address': {
-                            required: 'Hãy nhập'
-                        },
-                        'birthday' : {
-                            required: 'Hãy nhập'
-                        }
+//                        'telephone': {
+//                            required: 'Hãy nhập',
+//                            number: 'Hãy nhập số điện thoại',
+//                            minlength: 'Bạn đã nhập sai số điện thoại'
+//                        },
+//                        'address': {
+//                            required: 'Hãy nhập'
+//                        },
+//                        'birthday' : {
+//                            required: 'Hãy nhập'
+//                        }
                     },
                     submitHandler: function (form) {
                         $.ajax({
