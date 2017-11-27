@@ -600,6 +600,7 @@ class DevicesController extends AppController
         $url = $this->request;
         $apt_key = $this->slug($url->params['id']);
         $flag_id = $this->slug($url->params['flag_id']);
+        $this->request->allowMethod(['post', 'get' ,'put','ajax','delete']);
         if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
             $this->autoRender = false;
             $conn = ConnectionManager::get('default');
@@ -737,6 +738,7 @@ class DevicesController extends AppController
                         $flag_normal = false;
                     }
                 } else {
+                    $flag_normal = false;
                     $partner = $this->Partners->find()->where(
                         array(
                             'device_id' => $apt_key_check->id,
@@ -770,7 +772,6 @@ class DevicesController extends AppController
                         }
                     }
                 }
-
                 $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
                 $device->type = Device::TB_MIRKOTIC;
                 if (empty($device->errors())) {
@@ -873,6 +874,7 @@ class DevicesController extends AppController
             $conn = ConnectionManager::get('default');
             $conn->begin();
             $this->loadModel('Partners');
+
             if ($apt_key != '') {
                 $this->autoRender= false;
                 $apt_key_check = $this->Devices->find()->where(
@@ -998,10 +1000,13 @@ class DevicesController extends AppController
                                     }
                                 }
                             } else {
-                                $flag_normal = true;
+                                $flag_normal = false;
                             }
+                        } else {
+                            $flag_normal = false;
                         }
                     } else {
+                        $flag_normal = false;
                         $partner = $this->Partners->find()->where(
                             array(
                                 'device_id' => $apt_key_check->id,

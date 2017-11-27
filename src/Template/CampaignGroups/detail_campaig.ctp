@@ -181,7 +181,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $tile_congratulations = isset($campaign_group->tile_congratulations) ? ($campaign_group->tile_congratulations):'' ?>
-                                <?php echo $this->Form->control('tile_name', array(
+                                <?php echo $this->Form->control('tile_congratulations', array(
                                     'label' => 'Nội dung tin nhắn chúc mừng',
                                     'class' => 'form-control',
                                     'escape' => false,
