@@ -606,7 +606,6 @@ class DevicesController extends AppController
             $conn = ConnectionManager::get('default');
             $conn->begin();
             $this->loadModel('Partners');
-            $this->autoRender= false;
             $apt_key_check = $this->Devices->find()->where(
                 [
                     'apt_key' => $apt_key,
@@ -800,20 +799,7 @@ class DevicesController extends AppController
                     'role' => User::ROLE_TOW
                 ];
 
-//                $this->request->data['gateway_mac'] = $apt_key;
-//                $this->request->data['apt_key'] = $apt_key;
-//                $this->request->data['reg'] = 'xxx';
-//                $this->request->data['client_mac'] = 'f0:4d:a2:8e:1b:37';
-//                $this->request->data['ip'] = '192.168.0.1';
-//                $this->request->data['username'] = 'hoan_nv';
-//                $this->request->data['link_login'] = 'http://crm.wifimedia.vn/';
-//                $this->request->data['link_orig'] = 'https://www.facebook.com/';
-//                $this->request->data['error'] = 'no_error';
-//                $this->request->data['chap_id'] = '12';
-//                $this->request->data['chap_challenge'] = 'hoan_nv';
-//                $this->request->data['link_login_only'] = 'http://crm.wifimedia.vn/';
-//                $this->request->data['link_orig_esc'] = 'http://crm.wifimedia.vn/';
-//                $this->request->data['mac_esc'] = 'f0:4d:a2:8e:1b:37';
+
                 $this->request->data['type'] = $flag_id;
                 $device = $this->Devices->newEntity();
                 $device = $this->Devices->patchEntity($device, $this->request->data);
@@ -822,15 +808,6 @@ class DevicesController extends AppController
                 $device->name = DEVICE.($query + 1);
                 $users = $this->Users->patchEntity($users, $data_user);
                 $query = $this->Partners->find('all', [])->count();
-                $client_mac = $this->request->data['client_mac'];
-//                $flag_voucher = $this->getVoucher($client_mac);
-//                $this->loadModel('Partners');
-//                $data_flag = $this->Partners->find()
-//                    ->where(['flag_voucher' => 1])
-//                    ->hydrate(false)
-//                    ->select(['flag_voucher'])->count()
-//                ;
-
                 $data_new_par = array(
                     'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:'',
                     'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only']:'',
@@ -854,7 +831,7 @@ class DevicesController extends AppController
                                         $this->redirect([
                                             'plugin' => null,
                                             'controller' => 'Devices',
-                                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id)
+                                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id). '/' . \UrlUtil::_encodeUrl(2)
                                         ]);
                                     }
                                 }
@@ -1062,6 +1039,7 @@ class DevicesController extends AppController
 //                        }
                     }
                     $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
+                    $device->type = Device::TB_NORMAR;
                     if (empty($device->errors())) {
                         if (!$this->Devices->save($device)) {
                             $chk = true;
@@ -1299,4 +1277,19 @@ class DevicesController extends AppController
             return $this->redirect(['action' => 'index']);
         }
     }
+
+
+
+
+    public function generateRandomString($length = 12) {
+
+        $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
+
 }

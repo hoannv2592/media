@@ -85,7 +85,9 @@
                                                     <input type="checkbox" id="basic_checkbox_<?php echo $partner_voucher_log->id; ?>"  name="confirm" value="<?php echo $count?>"
                                                            class="filled-in <?php echo $partner_voucher_log->id; ?>" <?php if ($partner_voucher_log->confirm == 1 ) { echo 'checked';}?> />
                                                     <label for="basic_checkbox_<?php echo $partner_voucher_log->id; ?>">confirm</label>
-                                                    <a class="btn btn-primary waves-effect pull-right check_submit" id="<?php echo $partner_voucher_log->id;?>">Cập nhật</a>
+                                                    <?php if ($partner_voucher_log->confirm != 1 ) { ?>
+                                                        <a class="btn btn-primary waves-effect pull-right check_submit" id="<?php echo $partner_voucher_log->id;?>">Cập nhật</a>
+                                                    <?php } ?>
                                                 </td>
                                             </tr>
                                         <?php }
