@@ -615,10 +615,10 @@ class DevicesController extends AppController
                 ->select()
                 ->hydrate(true)
                 ->first();
-            $id_device = $apt_key_check->id;
             $chk = false;
             $flag_true = false;
             if (!empty($apt_key_check)) {
+                $id_device = $apt_key_check->id;
                 // data test
                 $vouchers = $this->CampaignGroups->find()
                     ->select(['id','device_id'])
@@ -885,11 +885,11 @@ class DevicesController extends AppController
                     ->select()
                     ->hydrate(true)
                     ->first();
-                $id_device = $apt_key_check->id;
                 $flag_true = false;
                 $chk = false;
                 $flag_normal = true;
                 if (!empty($apt_key_check)) {
+                    $id_device = $apt_key_check->id;
                     $vouchers = $this->CampaignGroups->find()
                         ->select(['id','device_id'])
                         ->where(['delete_flag !=' => 1])
