@@ -77,13 +77,13 @@ class UsersTable extends Table
             ->integer('id')
             ->allowEmpty('id', 'create');
 
-        $validator
-            ->requirePresence('email','create')
-            ->notEmpty('username','Hãy nhập email');
-
-        $validator
-            ->requirePresence('password','create')
-            ->notEmpty('password','Hãy nhập mật khẩu');
+//        $validator
+//            ->requirePresence('email','create')
+//            ->notEmpty('username','Hãy nhập email');
+//
+//        $validator
+//            ->requirePresence('password','create')
+//            ->notEmpty('password','Hãy nhập mật khẩu');
         return $validator;
     }
 

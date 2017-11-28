@@ -52,7 +52,16 @@
                                                 <i class="material-icons">account_circle</i>
                                             </span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control " name="name" id="name"  value="<?php echo $partner['name'] ? $partner['name']: ''; ?>" required placeholder="Tên khách hàng">
+                                            <?php
+                                            $name = isset($partner['name']) ? ($partner['name']):'';
+                                            echo $this->Form->control('name', array(
+                                                'label' => false,
+                                                'class' => 'form-control',
+                                                'value' => $name,
+                                                'required' => true,
+                                                'id' => 'name'
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -63,7 +72,15 @@
                                                 <i class="material-icons">phone_iphone</i>
                                             </span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control mobile-phone-number" name="phone" placeholder="Số điện thoại" value="<?php echo $partner['phone'] ? $partner['phone']: ''; ?>">
+                                            <?php
+                                            $phone = isset($partner['phone']) ? ($partner['phone']):'';
+                                            echo $this->Form->control('phone', array(
+                                                'label' => false,
+                                                'class' => 'form-control mobile-phone-number',
+                                                'value' => $phone,
+                                                'required' => false,
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -74,18 +91,35 @@
                                                 <i class="material-icons">email</i>
                                             </span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control email" name="email" value="<?php echo $partner['email'] ? $partner['email']: ''; ?>" placeholder="Ex: example@example.com" >
+                                            <?php
+                                            $email = isset($partner['email']) ? ($partner['email']):'';
+                                            echo $this->Form->control('email', array(
+                                                'label' => false,
+                                                'class' => 'form-control email',
+                                                'value' => $email,
+                                                'required' => false,
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <b>Loại thành viên</b>
+                                    <b>Địa chỉ mac</b>
                                     <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">assignment_ind</i>
                                             </span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control time12" value="Member" name="role" readonly="readonly" placeholder="Loại thành viên">
+                                            <?php
+                                            $client_mac = isset($partner['client_mac']) ? ($partner['client_mac']):'';
+                                            echo $this->Form->control('client_mac', array(
+                                                'label' => false,
+                                                'class' => 'form-control time12',
+                                                'value' => $client_mac,
+                                                'readonly' => 'readonly',
+                                                'required' => false,
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -96,8 +130,16 @@
                                                 <i class="material-icons">date_range</i>
                                             </span>
                                         <div class="form-line">
-
-                                            <input type="text" class="form-control datetime" id="datetime_birthday" name="birthday" value="<?php echo $partner['birthday'] ? $partner['birthday']: ''; ?>" placeholder="Ex: 30/07/2016 23:59">
+                                            <?php
+                                            $birthday = isset($partner['birthday']) ? ($partner['birthday']):'';
+                                            echo $this->Form->control('birthday', array(
+                                                'label' => false,
+                                                'class' => 'form-control datetime',
+                                                'value' => $birthday,
+                                                'required' => false,
+                                                'id' => 'datetime_birthday'
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -109,7 +151,16 @@
                                                 <i class="material-icons">confirmation_number</i>
                                             </span>
                                         <div class="form-line">
-                                            <input type="text" readonly="readonly" class="form-control mobile-phone-number" name="num_clients_connect" value="<?php echo isset($partner->num_clients_connect) ? $partner->num_clients_connect:''; ?>" placeholder="Ex: +00 (000) 000-00-00">
+                                            <?php
+                                            $num_clients_connect = isset($partner['num_clients_connect']) ? ($partner['num_clients_connect']):'';
+                                            echo $this->Form->control('num_clients_connect', array(
+                                                'label' => false,
+                                                'class' => 'form-control mobile-phone-number',
+                                                'value' => $num_clients_connect,
+                                                'required' => false,
+                                                'readonly' => 'readonly'
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -135,7 +186,15 @@
                                                 <i class="material-icons">home</i>
                                             </span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control" name="address" placeholder="Điền địa chỉ" value="<?php echo $partner['address'] ? $partner['address']: ''; ?>" required>
+                                            <?php
+                                            $address = isset($partner['address']) ? ($partner['address']):'';
+                                            echo $this->Form->control('address', array(
+                                                'label' => false,
+                                                'class' => 'form-control',
+                                                'value' => $address,
+                                                'required' => false,
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -170,12 +229,6 @@
             rules: {
                 'name' :{
                     required: true
-                },
-                'phone': {
-                    required: true,
-                    number : true,
-                    minlength:9,
-                    maxlength:11
                 },
                 'email' : {
                     'email' : true

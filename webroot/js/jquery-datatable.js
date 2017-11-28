@@ -74,6 +74,8 @@ $(function () {
             { "width": "1%" },
             { "width": "8%" },
             { "width": "8%" },
+            { "width": "8%" },
+            { "width": "8%" },
             { "width": "8%"},
             { "width": "8%"},
             { "width": "8%"},
@@ -125,6 +127,7 @@ $(function () {
         responsive: true,
         "columns": [
             { "width": "1%" },
+            { "width": "10%" },
             { "width": "10%" },
             { "width": "10%" },
             { "width": "10%" },

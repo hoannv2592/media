@@ -33,6 +33,7 @@
                                     <tr class="bg-blue-grey">
                                         <th>STT</th>
                                         <th>Tên người dùng</th>
+                                        <th>Địa chỉ mac</th>
                                         <th>Email</th>
                                         <th>Số điện thoại</th>
                                         <th>Ngày sinh</th>
@@ -52,6 +53,7 @@
                                                     <?php echo h($vl->name); ?>
                                                 </a>
                                             </td>
+                                            <td><?php echo nl2br($vl->client_mac); ?></td>
                                             <td><?php echo nl2br($vl->email); ?></td>
                                             <td><?php echo nl2br($vl->phone); ?></td>
                                             <td><?php echo nl2br($vl->birthday); ?></td>

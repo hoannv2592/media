@@ -71,7 +71,7 @@ if ($voucher_flag == 1) {
                         <div class="modal-body">
                             <div class="c-spacer--x-large c-spacer"></div>
                             <form action="#" name="register_form" class="register_form" id="register_form" method="post">
-                                <p><input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                 <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign: '';?>"/>
                                 <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
                                 <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
@@ -126,7 +126,7 @@ if ($voucher_flag == 1) {
 //                        }
                     },
                     messages: {
-                        'full_name': {
+                        'name': {
                             required: 'Hãy nhập'
                         },
 //                        'telephone': {
@@ -260,7 +260,7 @@ if ($voucher_flag == 1) {
                                     <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                     <input style="display: none;" name="password" type="password" value="wifimedia" />
                                     <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign: '';?>"/>
-                                    <p><input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                    <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                     <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
                                     <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                                     <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
@@ -298,7 +298,7 @@ if ($voucher_flag == 1) {
                 $('#info').validate({
                     onkeyup : false,
                     rules: {
-                        'full_name': {
+                        'name': {
                             required: true,
                             nonNumeric: true
                         },

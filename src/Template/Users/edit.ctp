@@ -49,60 +49,105 @@ $this->assign('title', 'Chỉnh sửa người dùng');
                             'autocomplete' => "off"
                         ));
                         ?>
-                        <label for="email">Email</label>
                         <div class="form-group form-float">
                             <div class="form-line" id="email_user">
                                 <div class="form-line">
-                                    <input type="text" class="form-control" name="email" id="email"  value="<?php echo $user['email'] ? $user['email']: ''; ?>" required>
+                                    <?php
+                                        $email = isset($user['email']) ? ($user['email']):'';
+                                        echo $this->Form->control('email', array(
+                                            'label' => 'Email',
+                                            'class' => 'form-control',
+                                            'value' => $email,
+                                            'required' => true,
+                                            'id' => 'email'
+                                        ));
+                                    ?>
                                 </div>
                             </div>
                             <div class="help-info">Email</div>
                         </div>
-                        <label for="username">Tên người dùng</label>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" class="form-control" name="username" value="<?php echo $user['username'] ? $user['username']: ''; ?>" required>
-                            </div>
-                            <div class="help-info">Tên người dùng</div>
-                        </div>
-                        <label for="phone">Số điện thoại</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <div class="form-line">
-                                    <input type="text" class="form-control"  name="phone" value="<?php echo $user['phone'] ? '0'.$user['phone']: ''; ?>" required>
+                                    <?php
+                                        echo $this->Form->control('password', array(
+                                            'type' => 'password',
+                                            'label' => 'Mật khẩu',
+                                            'class' => 'form-control',
+                                            'required' => false,
+                                        ));
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="help-info">Mật khẩu</div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?php
+                                $username = isset($user['username']) ? ($user['username']):'';
+                                echo $this->Form->control('username', array(
+                                    'label' => 'Tên người dùng',
+                                    'class' => 'form-control',
+                                    'escape' => false,
+                                    'value' => $username,
+                                    'required' => true,
+                                ));
+                                ?>
+                            </div>
+                            <div class="help-info">Tên người dùng</div>
+                        </div>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <div class="form-line">
+                                    <?php
+                                    $phone = isset($user['phone']) ? ($user['phone']):'';
+                                    echo $this->Form->control('phone', array(
+                                        'label' => 'Số điện thoại',
+                                        'class' => 'form-control',
+                                        'escape' => false,
+                                        'value' => $phone,
+                                        'required' => false,
+                                    ));
+                                    ?>
                                 </div>
                             </div>
                             <div class="help-info">Số điện thoại</div>
                         </div>
-                        <label for="address">Địa chỉ</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <div class="form-line">
-                                    <input type="text" class="form-control" name="address" value="<?php echo $user['address'] ? $user['address']: ''; ?>" required>
+                                    <?php
+                                    $address = isset($user['address']) ? ($user['address']):'';
+                                    echo $this->Form->control('address', array(
+                                        'label' => 'Địa chỉ',
+                                        'class' => 'form-control',
+                                        'escape' => false,
+                                        'value' => $address,
+                                        'required' => false,
+                                    ));
+                                    ?>
                                 </div>
                             </div>
                             <div class="help-info">Địa chỉ</div>
                         </div>
-                        <label for="user_id">Loại tài khoản</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <?php
                                 if ($userData['role'] == \App\Model\Entity\User::ROLE_TOW) {
                                     echo isset($role[$user['role']]) ? $role[$user['role']]: '';
-                                } else { ?>
-                                    <select class="form-control required" name="role" id="role">
-                                        <option disabled selected value> -- chọn quyền -- </option>
-                                        <?php
-                                        foreach ($role as $key => $item) {
-                                            if ($user['role'] == $key) { ?>
-                                                <option selected="selected" value="<?php echo $key; ?>" ><?php echo $item; ?></option>
-                                            <?php } else { ?>
-                                                <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
-                                            <?php }
-                                        }
-                                        ?>
-                                    </select>
-                                <?php } ?>
+                                } else {
+                                    $role_v = isset($user['role']) ? $user['role']: '';
+                                    echo  $this->Form->input('role', array(
+                                        'type' => 'select',
+                                        'options' => $role,
+                                        'empty' => '-- chọn quyền --',
+                                        'label'=> 'Loại tài khoản',
+                                        'value' => $role_v,
+                                        'id' => 'role',
+                                        'required' => true,
+                                        'class' => 'form-control required input_select_medium'
+                                    ));
+                                 } ?>
                             </div>
                             <div class="help-info">Loại tài khoản</div>
                         </div>
@@ -121,9 +166,6 @@ $this->assign('title', 'Chỉnh sửa người dùng');
         $('#form_advanced_validation').validate({
             onkeyup: false,
             rules: {
-                'phone': {
-                    number : true
-                },
                 'email' : {
                     'email' : true,
                     remote: {

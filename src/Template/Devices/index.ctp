@@ -50,6 +50,8 @@ $this->assign('title', 'Quản lý thiết bị');
                                             <tr class="bg-blue-grey">
                                                 <th>STT</th>
                                                 <th>Tên thiết bị</th>
+                                                <th>Thời gian online</th>
+                                                <th>Số lượng thiết bị kết nối tức thời</th>
                                                 <th>User quản lý</th>
                                                 <th>Nhóm thiết bị</th>
                                                 <th>Mã thiết bị</th>
@@ -70,6 +72,8 @@ $this->assign('title', 'Quản lý thiết bị');
                                                     <td class="advertise font-bold col-cyan">
                                                         <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>"><?php echo h($device->name); ?></a>
                                                     </td>
+                                                    <td><?php echo isset($device->uptime) ? $device->uptime :'';?></td>
+                                                    <td><?php echo isset($device->num_clients) ? $device->num_clients :'';?></td>
                                                     <td class="font-bold col-cyan">
                                                         <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>"><?php echo h($device->user->username); ?></a>
                                                     </td>

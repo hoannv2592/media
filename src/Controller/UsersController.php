@@ -166,7 +166,11 @@ class UsersController extends AppController
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $data = $this->request->getData();
+            if ($data['password'] == '') {
+                unset($data['password']);
+            }
+            $user = $this->Users->patchEntity($user, $data);
             if (empty($user->errors())) {
                 if ($this->Users->save($user)) {
                     $conn->commit();
