@@ -1089,7 +1089,7 @@ class DevicesController extends AppController
                             $current_date = date('d/m/Y');
                             $ts1 = strtotime($my_date);
                             $ts2 = strtotime($current_date);
-                            $seconds_diff = $ts2 - $ts1;
+                            $seconds_diff = $ts1 - $ts2;
                             if ($seconds_diff >= 0) {
                                 $campaign_id = false;
                                 if (!empty($pa_voucher)) {
