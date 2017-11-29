@@ -717,6 +717,10 @@ class DevicesController extends AppController
                                         $partner_id = $pa_voucher['partner_id'];
                                         $data_update = array(
                                             'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
+                                            'campaign_group_id' => $id_campaign,
+                                            'link_login_only' => $link_login_only,
+                                            'link_orig' => $link_orig,
+                                            'chap_id' => $chap_id,
                                         );
                                         $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
                                         if (empty($partner_v->errors())) {
@@ -726,6 +730,10 @@ class DevicesController extends AppController
                                         }
                                         $data_update_pa = array(
                                             'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
+                                            'campaign_group_id' => $id_campaign,
+                                            'link_login_only' => $link_login_only,
+                                            'link_orig' => $link_orig,
+                                            'chap_id' => $chap_id,
                                         );
                                         $partner = $this->Partners->patchEntity($pa_confirm, $data_update_pa);
                                         if (empty($partner->errors())) {
@@ -745,6 +753,10 @@ class DevicesController extends AppController
                                     $partner_id = $pa_confirm['id'];
                                     $data_update = array(
                                         'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
+                                        'campaign_group_id' => $id_campaign,
+                                        'link_login_only' => $link_login_only,
+                                        'link_orig' => $link_orig,
+                                        'chap_id' => $chap_id,
                                     );
                                     $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
                                     if (empty($partner_v->errors())) {
@@ -893,6 +905,9 @@ class DevicesController extends AppController
                             $partner_id = $partner['id'];
                             $data_update = array(
                                 'num_clients_connect' => $partner['num_clients_connect'] + 1,
+                                'link_login_only' => $link_login_only,
+                                'link_orig' => $link_orig,
+                                'chap_id' => $chap_id,
                             );
                             $partner = $this->Partners->patchEntity($partner, $data_update);
                             if (empty($partner->errors())) {
@@ -932,6 +947,9 @@ class DevicesController extends AppController
                         $partner_id = $partner['id'];
                         $data_update = array(
                             'num_clients_connect' => $partner['num_clients_connect'] + 1,
+                            'link_login_only' => $link_login_only,
+                            'link_orig' => $link_orig,
+                            'chap_id' => $chap_id,
                         );
                         $partner = $this->Partners->patchEntity($partner, $data_update);
                         if (empty($partner->errors())) {
@@ -1107,7 +1125,8 @@ class DevicesController extends AppController
                                                 'client_mac' => $client_mac,
                                                 'num_clients_connect' => 1,
                                                 'name' => 'user_online',
-                                                'campaign_group_id' => $id_campaign
+                                                'campaign_group_id' => $id_campaign,
+                                                'auth_target' => $auth_target
                                             );
                                             $new_partner = $this->Partners->newEntity();
                                             $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
@@ -1127,6 +1146,8 @@ class DevicesController extends AppController
                                             $partner_id = $pa_voucher['partner_id'];
                                             $data_update = array(
                                                 'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
+                                                'auth_target' => $auth_target,
+                                                'campaign_group_id' => $id_campaign,
                                             );
                                             $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
                                             if (empty($partner_v->errors())) {
@@ -1136,6 +1157,8 @@ class DevicesController extends AppController
                                             }
                                             $data_update_pa = array(
                                                 'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
+                                                'auth_target' => $auth_target,
+                                                'campaign_group_id' => $id_campaign,
                                             );
                                             $partner = $this->Partners->patchEntity($pa_confirm, $data_update_pa);
                                             if (empty($partner->errors())) {
@@ -1155,6 +1178,8 @@ class DevicesController extends AppController
                                         $partner_id = $pa_confirm['id'];
                                         $data_update = array(
                                             'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
+                                            'auth_target' => $auth_target,
+                                            'campaign_group_id' => $id_campaign,
                                         );
 
 
@@ -1190,7 +1215,8 @@ class DevicesController extends AppController
                                             'auth_target' => $auth_target,
                                             'num_clients_connect' => 1,
                                             'name' => 'user_online',
-                                            'apt_device_pass' => $this->radompassWord()
+                                            'apt_device_pass' => $this->radompassWord(),
+                                            'campaign_group_id' => $id_campaign,
                                         );
                                         $new_partner_v = $this->PartnerVouchers->newEntity();
                                         $new_partner_v = $this->PartnerVouchers->patchEntity($new_partner_v, $save_new_pa_vou_v);
@@ -1217,7 +1243,8 @@ class DevicesController extends AppController
                                             'auth_target' => $auth_target,
                                             'num_clients_connect' => 1,
                                             'name' => 'user_online',
-                                            'apt_device_pass' => $this->radompassWord()
+                                            'apt_device_pass' => $this->radompassWord(),
+                                            'campaign_group_id' => $id_campaign,
                                         );
                                         $new_partner = $this->Partners->newEntity();
                                         $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou_v);
@@ -1260,7 +1287,7 @@ class DevicesController extends AppController
                                     $data_update = array(
                                         'num_clients_connect' => $partner['num_clients_connect'] + 1,
                                         'auth_target' => $auth_target,
-                                        'apt_device_pass' => $this->radompassWord()
+                                        'campaign_group_id' => $id_campaign,
                                     );
                                     $partner = $this->Partners->patchEntity($partner, $data_update);
                                     if (empty($partner->errors())) {
@@ -1300,7 +1327,6 @@ class DevicesController extends AppController
                                 $data_update = array(
                                     'num_clients_connect' => $partner['num_clients_connect'] + 1,
                                     'auth_target' => $auth_target,
-                                    'apt_device_pass' => $this->radompassWord()
                                 );
                                 $partner = $this->Partners->patchEntity($partner, $data_update);
                                 if (empty($partner->errors())) {
@@ -1340,7 +1366,6 @@ class DevicesController extends AppController
                             $data_update = array(
                                 'num_clients_connect' => $partner['num_clients_connect'] + 1,
                                 'auth_target' => $auth_target,
-                                'apt_device_pass' => $this->radompassWord()
                             );
                             $partner = $this->Partners->patchEntity($partner, $data_update);
                             if (empty($partner->errors())) {
