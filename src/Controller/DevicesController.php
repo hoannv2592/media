@@ -64,17 +64,16 @@ class DevicesController extends AppController
             $devices = $this->Devices->find('all', [
                 'contain' => ['Users' => function ($q) {
                     return $q
-                    ->select(['Users.id', 'Users.username'])
+                        ->select(['Users.id', 'Users.username'])
                         ->where(['Users.delete_flag !=' => 1])
                         ->hydrate(false);
                 },
-                'Partners' => function($q) {
-                    return $q
-                        ->select([
-                            'Partners.id','Partners.name','Partners.device_id'
-                        ])
-                        ;
-                }],
+                    'Partners' => function ($q) {
+                        return $q
+                            ->select([
+                                'Partners.id', 'Partners.name', 'Partners.device_id'
+                            ]);
+                    }],
                 'conditions' => [
                     'Devices.delete_flag !=' => DELETED
                 ]
@@ -87,13 +86,12 @@ class DevicesController extends AppController
                             'Devices.delete_flag !=' => 1,
                         ]);
                 },
-                'Partners' => function($q) {
-                return $q
-                    ->select([
-                        'Partners.id','Partners.device_id',
-                    ])
-                    ;
-                }],
+                    'Partners' => function ($q) {
+                        return $q
+                            ->select([
+                                'Partners.id', 'Partners.device_id',
+                            ]);
+                    }],
                 'conditions' => [
                     'Devices.user_id ' => $login['id'],
                     'Devices.delete_flag !=' => DELETED
@@ -105,7 +103,7 @@ class DevicesController extends AppController
         if (!empty($result)) {
             $Adgroups = $this->Adgroups->find()->where(['id IN' => array_unique($result)])->combine('id', 'name')->toArray();
         }
-        $this->set(compact('Adgroups','devices'));
+        $this->set(compact('Adgroups', 'devices'));
     }
 
 
@@ -485,8 +483,8 @@ class DevicesController extends AppController
         }
         $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
         $filesRowNum = $files->count();
-        $this->set('files',$files);
-        $this->set('filesRowNum',$filesRowNum);
+        $this->set('files', $files);
+        $this->set('filesRowNum', $filesRowNum);
         $apt = $this->radompassWord();
         $this->set(compact('device', 'device_id', 'user_id', 'apt'));
     }
@@ -503,19 +501,18 @@ class DevicesController extends AppController
         if (isset($device_id)) {
             $device_id = \UrlUtil::_decodeUrl($device_id);
             $vouchers = $this->CampaignGroups->find()
-                ->select(['id','device_id'])
+                ->select(['id', 'device_id'])
                 ->where(['delete_flag !=' => 1])
                 ->hydrate(false)
                 ->combine('id', 'device_id')
-                ->toArray()
-            ;
+                ->toArray();
             if (!empty($vouchers)) {
                 foreach ($vouchers as $k => $voucher) {
                     $list_device_id_voucher[$k] = json_decode($voucher);
                 }
                 if (!empty($list_device_id_voucher)) {
                     $id_campaign = '';
-                    foreach ($list_device_id_voucher as $k =>  $vl) {
+                    foreach ($list_device_id_voucher as $k => $vl) {
                         foreach ($vl as $key => $item) {
                             if ($device_id == $item) {
                                 $id_campaign = $k;
@@ -529,7 +526,7 @@ class DevicesController extends AppController
             }
             $infor_devices = $this->Devices->get($device_id);
             if (!empty($infor_devices)) {
-                if (isset($infor_devices->campaign_group_id) &&  $infor_devices->campaign_group_id != '') {
+                if (isset($infor_devices->campaign_group_id) && $infor_devices->campaign_group_id != '') {
                     $device_campaign = $this->CampaignGroups->find()
                         ->where(['id' => $infor_devices->campaign_group_id, 'delete_flag !=' => DELETED])
                         ->first();
@@ -571,7 +568,7 @@ class DevicesController extends AppController
      */
     public function addLog()
     {
-        $this->autoRender= false;
+        $this->autoRender = false;
         if ($this->request->getData()) {
             $log = $this->Logs->newEntity();
             if ($this->request->data) {
@@ -600,7 +597,7 @@ class DevicesController extends AppController
         $url = $this->request;
         $apt_key = $this->slug($url->params['id']);
         $flag_id = $this->slug($url->params['flag_id']);
-        $this->request->allowMethod(['post', 'get' ,'put','ajax','delete']);
+        $this->request->allowMethod(['post', 'get', 'put', 'ajax', 'delete']);
         $conn = ConnectionManager::get('default');
         $conn->begin();
         if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
@@ -620,269 +617,183 @@ class DevicesController extends AppController
                 $id_device = $apt_key_check->id;
                 // data test
                 $vouchers = $this->CampaignGroups->find()
-                    ->select(['id','device_id'])
+                    ->select(['id', 'device_id'])
                     ->where(['delete_flag !=' => 1])
                     ->hydrate(false)
                     ->combine('id', 'device_id')
-                    ->toArray()
-                ;
+                    ->toArray();
                 $flag_normal = true;
+                $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
                 if (!empty($vouchers)) {
+                    $list_device_id_voucher = array();
                     foreach ($vouchers as $k => $voucher) {
                         $list_device_id_voucher[$k] = json_decode($voucher);
                     }
-                    if (!empty($list_device_id_voucher)) {
-                        $id_campaign = '';
-                        foreach ($list_device_id_voucher as $k =>  $vl) {
-                            foreach ($vl as $key => $item) {
-                                if ($id_device == $item) {
-                                    $id_campaign = $k;
+                    $id_campaign = '';
+                    foreach ($list_device_id_voucher as $k => $vl) {
+                        foreach ($vl as $key => $item) {
+                            if ($id_device == $item) {
+                                $id_campaign = $k;
+                            }
+                        }
+                    }
+
+                    $campaign = $this->CampaignGroups->find()
+                        ->where(['id' => $id_campaign])
+                        ->first();
+
+                    $client_mac = 'f0:4d:a2:8e:1b:37';
+                    // todo kiem tra partner da ton tai trong partner_voucher.
+                    $pa_voucher = $this->PartnerVouchers->find()->where(
+                        array(
+                            'device_id' => $id_device,
+                            'client_mac' => $client_mac,
+                        ))
+                        ->first();
+                    // todo dem so luong voucher phat ra.
+                    $number_voucher_userd = $this->PartnerVouchers->find()
+                        ->where(['confirm ' => '1'])
+                        ->count();
+
+                    if (!empty($pa_voucher)) {
+                        if ($pa_voucher->confirm == 1) {
+                            $flag_normal = false;
+                            $pa_confirm = $this->Partners->find()->where(
+                                array(
+                                    'device_id' => $id_device,
+                                    'client_mac' => $client_mac,
+                                ))
+                                ->first();
+                            if (empty($pa_confirm)) {
+                                $save_new_pa_vou = array(
+                                    'device_id' => $apt_key_check->id,
+                                    'client_mac' => $client_mac,
+                                    'num_clients_connect' => 1,
+                                    'name' => 'user_online',
+                                    'campaign_group_id' => $id_campaign
+                                );
+                                $new_partner = $this->Partners->newEntity();
+                                $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
+                                if (empty($new_partner->errors())) {
+                                    if (!$this->Partners->save($new_partner)) {
+                                        $chk = true;
+                                    }
+                                }
+                            } else {
+                                $pa_voucher = $this->PartnerVouchers->find()->where(
+                                    array(
+                                        'device_id' => $id_device,
+                                        'client_mac' => $client_mac,
+                                    ))
+                                    ->first();
+                                $data_update = array(
+                                    'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
+                                );
+                                $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
+                                if (empty($partner_v->errors())) {
+                                    if (!$this->PartnerVouchers->save($partner_v)) {
+                                        $chk = true;
+                                    }
+                                }
+                                $data_update_pa = array(
+                                    'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
+                                );
+                                $partner = $this->Partners->patchEntity($pa_confirm, $data_update_pa);
+                                if (empty($partner->errors())) {
+                                    if (!$this->Partners->save($partner)) {
+                                        $chk = true;
+                                    }
+                                }
+                            }
+                        } else {
+                            $flag_normal = true;
+                            $pa_confirm = $this->Partners->find()->where(
+                                array(
+                                    'device_id' => $id_device,
+                                    'client_mac' => $client_mac,
+                                ))
+                                ->first();
+                            $data_update = array(
+                                'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
+                            );
+                            $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
+                            if (empty($partner_v->errors())) {
+                                if (!$this->PartnerVouchers->save($partner_v)) {
+                                    $chk = true;
+                                }
+                            }
+                            $partner_p = $this->Partners->patchEntity($pa_confirm, $data_update);
+                            if (empty($partner_p->errors())) {
+                                if (!$this->Partners->save($partner_p)) {
+                                    $chk = true;
                                 }
                             }
                         }
-                        if (!empty($id_campaign)) {
-                            $campaign = $this->CampaignGroups->find()
-                                ->where(['id' => $id_campaign])
-                                ->first()
-                            ;
-                            $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac']:'';
-                            $client_mac = 'f0:4d:a2:8e:1b:37';
-                            // todo kiem tra partner da ton tai trong partner_voucher.
-                            $pa_voucher = $this->PartnerVouchers->find()->where(
-                                array(
-                                    'device_id' => $id_device,
-                                    'client_mac' => $client_mac,
-                                    'confirm' => 0,
-                                ))
-                                ->first()
-                            ;
-                            $pa_voucher_confirm = $this->PartnerVouchers->find()->where(
-                                array(
-                                    'device_id' => $id_device,
-                                    'client_mac' => $client_mac,
-                                    'confirm' => 1,
-                                ))
-                                ->first()
-                            ;
-
-                            // todo dem so luong voucher phat ra.
-                            $number_voucher_userd = $this->PartnerVouchers->find()
-                                ->where(['confirm ' => '1'])
-                                ->count()
-                            ;
+                    } else {
+                        if ($number_voucher_userd <= $campaign->number_voucher) {
                             if ($campaign->random == 2) {
-                                if ($number_voucher_userd <= $campaign->number_voucher) {
-                                    if (empty($pa_voucher_confirm) && empty($pa_voucher)) {
-                                        $save_new_pa_vou = array(
-                                            'device_id' => $apt_key_check->id,
-                                            'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
-                                            'num_clients_connect' => 1,
-                                            'name' => 'user_online',
-                                            'confirm' => '1',
-                                            'campaign_group_id' => $id_campaign
-                                        );
-                                        $new_partner_vou = $this->PartnerVouchers->newEntity();
-                                        $new_partner_vou = $this->PartnerVouchers->patchEntity($new_partner_vou, $save_new_pa_vou);
-                                        //todo save table partner first
-                                        $new_partner = $this->Partners->newEntity();
-                                        $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
-                                        if (empty($new_partner->errors())) {
-                                            $save_partner = $this->Partners->save($new_partner);
-                                            if ($save_partner) {
-                                                $new_partner_vou->partner_id = $save_partner->id;
-                                                if (empty($new_partner_vou->errors())) {
-                                                    if (!$this->PartnerVouchers->save($new_partner_vou)) {
-                                                        $chk = true;
-                                                        $flag_true = true;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    } elseif (empty($pa_voucher_confirm) && !empty($pa_voucher)) {
-                                        $data_update = array(
-                                            'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
-                                        );
-
-                                        $partner = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
-                                        if (empty($partner->errors())){
-                                            if (!$this->PartnerVouchers->save($partner)) {
-                                                $chk = true;
-                                                $flag_true = true;
-                                            }
-                                        }
-
-                                        $partner_p = $this->Partners->patchEntity($pa_voucher, $data_update);
-                                        if (empty($partner_p->errors())){
-                                            if (!$this->Partners->save($partner_p)) {
-                                                $chk = true;
-                                            }
-                                        }
-
-                                    } elseif(!empty($pa_voucher_confirm) && empty($pa_voucher)) {
-                                        //
-                                        $flag_normal = false;
-                                        $pa_confirm = $this->Partners->find()->where(
-                                            array(
-                                                'device_id' => $id_device,
-                                                'client_mac' => $client_mac,
-                                            ))
-                                            ->first()
-                                        ;
-                                        if (empty($pa_confirm)) {
-                                            $save_new_pa_vou = array(
-                                                'device_id' => $apt_key_check->id,
-                                                'client_mac' => $client_mac,
-                                                'num_clients_connect' => 1,
-                                                'name' => 'user_online',
-                                                'campaign_group_id' => $id_campaign
-                                            );
-                                            $new_partner = $this->Partners->newEntity();
-                                            $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
-                                            if (empty($new_partner->errors())) {
-                                                if (!$this->Partners->save($new_partner)) {
-                                                    $chk = true;
-                                                }
-                                            }
-                                        } else {
-                                            $data_update = array(
-                                                'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
-                                            );
-                                            $partner_v = $this->PartnerVouchers->patchEntity($pa_confirm, $data_update);
-                                            if (empty($partner_v->errors())){
-                                                if (!$this->PartnerVouchers->save($partner_v)) {
-                                                    $chk = true;
-                                                }
-                                            }
-                                            $partner = $this->Partners->patchEntity($pa_confirm, $data_update);
-                                            if (empty($partner->errors())){
-                                                if (!$this->Partners->save($partner)) {
-                                                    $chk = true;
-                                                }
-                                            }
-                                        }
-                                    }
+                                $flag_normal = true;
+                            } else {
+                                $flag_get_voucher = $this->getVoucher($client_mac);
+                                if ($flag_get_voucher) {
+                                    $flag_normal = true;
                                 } else {
                                     $flag_normal = false;
                                 }
-                            } else {
-                                $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '';
-                                // data test
-                                $flag_get_voucher = $this->getVoucher($client_mac);
-                                if ($flag_get_voucher) {
-                                    if ($number_voucher_userd <= $campaign->number_voucher) {
-                                        if (empty($pa_voucher_confirm) && empty($pa_voucher)) {
-                                            $save_new_pa_vou = array(
-                                                'device_id' => $apt_key_check->id,
-                                                'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
-                                                'num_clients_connect' => 1,
-                                                'name' => 'user_online',
-                                                'confirm' => '1',
-                                                'campaign_group_id' => $id_campaign
-                                            );
-                                            $new_partner_vou = $this->PartnerVouchers->newEntity();
-                                            $new_partner_vou = $this->PartnerVouchers->patchEntity($new_partner_vou, $save_new_pa_vou);
-                                            //todo save table partner first
-                                            $new_partner = $this->Partners->newEntity();
-                                            $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
-                                            if (empty($new_partner->errors())) {
-                                                $save_partner = $this->Partners->save($new_partner);
-                                                if ($save_partner) {
-                                                    $new_partner_vou->partner_id = $save_partner->id;
-                                                    if (empty($new_partner_vou->errors())) {
-                                                        if (!$this->PartnerVouchers->save($new_partner_vou)) {
-                                                            $chk = true;
-                                                            $flag_true = true;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        } elseif (empty($pa_voucher_confirm) && !empty($pa_voucher)) {
-                                            $data_update = array(
-                                                'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
-                                            );
+                            }
 
-                                            $partner = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
-                                            if (empty($partner->errors())){
-                                                if (!$this->PartnerVouchers->save($partner)) {
-                                                    $chk = true;
-                                                    $flag_true = true;
-                                                }
-                                            }
+                            $save_new_pa_vou = array(
+                                'device_id' => $apt_key_check->id,
+                                'client_mac' => $client_mac,
+                                'num_clients_connect' => 1,
+                                'name' => 'user_online',
+                                'campaign_group_id' => $id_campaign
+                            );
+                            $new_partner = $this->Partners->newEntity();
+                            $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
+                            if (empty($new_partner->errors())) {
+                                if (!$this->Partners->save($new_partner)) {
+                                    $chk = true;
+                                }
+                            }
 
-                                            $partner_p = $this->Partners->patchEntity($pa_voucher, $data_update);
-                                            if (empty($partner_p->errors())){
-                                                if (!$this->Partners->save($partner_p)) {
-                                                    $chk = true;
-                                                }
-                                            }
-
-                                        } elseif(!empty($pa_voucher_confirm) && empty($pa_voucher)) {
-                                            //
-                                            $flag_normal = false;
-                                            $pa_confirm = $this->Partners->find()->where(
-                                                array(
-                                                    'device_id' => $id_device,
-                                                    'client_mac' => $client_mac,
-                                                ))
-                                                ->first()
-                                            ;
-                                            if (empty($pa_confirm)) {
-                                                $save_new_pa_vou = array(
-                                                    'device_id' => $apt_key_check->id,
-                                                    'client_mac' => $client_mac,
-                                                    'num_clients_connect' => 1,
-                                                    'name' => 'user_online',
-                                                    'campaign_group_id' => $id_campaign
-                                                );
-                                                $new_partner = $this->Partners->newEntity();
-                                                $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
-                                                if (empty($new_partner->errors())) {
-                                                    if (!$this->Partners->save($new_partner)) {
-                                                        $chk = true;
-                                                    }
-                                                }
-                                            } else {
-                                                $data_update = array(
-                                                    'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
-                                                );
-                                                $partner_v = $this->PartnerVouchers->patchEntity($pa_confirm, $data_update);
-                                                if (empty($partner_v->errors())){
-                                                    if (!$this->PartnerVouchers->save($partner_v)) {
-                                                        $chk = true;
-                                                    }
-                                                }
-                                                $partner = $this->Partners->patchEntity($pa_confirm, $data_update);
-                                                if (empty($partner->errors())){
-                                                    if (!$this->Partners->save($partner)) {
-                                                        $chk = true;
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                } else {
-                                    $flag_normal = false;
+                            $new_partner_v = $this->PartnerVouchers->newEntity();
+                            $new_partner_v = $this->PartnerVouchers->patchEntity($new_partner_v, $save_new_pa_vou);
+                            if (empty($new_partner_v->errors())) {
+                                if (!$this->PartnerVouchers->save($new_partner_v)) {
+                                    $chk = true;
                                 }
                             }
                         } else {
                             $flag_normal = false;
+                            $save_new_pa_vou = array(
+                                'device_id' => $apt_key_check->id,
+                                'client_mac' => $client_mac,
+                                'num_clients_connect' => 1,
+                                'name' => 'user_online',
+                                'campaign_group_id' => $id_campaign
+                            );
+                            $new_partner = $this->Partners->newEntity();
+                            $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
+                            if (empty($new_partner->errors())) {
+                                if (!$this->Partners->save($new_partner)) {
+                                    $chk = true;
+                                }
+                            }
                         }
-                    } else {
-                        $flag_normal = false;
                     }
                 } else {
                     $flag_normal = false;
                     $partner = $this->Partners->find()->where(
                         array(
                             'device_id' => $apt_key_check->id,
-                            'client_mac' => isset($this->request->data['mac']) ? $this->request->data['mac']:'',
+                            'client_mac' => $client_mac,
                         ))
                         ->first();
-                    $query = $this->Partners->find('all', [])->count();
                     if (empty($partner)) {
                         $save_new_pa = array(
                             'device_id' => $apt_key_check->id,
-                            'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
+                            'client_mac' => $client_mac,
                             'num_clients_connect' => 1,
                             'name' => 'user_online',
                         );
@@ -898,7 +809,7 @@ class DevicesController extends AppController
                             'num_clients_connect' => $partner['num_clients_connect'] + 1,
                         );
                         $partner = $this->Partners->patchEntity($partner, $data_update);
-                        if (empty($partner->errors())){
+                        if (empty($partner->errors())) {
                             if (!$this->Partners->save($partner)) {
                                 $chk = true;
                             }
@@ -914,10 +825,10 @@ class DevicesController extends AppController
                 }
                 if (!$chk) {
                     $conn->commit();
-                    if (!$flag_true && $flag_normal) {
+                    if ($flag_normal) {
                         $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1)]);
                     } else {
-                        $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id). '/' . \UrlUtil::_encodeUrl(2)]);
+                        $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2)]);
                     }
                 } else {
                     $conn->rollback();
@@ -926,25 +837,23 @@ class DevicesController extends AppController
                 $query = $this->Users->find('all', [])->count();
                 $users = $this->Users->newEntity();
                 $data_user = [
-                    'username' => USER.($query + 1),
-                    'email' => USER.($query + 1).'@wifimedia.com',
+                    'username' => USER . ($query + 1),
+                    'email' => USER . ($query + 1) . '@wifimedia.com',
                     'password' => '123456',
                     'delete_flag' => UN_DELETED,
                     'role' => User::ROLE_TOW
                 ];
-
-
                 $this->request->data['type'] = $flag_id;
                 $device = $this->Devices->newEntity();
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 $device->delete_flag = UN_DELETED;
                 $device->status = UN_DELETED;
-                $device->name = DEVICE.($query + 1);
+                $device->name = DEVICE . ($query + 1);
                 $users = $this->Users->patchEntity($users, $data_user);
                 $query = $this->Partners->find('all', [])->count();
                 $data_new_par = array(
-                    'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:'',
-                    'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only']:'',
+                    'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '',
+                    'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only'] : '',
                     'num_clients_connect' => 1,
                     'name' => 'user_online'
                 );
@@ -965,7 +874,7 @@ class DevicesController extends AppController
                                         $this->redirect([
                                             'plugin' => null,
                                             'controller' => 'Devices',
-                                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id). '/' . \UrlUtil::_encodeUrl(2)
+                                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id) . '/' . \UrlUtil::_encodeUrl(2)
                                         ]);
                                     }
                                 }
@@ -987,7 +896,7 @@ class DevicesController extends AppController
             $this->loadModel('Partners');
 
             if ($apt_key != '') {
-                $this->autoRender= false;
+                $this->autoRender = false;
                 $apt_key_check = $this->Devices->find()->where(
                     [
                         'apt_key' => $apt_key,
@@ -996,270 +905,190 @@ class DevicesController extends AppController
                     ->select()
                     ->hydrate(true)
                     ->first();
-                $flag_true = false;
                 $chk = false;
                 $flag_normal = true;
                 if (!empty($apt_key_check)) {
                     $id_device = $apt_key_check->id;
                     $vouchers = $this->CampaignGroups->find()
-                        ->select(['id','device_id'])
+                        ->select(['id', 'device_id'])
                         ->where(['delete_flag !=' => 1])
                         ->hydrate(false)
                         ->combine('id', 'device_id')
-                        ->toArray()
-                    ;
-
+                        ->toArray();
                     if (!empty($vouchers)) {
+                        $list_device_id_voucher = array();
                         foreach ($vouchers as $k => $voucher) {
                             $list_device_id_voucher[$k] = json_decode($voucher);
                         }
-                        if (!empty($list_device_id_voucher)) {
-                            $id_campaign = '';
-                            foreach ($list_device_id_voucher as $k => $vl) {
-                                foreach ($vl as $key => $item) {
-                                    if ($id_device == $item) {
-                                        $id_campaign = $k;
-                                    }
+
+                        $id_campaign = '';
+                        foreach ($list_device_id_voucher as $k => $vl) {
+                            foreach ($vl as $key => $item) {
+                                if ($id_device == $item) {
+                                    $id_campaign = $k;
                                 }
                             }
-                            if (!empty($id_campaign)) {
-                                $campaign = $this->CampaignGroups->find()
-                                    ->where(['id' => $id_campaign])
+                        }
+                        $campaign = $this->CampaignGroups->find()
+                            ->where(['id' => $id_campaign])
+                            ->first();
+                        $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
+                        // todo kiem tra partner da ton tai trong partner_voucher.
+                        $pa_voucher = $this->PartnerVouchers->find()->where(
+                            array(
+                                'device_id' => $id_device,
+                                'client_mac' => $client_mac,
+                            ))
+                            ->first();
+                        // todo dem so luong voucher phat ra.
+                        $number_voucher_userd = $this->PartnerVouchers->find()
+                            ->where(['confirm ' => '1'])
+                            ->count();
+                        if (!empty($pa_voucher)) {
+                            if ($pa_voucher->confirm == 1) {
+                                $flag_normal = false;
+                                $pa_confirm = $this->Partners->find()->where(
+                                    array(
+                                        'device_id' => $id_device,
+                                        'client_mac' => $client_mac,
+                                    ))
                                     ->first();
-                                $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac']:'';
-                                // todo kiem tra partner da ton tai trong partner_voucher.
-                                $pa_voucher = $this->PartnerVouchers->find()->where(
-                                    array(
-                                        'device_id' => $id_device,
+                                if (empty($pa_confirm)) {
+                                    $save_new_pa_vou = array(
+                                        'device_id' => $apt_key_check->id,
                                         'client_mac' => $client_mac,
-                                        'confirm' => 0,
-                                    ))
-                                    ->first()
-                                ;
-                                $pa_voucher_confirm = $this->PartnerVouchers->find()->where(
-                                    array(
-                                        'device_id' => $id_device,
-                                        'client_mac' => $client_mac,
-                                        'confirm' => 1,
-                                    ))
-                                    ->first()
-                                ;
-                                // todo dem so luong voucher phat ra.
-                                $number_voucher_userd = $this->PartnerVouchers->find()
-                                    ->where(['confirm ' => '1'])
-                                    ->count();
-
-                                $query = $this->PartnerVouchers->find('all', [])->count();
-                                if ($campaign->random == 2) {
-                                    if ($number_voucher_userd <= $campaign->number_voucher) {
-                                        if (empty($pa_voucher_confirm) && empty($pa_voucher)) {
-                                            $save_new_pa_vou = array(
-                                                'device_id' => $apt_key_check->id,
-                                                'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
-                                                'num_clients_connect' => 1,
-                                                'name' => 'user_online',
-                                                'confirm' => '1',
-                                                'campaign_group_id' => $id_campaign
-                                            );
-                                            $new_partner_vou = $this->PartnerVouchers->newEntity();
-                                            $new_partner_vou = $this->PartnerVouchers->patchEntity($new_partner_vou, $save_new_pa_vou);
-                                            //todo save table partner first
-                                            $new_partner = $this->Partners->newEntity();
-                                            $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
-                                            if (empty($new_partner->errors())) {
-                                                $save_partner = $this->Partners->save($new_partner);
-                                                if ($save_partner) {
-                                                    $new_partner_vou->partner_id = $save_partner->id;
-                                                    if (empty($new_partner_vou->errors())) {
-                                                        if (!$this->PartnerVouchers->save($new_partner_vou)) {
-                                                            $chk = true;
-                                                            $flag_true = true;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        } elseif (empty($pa_voucher_confirm) && !empty($pa_voucher)) {
-                                            $data_update = array(
-                                                'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
-                                            );
-
-                                            $partner = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
-                                            if (empty($partner->errors())){
-                                                if (!$this->PartnerVouchers->save($partner)) {
-                                                    $chk = true;
-                                                    $flag_true = true;
-                                                }
-                                            }
-
-                                            $partner_p = $this->Partners->patchEntity($pa_voucher, $data_update);
-                                            if (empty($partner_p->errors())){
-                                                if (!$this->Partners->save($partner_p)) {
-                                                    $chk = true;
-                                                }
-                                            }
-
-                                        } elseif(!empty($pa_voucher_confirm) && empty($pa_voucher)) {
-                                            //
-                                            $flag_normal = false;
-                                            $pa_confirm = $this->Partners->find()->where(
-                                                array(
-                                                    'device_id' => $id_device,
-                                                    'client_mac' => $client_mac,
-                                                ))
-                                                ->first()
-                                            ;
-                                            if (empty($pa_confirm)) {
-                                                $save_new_pa_vou = array(
-                                                    'device_id' => $apt_key_check->id,
-                                                    'client_mac' => $client_mac,
-                                                    'num_clients_connect' => 1,
-                                                    'name' => 'user_online',
-                                                    'campaign_group_id' => $id_campaign
-                                                );
-                                                $new_partner = $this->Partners->newEntity();
-                                                $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
-                                                if (empty($new_partner->errors())) {
-                                                    if (!$this->Partners->save($new_partner)) {
-                                                        $chk = true;
-                                                    }
-                                                }
-                                            } else {
-                                                $data_update = array(
-                                                    'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
-                                                );
-                                                $partner_v = $this->PartnerVouchers->patchEntity($pa_confirm, $data_update);
-                                                if (empty($partner_v->errors())){
-                                                    if (!$this->PartnerVouchers->save($partner_v)) {
-                                                        $chk = true;
-                                                    }
-                                                }
-                                                $partner = $this->Partners->patchEntity($pa_confirm, $data_update);
-                                                if (empty($partner->errors())){
-                                                    if (!$this->Partners->save($partner)) {
-                                                        $chk = true;
-                                                    }
-                                                }
-                                            }
+                                        'num_clients_connect' => 1,
+                                        'name' => 'user_online',
+                                        'campaign_group_id' => $id_campaign
+                                    );
+                                    $new_partner = $this->Partners->newEntity();
+                                    $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
+                                    if (empty($new_partner->errors())) {
+                                        if (!$this->Partners->save($new_partner)) {
+                                            $chk = true;
                                         }
                                     }
                                 } else {
-                                    $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
-                                    // data test
-                                    $flag_get_voucher = $this->getVoucher($client_mac);
-                                    if ($flag_get_voucher) {
-                                        if ($number_voucher_userd <= $campaign->number_voucher) {
-                                            if (empty($pa_voucher_confirm) && empty($pa_voucher)) {
-                                                $save_new_pa_vou = array(
-                                                    'device_id' => $apt_key_check->id,
-                                                    'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
-                                                    'num_clients_connect' => 1,
-                                                    'name' => 'user_online',
-                                                    'confirm' => '1',
-                                                    'campaign_group_id' => $id_campaign
-                                                );
-                                                $new_partner_vou = $this->PartnerVouchers->newEntity();
-                                                $new_partner_vou = $this->PartnerVouchers->patchEntity($new_partner_vou, $save_new_pa_vou);
-                                                //todo save table partner first
-                                                $new_partner = $this->Partners->newEntity();
-                                                $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
-                                                if (empty($new_partner->errors())) {
-                                                    $save_partner = $this->Partners->save($new_partner);
-                                                    if ($save_partner) {
-                                                        $new_partner_vou->partner_id = $save_partner->id;
-                                                        if (empty($new_partner_vou->errors())) {
-                                                            if (!$this->PartnerVouchers->save($new_partner_vou)) {
-                                                                $chk = true;
-                                                                $flag_true = true;
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            } elseif (empty($pa_voucher_confirm) && !empty($pa_voucher)) {
-                                                $data_update = array(
-                                                    'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
-                                                );
-
-                                                $partner = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
-                                                if (empty($partner->errors())){
-                                                    if (!$this->PartnerVouchers->save($partner)) {
-                                                        $chk = true;
-                                                        $flag_true = true;
-                                                    }
-                                                }
-
-                                                $partner_p = $this->Partners->patchEntity($pa_voucher, $data_update);
-                                                if (empty($partner_p->errors())){
-                                                    if (!$this->Partners->save($partner_p)) {
-                                                        $chk = true;
-                                                    }
-                                                }
-
-                                            } elseif(!empty($pa_voucher_confirm) && empty($pa_voucher)) {
-                                                //
-                                                $flag_normal = false;
-                                                $pa_confirm = $this->Partners->find()->where(
-                                                    array(
-                                                        'device_id' => $id_device,
-                                                        'client_mac' => $client_mac,
-                                                    ))
-                                                    ->first()
-                                                ;
-                                                if (empty($pa_confirm)) {
-                                                    $save_new_pa_vou = array(
-                                                        'device_id' => $apt_key_check->id,
-                                                        'client_mac' => $client_mac,
-                                                        'num_clients_connect' => 1,
-                                                        'name' => 'user_online',
-                                                        'campaign_group_id' => $id_campaign
-                                                    );
-                                                    $new_partner = $this->Partners->newEntity();
-                                                    $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
-                                                    if (empty($new_partner->errors())) {
-                                                        if (!$this->Partners->save($new_partner)) {
-                                                            $chk = true;
-                                                        }
-                                                    }
-                                                } else {
-                                                    $data_update = array(
-                                                        'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
-                                                    );
-                                                    $partner_v = $this->PartnerVouchers->patchEntity($pa_confirm, $data_update);
-                                                    if (empty($partner_v->errors())){
-                                                        if (!$this->PartnerVouchers->save($partner_v)) {
-                                                            $chk = true;
-                                                        }
-                                                    }
-                                                    $partner = $this->Partners->patchEntity($pa_confirm, $data_update);
-                                                    if (empty($partner->errors())){
-                                                        if (!$this->Partners->save($partner)) {
-                                                            $chk = true;
-                                                        }
-                                                    }
-                                                }
-                                            }
+                                    $pa_voucher = $this->PartnerVouchers->find()->where(
+                                        array(
+                                            'device_id' => $id_device,
+                                            'client_mac' => $client_mac,
+                                        ))
+                                        ->first();
+                                    $data_update = array(
+                                        'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
+                                    );
+                                    $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
+                                    if (empty($partner_v->errors())) {
+                                        if (!$this->PartnerVouchers->save($partner_v)) {
+                                            $chk = true;
+                                        }
+                                    }
+                                    $data_update_pa = array(
+                                        'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
+                                    );
+                                    $partner = $this->Partners->patchEntity($pa_confirm, $data_update_pa);
+                                    if (empty($partner->errors())) {
+                                        if (!$this->Partners->save($partner)) {
+                                            $chk = true;
                                         }
                                     }
                                 }
                             } else {
-                                $flag_normal = false;
+                                $flag_normal = true;
+                                $pa_confirm = $this->Partners->find()->where(
+                                    array(
+                                        'device_id' => $id_device,
+                                        'client_mac' => $client_mac,
+                                    ))
+                                    ->first();
+                                $data_update = array(
+                                    'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
+                                );
+                                $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
+                                if (empty($partner_v->errors())) {
+                                    if (!$this->PartnerVouchers->save($partner_v)) {
+                                        $chk = true;
+                                    }
+                                }
+                                $partner_p = $this->Partners->patchEntity($pa_confirm, $data_update);
+                                if (empty($partner_p->errors())) {
+                                    if (!$this->Partners->save($partner_p)) {
+                                        $chk = true;
+                                    }
+                                }
                             }
                         } else {
-                            $flag_normal = false;
+                            if ($number_voucher_userd <= $campaign->number_voucher) {
+                                if ($campaign->random == 2) {
+                                    $flag_normal = true;
+                                } else {
+                                    $flag_get_voucher = $this->getVoucher($client_mac);
+                                    if ($flag_get_voucher) {
+                                        $flag_normal = true;
+                                    } else {
+                                        $flag_normal = false;
+                                    }
+                                }
+
+                                $save_new_pa_vou = array(
+                                    'device_id' => $apt_key_check->id,
+                                    'client_mac' => $client_mac,
+                                    'num_clients_connect' => 1,
+                                    'name' => 'user_online',
+                                    'campaign_group_id' => $id_campaign
+                                );
+                                $new_partner = $this->Partners->newEntity();
+                                $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
+                                if (empty($new_partner->errors())) {
+                                    if ($this->Partners->save($new_partner)) {
+                                        echo 'vao day';
+                                        $conn->commit();
+                                        $chk = true;
+                                    }
+                                }
+                                die(1);
+                                $new_partner_v = $this->PartnerVouchers->newEntity();
+                                $new_partner_v = $this->PartnerVouchers->patchEntity($new_partner_v, $save_new_pa_vou);
+                                if (empty($new_partner_v->errors())) {
+                                    if (!$this->PartnerVouchers->save($new_partner_v)) {
+                                        $chk = true;
+                                    }
+                                }
+                                pr($new_partner);
+                                pr($new_partner_v); die;
+                            } else {
+                                $flag_normal = false;
+                                $save_new_pa_vou = array(
+                                    'device_id' => $apt_key_check->id,
+                                    'client_mac' => $client_mac,
+                                    'num_clients_connect' => 1,
+                                    'name' => 'user_online',
+                                    'campaign_group_id' => $id_campaign
+                                );
+                                $new_partner = $this->Partners->newEntity();
+                                $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
+                                if (empty($new_partner->errors())) {
+                                    if (!$this->Partners->save($new_partner)) {
+                                        $chk = true;
+                                    }
+                                }
+                            }
                         }
                     } else {
+                        echo  'vao day'; die;
                         $flag_normal = false;
                         $partner = $this->Partners->find()->where(
                             array(
                                 'device_id' => $apt_key_check->id,
-                                'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:''
+                                'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : ''
                             ))
                             ->first();
-                        $query = $this->Partners->find('all', [])->count();
                         if (empty($partner)) {
                             $save_new_pa = array(
                                 'device_id' => $apt_key_check->id,
-                                'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']: '',
-                                'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+                                'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '',
+                                'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '',
                                 'num_clients_connect' => 1,
                                 'name' => 'user_online',
                                 'apt_device_pass' => $this->radompassWord()
@@ -1274,11 +1103,11 @@ class DevicesController extends AppController
                         } else {
                             $data_update = array(
                                 'num_clients_connect' => $partner['num_clients_connect'] + 1,
-                                'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+                                'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '',
                                 'apt_device_pass' => $this->radompassWord()
                             );
                             $partner = $this->Partners->patchEntity($partner, $data_update);
-                            if (empty($partner->errors())){
+                            if (empty($partner->errors())) {
                                 if (!$this->Partners->save($partner)) {
                                     $chk = true;
                                 }
@@ -1311,12 +1140,13 @@ class DevicesController extends AppController
                     }
                     if (!$chk) {
                         $conn->commit();
-                        $result = $this->LogAuths->find('all',['fields'=>'id'])->last();
-                        $record_log_auth_id = $result->id;
-                        if (!$flag_true && $flag_normal) {
-                            $this->redirect([ 'plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1)]);
+//                        $result = $this->LogAuths->find('all', ['fields' => 'id'])->last();
+//                        $record_log_auth_id = $result->id;
+                        var_dump($flag_normal); die;
+                        if ($flag_normal) {
+                            $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1)]);
                         } else {
-                            $this->redirect([ 'plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2)]);
+                            $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2)]);
                         }
                     } else {
                         $conn->rollback();
@@ -1325,8 +1155,8 @@ class DevicesController extends AppController
                     $query = $this->Users->find('all', [])->count();
                     $users = $this->Users->newEntity();
                     $data_user = [
-                        'username' => USER.($query + 1),
-                        'email' => USER.($query + 1).'@wifimedia.com',
+                        'username' => USER . ($query + 1),
+                        'email' => USER . ($query + 1) . '@wifimedia.com',
                         'password' => '123456',
                         'delete_flag' => UN_DELETED,
                         'role' => User::ROLE_TOW
@@ -1335,14 +1165,14 @@ class DevicesController extends AppController
                     $device = $this->Devices->patchEntity($device, $this->request->data);
                     $device->delete_flag = UN_DELETED;
                     $device->status = UN_DELETED;
-                    $device->name = DEVICE.($query + 1);
+                    $device->name = DEVICE . ($query + 1);
                     $device->apt_device_number = $this->radompassWord();
                     $device->apt_key = isset($this->request->data['gateway_mac']) ? $this->request->data['gateway_mac'] : $apt_key;
                     $users = $this->Users->patchEntity($users, $data_user);
                     $query = $this->Partners->find('all', [])->count();
                     $data_new_par = array(
-                        'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:'',
-                        'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target']:'',
+                        'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '',
+                        'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '',
                         'num_clients_connect' => 1,
                         'name' => 'user_online',
                         'apt_device_pass' => $this->radompassWord()
@@ -1360,7 +1190,7 @@ class DevicesController extends AppController
                                     if (empty($partner->errors())) {
                                         if ($this->Partners->save($partner)) {
                                             $conn->commit();
-                                            $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id). \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2)]);
+                                            $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id) . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2)]);
                                         }
                                     }
                                 } else {
@@ -1449,8 +1279,8 @@ class DevicesController extends AppController
         }
         $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
         $filesRowNum = $files->count();
-        $this->set('files',$files);
-        $this->set('filesRowNum',$filesRowNum);
+        $this->set('files', $files);
+        $this->set('filesRowNum', $filesRowNum);
         $apt = $this->radompassWord();
         $this->set(compact('device', 'device_id', 'user_id', 'apt'));
     }
@@ -1508,11 +1338,10 @@ class DevicesController extends AppController
             }
             $infor_devices = $this->Devices->get($device_id);
             if (!empty($infor_devices)) {
-                if (isset($infor_devices->campaign_group_id) &&  $infor_devices->campaign_group_id != '') {
+                if (isset($infor_devices->campaign_group_id) && $infor_devices->campaign_group_id != '') {
                     $device_campaign = $this->CampaignGroups->find()
                         ->where(['id' => $infor_devices->campaign_group_id, 'delete_flag !=' => DELETED])
-                        ->first()
-                    ;
+                        ->first();
                     if (!empty($device_campaign)) {
                         $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
                         $infor_devices->path = $device_campaign->path;
@@ -1542,7 +1371,8 @@ class DevicesController extends AppController
         }
     }
 
-    public function generateRandomString($length = 12) {
+    public function generateRandomString($length = 12)
+    {
 
         $characters = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
