@@ -47,6 +47,9 @@ class PartnerVouchersTable extends Table
 //        $this->belongsTo('Devices', [
 //            'foreignKey' => 'device_id'
 //        ]);
+        $this->belongsTo('CampaignGroups', [
+            'foreignKey' => 'campaign_group_id'
+        ]);
     }
 
     /**

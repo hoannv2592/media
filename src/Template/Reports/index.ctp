@@ -41,8 +41,8 @@
                             <?php
                                 foreach ($list_campaign as $k => $vl) { ?>
                                     <a href="<?php echo $this->Url->build(['controller' => 'Reports', 'action' => 'report_detail'.'/'. UrlUtil::_encodeUrl($vl->id)]) ?>" class="list-group-item"><?php echo isset($vl->name) ? $vl->name : ''; ?><span class="badge bg-pink">
-                                            <?php $number_partner = count($vl->partner_voucher_logs);
-                                            echo isset($number_partner) ? $number_partner :'' ;?> new
+                                            <?php $number_partner = count($vl->partner_vouchers);
+                                            echo $number_partner .'/'. $vl->number_voucher ;?> new
                                         </span>
                                     </a>
                             <?php } ?>

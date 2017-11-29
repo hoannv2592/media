@@ -42,7 +42,7 @@ class ReportsController extends AppController
     public function index()
     {
         $list_campaign = $this->CampaignGroups->find('all', [
-            'contain'  => ['PartnerVoucherLogs' => function ($q) {
+            'contain'  => ['PartnerVouchers' => function ($q) {
                 return $q ;
             }],
             'conditions' => [
@@ -143,7 +143,7 @@ class ReportsController extends AppController
     {
         $campaign_id = \UrlUtil::_decodeUrl($campaign_id);
         $campaigns = $this->CampaignGroups->find('all', [
-            'contain'  => ['PartnerVoucherLogs' => function ($q) {
+            'contain'  => ['PartnerVouchers' => function ($q) {
                 return $q ;
             }],
             'conditions' => [
@@ -152,10 +152,10 @@ class ReportsController extends AppController
             ]
         ])->toArray();
         $campaignGroups_title = $this->CampaignGroups->find('all',[
-            'contain'  => ['PartnerVoucherLogs' => function ($q) {
+            'contain'  => ['PartnerVouchers' => function ($q) {
                 return $q
                     ->where([
-                        'PartnerVoucherLogs.confirm ' => 1,
+                        'PartnerVouchers.confirm ' => 1,
                     ])
                     ->select([
                         'campaign_group_id','id'

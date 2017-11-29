@@ -5,6 +5,7 @@
  * @var \App\View\AppView $device_group
  * @var \App\View\AppView $this
  * @var \App\View\AppView auth_target
+ * @var $partner_id
  *
  */
 $this->layout = 'landing';
@@ -78,6 +79,7 @@ if ($voucher_flag == 1) {
                                 <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
                                 <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                 <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
+                                <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>">
                                 <p><input type="submit" class="_btn" value="Đăng ký"></p>
                             </form>
                         </div>
@@ -231,6 +233,7 @@ if ($voucher_flag == 1) {
                                     <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
                                     <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                     <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
+                                    <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>">
                                     <p><input type="submit" class="_btn" value="Đăng ký"></p>
                                 </form>
                             </div>
@@ -280,7 +283,6 @@ if ($voucher_flag == 1) {
                             cache: false,
                             processData: false,
                             success: function (data) {
-                                console.log(data);
                                 if (data == 'true') {
                                     window.location.href = X_url;
                                     return false;
@@ -335,18 +337,10 @@ if ($voucher_flag == 1) {
                                 <div class="u-ui-padding-x-large landing__cover-wrapper">
                                     <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
                                     <ul class="icons mbl">
-                                        <li class="facebook">
-                                            <a href="" target="_blank"><i class="fa fa-facebook"></i></a>
-                                        </li>
-                                        <li class="youtube">
-                                            <a href="" target="_blank"><i class="fa fa-youtube"></i></a>
-                                        </li>
-                                        <li class="googleplus">
-                                            <a href="" target="_blank"><i class="fa fa-google-plus"></i></a>
-                                        </li>
-                                        <li class="twitter">
-                                            <a href="" target="_blank"><i class="fa fa-twitter"></i></a>
-                                        </li>
+                                        <li class="facebook"> <a href="" target="_blank"><i class="fa fa-facebook"></i></a></li>
+                                        <li class="youtube"><a href="" target="_blank"><i class="fa fa-youtube"></i></a></li>
+                                        <li class="googleplus"><a href="" target="_blank"><i class="fa fa-google-plus"></i></a></li>
+                                        <li class="twitter"><a href="" target="_blank"><i class="fa fa-twitter"></i></a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -365,18 +359,12 @@ if ($voucher_flag == 1) {
                             <div class="modal-body">
                                 <div class="c-spacer--x-large c-spacer"></div>
                                 <form action="#" name="register_form" class="register_form" id="register_form" method="post">
-                                    <p>
-                                        <input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input"
-                                               placeholder="Họ và tên">
-                                    </p>
-                                    <p>
-                                        <input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input"
-                                               placeholder="Số điện thoại">
-                                    </p>
-                                    <p><input type="text" id="_reg_address" name="address" value="" class="txt_input"
-                                              placeholder="Địa chỉ"></p>
+                                    <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                    <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                    <p><input type="text" id="_reg_address" name="address" value="" class="txt_input"placeholder="Địa chỉ"></p>
                                     <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                     <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
+                                    <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>">
                                     <p><input type="submit" class="_btn" value="Đăng ký"></p>
                                 </form>
                             </div>
@@ -544,36 +532,18 @@ if ($voucher_flag == 1) {
             }, "Please enter a valid phone number");
             $('#register_form').validate({
                 rules: {
-                    'full_name': {
+                    'name': {
                         required: true,
-                        nonNumeric: true
-                    },
-                    'telephone': {
-                        required: true,
-                        customphone: true,
-                        minlength: 10,
-                        maxlength: 11
-                    },
-                    'address': {
-                        required: true
                     }
                 },
                 messages: {
-                    'full_name': {
-                        required: 'Hãy nhập'
-                    },
-                    'telephone': {
-                        required: 'Hãy nhập',
-                        number: 'Hãy nhập số điện thoại',
-                        minlength: 'Bạn đã nhập sai số điện thoại'
-                    },
-                    'address': {
+                    'name': {
                         required: 'Hãy nhập'
                     }
                 },
                 submitHandler: function (form) {
                     $.ajax({
-                        url: "/Devices/add_log",
+                        url: "/Devices/add_log_partner",
                         type: "POST",
                         data: $("#register_form").serialize(),
                         cache: false,
@@ -587,7 +557,6 @@ if ($voucher_flag == 1) {
                             }
                         }
                     });
-                    window.location.href = url;
                     return false;
                 }
             });
@@ -783,16 +752,17 @@ if ($voucher_flag == 1) {
                                 </div>
                                 <div class="modal-body">
                                     <div class="c-spacer--x-large c-spacer"></div>
-                                    <form class="form-validation" style="width: 100%" name="login_popup" id="info" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin_popup2()">
+                                    <form class="form-validation" style="width: 100%" name="login_popup" id="info" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin_popup3()">
                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                         <input type="hidden" name="popup" value="true"/>
                                         <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                         <input style="display: none;" name="password" type="password" value="wifimedia" />
-                                        <p><input type="text" id="_reg_full_name" name="full_name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                        <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                         <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                                         <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
                                         <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                         <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
+                                        <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>">
                                         <p><input type="submit" class="_btn" value="Đăng ký"></p>
                                     </form>
                                 </div>
@@ -844,7 +814,7 @@ if ($voucher_flag == 1) {
         <?php } ?>
             <?php echo $this->Html->script(['md5']); ?>
         <script type="application/javascript">
-            function doLogin_popup2() {
+            function doLogin_popup3() {
                 <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
                 document.sendin.username.value = document.login_popup.username.value;
                 document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login_popup.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
@@ -898,42 +868,24 @@ if ($voucher_flag == 1) {
             }, "Please enter a valid phone number");
             $('#info').validate({
                 rules: {
-                    'full_name': {
-                        required: true,
-                        nonNumeric: true
-                    },
-                    'telephone': {
-                        required: true,
-                        customphone: true,
-                        minlength: 10,
-                        maxlength: 11
-                    },
-                    'address': {
+                    'name': {
                         required: true
                     }
                 },
                 messages: {
                     'full_name': {
                         required: 'Hãy nhập'
-                    },
-                    'telephone': {
-                        required: 'Hãy nhập',
-                        number: 'Hãy nhập số điện thoại',
-                        minlength: 'Bạn đã nhập sai số điện thoại'
-                    },
-                    'address': {
-                        required: 'Hãy nhập'
                     }
                 },
                 submitHandler: function (form) {
                     $.ajax({
-                        url: "/Devices/add_log",
+                        url: "/Devices/add_log_partner",
                         type: "POST",
-                        data: $("#register_form").serialize(),
+                        data: $("#info").serialize(),
                         cache: false,
                         processData: false,
                         success: function (data) {
-                            if (data === 'true') {
+                            if (data == 'true') {
                                 return true;
                             } else {
                                 return false;

@@ -42,14 +42,14 @@
                     <div class="body">
 
                         <?php
-                        foreach ($campaignGroups_title as $campaign) { ?>
+                        foreach ($campaignGroups_title as $k => $campaign) { if ($k == 0) { ?>
+
                             <h2 class="card-inside-title">Tên chiến dịch : <?php echo $campaign->name?> </h2>
                             <h2 class="card-inside-title">Số lượng voucher : <?php
                                 $number = count($campaign->partner_voucher_logs);
                                 echo $number.'/'.$campaign->number_voucher; ?> </h2>
                             <h2 class="card-inside-title">Thời gian : <?php echo $campaign->time?> </h2>
-                         <?php }
-                        ?>
+                         <?php } } ?>
                         <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'componentExcel']);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="home">
@@ -69,7 +69,7 @@
                                         <tbody>
                                         <?php
                                         $count = 0;
-                                        foreach ($campaigns[0]['partner_voucher_logs'] as $partner_voucher_log) {
+                                        foreach ($campaigns[0]['partner_vouchers'] as $partner_voucher_log) {
                                             $count++; ?>
                                             <tr valign="middle">
                                                 <td><?php echo $count; ?></td>
