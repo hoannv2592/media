@@ -75,7 +75,7 @@
                                                 <td><?php echo $count; ?></td>
                                                 <td class="advertise font-bold col-cyan">
                                                     <a href="<?php echo $this->Url->build(['controller' => 'Reports', 'action' => 'detail_partner_voucher' . '/' . UrlUtil::_encodeUrl($partner_voucher_log->id). '/' . UrlUtil::_encodeUrl($campaign_id)]) ?>">
-                                                        <?php echo h($partner_voucher_log->full_name); ?>
+                                                        <?php echo h($partner_voucher_log->name); ?>
                                                     </a>
                                                 </td>
                                                 <td><?php echo nl2br($partner_voucher_log->telephone); ?></td>
