@@ -530,15 +530,15 @@ class DevicesController extends AppController
             }
             $this->loadModel('Partners');
             $infor_devices = $this->Devices->get($device_id);
-            $info_partner = $this->Partners->get($partner_id);
-            if (!empty($info_partner)) {
-                $infor_devices->link_orig = $info_partner->link_orig;
-                $infor_devices->chap_id = $info_partner->chap_id;
-                $infor_devices->mac_esc = $info_partner->mac_esc;
-                $infor_devices->link_login_only = $info_partner->link_login_only;
-                $infor_devices->auth_target = $info_partner->auth_target;
-                $infor_devices->apt_device_number = $info_partner->link_orig;
-            }
+//            $info_partner = $this->Partners->get($partner_id);
+//            if (!empty($info_partner)) {
+//                $infor_devices->link_orig = $info_partner->link_orig;
+//                $infor_devices->chap_id = $info_partner->chap_id;
+//                $infor_devices->mac_esc = $info_partner->mac_esc;
+//                $infor_devices->link_login_only = $info_partner->link_login_only;
+//                $infor_devices->auth_target = $info_partner->auth_target;
+//                $infor_devices->apt_device_number = $info_partner->link_orig;
+//            }
             if (!empty($infor_devices)) {
                 if (isset($infor_devices->campaign_group_id) && $infor_devices->campaign_group_id != '') {
                     $device_campaign = $this->CampaignGroups->find()
