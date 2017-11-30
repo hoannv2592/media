@@ -46,7 +46,7 @@
 
                             <h2 class="card-inside-title">Tên chiến dịch : <?php echo $campaign->name?> </h2>
                             <h2 class="card-inside-title">Số lượng voucher : <?php
-                                $number = count($campaign->partner_voucher_logs);
+                                $number = count($campaign->partner_vouchers);
                                 echo $number.'/'.$campaign->number_voucher; ?> </h2>
                             <h2 class="card-inside-title">Thời gian : <?php echo $campaign->time?> </h2>
                          <?php } } ?>

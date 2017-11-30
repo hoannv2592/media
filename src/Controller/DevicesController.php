@@ -1069,7 +1069,7 @@ class DevicesController extends AppController
                         ->combine('id', 'device_id')
                         ->toArray();
                     $auth_target = isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '';
-                    $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
+                    $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
                     $partner_id = '';
 
                     if (!empty($vouchers)) {
@@ -1594,10 +1594,7 @@ class DevicesController extends AppController
                     $chk = true;
                 }
             }
-
-            $partner_voucher = $this->PartnerVouchers->find()->where(
-                ['partner_id'=> $partner_id]
-            )->first();
+            $partner_voucher = $this->PartnerVouchers->find()->where(['partner_id'=> $partner_id])->first();
             $partner_v_id = $partner_voucher['id'];
             $voucher_pa = $this->PartnerVouchers->get($partner_v_id);
             $voucher_pa = $this->Partners->patchEntity($voucher_pa, $data_save_pa);
