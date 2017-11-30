@@ -15,6 +15,7 @@ $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng
 $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
+pr($infor_devices);
 echo $this->Html->script(['md5']);
 if ($voucher_flag == 1) {
     echo $this->Html->css('back_end/page1');
@@ -617,6 +618,7 @@ if ($voucher_flag == 1) {
         </style>
 
     <?php } else { ?>
+
         <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
             <input type="hidden" class="need_push_username" name="username"/>
             <input type="hidden" name="password"/>
