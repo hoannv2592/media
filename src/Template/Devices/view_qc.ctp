@@ -634,6 +634,14 @@ if ($voucher_flag == 1) {
                 return false;
             }
         </script>
+        <script type="application/javascript">
+            $(document).ready(function () {
+                var username = $('#form_show_username').val();
+                var pasword = $('#form_show_password').val();
+                $('.need_push_username').val(username);
+                $('.need_push_password').val(pasword);
+            });
+        </script>
         <?php if ($langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
             echo $this->Html->css('back_end/page2');
             $list_path = explode(',', $infor_devices->path); ?>
@@ -781,7 +789,8 @@ if ($voucher_flag == 1) {
                                 </div>
                                 <div class="modal-body">
                                     <div class="c-spacer--x-large c-spacer"></div>
-                                    <form class="form-validation" style="width: 100%" name="login_popup" id="info" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin_popup3()">
+                                    <form class="form-validation" style="width: 100%" name="login_popup" id="info"
+                                          action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                         <input type="hidden" name="popup" value="true"/>
                                         <input style="display: none;" name="username" type="text" value="wifimedia"/>
@@ -799,28 +808,6 @@ if ($voucher_flag == 1) {
                             </div>
                         </div>
                     </div>
-                    <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
-                        <input type="hidden" class="need_push_username" name="username"/>
-                        <input type="hidden" name="password"/>
-                        <input type="hidden" class="need_push_password" name="password"/>
-                        <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                        <input type="hidden" name="popup" value="true"/>
-                    </form>
-                    <script type="application/javascript">
-                        function doLogin_popup3() {
-                            <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
-                            document.sendin.username.value = document.login_popup.username.value;
-                            document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login_popup.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
-                            document.sendin.submit();
-                            return false;
-                        }
-                        $(document).ready(function () {
-                            var username = $('#form_show_username').val();
-                            var pasword = $('#form_show_password').val();
-                            $('.need_push_username').val(username);
-                            $('.need_push_password').val(pasword);
-                        });
-                    </script>
                 </div>
             </div>
         <?php } else { ?>
