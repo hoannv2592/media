@@ -49,10 +49,10 @@ class CampaignGroupsController extends AppController
     public function index()
     {
         $campaignGroups = $this->CampaignGroups->find('all',[
-            'contain'  => ['PartnerVoucherLogs' => function ($q) {
+            'contain'  => ['PartnerVouchers' => function ($q) {
                 return $q
                     ->where([
-                        'PartnerVoucherLogs.confirm ' => 1
+                        'PartnerVouchers.confirm ' => 1
                     ])
                     ->select([
                         'campaign_group_id','id'

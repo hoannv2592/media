@@ -12,6 +12,7 @@ use Cake\Utility\Hash;
  *
  * @property \App\Model\Table\ReportsTable $Reports
  * @property \App\Model\Table\PartnerVoucherLogsTable $PartnerVoucherLogs
+ * @property \App\Model\Table\PartnerVouchersTable $PartnerVouchers
  */
 class ReportsController extends AppController
 {
@@ -177,13 +178,13 @@ class ReportsController extends AppController
         }
         $conn = ConnectionManager::get('default');
         $conn->begin();
-        $partner_voucher_logs = $this->PartnerVoucherLogs->get($partner_id, [
+        $partner_voucher_logs = $this->PartnerVouchers->get($partner_id, [
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            $partner_voucher_logs = $this->PartnerVoucherLogs->patchEntity($partner_voucher_logs, $this->request->getData());
+            $partner_voucher_logs = $this->PartnerVouchers->patchEntity($partner_voucher_logs, $this->request->getData());
             if (empty($partner_voucher_logs->errors())) {
-                if ($this->PartnerVoucherLogs->save($partner_voucher_logs)) {
+                if ($this->PartnerVouchers->save($partner_voucher_logs)) {
                     $conn->commit();
                     $this->Flash->success(__('The partner has been saved.'));
                     return $this->redirect(['action' => 'reportDetail' . '/' . \UrlUtil::_encodeUrl($campaign_id)]);
@@ -206,11 +207,11 @@ class ReportsController extends AppController
         $conn->begin();
         if ($this->request->data) {
             $id = $this->request->data['id'];
-            $partner_log_voucher = $this->PartnerVoucherLogs->get($id);
-            $partner_log_voucher = $this->PartnerVoucherLogs->patchEntity($partner_log_voucher, $this->request->data);
+            $partner_log_voucher = $this->PartnerVouchers->get($id);
+            $partner_log_voucher = $this->PartnerVouchers->patchEntity($partner_log_voucher, $this->request->data);
             $partner_log_voucher->confirm = 1;
             if (empty($partner_log_voucher->errors())) {
-                if ($this->PartnerVoucherLogs->save($partner_log_voucher)) {
+                if ($this->PartnerVouchers->save($partner_log_voucher)) {
                     $conn->commit();
                     die(json_encode(true));
                 } else {
@@ -232,11 +233,11 @@ class ReportsController extends AppController
         if ($this->request->data) {
             $id = $this->request->data['id'];
             $this->loadModel('PartnerVoucherLogs');
-            $partner_log_voucher = $this->PartnerVoucherLogs->get($id);
-            $partner_log_voucher = $this->PartnerVoucherLogs->patchEntity($partner_log_voucher, $this->request->data);
+            $partner_log_voucher = $this->PartnerVouchers->get($id);
+            $partner_log_voucher = $this->PartnerVouchers->patchEntity($partner_log_voucher, $this->request->data);
             $partner_log_voucher->confirm = '2';
             if (empty($partner_log_voucher->errors())) {
-                if ($this->PartnerVoucherLogs->save($partner_log_voucher)) {
+                if ($this->PartnerVouchers->save($partner_log_voucher)) {
                     $conn->commit();
                     die(json_encode(true));
                 } else {

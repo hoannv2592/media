@@ -58,7 +58,7 @@
                                                 <i class="material-icons">account_circle</i>
                                             </span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control " name="name" id="name"  value="<?php echo $partner_voucher_logs['full_name'] ? $partner_voucher_logs['full_name']: ''; ?>" required placeholder="Tên khách hàng">
+                                            <input type="text" class="form-control " name="name" id="name"  value="<?php echo $partner_voucher_logs['name'] ? $partner_voucher_logs['name']: ''; ?>" required placeholder="Tên khách hàng">
                                         </div>
                                     </div>
                                 </div>
