@@ -15,7 +15,6 @@ $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng
 $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
-pr($infor_devices);
 echo $this->Html->script(['md5']);
 if ($voucher_flag == 1) {
     echo $this->Html->css('back_end/page1');
@@ -378,7 +377,7 @@ if ($voucher_flag == 1) {
                             </div>
                             <div class="modal-body">
                                 <div class="c-spacer--x-large c-spacer"></div>
-                                <form action="#" name="register_form" class="register_form" id="register_form" method="post">
+                                <form action="#" name="register_form" class="register_form123213" id="register_form" method="post">
                                     <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                     <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                                     <p><input type="text" id="_reg_address" name="address" value="" class="txt_input"placeholder="Địa chỉ"></p>
@@ -800,6 +799,28 @@ if ($voucher_flag == 1) {
                             </div>
                         </div>
                     </div>
+                    <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
+                        <input type="hidden" class="need_push_username" name="username"/>
+                        <input type="hidden" name="password"/>
+                        <input type="hidden" class="need_push_password" name="password"/>
+                        <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                        <input type="hidden" name="popup" value="true"/>
+                    </form>
+                    <script type="application/javascript">
+                        function doLogin_popup3() {
+                            <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
+                            document.sendin.username.value = document.login_popup.username.value;
+                            document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login_popup.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+                            document.sendin.submit();
+                            return false;
+                        }
+                        $(document).ready(function () {
+                            var username = $('#form_show_username').val();
+                            var pasword = $('#form_show_password').val();
+                            $('.need_push_username').val(username);
+                            $('.need_push_password').val(pasword);
+                        });
+                    </script>
                 </div>
             </div>
         <?php } else { ?>
@@ -842,22 +863,7 @@ if ($voucher_flag == 1) {
             </div>
             </body>
         <?php } ?>
-        <script type="application/javascript">
-            function doLogin_popup3() {
-                <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
-                document.sendin.username.value = document.login_popup.username.value;
-                document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login_popup.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
-                document.sendin.submit();
-                return false;
-            }
-            $(document).ready(function () {
-                var username = $('#form_show_username').val();
-                var pasword = $('#form_show_password').val();
-                $('.need_push_username').val(username);
-                $('.need_push_password').val(pasword);
-            });
-        </script>
-        <?php } ?>
+    <?php } ?>
     <?php echo $this->Html->script(['jquery.validate.min']); ?>
         <script type="text/javascript">
             $(document).ready(function() {
