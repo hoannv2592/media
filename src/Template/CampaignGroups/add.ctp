@@ -126,12 +126,9 @@
                         <?php } ?>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <h2 class="card-inside-title">Loại quảng cáo</h2>
                                 <div class="demo-radio-button">
-                                    <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" checked/>
-                                    <label style="font-weight: bold" for="radio_30">Quảng cáo với password</label>
-                                    <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" />
-                                    <label style="font-weight: bold" for="radio_31">Quảng cáo Facebook-Login</label>
-                                    <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey"  />
+                                    <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" checked />
                                     <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
                                 </div>
                             </div>
@@ -166,7 +163,8 @@
                             <div class="form-line"
                             <?php echo $this->Form->control('tile_congratulations', array(
                                 'label' => 'Nội dung tin nhắn chúc mừng',
-                                'class' => 'form-control'
+                                'class' => 'form-control',
+                                'placeholder' => 'Nội dung tin nhắn chúc mừng..'
                             ));
                             ?>
                             <div class="help-info">Nội dung tin nhắn chúc mừng</div>
@@ -175,14 +173,6 @@
                         <div class="form-group" id="end_show">
                             <div class="form-line">
                                 <input type="text" name="address" id="slogan" class="form-control" value="<?php echo isset($device->address) ? $device->address :'';?>" placeholder="Điền địa chỉ nhóm thiết bị..">
-                            </div>
-                        </div>
-                        <div class="check_pass_device m-t-15">
-                            <h2 class="card-inside-title"> Mật khẩu thiết bị </h2>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input type="text" name="apt_device_number" maxlength="8" id="apt_device_number" value="<?php echo isset($apt_device_number) ? $apt_device_number:'' ?>" placeholder="Điền mật khẩu.." class="form-control">
-                                </div>
                             </div>
                         </div>
                         <h2 class="card-inside-title"> Chọn một ảnh </h2>
@@ -228,12 +218,6 @@
                 'tile_name': {
                     required : true
                 },
-                'apt_device_number': {
-                    required : true
-                },
-                'langdingpage_id': {
-                    required: true
-                },
                 'random': {
                     required: true
                 }
@@ -241,36 +225,6 @@
         });
     });
     $('#config-demo').daterangepicker({}, function(start, end, label) {});
-
-
-    $(document).ready(function () {
-        var langding = "<?php echo isset($device->langdingpage_id) ? $device->langdingpage_id:''; ?>";
-        if (langding == 1) {
-            $('.check_pass_device').css('display', '');
-        } else if (langding == 3) {
-            $('.check_pass_device').css('display', 'none');
-        } else {
-            $('.check_pass_device').css('display', 'none');
-        }
-    });
-    $('.radio-col-grey').change(function () {
-        var __val = $(this).val();
-        if (__val == 1) {
-            $('.check_pass_device').css('display', '');
-        } else if (__val == 3) {
-            $('.check_pass_device').css('display', 'none');
-        } else {
-            $('.check_pass_device').css('display', 'none');
-        }
-    });
-    $('.radio-col-grey').change(function () {
-        var __val = $(this).val();
-        if ($(this).is(':checked')){
-            $(this).prop('checked', true).attr('checked', 'checked');
-        } else {
-            $(this).prop('checked', false).removeAttr('checked');
-        }
-    });
 </script>
 <style>
     .chosen-container {

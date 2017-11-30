@@ -1582,7 +1582,7 @@ class DevicesController extends AppController
             $data_save_pa = array(
                 'name' => $this->request->data['name'],
                 'birthday' => $this->request->data['birthday'],
-                'telephone' => $this->request->data['telephone'],
+                'phone' => $this->request->data['phone'],
                 'address' => $this->request->data['address'],
                 'device_id' => $this->request->data['device_id'],
                 'user_id' => $this->request->data['user_id'],

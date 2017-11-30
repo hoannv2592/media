@@ -15,6 +15,7 @@ $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng
 $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
+echo $this->Html->script(['md5']);
 if ($voucher_flag == 1) {
     echo $this->Html->css('back_end/page1');
     $list_path = explode(',', $infor_devices->path);
@@ -75,7 +76,7 @@ if ($voucher_flag == 1) {
                                 <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                 <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign: '';?>"/>
                                 <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
-                                <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                                 <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
                                 <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                 <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
@@ -112,12 +113,21 @@ if ($voucher_flag == 1) {
                     rules: {
                         'name': {
                             required: true,
+                        },
+                        'phone' : {
+                            required: true,
+                            number : true
                         }
                     },
                     messages: {
                         'name': {
                             required: 'Hãy nhập'
+                        },
+                        'phone': {
+                            required: 'Hãy nhập',
+                            number: 'Hãy nhập đúng định dạng',
                         }
+
                     },
                     submitHandler: function (form) {
                         $.ajax({
@@ -229,7 +239,7 @@ if ($voucher_flag == 1) {
                                     <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign: '';?>"/>
                                     <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                     <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
-                                    <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                    <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                                     <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
                                     <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                     <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
@@ -268,12 +278,21 @@ if ($voucher_flag == 1) {
                     rules: {
                         'name': {
                             required: true
+                        },
+                        'phone' : {
+                            required: true,
+                            number : true
                         }
                     },
                     messages: {
                         'name': {
                             required: 'Hãy nhập'
+                        },
+                        'phone': {
+                            required: 'Hãy nhập',
+                            number: 'Hãy nhập đúng định dạng',
                         }
+
                     },
                     submitHandler: function (form) {
                         $.ajax({
@@ -360,7 +379,7 @@ if ($voucher_flag == 1) {
                                 <div class="c-spacer--x-large c-spacer"></div>
                                 <form action="#" name="register_form" class="register_form" id="register_form" method="post">
                                     <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
-                                    <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                    <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                                     <p><input type="text" id="_reg_address" name="address" value="" class="txt_input"placeholder="Địa chỉ"></p>
                                     <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                     <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
@@ -533,12 +552,20 @@ if ($voucher_flag == 1) {
             $('#register_form').validate({
                 rules: {
                     'name': {
+                        required: true
+                    },
+                    'phone': {
                         required: true,
+                        number : true
                     }
                 },
                 messages: {
                     'name': {
                         required: 'Hãy nhập'
+                    },
+                    'phone': {
+                        required: 'Hãy nhập',
+                        number: 'Hãy nhập đúng định dạng',
                     }
                 },
                 submitHandler: function (form) {
@@ -601,7 +628,7 @@ if ($voucher_flag == 1) {
             function doLogin() {
                 <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
                 document.sendin.username.value = document.login.username.value;
-                document.sendin.password.value = hexMD5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+                document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
                 document.sendin.submit();
                 return false;
             }
@@ -657,7 +684,8 @@ if ($voucher_flag == 1) {
         <?php } elseif ($langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
             echo $this->Html->css('back_end/page3');
             $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
-            $list_path = explode(',', $infor_devices->path);?>
+            $list_path = explode(',', $infor_devices->path);
+            ?>
             <div id="fullpage">
                 <div class="section" id="section1">
                     <?php foreach ($list_path as $k => $vl) { ?>
@@ -758,7 +786,7 @@ if ($voucher_flag == 1) {
                                         <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                         <input style="display: none;" name="password" type="password" value="wifimedia" />
                                         <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
-                                        <p><input type="text" id="_reg_telephone" name="telephone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                        <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                                         <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
                                         <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                         <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
@@ -812,7 +840,6 @@ if ($voucher_flag == 1) {
             </div>
             </body>
         <?php } ?>
-            <?php echo $this->Html->script(['md5']); ?>
         <script type="application/javascript">
             function doLogin_popup3() {
                 <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
@@ -870,11 +897,19 @@ if ($voucher_flag == 1) {
                 rules: {
                     'name': {
                         required: true
+                    },
+                    'phone': {
+                        required: true,
+                        number: true
                     }
                 },
                 messages: {
-                    'full_name': {
+                    'name': {
                         required: 'Hãy nhập'
+                    },
+                    'phone': {
+                        required: 'Hãy nhập',
+                        number: 'Hãy nhập đúng định dạng'
                     }
                 },
                 submitHandler: function (form) {

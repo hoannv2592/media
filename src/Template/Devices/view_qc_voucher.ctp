@@ -15,7 +15,6 @@ $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg'
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
 $tile_congratulations = isset($infor_devices->tile_congratulations) ? $infor_devices->tile_congratulations : 'Chúc mừng bạn đã nhận được voucher Bạn hãy đem hình ảnh này đến quầy thu ngân để được nhận khuyến mại.!';
-
 echo $this->Html->css('back_end/page2');
 $list_path = explode(',', $infor_devices->path);
 if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
@@ -67,11 +66,12 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
         <input type="hidden" name="popup" value="true"/>
     </form>
+    <?php echo $this->Html->script(['md5']);?>
     <script type="text/javascript">
         function doLogin() {
             <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
             document.sendin.username.value = document.login.username.value;
-            document.sendin.password.value = hexMD5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+            document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
             document.sendin.submit();
             return false;
         }

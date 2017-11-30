@@ -82,7 +82,7 @@ class PartnerVoucherLogsTable extends Table
             ->allowEmpty('birthday');
 
         $validator
-            ->allowEmpty('telephone');
+            ->allowEmpty('phone');
 
         $validator
             ->allowEmpty('address');

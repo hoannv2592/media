@@ -147,14 +147,10 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                         <?php }?>
                         <div class="form-group">
                             <div class="form-line">
-                                <label> Chọn loại quảng cáo </label>
+                                <label> Loại quảng cáo </label>
                                 <div class="demo-radio-button">
-                                    <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey langding" <?php if ($campaign_group->langdingpage_id == 1 || $campaign_group->langdingpage_id == '') { echo 'checked'; } ?> />
-                                    <label style="font-weight: bold" for="radio_30">Quảng cáo với password</label>
-                                    <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey langding" <?php if ($campaign_group->langdingpage_id == 2) { echo 'checked'; }?> />
-                                    <label style="font-weight: bold" for="radio_31">Quảng cáo Facebook-Login</label>
                                     <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey langding" <?php if ($campaign_group->langdingpage_id == 3) { echo 'checked'; }?> />
-                                    <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
+                                    <label style="font-weight: bold" for="radio_32">Khảo sát thông tin khách hàng</label>
                                 </div>
                             </div>
                         </div>
@@ -215,20 +211,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 ));
                                 ?>
                                 <div class="help-info">Địa chỉ nhóm thiết bị</div>
-                            </div>
-                        </div>
-
-                        <div class="form-group check_pass_device">
-                            <div class="form-line">
-                                <?php $apt_device_number_ = isset($campaign_group->apt_device_number) ? ($campaign_group->apt_device_number): $apt_device_number ?>
-                                <?php echo $this->Form->control('apt_device_number', array(
-                                    'label' => 'Mật khẩu thiết bị',
-                                    'class' => 'form-control check_pass_device',
-                                    'id' => 'apt_device_number',
-                                    'value' => $apt_device_number_
-                                ));
-                                ?>
-                                <div class="help-info">Mật khẩu thiết bị</div>
                             </div>
                         </div>
                         <!-- Table -->
@@ -350,32 +332,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
 //        }
 //    }
 
-
-    $(document).ready(function () {
-        var langding = "<?php echo $campaign_group->langdingpage_id; ?>";
-        if (langding == 1) {
-            $('.check_pass_device').css('display', '');
-        } else if (langding == 3) {
-            $('.check_pass_device').css('display', 'none');
-        } else {
-            $('.check_pass_device').css('display', 'none');
-        }
-    });
-    $('.langding').change(function () {
-        var __val = $(this).val();
-        if (__val == 1) {
-            $('.check_pass_device').css('display', '');
-        } else if (__val == 3) {
-            $('.check_pass_device').css('display', 'none');
-        } else {
-            $('.check_pass_device').css('display', 'none');
-        }
-        if ($(this).is(':checked')){
-            $(this).prop('checked', true).attr('checked', 'checked');
-        } else {
-            $(this).prop('checked', false).removeAttr('checked');
-        }
-    });
     $.validator.setDefaults({ ignore: ":hidden:not(select)" });
     $('#form_advanced').validate({
         onkeyup: false,
