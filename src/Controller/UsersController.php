@@ -374,7 +374,7 @@ class UsersController extends AppController
         $this->autoRender = false;
         $this->loadModel('Sys_User');
         $conn = ConnectionManager::get('default');
-        $stmt = $conn->execute('SELECT name,birthday,telephone,address  from partner_voucher_logs');
+        $stmt = $conn->execute('SELECT name,birthday,telephone,address  from partner_vouchers');
         $first_row = $stmt->fetch('assoc');
         $objPHPExcel = $this->PhpExcel->createWorksheet();
         $objPHPExcel->setActiveSheet(0);
