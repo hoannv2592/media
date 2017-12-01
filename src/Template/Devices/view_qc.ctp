@@ -146,6 +146,30 @@ if ($voucher_flag == 1) {
             });
         </script>
     <?php } else { ?>
+        <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
+            <input type="hidden" class="need_push_username" name="username"/>
+            <input type="hidden" name="password"/>
+            <input type="hidden" class="need_push_password" name="password"/>
+            <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+            <input type="hidden" name="popup" value="true"/>
+        </form>
+        <script type="text/javascript">
+            function doLogin() {
+                <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
+                document.sendin.username.value = document.login.username.value;
+                document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+                document.sendin.submit();
+                return false;
+            }
+        </script>
+        <script type="application/javascript">
+            $(document).ready(function () {
+                var username = $('#form_show_username').val();
+                var pasword = $('#form_show_password').val();
+                $('.need_push_username').val(username);
+                $('.need_push_password').val(pasword);
+            });
+        </script>
         <div id="fullpage">
             <div class="section" id="section1">
                 <?php foreach ($list_path as $k => $vl) { ?>
