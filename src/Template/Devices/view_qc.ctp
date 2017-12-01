@@ -106,7 +106,7 @@ if ($voucher_flag == 1) {
                     onkeyup : false,
                     rules: {
                         'name': {
-                            required: true,
+                            required: true
                         },
                         'phone' : {
                             required: true,
@@ -119,9 +119,8 @@ if ($voucher_flag == 1) {
                         },
                         'phone': {
                             required: 'Hãy nhập',
-                            number: 'Hãy nhập đúng định dạng',
+                            number: 'Hãy nhập đúng định dạng'
                         }
-
                     },
                     submitHandler: function (form) {
                         $.ajax({
@@ -226,7 +225,7 @@ if ($voucher_flag == 1) {
                             </div>
                             <div class="modal-body">
                                 <div class="c-spacer--x-large c-spacer"></div>
-                                <form class="form-validation" style="width: 100%" name="login_popup" id="info_mirkotic" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
+                                <form class="form-validation" style="width: 100%" name="login_popup" id="info_mirkotic" action="#" method="post">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="true"/>
                                     <input style="display: none;" name="username" type="text" value="wifimedia"/>
