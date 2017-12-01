@@ -507,8 +507,7 @@ class CampaignGroupsController extends AppController
                 return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
             }
         }
-        $apt_device_number = $this->radompassWord();
-        $this->set(compact('campaign_group','apt_device_number', 'devices', 'list_users'));
+        $this->set(compact('campaign_group', 'devices', 'list_users'));
     }
 
     /**

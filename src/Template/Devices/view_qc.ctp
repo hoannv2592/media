@@ -101,13 +101,6 @@ if ($voucher_flag == 1) {
                     forceParse: 0,
                     format: "dd/mm/yyyy"
                 });
-                jQuery.validator.addMethod("nonNumeric", function (value, element) {
-                    return this.optional(element) || isNaN(parseInt(value));
-                }, "Hãy nhập đúng tên");
-                $.validator.addMethod('customphone', function (value, element) {
-                    return this.optional(element) || /^[0-9-+]+$/.test(value);
-                }, "Please enter a valid phone number");
-                var url = "<?php echo $infor_devices->auth_target?>";
                 var X_url = "<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'viewQcVoucher' . '/' . UrlUtil::_encodeUrl($infor_devices->id)])?>";
                 $('#register_form').validate({
                     onkeyup : false,
@@ -153,29 +146,6 @@ if ($voucher_flag == 1) {
             });
         </script>
     <?php } else { ?>
-        <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
-            <input type="hidden" class="need_push_username" name="username"/>
-            <input type="hidden" name="password"/>
-            <input type="hidden" class="need_push_password" name="password"/>
-            <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-            <input type="hidden" name="popup" value="true"/>
-        </form>
-        <?php echo $this->Html->script(['md5']); ?>
-        <script type="application/javascript">
-            function doLogin_popup2() {
-                <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
-                document.sendin.username.value = document.login_popup.username.value;
-                document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login_popup.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
-                document.sendin.submit();
-                return false;
-            }
-            $(document).ready(function () {
-                var username = $('#form_show_username').val();
-                var pasword = $('#form_show_password').val();
-                $('.need_push_username').val(username);
-                $('.need_push_password').val(pasword);
-            });
-        </script>
         <div id="fullpage">
             <div class="section" id="section1">
                 <?php foreach ($list_path as $k => $vl) { ?>
@@ -232,7 +202,7 @@ if ($voucher_flag == 1) {
                             </div>
                             <div class="modal-body">
                                 <div class="c-spacer--x-large c-spacer"></div>
-                                <form class="form-validation" style="width: 100%" name="login_popup" id="info_mirkotic" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin_popup2()">
+                                <form class="form-validation" style="width: 100%" name="login_popup" id="info_mirkotic" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="true"/>
                                     <input style="display: none;" name="username" type="text" value="wifimedia"/>
@@ -248,7 +218,6 @@ if ($voucher_flag == 1) {
                                     <p><input type="submit" class="_btn" value="Đăng ký"></p>
                                 </form>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -298,7 +267,7 @@ if ($voucher_flag == 1) {
                         $.ajax({
                             url: "/Devices/add_log_voucher",
                             type: "POST",
-                            data: $("#info").serialize(),
+                            data: $("#info_mirkotic").serialize(),
                             cache: false,
                             processData: false,
                             success: function (data) {
