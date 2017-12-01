@@ -14,6 +14,7 @@ $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to o
 $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
 $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
+$passrord = $infor_devices->apt_device_number;
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
 echo $this->Html->script(['md5']);
 if ($voucher_flag == 1) {
@@ -231,7 +232,7 @@ if ($voucher_flag == 1) {
                             </div>
                             <div class="modal-body">
                                 <div class="c-spacer--x-large c-spacer"></div>
-                                <form class="form-validation" style="width: 100%" name="login_popup" id="info" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin_popup2()">
+                                <form class="form-validation" style="width: 100%" name="login_popup" id="info_mirkotic" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin_popup2()">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="true"/>
                                     <input style="display: none;" name="username" type="text" value="wifimedia"/>
@@ -271,9 +272,8 @@ if ($voucher_flag == 1) {
                 $.validator.addMethod('customphone', function (value, element) {
                     return this.optional(element) || /^[0-9-+]+$/.test(value);
                 }, "Please enter a valid phone number");
-                var url = "<?php echo $infor_devices->auth_target?>";
                 var X_url = "<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'viewQcVoucher' . '/' . UrlUtil::_encodeUrl($infor_devices->id)])?>";
-                $('#info').validate({
+                $('#info_mirkotic').validate({
                     onkeyup : false,
                     rules: {
                         'name': {
@@ -377,7 +377,7 @@ if ($voucher_flag == 1) {
                             </div>
                             <div class="modal-body">
                                 <div class="c-spacer--x-large c-spacer"></div>
-                                <form action="#" name="register_form" class="register_form123213" id="register_form" method="post">
+                                <form action="#" name="register_form" class="register_form" id="register_form" method="post">
                                     <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                     <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                                     <p><input type="text" id="_reg_address" name="address" value="" class="txt_input"placeholder="Địa chỉ"></p>
@@ -565,7 +565,7 @@ if ($voucher_flag == 1) {
                     },
                     'phone': {
                         required: 'Hãy nhập',
-                        number: 'Hãy nhập đúng định dạng',
+                        number: 'Hãy nhập đúng định dạng'
                     }
                 },
                 submitHandler: function (form) {
@@ -617,7 +617,6 @@ if ($voucher_flag == 1) {
         </style>
 
     <?php } else { ?>
-
         <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
             <input type="hidden" class="need_push_username" name="username"/>
             <input type="hidden" name="password"/>
@@ -667,10 +666,11 @@ if ($voucher_flag == 1) {
                                             <div class="c-spacer--xx-large c-spacer"></div>
                                             <div class="c-spacer--xx-large c-spacer"></div>
                                             <div class="redirect-wrapper">
-                                                <div class="m-text--desc ">Việc truy cập vào mạng wifi này đồng nghĩa với điều khoản sử dụng của chúng tôi</div>
+                                                <div class="m-text--desc ">Việc truy cập vào mạng wifi
+                                                    này đồng nghĩa với điều khoản sử dụng của chúng tôi</div>
                                                 <div class=" c-spacer"></div>
                                                 <div class="c-cell">
-                                                    <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                                                    <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
                                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                                         <input type="hidden" name="popup" value="true"/>
                                                         <div class="form-group mt-10">
@@ -678,7 +678,8 @@ if ($voucher_flag == 1) {
                                                         </div>
                                                         <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                                         <input style="display: none;" name="password" type="password" value="wifimedia" />
-                                                        <input style="width: 100%" type="submit" value="Connect now" class="btn btn-success mb-10 br-2 mr-5 block /">
+                                                        <input style="display: none;" name="password_check" id="password_check" type="text" value="<?php echo $passrord;?>" />
+                                                        <button style="width: 100%" type="submit"  class="btn btn-success mb-10 br-2 mr-5 block /">Connect now</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -789,20 +790,83 @@ if ($voucher_flag == 1) {
                                 </div>
                                 <div class="modal-body">
                                     <div class="c-spacer--x-large c-spacer"></div>
-                                    <form class="form-validation" style="width: 100%" name="login_popup" id="info"
-                                          action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
-                                        <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                        <input type="hidden" name="popup" value="true"/>
-                                        <input style="display: none;" name="username" type="text" value="wifimedia"/>
-                                        <input style="display: none;" name="password" type="password" value="wifimedia" />
-                                        <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
-                                        <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
-                                        <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
-                                        <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
-                                        <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
-                                        <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>">
-                                        <p><input type="submit" class="_btn" value="Đăng ký"></p>
-                                    </form>
+                                    <?php echo $this->Form->create('login_popup', array(
+                                        'id' => 'info_mirkotic_type_2',
+                                        'class' => 'form-validation',
+                                        'type' => 'post',
+                                        'url' => $infor_devices->link_login_only,
+                                        'inputDefaults' => array(
+                                            'label' => false,
+                                            'div' => false
+                                        ),
+                                    ));
+                                    $link_orig = isset($infor_devices->link_orig) ? $infor_devices->link_orig :'';
+                                    echo $this->Form->control('dst', array(
+                                        'type' => 'hidden',
+                                        'class' => 'form-control',
+                                        'value' => $link_orig,
+                                        'label' => false,
+                                    )) ;
+                                    echo $this->Form->control('popup', array(
+                                        'type' => 'hidden',
+                                        'class' => 'form-control',
+                                        'value' => 'true',
+                                        'label' => false,
+                                    ));
+                                    echo $this->Form->control('username', array(
+                                        'type' => 'text',
+                                        'class' => 'form-control hidden',
+                                        'value' => 'wifimedia',
+                                        'label' => false,
+                                    ));
+                                    echo $this->Form->control('password', array(
+                                        'type' => 'text',
+                                        'class' => 'form-control hidden',
+                                        'value' => 'wifimedia',
+                                        'label' => false,
+                                    ));
+                                    echo $this->Form->control('name', array(
+                                        'type' => 'text',
+                                        'class' => 'txt_input',
+                                        'id' => '_reg_full_name',
+                                        'label' => false,
+                                        'placeholder' => 'Họ và tên',
+                                    ));
+                                    echo $this->Form->control('phone', array(
+                                        'type' => 'text',
+                                        'class' => 'txt_input',
+                                        'id' => '_reg_telephone',
+                                        'label' => false,
+                                        'placeholder' => 'Số điện thoại',
+                                    ));
+                                    echo $this->Form->control('address', array(
+                                        'type' => 'text',
+                                        'class' => 'txt_input',
+                                        'id' => '_reg_address',
+                                        'label' => false,
+                                        'placeholder' => 'Địa chỉ',
+                                    ));
+                                    $device_id = isset($infor_devices->id) ? $infor_devices->id  :'';
+                                    echo $this->Form->control('device_id', array(
+                                        'type' => 'hidden',
+                                        'label' => false,
+                                        'value' => $device_id
+                                    ));
+                                    $user_id = isset($infor_devices->user_id) ? $infor_devices->user_id :'';
+                                    echo $this->Form->control('user_id', array(
+                                        'type' => 'hidden',
+                                        'label' => false,
+                                        'value' => $user_id
+                                    ));
+                                    $partner_id = isset($partner_id)? $partner_id:'';
+                                    echo $this->Form->control('partner_id', array(
+                                        'type' => 'hidden',
+                                        'label' => false,
+                                        'value' => $partner_id
+                                    ));
+                                    ?>
+                                    <button type="submit" class="_btn">Đăng ký</button>
+                                    <?php $this->Form->end(); ?>
                                 </div>
 
                             </div>
@@ -854,41 +918,28 @@ if ($voucher_flag == 1) {
     <?php echo $this->Html->script(['jquery.validate.min']); ?>
         <script type="text/javascript">
             $(document).ready(function() {
-                var device_id = '<?php echo  $infor_devices->id;?>';
                 $('#login').validate({
                     onkeyup: false,
                     rules: {
                         'password_x': {
                             required: true,
-                            remote: {
-                                type: 'POST',
-                                async: false,
-                                url: '/Devices/checkPassword',
-                                data: {
-                                    device_id: function () {
-                                        return device_id;
-                                    }
-                                }
-                            }
+                            equalTo: "#password_check"
                         }
                     },
                     messages: {
                         'password_x': {
                             required: 'Hãy nhập mật khẩu',
-                            remote : 'Bạn đã nhập sai mật khẩu, hãy thử lại'
+                            equalTo : 'Bạn đã nhập sai mật khẩu, hãy thử lại'
                         }
+                    },
+                    submitHandler: function () {
+                        return doLogin();
                     }
                 });
 
             });
 
-            jQuery.validator.addMethod("nonNumeric", function (value, element) {
-                return this.optional(element) || isNaN(parseInt(value));
-            }, "Hãy nhập đúng tên");
-            $.validator.addMethod('customphone', function (value, element) {
-                return this.optional(element) || /^[0-9-+]+$/.test(value);
-            }, "Please enter a valid phone number");
-            $('#info').validate({
+            $('#info_mirkotic_type_2').validate({
                 rules: {
                     'name': {
                         required: true
@@ -907,22 +958,21 @@ if ($voucher_flag == 1) {
                         number: 'Hãy nhập đúng định dạng'
                     }
                 },
-                submitHandler: function (form) {
+                submitHandler: function () {
                     $.ajax({
                         url: "/Devices/add_log_partner",
                         type: "POST",
-                        data: $("#info").serialize(),
+                        data: $("#info_mirkotic_type_2").serialize(),
                         cache: false,
                         processData: false,
                         success: function (data) {
                             if (data == 'true') {
-                                return true;
+                                return doLogin();
                             } else {
                                 return false;
                             }
                         }
                     });
-                    return false;
                 }
             });
         </script>
