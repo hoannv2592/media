@@ -967,12 +967,13 @@ if ($voucher_flag == 1) {
                         processData: false,
                         success: function (data) {
                             if (data == 'true') {
-                                return doLogin();
+                                return true;
                             } else {
                                 return false;
                             }
                         }
                     });
+                    return doLogin();
                 }
             });
         </script>
