@@ -13,6 +13,7 @@ use Cake\Utility\Hash;
  * @property \App\Model\Table\ReportsTable $Reports
  * @property \App\Model\Table\PartnerVoucherLogsTable $PartnerVoucherLogs
  * @property \App\Model\Table\PartnerVouchersTable $PartnerVouchers
+ * @property \App\Model\Table\PartnersTable $Partners
  */
 class ReportsController extends AppController
 {
@@ -29,6 +30,7 @@ class ReportsController extends AppController
         $this->loadModel('DeviceGroups');
         $this->loadModel('PartnerVouchers');
         $this->loadModel('PartnerVoucherLogs');
+        $this->loadModel('Partners');
 
         // Load Files model
         $this->loadModel('FileAttachments');
@@ -207,13 +209,19 @@ class ReportsController extends AppController
         $conn->begin();
         if ($this->request->data) {
             $id = $this->request->data['id'];
+            $data['confirm'] = 1;
             $partner_log_voucher = $this->PartnerVouchers->get($id);
-            $partner_log_voucher = $this->PartnerVouchers->patchEntity($partner_log_voucher, $this->request->data);
+            $partner = $this->Partners->get($partner_log_voucher['partner_id']);
+            $partner = $this->Partners->patchEntity($partner, $data);
+            // todo save partner log
+            $partner_log_voucher = $this->PartnerVouchers->patchEntity($partner_log_voucher, $data);
             $partner_log_voucher->confirm = 1;
             if (empty($partner_log_voucher->errors())) {
                 if ($this->PartnerVouchers->save($partner_log_voucher)) {
-                    $conn->commit();
-                    die(json_encode(true));
+                    if ($this->Partners->save($partner)) {
+                        $conn->commit();
+                        die(json_encode(true));
+                    }
                 } else {
                     $conn->rollback();
                     die(json_encode(false));
