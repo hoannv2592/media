@@ -54,11 +54,20 @@
                                 <div class="col-md-6">
                                     <b>Tên khách hàng</b>
                                     <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="material-icons">account_circle</i>
-                                            </span>
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">account_circle</i>
+                                        </span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control " name="name" id="name"  value="<?php echo $partner_voucher_logs['name'] ? $partner_voucher_logs['name']: ''; ?>" required placeholder="Tên khách hàng">
+                                            <?php $name = isset($partner_voucher_logs['name']) ? ($partner_voucher_logs['name']):'' ?>
+                                            <?php echo $this->Form->control('name', array(
+                                                'label' => false,
+                                                'id' => 'name',
+                                                'class' => 'form-control',
+                                                'value' => $name,
+                                                'required' => true,
+                                                'placeholder' => 'Tên khách hàng'
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -69,7 +78,15 @@
                                                 <i class="material-icons">phone_iphone</i>
                                             </span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control mobile-phone-number" name="telephone" placeholder="Số điện thoại" value="<?php echo $partner_voucher_logs['telephone'] ? $partner_voucher_logs['telephone']: ''; ?>">
+                                            <?php $phone = isset($partner_voucher_logs['phone']) ? ($partner_voucher_logs['phone']):'' ?>
+                                            <?php echo $this->Form->control('phone', array(
+                                                'label' => false,
+                                                'class' => 'form-control mobile-phone-number',
+                                                'value' => $phone,
+                                                'required' => true,
+                                                'placeholder' => 'Số điện thoại'
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -80,7 +97,15 @@
                                                 <i class="material-icons">date_range</i>
                                             </span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control datetime" id="datetime_birthday" name="birthday" value="<?php echo $partner_voucher_logs['birthday'] ? $partner_voucher_logs['birthday']: ''; ?>" placeholder="Ex: 30/07/2016 23:59">
+                                            <?php $birthday = isset($partner_voucher_logs['birthday']) ? ($partner_voucher_logs['birthday']):'' ?>
+                                            <?php echo $this->Form->control('birthday', array(
+                                                'label' => false,
+                                                'class' => 'form-control datetime',
+                                                'id' => 'datetime_birthday',
+                                                'value' => $birthday,
+                                                'placeholder' => 'Ex: 30/07/2016 23:59'
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>
@@ -92,7 +117,14 @@
                                                 <i class="material-icons">home</i>
                                             </span>
                                         <div class="form-line">
-                                            <input type="text" class="form-control" name="address" placeholder="Điền địa chỉ" value="<?php echo $partner_voucher_logs['address'] ? $partner_voucher_logs['address']: ''; ?>" required>
+                                            <?php $address = isset($partner_voucher_logs['address']) ? ($partner_voucher_logs['address']):'' ?>
+                                            <?php echo $this->Form->control('address', array(
+                                                'label' => false,
+                                                'class' => 'form-control',
+                                                'value' => $address,
+                                                'placeholder' => 'Điền địa chỉ'
+                                            ));
+                                            ?>
                                         </div>
                                     </div>
                                 </div>

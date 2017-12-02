@@ -78,7 +78,7 @@
                                                         <?php echo h($partner_voucher_log->name); ?>
                                                     </a>
                                                 </td>
-                                                <td><?php echo nl2br($partner_voucher_log->telephone); ?></td>
+                                                <td><?php echo nl2br($partner_voucher_log->phone); ?></td>
                                                 <td><?php echo nl2br($partner_voucher_log->birthday); ?></td>
                                                 <td><?php echo nl2br($partner_voucher_log->address); ?></td>
                                                 <td>

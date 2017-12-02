@@ -107,178 +107,10 @@ class DevicesController extends AppController
         $this->set(compact('Adgroups', 'devices'));
     }
 
-
-    /**
-     *
-     */
-    public function loadDeviceNoLangdingpage()
-    {
-        $login = $this->Auth->user();
-        if ($login['role'] == User::ROLE_ONE) {
-            $devices = $this->Devices->find('all', [
-                'contain' => ['Users' => function ($q) {
-                    return $q
-                        ->where(['Devices.delete_flag !=' => 1]);
-                }],
-                'conditions' => array(
-                    'Devices.status ' => NO_LANDING
-                )
-            ])->toArray();
-        } else {
-            $devices = $this->Devices->find('all', [
-                'contain' => ['Users' => function ($q) {
-                    return $q
-                        ->where([
-                            'Devices.delete_flag !=' => 1,
-                        ]);
-                }],
-                'conditions' => [
-                    'Devices.user_id ' => $login['id'],
-                    'Devices.status ' => NO_LANDING
-                ],
-            ])->toArray();
-        }
-        $this->set(compact('devices'));
-        $this->render('/Devices/index');
-    }
-
-    /**
-     *
-     */
-    public function loadDeviceHasLangdingpage()
-    {
-        $login = $this->Auth->user();
-        if ($login['role'] == User::ROLE_ONE) {
-            $devices = $this->Devices->find('all', [
-                'contain' => ['Users' => function ($q) {
-                    return $q
-                        ->where(['Devices.delete_flag !=' => 1]);
-                }],
-                'conditions' => array(
-                    'Devices.status ' => HAS_LANDING
-                )
-            ])->toArray();
-        } else {
-            $devices = $this->Devices->find('all', [
-                'contain' => ['Users' => function ($q) {
-                    return $q
-                        ->where([
-                            'Devices.delete_flag !=' => 1,
-                        ]);
-                }],
-                'conditions' => [
-                    'Devices.user_id ' => $login['id'],
-                    'Devices.status ' => HAS_LANDING
-                ],
-            ])->toArray();
-        }
-        $this->set(compact('devices'));
-        $this->render('/Devices/index');
-    }
-
-    /**
-     * View method
-     *
-     * @param string|null $id Device id.
-     * @return \Cake\Http\Response|void
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($id = null)
-    {
-        $device = $this->Devices->get($id, [
-            'contain' => ['Users']
-        ]);
-
-        $this->set('device', $device);
-        $this->set('_serialize', ['device']);
-    }
-
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
-     */
-    public function add()
-    {
-        $conn = ConnectionManager::get('default');
-        $conn->begin();
-        $this->loadModel('Users');
-        $users = $this->Users->find('all')
-            ->where(['Users.delete_flag !=' => DELETED])
-            ->select(['id', 'username'])
-            ->order(['Users.id' => 'DESC'])
-            ->combine('id', 'username')
-            ->toArray();
-        $device = $this->Devices->newEntity();
-        if ($this->request->is('post')) {
-            $device = $this->Devices->patchEntity($device, $this->request->getData());
-            $device->delete_flag = UN_DELETED;
-            if (empty($device->errors())) {
-                if ($this->Devices->save($device)) {
-                    $conn->commit();
-                    $this->Flash->success(__('The device has been saved.'));
-                    return $this->redirect(['action' => 'index']);
-                } else {
-                    $conn->rollback();
-                    $this->Flash->error(__('The device could not be saved. Please, try again.'));
-                    return $this->redirect(['action' => 'add']);
-                }
-            } else {
-                $conn->rollback();
-                $this->Flash->error(__('The device could not be saved. Please, try again.'));
-                return $this->redirect(['action' => 'add']);
-            }
-        }
-        $this->set(compact('users', 'device'));
-        //return $this->redirect(['action' => 'index']);
-    }
-
-    /**
-     * Edit method
-     *
-     * @param string|null $id Devices id.
-     * @return \Cake\Http\Response|null Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Network\Exception\NotFoundException When record not found.
-     */
-    public function edit($id = null)
-    {
-        $id = \UrlUtil::_decodeUrl($id);
-        $conn = ConnectionManager::get('default');
-        $conn->begin();
-        if (!$this->Devices->exists(['id' => $id])) {
-            return $this->redirect(array('controller' => 'Devices', 'action' => 'index'));
-        }
-        $device = $this->Devices->get($id, [
-            'contain' => []
-        ]);
-        $this->getAllData();
-        if ($this->request->getData()) {
-            $device = $this->Devices->patchEntity($device, $this->request->getData());
-            if (empty($device->errors())) {
-                if ($this->Devices->save($device)) {
-                    $conn->commit();
-                    $this->Flash->success(__('The user has been saved.'));
-                    return $this->redirect(['action' => 'index']);
-                } else {
-                    $conn->rollback();
-                    $this->Flash->error(__('The device could not be saved. Please, try again.'));
-                    return $this->redirect(['action' => 'edit' . '/' . \UrlUtil::_encodeUrl($id)]);
-                }
-            } else {
-                $conn->rollback();
-                $this->Flash->error(__('The device could not be saved. Please, try again.'));
-                return $this->redirect(['action' => 'edit' . '/' . \UrlUtil::_encodeUrl($id)]);
-            }
-        }
-        $this->set(compact('device'));
-        $this->set('_serialize', ['device']);
-    }
-
     /**
      * Delete method
      *
-     * @return \Cake\Http\Response|null Redirects to index.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return void Redirects to index.
      */
     public function delete()
     {
@@ -382,17 +214,6 @@ class DevicesController extends AppController
                 die(json_encode(false));
             }
         }
-    }
-
-    /**
-     * setNewAdvertise method
-     *
-     * @param null $id
-     * @return \Cake\Http\Response|void
-     */
-    public function setNewAdvertise($id = null)
-    {
-        $this->getAllData();
     }
 
     public function detailDevice($id = null)
@@ -575,32 +396,6 @@ class DevicesController extends AppController
 
 
     /**
-     * Add info users
-     * @table logs
-     *
-     * @return json
-     *
-     */
-    public function addLog()
-    {
-        $this->autoRender = false;
-        if ($this->request->getData()) {
-            $log = $this->Logs->newEntity();
-            if ($this->request->data) {
-                $log = $this->Logs->patchEntity($log, $this->request->data);
-                if (empty($log->errors())) {
-                    if ($this->Logs->save($log)) {
-                        die(json_encode(true));
-                    } else {
-                        die(json_encode(false));
-                    }
-                }
-            }
-        }
-    }
-
-
-    /**
      * Add method
      *
      * @param null $apt_key
@@ -634,9 +429,10 @@ class DevicesController extends AppController
                 $link_login_only = isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only']:'';
                 $link_orig = isset($this->request->data['link_orig']) ? $this->request->data['link_orig']:'';
                 $chap_id = isset($this->request->data['chap_id']) ? $this->request->data['chap_id']:'';
-                $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
                 $auth_target = isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '';
+                $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
                 if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
+                    $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
                     $conn = ConnectionManager::get('default');
                     $conn->begin();
                     $chk = false;
@@ -1342,8 +1138,13 @@ class DevicesController extends AppController
                 $device->status = UN_DELETED;
                 $device->name = DEVICE . ($query + 1);
                 $users = $this->Users->patchEntity($users, $data_user);
+                if ($flag_id == 1) {
+                    $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
+                } else {
+                    $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
+                }
                 $data_new_par = array(
-                    'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '',
+                    'client_mac' => $client_mac,
                     'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only'] : '',
                     'link_orig' => isset($this->request->data['link_orig']) ? $this->request->data['link_orig'] : '',
                     'chap_id' => isset($this->request->data['chap_id']) ? $this->request->data['chap_id'] : '',
