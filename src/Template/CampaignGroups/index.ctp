@@ -84,7 +84,7 @@
                                         </td>
                                         <td>
                                             <?php
-                                                $number = count($campaignGroup->partner_voucher_logs);
+                                                $number = count($campaignGroup->partner_vouchers);
                                             echo $number.'/'.$campaignGroup->number_voucher; ?>
                                         </td>
                                         <td><?php echo isset(\App\Model\Entity\CampaignGroup::$random[$campaignGroup->random]) ? \App\Model\Entity\CampaignGroup::$random[$campaignGroup->random] : '' ?></td>
