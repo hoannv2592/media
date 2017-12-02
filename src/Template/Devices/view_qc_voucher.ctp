@@ -66,7 +66,7 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
         <input type="hidden" name="popup" value="true"/>
     </form>
-    <?php echo $this->Html->script(['md5']);?>
+    <?php echo $this->Html->script(['md 5']);?>
     <script type="text/javascript">
         function doLogin() {
             <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
