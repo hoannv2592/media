@@ -1336,6 +1336,7 @@ class DevicesController extends AppController
                 ];
                 $this->request->data['type'] = $flag_id;
                 $device = $this->Devices->newEntity();
+                $this->request->data['apt_key'] = $apt_key;
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 $device->delete_flag = UN_DELETED;
                 $device->status = UN_DELETED;
