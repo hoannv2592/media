@@ -85,25 +85,6 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <b>Địa chỉ email</b>
-                                    <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="material-icons">email</i>
-                                            </span>
-                                        <div class="form-line">
-                                            <?php
-                                            $email = isset($partner['email']) ? ($partner['email']):'';
-                                            echo $this->Form->control('email', array(
-                                                'label' => false,
-                                                'class' => 'form-control email',
-                                                'value' => $email,
-                                                'required' => false,
-                                            ));
-                                            ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
                                     <b>Địa chỉ mac</b>
                                     <div class="input-group">
                                             <span class="input-group-addon">
@@ -161,21 +142,6 @@
                                                 'readonly' => 'readonly'
                                             ));
                                             ?>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <b>Giới tính</b>
-                                    <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="material-icons">perm_identity</i>
-                                            </span>
-                                        <div class="form-line">
-                                            <select class="form-control" name="sex" id="sex">
-                                                <option disabled selected value> Không xác định </option>
-                                                <option value="1" >Nam</option>
-                                                <option value="2" >Nữ</option>
-                                            </select>
                                         </div>
                                     </div>
                                 </div>

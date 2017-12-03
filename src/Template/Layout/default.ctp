@@ -158,7 +158,7 @@ $cakeDescription = 'Media ';
                     <?php } ?>
                     <a href="<?php echo $this->Url->build(["controller" => "Devices", "action" => "index"]); ?>"
                        class="waves-effect waves-block">
-                        <i class="material-icons">business</i>
+                        <i class="material-icons">devices</i>
                         <span>Quản lý thiết bị</span>
                     </a>
                 </li>
@@ -202,13 +202,23 @@ $cakeDescription = 'Media ';
                         <span>Danh sách khách hàng</span>
                     </a>
                 </li>
+                <?php if ($controller == 'ServiceGroups') { ?>
+            <li class="left_menu active ">
+            <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "ServiceGroups", "action" => "index"]); ?>">
+                        <i class="material-icons">group_add</i>
+                        <span>Chăm sóc khách hàng</span>
+                    </a>
+                </li>
                 <?php if ($controller == 'AdgroupChangeHistories') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
                 <li class="left_menu">
                     <?php } ?>
                     <a href="<?php echo $this->Url->build(["controller" => "AdgroupChangeHistories", "action" => "index"]); ?>">
-                        <i class="material-icons">change_history</i>
+                        <i class="material-icons">history</i>
                         <span>Lịch sử thay đổi nhóm thiết bị</span>
                     </a>
                 </li>
@@ -220,16 +230,6 @@ $cakeDescription = 'Media ';
                     <a href="<?php echo $this->Url->build(["controller" => "Landingpages", "action" => "index"]); ?>">
                         <i class="material-icons">pages</i>
                         <span>Màn hình quảng cáo</span>
-                    </a>
-                </li>
-                <?php if ($controller == 'ServiceGroups') { ?>
-            <li class="left_menu active ">
-            <?php } else { ?>
-                <li class="left_menu">
-                    <?php } ?>
-                    <a href="javascript:void(0);">
-                        <i class="material-icons">widgets</i>
-                        <span>Nhóm dịch vụ</span>
                     </a>
                 </li>
             </ul>

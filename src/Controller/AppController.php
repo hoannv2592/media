@@ -81,6 +81,8 @@ class AppController extends Controller
         $this->loadModel('Landingpages');
         $this->loadModel('ServiceGroups');
         $this->loadModel('CampaignGroups');
+        $this->loadModel('Partners');
+        $this->loadModel('PartnerVouchers');
         $this->Auth->config('authorize', false);
 
         /*

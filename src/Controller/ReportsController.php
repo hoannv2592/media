@@ -183,13 +183,17 @@ class ReportsController extends AppController
         $partner_voucher_logs = $this->PartnerVouchers->get($partner_id, [
             'contain' => []
         ]);
+        $partner = $this->Partners->get($partner_voucher_logs['partner_id']);
         if ($this->request->is(['patch', 'post', 'put'])) {
+            $partner = $this->Partners->patchEntity($partner, $this->request->getData());
             $partner_voucher_logs = $this->PartnerVouchers->patchEntity($partner_voucher_logs, $this->request->getData());
             if (empty($partner_voucher_logs->errors())) {
                 if ($this->PartnerVouchers->save($partner_voucher_logs)) {
-                    $conn->commit();
-                    $this->Flash->success(__('The partner has been saved.'));
-                    return $this->redirect(['action' => 'reportDetail' . '/' . \UrlUtil::_encodeUrl($campaign_id)]);
+                    if ($this->Partners->save($partner)) {
+                        $conn->commit();
+                        $this->Flash->success(__('The partner has been saved.'));
+                        return $this->redirect(['action' => 'reportDetail' . '/' . \UrlUtil::_encodeUrl($campaign_id)]);
+                    }
                 } else {
                     $conn->rollback();
                 }

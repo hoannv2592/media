@@ -24,8 +24,8 @@ use Cake\Utility\Hash;
  *
  * @method \App\Model\Entity\Device[] paginate($object = null, array $settings = [])
  *
- *  * @property  \App\Controller\Component\UploadImageComponent $UploadImage
- * * @property \App\Model\Table\PartnersTable $Partners
+ * @property  \App\Controller\Component\UploadImageComponent $UploadImage
+ * @property \App\Model\Table\PartnersTable $Partners
  */
 class DevicesController extends AppController
 {

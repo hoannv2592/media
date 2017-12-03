@@ -10,6 +10,7 @@ use Cake\Datasource\ConnectionManager;
  * Partners Controller
  *
  * @property \App\Model\Table\PartnersTable $Partners
+ * @property \App\Model\Table\PartnerVouchersTable $PartnerVouchers
  */
 class PartnersController extends AppController
 {
@@ -17,7 +18,7 @@ class PartnersController extends AppController
     /**
      * Index method
      *
-     * @return \Cake\Network\Response|null
+     * @return void
      */
     public function index()
     {
@@ -58,8 +59,7 @@ class PartnersController extends AppController
      * View method
      *
      * @param string|null $id Partner id.
-     * @return \Cake\Network\Response|null
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
+     * @return void
      */
     public function view($id = null)
     {
@@ -129,20 +129,43 @@ class PartnersController extends AppController
         $conn = ConnectionManager::get('default');
         $conn->begin();
         $partner = $this->Partners->get($id, [
-            'contain' => []
+            'contain' => [
+                'PartnerVouchers' => function ($q) {
+                    return $q
+                        ->select([
+                            'PartnerVouchers.partner_id', 'PartnerVouchers.id'
+                        ]);
+                }]
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $partner = $this->Partners->patchEntity($partner, $this->request->getData());
-            if (empty($partner->errors())) {
-                if ($this->Partners->save($partner)) {
-                    $conn->commit();
-                    $this->Flash->success(__('The partner has been saved.'));
-                    return $this->redirect(['action' => 'index']);
+            if (!empty($partner['partner_vouchers'])) {
+                $partner_voucher_id = $partner['partner_vouchers'][0]['id'];
+                $partner_voucher = $this->PartnerVouchers->get($partner_voucher_id);
+                $partner_voucher = $this->PartnerVouchers->patchEntity($partner_voucher, $this->request->getData());
+                if (empty($partner->errors())) {
+                    if ($this->Partners->save($partner)) {
+                        if ($this->PartnerVouchers->save($partner_voucher)) {
+                            $conn->commit();
+                            return $this->redirect(['action' => 'index']);
+                        }
+                    } else {
+                        $conn->rollback();
+                    }
                 } else {
                     $conn->rollback();
                 }
             } else {
-                $conn->rollback();
+                if (empty($partner->errors())) {
+                    if ($this->Partners->save($partner)) {
+                        $conn->commit();
+                        return $this->redirect(['action' => 'index']);
+                    } else {
+                        $conn->rollback();
+                    }
+                } else {
+                    $conn->rollback();
+                }
             }
         }
 
@@ -155,7 +178,7 @@ class PartnersController extends AppController
      * Delete method
      *
      * @param string|null $id Partner id.
-     * @return \Cake\Network\Response|null Redirects to index.
+     * @return \Cake\Http\Response
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
     public function delete($id = null)
@@ -167,7 +190,6 @@ class PartnersController extends AppController
         } else {
             $this->Flash->error(__('The partner could not be deleted. Please, try again.'));
         }
-
         return $this->redirect(['action' => 'index']);
     }
 }

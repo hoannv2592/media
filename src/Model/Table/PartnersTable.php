@@ -44,6 +44,10 @@ class PartnersTable extends Table
             'foreignKey' => 'device_id'
         ]);
 
+        $this->hasMany('PartnerVouchers', [
+            'foreignKey' => 'partner_id'
+        ]);
+
     }
 
     /**

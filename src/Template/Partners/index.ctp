@@ -34,11 +34,11 @@
                                         <th>STT</th>
                                         <th>Tên người dùng</th>
                                         <th>Địa chỉ mac</th>
-                                        <th>Email</th>
                                         <th>Số điện thoại</th>
                                         <th>Ngày sinh</th>
                                         <th>Địa chỉ</th>
-                                        <th>Giới tính</th>
+                                        <th>Thời gian truy cập</th>
+                                        <th>Số lần ghé thăm</th>
                                         <th>Thiết bị quản lý</th>
                                     </tr>
                                     </thead>
@@ -54,11 +54,11 @@
                                                 </a>
                                             </td>
                                             <td><?php echo nl2br($vl->client_mac); ?></td>
-                                            <td><?php echo nl2br($vl->email); ?></td>
                                             <td><?php echo nl2br($vl->phone); ?></td>
                                             <td><?php echo nl2br($vl->birthday); ?></td>
                                             <td><?php echo nl2br($vl->address); ?></td>
-                                            <td><?php echo isset(\App\Model\Entity\Partner::$sex[$vl->sex]) ? \App\Model\Entity\Partner::$sex[$vl->sex] :''; ?></td>
+                                            <td><?php echo date('d/m/Y', strtotime($vl->modified)); ?></td>
+                                            <td><?php echo nl2br($vl->num_clients_connect); ?></td>
                                             <td><?php echo isset($vl->device->name) ? $vl->device->name: ''; ?></td>
                                         </tr>
                                     <?php } ?>

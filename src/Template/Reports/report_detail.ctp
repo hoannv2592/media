@@ -60,6 +60,8 @@
                                         <tr class="bg-blue-grey">
                                             <th>STT</th>
                                             <th>Tên khách hàng</th>
+                                            <th>Địa chỉ mac</th>
+                                            <th>Thời gian truy cập</th>
                                             <th>Số điện thoại</th>
                                             <th>Ngày sinh</th>
                                             <th>Địa chỉ</th>
@@ -78,6 +80,8 @@
                                                         <?php echo h($partner_voucher_log->name); ?>
                                                     </a>
                                                 </td>
+                                                <td><?php echo nl2br($partner_voucher_log->client_mac); ?></td>
+                                                <td><?php echo date('d/m/Y', strtotime($partner_voucher_log->modified)); ?></td>
                                                 <td><?php echo nl2br($partner_voucher_log->phone); ?></td>
                                                 <td><?php echo nl2br($partner_voucher_log->birthday); ?></td>
                                                 <td><?php echo nl2br($partner_voucher_log->address); ?></td>

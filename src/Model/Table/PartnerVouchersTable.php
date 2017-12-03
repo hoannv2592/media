@@ -50,6 +50,9 @@ class PartnerVouchersTable extends Table
         $this->belongsTo('CampaignGroups', [
             'foreignKey' => 'campaign_group_id'
         ]);
+        $this->belongsTo('Partners', [
+            'foreignKey' => 'partner_id'
+        ]);
     }
 
     /**
