@@ -1143,17 +1143,25 @@ class DevicesController extends AppController
                 } else {
                     $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
                 }
-                $data_new_par = array(
-                    'client_mac' => $client_mac,
-                    'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only'] : '',
-                    'link_orig' => isset($this->request->data['link_orig']) ? $this->request->data['link_orig'] : '',
-                    'chap_id' => isset($this->request->data['chap_id']) ? $this->request->data['chap_id'] : '',
-                    'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '',
-                    'num_clients_connect' => 1,
-                    'name' => 'user_online',
-                );
-                $partner = $this->Partners->newEntity();
-                $partner = $this->Partners->patchEntity($partner, $data_new_par);
+                $old_partner = $this->Partners->find()->where(['client_mac'=> $client_mac])->first();
+                if (!empty($old_partner)) {
+                    $data_new_par = array(
+                        'num_clients_connect' => $old_partner['num_clients_connect'] + 1
+                    );
+                    $partner = $this->Partners->patchEntity($old_partner, $data_new_par);
+                } else {
+                    $data_new_par = array(
+                        'client_mac' => $client_mac,
+                        'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only'] : '',
+                        'link_orig' => isset($this->request->data['link_orig']) ? $this->request->data['link_orig'] : '',
+                        'chap_id' => isset($this->request->data['chap_id']) ? $this->request->data['chap_id'] : '',
+                        'auth_target' => isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '',
+                        'num_clients_connect' => 1,
+                        'name' => 'user_online',
+                    );
+                    $partner = $this->Partners->newEntity();
+                    $partner = $this->Partners->patchEntity($partner, $data_new_par);
+                }
                 if (empty($users->errors())) {
                     $result = $this->Users->save($users);
                     if ($result) {
