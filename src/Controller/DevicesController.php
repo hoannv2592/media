@@ -1143,7 +1143,6 @@ class DevicesController extends AppController
                 } else {
                     $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
                 }
-                $client_mac= '00:0C:29:0D:36:1C';
                 $old_partner = $this->Partners->find()->where(['client_mac'=> $client_mac])->first();
                 if (!empty($old_partner)) {
                     $data_new_par = array(
