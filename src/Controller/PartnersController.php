@@ -97,7 +97,7 @@ class PartnersController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
+     * @return \Cake\Http\Response
      */
     public function add()
     {

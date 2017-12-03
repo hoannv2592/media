@@ -341,63 +341,6 @@ class ReportsController extends AppController
             } else {
                 $data = $this->request->data;
                 $this->save_new_data($apt_key , $data, Device::TB_MIRKOTIC);
-//                $query = $this->Users->find('all', [])->count();
-//                $users = $this->Users->newEntity();
-//                $data_user = [
-//                    'username' => USER.($query + 1),
-//                    'email' => USER.($query + 1).'@wifimedia.com',
-//                    'password' => '123456',
-//                    'delete_flag' => UN_DELETED,
-//                    'role' => User::ROLE_TOW
-//                ];
-//
-//
-//                $this->request->data['type'] = $flag_id;
-//                $device = $this->Devices->newEntity();
-//                $device = $this->Devices->patchEntity($device, $this->request->data);
-//                $device->apt_key = isset($this->request->data['gateway_mac']) ? $this->request->data['gateway_mac'] : $apt_key;
-//                $device->delete_flag = UN_DELETED;
-//                $device->status = UN_DELETED;
-//                $device->name = DEVICE.($query + 1);
-//                $users = $this->Users->patchEntity($users, $data_user);
-//                $query = $this->Partners->find('all', [])->count();
-//                $data_new_par = array(
-//                    'client_mac' => isset($this->request->data['client_mac']) ? $this->request->data['client_mac']:'',
-//                    'link_login_only' => isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only']:'',
-//                    'num_clients_connect' => 1,
-//                    'name' => PARTNER.($query + 1)
-//                );
-//
-//                $partner = $this->Partners->newEntity();
-//                $partner = $this->Partners->patchEntity($partner, $data_new_par);
-//                if (empty($users->errors())) {
-//                    $result = $this->Users->save($users);
-//                    if ($result) {
-//                        $device->user_id = $result->id;
-//                        if (empty($device->errors())) {
-//                            $data_device = $this->Devices->save($device);
-//                            if ($data_device) {
-//                                $partner->device_id = $data_device->id;
-//                                if (empty($partner->errors())) {
-//                                    if ($this->Partners->save($partner)) {
-//                                        $conn->commit();
-//                                        $this->redirect([
-//                                            'plugin' => null,
-//                                            'controller' => 'Devices',
-//                                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id). '/' . \UrlUtil::_encodeUrl(2)
-//                                        ]);
-//                                    }
-//                                }
-//                            } else {
-//                                $conn->rollback();
-//                            }
-//                        } else {
-//                            $conn->rollback();
-//                        }
-//                    } else {
-//                        $conn->rollback();
-//                    }
-//                }
             }
         } else {
             if (!empty($apt_key_check)) {

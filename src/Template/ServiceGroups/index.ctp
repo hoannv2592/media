@@ -1,6 +1,7 @@
 <?php
 /**
   * @var \App\View\AppView $this
+  * @var \App\View\AppView $users
   * @var \App\Model\Entity\ServiceGroup[]|\Cake\Collection\CollectionInterface $serviceGroups
   */
 ?>
@@ -11,7 +12,7 @@
                 <div class="card">
                     <div class="header bg-green">
                         <h2>
-                            Quản lý nhóm dịch vụ <small>Description text here...</small>
+                            Chăm sóc khách hàng <small>Description text here...</small>
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>
@@ -27,31 +28,14 @@
                         </ul>
                     </div>
                     <div class="body">
-                        <div class="button-demo">
-                            <button type="button" class="btn btn-primary waves-effect m-r-20" data-toggle="modal" data-target="#defaultModal">THÊM NHÓM DỊCH VỤ</button>
-                        </div>
-
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example dataTable">
-                                <thead>
-                                <tr class="bg-blue-grey">
-                                    <th>Tên quảng cáo</th>
-                                    <th>Mô tả</th>
-                                    <th>Ngày tạo</th>
-                                    <th>Điều hướng</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php foreach ($serviceGroups as $key => $serviceGroup) { ?>
-                                    <tr>
-                                        <td class="advertise font-bold col-cyan" value="<?php echo h($serviceGroup->id); ?>"><a href="javascript:void(0);" data-toggle="modal" data-target="#modal-02"> <?php echo h($serviceGroup->name); ?></a></td>
-                                        <td><?php echo nl2br($serviceGroup->description); ?></td>
-                                        <td><?php echo date('d/m/Y H:i', strtotime($serviceGroup->created));?></td>
-                                        <td class="delete_advertise" value="<?php echo h($serviceGroup->id); ?>"><button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa nhóm dịch vụ</button></td>
-                                    </tr>
-                                <?php } ?>
-                                </tbody>
-                            </table>
+                        <div class="list-group">
+                            <?php foreach ($users as $k => $vl) { ?>
+                                <a href="<?php echo $this->Url->build(['controller' => 'ServiceGroups', 'action' => 'sevice_detail'.'/'. UrlUtil::_encodeUrl($vl->id)]) ?>" class="list-group-item"><?php echo isset($vl->username) ? $vl->username : ''; ?>
+                                    <span class="badge bg-pink">
+                                        <?php $number_partner = count($vl->devices); echo $number_partner ;?>
+                                    </span>
+                                </a>
+                            <?php } ?>
                         </div>
                     </div>
                 </div>

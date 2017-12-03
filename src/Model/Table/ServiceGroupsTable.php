@@ -32,7 +32,7 @@ class ServiceGroupsTable extends Table
     {
         parent::initialize($config);
 
-        $this->setTable('service_groups');
+        $this->setTable('partners');
         $this->setDisplayField('name');
         $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp', [

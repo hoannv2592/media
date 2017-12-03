@@ -4,6 +4,9 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
+use App\Model\Entity\User;
 
 /**
  * ServiceGroups Controller
@@ -11,7 +14,7 @@ use Cake\Event\Event;
  * @property \App\Model\Table\ServiceGroupsTable $ServiceGroups
  * @property \App\Model\Table\PartnerVouchersTable $PartnerVouchers
  * @property \App\Model\Table\PartnersTable $Partners
- *
+ * @property \App\Model\Table\UsersTable $Users
  * @method \App\Model\Entity\ServiceGroup[] paginate($object = null, array $settings = [])
  */
 class ServiceGroupsController extends AppController
@@ -28,13 +31,46 @@ class ServiceGroupsController extends AppController
      */
     public function index()
     {
+        $login = $this->Auth->user();
+        if ($login['role'] == User::ROLE_ONE) {
+            $users = $this->Users->find('all',[
+                'contain'  => ['Devices' => function ($q) {
+                    return $q
+                        ->where([
+                            'Devices.delete_flag !=' => 1
+                        ])
+                        ->select([
+                            'Devices.user_id', 'id', 'name'
+                        ]);
+                }],
+                'conditions' => [
+                    'Users.delete_flag !=' => 1
+                ]
+            ])->toArray();
+        } else {
+            $users = $this->Users->find('all',[
+                'contain'  => ['Devices' => function ($q) {
+                    return $q
+                        ->where([
+                            'Devices.delete_flag !=' => 1,
+                        ])
+                        ->select([
+                            'Devices.user_id', 'id', 'name'
+                        ]);
+                }],
+                'conditions' => [
+                    'Users.id' => $login['id'],
+                    'Users.delete_flag !=' => 1,
+                ]
+            ])->toArray();
+        }
         $query = $this->ServiceGroups
             ->find()
             ->select()
-            ->where(['delete_flag !=' => DELETED])
+            ->where()
             ->order(['id' => 'DESC']);
         $serviceGroups = $query->toArray();
-        $this->set(compact('serviceGroups'));
+        $this->set(compact('serviceGroups', 'users'));
         $this->set('_serialize', ['serviceGroups']);
     }
 
@@ -223,6 +259,29 @@ class ServiceGroupsController extends AppController
                 die(json_encode(false));
             }
         }
+    }
+
+    public function seviceDetail($user_id = null)
+    {
+        $user_id = \UrlUtil::_decodeUrl($user_id);
+        $users = $this->Users->find('all',[
+            'contain'  => ['Devices' => function ($q) {
+                return $q
+                    ->where([
+                        'Devices.delete_flag !=' => 1
+                    ])
+                    ->select([
+                        'Devices.user_id', 'id', 'name'
+                    ]);
+            }],
+            'conditions' => [
+                'Users.delete_flag !=' => 1,
+                'id' => $user_id
+            ]
+        ])->first();
+        $list_id_devices = Hash::extract($users['devices'], '{n}.id');
+        $partners = $this->Partners->find()->where(['device_id IN' => $list_id_devices])->toArray();
+        $this->set(compact('partners'));
     }
 }
 
