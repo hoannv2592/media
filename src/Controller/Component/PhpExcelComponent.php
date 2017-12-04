@@ -141,6 +141,7 @@ class PhpExcelComponent extends Component
      * @param int $sheet sheet
      *
      * @return $this for method chaining
+     * @throws \PHPExcel_Exception
      */
     public function setActiveSheet($sheet)
     {
@@ -155,6 +156,7 @@ class PhpExcelComponent extends Component
      * @param string $name name
      *
      * @return $this for method chaining
+     * @throws \PHPExcel_Exception
      */
     public function setSheetName($name)
     {
@@ -247,7 +249,7 @@ class PhpExcelComponent extends Component
      * Get row pointer
      *
      *
-     * @return $this int
+     * @return int int
      */
     public function getRow()
     {
@@ -270,6 +272,7 @@ class PhpExcelComponent extends Component
      *                      italic  -   true for italic header text
      *
      * @return $this for method chaining
+     * @throws \PHPExcel_Exception
      */
     public function addTableHeader($data, $params = array())
     {
@@ -395,6 +398,7 @@ class PhpExcelComponent extends Component
      * @param $k
      * @param array $data data
      * @return $this for method chaining
+     * @throws \PHPExcel_Exception
      */
     public function addTableRow($k, $data)
     {
@@ -412,6 +416,7 @@ class PhpExcelComponent extends Component
      * End table - set params and styles that required data to be inserted first
      *
      * @return $this for method chaining
+     * @throws \PHPExcel_Exception
      */
     public function addTableFooter()
     {
@@ -632,6 +637,7 @@ class PhpExcelComponent extends Component
      * @param $columnTo
      * @param $rowFrom
      * @param $rowTo
+     * @throws \PHPExcel_Exception
      */
     protected function addRowTable($columnFrom, $columnTo, $rowFrom, $rowTo)
     {
@@ -655,10 +661,12 @@ class PhpExcelComponent extends Component
             }
         }
     }
+
     /**
      * Get array of data from active sheet
      *
      * @return array row contents
+     * @throws \PHPExcel_Exception
      */
     public function getActiveSheetData() {
         $data = array();
@@ -669,6 +677,7 @@ class PhpExcelComponent extends Component
     /**
      * @param $filename
      * @return PHPExcel
+     * @throws \PHPExcel_Reader_Exception
      */
     public function identify($filename)
     {

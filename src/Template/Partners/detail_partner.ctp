@@ -78,7 +78,7 @@
                                                 'label' => false,
                                                 'class' => 'form-control mobile-phone-number',
                                                 'value' => $phone,
-                                                'required' => false,
+                                                'required' => true,
                                             ));
                                             ?>
                                         </div>

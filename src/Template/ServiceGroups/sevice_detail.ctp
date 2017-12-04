@@ -28,6 +28,9 @@
                     </div>
                     <div class="body">
                         <span class="label label-warning font-14">Danh sách khách hàng truy cập dưới 3 lần.</span>
+                        <div class="m-t-10">
+                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/3']);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                        </div>
                         <div class="table-responsive m-b-15 m-t-5">
                             <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">
                                 <thead>
@@ -43,8 +46,7 @@
                                 <?php
                                 $count = 0;
                                 foreach ($partners as $key => $partner) { $count++;
-                                    $count_number_connect = count($partner->num_clients_connect);
-                                    if ($count_number_connect < 3) { ?>
+                                    if ($partner->num_clients_connect < 3) { ?>
                                         <tr>
                                             <td><?php echo $count;?></td>
                                             <td class="advertise font-bold col-cyan">
@@ -62,6 +64,9 @@
                             </table>
                         </div>
                         <span class="label label-warning font-14">Danh sách khách hàng truy cập <strong> Từ 3 -> 10 lần.</strong></span>
+                        <div class="m-t-10">
+                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/4']);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                        </div>
                         <div class="table-responsive m-b-15 m-t-5">
                             <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">
                                 <thead>
@@ -77,8 +82,7 @@
                                 <?php
                                 $count = 0;
                                 foreach ($partners as $key => $partner) { $count++ ;
-                                    $count_number_connect = count($partner->num_clients_connect);
-                                    if ($count_number_connect >=3 && $count_number_connect <= 10) { ?>
+                                    if ($partner->num_clients_connect >=3 && $partner->num_clients_connect <= 10) { ?>
                                         <tr>
                                             <td><?php echo $count;?></td>
                                             <td class="advertise font-bold col-cyan">
@@ -96,6 +100,9 @@
                             </table>
                         </div>
                         <span class="label label-warning font-14">Danh sách khách hàng truy cập <strong> lớn hơn 10 lần.</strong></span>
+                        <div class="m-t-10">
+                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/10']);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                        </div>
                         <div class="table-responsive m-b-15 m-t-5">
                             <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">
                                 <thead>
@@ -112,7 +119,7 @@
                                 $count = 0;
                                 foreach ($partners as $key => $partner) { $count++ ;
                                     $count_number_connect = count($partner->num_clients_connect);
-                                    if ($count_number_connect >=3 && $count_number_connect <= 10) { ?>
+                                    if ($partner->num_clients_connect >=10) { ?>
                                         <tr>
                                             <td><?php echo $count;?></td>
                                             <td class="advertise font-bold col-cyan">
