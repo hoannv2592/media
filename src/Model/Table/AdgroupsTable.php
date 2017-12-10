@@ -47,6 +47,10 @@ class AdgroupsTable extends Table
                 ]
             ]
         ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id_group',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**
@@ -64,11 +68,6 @@ class AdgroupsTable extends Table
         $validator
             ->requirePresence('name', 'create')
             ->notEmpty('name');
-
-        $validator
-            ->requirePresence('description', 'create')
-            ->notEmpty('description');
-
         return $validator;
     }
 }

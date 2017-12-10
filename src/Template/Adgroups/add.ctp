@@ -54,11 +54,11 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                         <label for="description">Mô tả nhóm thiết bị</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <textarea name="description" cols="30" rows="2" class="form-control no-resize" placeholder="Mô tả nhóm thiết bị" required></textarea>
+                                <textarea name="description" cols="30" rows="2" class="form-control no-resize" placeholder="Mô tả nhóm thiết bị"></textarea>
                             </div>
                             <div class="help-info">Mô tả nhóm thiết bị</div>
                         </div>
-                        <h2 class="card-inside-title">Chọn thiết bị cho nhóm</h2>
+                        <label class="">Chọn thiết bị cho nhóm</label>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
                                 <select data-placeholder="Chọn thiết bị"
@@ -76,7 +76,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                             </div>
                         </div>
                         <?php if ($user_login['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
-                            <h2 class="card-inside-title" >User quản lý nhóm thiết bị</h2>
+                            <label class="" >User quản lý nhóm thiết bị</label>
                             <div class="form-group form-float">
                                 <div class="form-line">
                                     <select  class="form-control required" name="user_id_group" id="user_id_group">
@@ -92,7 +92,9 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                 </div>
                                 <div class="help-info">User quản lý nhóm thiết bị</div>
                             </div>
-                        <?php }?>
+                        <?php } else { ?>
+                            <input type="hidden" name="user_id_group"  value="<?php echo $user_login['id'];?>" class="form-control"/>
+                        <?php } ?>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                             <div class="demo-radio-button">
@@ -105,16 +107,70 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                             </div>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">Tên cơ sở dịch vụ</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($device->tile_name) ? $device->tile_name :'';?>" placeholder="Điền tên..">
+                                <?php $tile_name = isset($adgroup->tile_name) ? ($adgroup->tile_name):'' ?>
+                                <?php echo $this->Form->control('tile_name', array(
+                                    'label' => 'Tên cơ sở dịch vụ',
+                                    'class' => 'form-control',
+                                    'id' => 'slogan',
+                                    'value' => $tile_name,
+                                    'placeholder' => "Điền tên.."
+                                ));
+                                ?>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">Địa chỉ nhóm thiết bị</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <input type="text" name="address" id="slogan" class="form-control" value="<?php echo isset($device->address) ? $device->address :'';?>" placeholder="Điền địa chỉ nhóm thiết bị..">
+                                <?php $address = isset($adgroup->address) ? ($adgroup->address):'' ?>
+                                <?php echo $this->Form->control('address', array(
+                                    'label' => 'Địa chỉ nhóm thiết bị',
+                                    'class' => 'form-control',
+                                    'id' => 'slogan',
+                                    'value' => $address,
+                                    'placeholder' => "Điền địa chỉ nhóm thiết bị.."
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php $title_connect = isset($adgroup->title_connect) ? ($adgroup->title_connect):'' ?>
+                                <?php echo $this->Form->control('title_connect', array(
+                                    'label' => 'Title button connect',
+                                    'class' => 'form-control',
+                                    'value' => $title_connect,
+                                    'placeholder' => 'Title button connect..'
+                                ));
+                                ?>
+                                <div class="help-info">Title_connect</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
+                                $hidden_connect = isset($adgroup->hidden_connect) ? $adgroup->hidden_connect: '1';
+                                echo  $this->Form->input('hidden_connect', array(
+                                    'type' => 'select',
+                                    'options' => [
+                                        '1' => 'Hiển thị button connect-snow',
+                                        '2' => 'Không hiển thị'
+                                    ],
+                                    'empty' => '--- Chọn hiển thị ---',
+                                    'label'=> 'Setting hidden button connect-snow',
+                                    'value' => $hidden_connect,
+                                    'escape' => false,
+                                    'error' => false,
+                                    'class' => 'form-control required input_select_medium'
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label> Logo Image </label>
+                            <div class="form-line">
+                                <input type="file" name="logo_image" id="file" value="" class="form-control"/>
+                                <div class="help-info">logo_image</div>
                             </div>
                         </div>
                         <div class="check_pass_device m-t-15">
@@ -125,31 +181,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                 </div>
                             </div>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped dataTable table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="5%">ID</th>
-                                    <th width="15%">Tên cơ sở dịch vụ</th>
-                                    <th width="25%">Ảnh nền</th>
-                                    <th width="10%">Ngày tải lên</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php if (isset($device->path)) { ?>
-                                    <tr>
-                                        <td><?php echo $device->id; ?></td>
-                                        <td><?php echo $device->tile_name; ?></td>
-                                        <td class="image"><embed src="<?= '/'.$device->path ?>" width="450" height="300"></td>
-                                        <td><?php echo $device->created; ?></td>
-                                    </tr>
-                                <?php } else { ?>
-                                <tr><td colspan="4" class="image">No file(s) found......</td>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                        </div>
-                        <h2 class="card-inside-title"> Chọn một ảnh </h2>
+                        <label class=""> Chọn một ảnh </label>
                         <div class="form-group">
                             <div class="form-line">
                                 <input type="file" name="file[]" id="file" multiple="multiple" value="<?php echo isset($device->path) ? '/'.$device->path: '';?>" class="form-control">
@@ -236,7 +268,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
 </script>
 <script type="application/javascript">
     $(document).ready(function () {
-        var langding = "<?php echo isset($device->langdingpage_id) ? $device->langdingpage_id:''; ?>";
+        var langding = "<?php echo isset($device->langdingpage_id) ? $device->langdingpage_id:'1'; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
         } else if (langding == 3) {
@@ -253,42 +285,6 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
             $('.check_pass_device').css('display', 'none');
         } else {
             $('.check_pass_device').css('display', 'none');
-        }
-    });
-    $('#uploadForm').validate({
-        rules: {
-            'tile_name': { required: true },
-            'langdingpage_id': { required: true },
-            'apt_device_number': { required: true },
-            'slogan': {required: true},
-        },
-        messages:{
-            'tile_name': { required: 'Hãy nhập' },
-            'langdingpage_id': { required: 'Hãy nhập' },
-            'apt_device_number': { required: 'Hãy nhập' },
-            'slogan': { required: 'Hãy nhập' }
-        }
-    });
-    function filePreview(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                $('.image').html('');
-                $('.image').append('<div class="text-center"><img src="'+e.target.result+'" width="450" height="300"/></div>');
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-    $("#file").change(function () {
-        filePreview(this);
-    });
-
-    $('.radio-col-grey').change(function () {
-        var __val = $(this).val();
-        if ($(this).is(':checked')){
-            $(this).prop('checked', true).attr('checked', 'checked');
-        } else {
-            $(this).prop('checked', false).removeAttr('checked');
         }
     });
 </script>

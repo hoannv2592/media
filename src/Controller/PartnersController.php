@@ -33,6 +33,7 @@ class PartnersController extends AppController
                             ->hydrate(false);
                     }
                 ],
+                'order' => ['Partners.id' => 'DESC']
             ])->toArray();
         } else {
             $device = $this->Devices->find()->where(['user_id' => $user['id']])->select(['id'])->combine('id', 'id')->toArray();

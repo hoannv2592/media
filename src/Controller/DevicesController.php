@@ -373,6 +373,9 @@ class DevicesController extends AppController
                         $infor_devices->apt_device_number = $device_campaign->number_pass;
                         $infor_devices->message = $device_campaign->message;
                         $infor_devices->slogan = $device_campaign->slogan;
+                        $infor_devices->title_connect = $device_campaign->title_connect;
+                        $infor_devices->hidden_connect = $device_campaign->hidden_connect;
+                        $infor_devices->path_logo = $device_campaign->path_logo;
                     }
                 } elseif (isset($infor_devices->adgroup_id) && $infor_devices->adgroup_id != '') {
                     $device_group = $this->DeviceGroups->find()
@@ -1214,6 +1217,21 @@ class DevicesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is('post')) {
+            if (!empty($this->request->data['logo_image']['error'] != 4)) {
+                $list_file['file'] = $this->request->getData('logo_image');
+                $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
+                $path = $fileOK['urls'][0];
+                $image_up_load = $list_file['file']['name'];
+                if ($path != '') {
+                    $this->request->data['path_logo'] = $path;
+                }
+                if ($image_up_load != '') {
+                    $this->request->data['image_logo'] = $image_up_load;
+                }
+                unset($this->request->data['logo_image']);
+            } else {
+                unset($this->request->data['logo_image']);
+            }
             if (!empty($this->request->data['file'][0]['error'] != 4)) {
                 // upload the file to the server
                 $new_arr = array();
@@ -1234,17 +1252,18 @@ class DevicesController extends AppController
                 $device->path = implode(',', $path);
                 $device->image_backgroup = implode(',', $image_up_load);
                 $device = $this->Devices->patchEntity($device, $this->request->data);
+                $device_id = $this->request->getData('device_id');
                 if (empty($device->errors())) {
                     if ($this->Devices->save($device)) {
                         $conn->commit();
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
                 }
             } else {
                 unset($this->request->data['file']);
@@ -1255,11 +1274,11 @@ class DevicesController extends AppController
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
                 }
             }
         }
@@ -1362,6 +1381,9 @@ class DevicesController extends AppController
                         $infor_devices->message = $device_campaign->message;
                         $infor_devices->slogan = $device_campaign->slogan;
                         $infor_devices->tile_congratulations = $device_campaign->tile_congratulations;
+                        $infor_devices->title_connect = $device_campaign->title_connect;
+                        $infor_devices->hidden_connect = $device_campaign->hidden_connect;
+                        $infor_devices->path_logo = $device_campaign->path_logo;
                     }
                 } elseif (isset($infor_devices->adgroup_id) && $infor_devices->adgroup_id != '') {
                     $device_group = $this->DeviceGroups->find()
@@ -1374,6 +1396,9 @@ class DevicesController extends AppController
                         $infor_devices->apt_device_number = $device_group->number_pass;
                         $infor_devices->message = $device_group->message;
                         $infor_devices->slogan = $device_group->slogan;
+                        $infor_devices->title_connect = $device_campaign->title_connect;
+                        $infor_devices->hidden_connect = $device_campaign->hidden_connect;
+                        $infor_devices->path_logo = $device_campaign->path_logo;
                     }
                 }
             }
@@ -1417,4 +1442,37 @@ class DevicesController extends AppController
         }
     }
 
+    public function edit($id = null)
+    {
+        $id = \UrlUtil::_decodeUrl($id);
+        $conn = ConnectionManager::get('default');
+        $conn->begin();
+        if (!$this->Devices->exists(['id' => $id])) {
+            return $this->redirect(array('controller' => 'Devices', 'action' => 'index'));
+        }
+        $device = $this->Devices->get($id, [
+            'contain' => []
+        ]);
+        $this->getAllData();
+        if ($this->request->getData()) {
+            $device = $this->Devices->patchEntity($device, $this->request->getData());
+            if (empty($device->errors())) {
+                if ($this->Devices->save($device)) {
+                    $conn->commit();
+                    $this->Flash->success(__('The user has been saved.'));
+                    return $this->redirect(['action' => 'index']);
+                } else {
+                    $conn->rollback();
+                    $this->Flash->error(__('The device could not be saved. Please, try again.'));
+                    return $this->redirect(['action' => 'edit' . '/' . \UrlUtil::_encodeUrl($id)]);
+                }
+            } else {
+                $conn->rollback();
+                $this->Flash->error(__('The device could not be saved. Please, try again.'));
+                return $this->redirect(['action' => 'edit' . '/' . \UrlUtil::_encodeUrl($id)]);
+            }
+        }
+        $this->set(compact('device'));
+        $this->set('_serialize', ['device']);
+    }
 }

@@ -53,6 +53,7 @@
                                     <th>Số lượng voucher</th>
                                     <th>Loại random</th>
                                     <th>Mô tả chiến dịch</th>
+                                    <th>User quản lý</th>
                                     <th>Ngày tạo</th>
                                     <th>Điều hướng</th>
                                 </tr>
@@ -89,6 +90,11 @@
                                         </td>
                                         <td><?php echo isset(\App\Model\Entity\CampaignGroup::$random[$campaignGroup->random]) ? \App\Model\Entity\CampaignGroup::$random[$campaignGroup->random] : '' ?></td>
                                         <td><?php echo nl2br($campaignGroup->description); ?></td>
+                                        <td class="advertise font-bold col-cyan">
+                                            <a href="<?php echo $this->Url->build(['controller' => 'users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($campaignGroup['user']['id'])]) ?>">
+                                                <?php echo $campaignGroup['user']['username']; ?>
+                                            </a>
+                                        </td>
                                         <td><?php echo date('d/m/Y H:i', strtotime($campaignGroup->created)); ?></td>
                                         <td class="delete_advertise" value="<?php echo h($campaignGroup->id); ?>">
                                             <button type="button" class="btn btn-danger waves-effect"

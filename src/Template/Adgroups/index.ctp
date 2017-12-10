@@ -69,7 +69,11 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                                 echo count($array);
                                              } ?>
                                         </td>
-                                        <td><?php echo isset($users[$adgroup->user_id_group]) ? $users[$adgroup->user_id_group]: ''?></td>
+                                        <td class="advertise font-bold col-cyan">
+                                            <a href="<?php echo $this->Url->build(['controller' => 'users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($adgroup['user']['id'])]) ?>">
+                                                <?php echo $adgroup['user']['username']; ?>
+                                            </a>
+                                        </td>
                                         <td>
                                             <?php echo  nl2br($adgroup->address);?>
                                         </td>

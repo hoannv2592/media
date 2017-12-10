@@ -144,6 +144,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 </div>
                                 <div class="help-info">User quản lý nhóm thiết bị</div>
                             </div>
+                        <?php } else { ?>
+                            <input type="hidden" name="user_id_campaign_group"  value="<?php echo $user_login['id'];?>" class="form-control"/>
                         <?php }?>
                         <div class="form-group">
                             <div class="form-line">
@@ -213,6 +215,68 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 <div class="help-info">Địa chỉ nhóm thiết bị</div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
+                                <?php echo $this->Form->control('title_connect', array(
+                                    'label' => 'Title button connect',
+                                    'class' => 'form-control',
+                                    'value' => $title_connect
+                                ));
+                                ?>
+                                <div class="help-info">Title_connect</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
+                                $hidden_connect = isset($campaign_group->hidden_connect) ? $campaign_group->hidden_connect: '1';
+                                echo  $this->Form->input('hidden_connect', array(
+                                    'type' => 'select',
+                                    'options' => [
+                                        '1' => 'Hiển thị button connect-snow',
+                                        '2' => 'Không hiển thị'
+                                    ],
+                                    'empty' => '--- Chọn hiển thị ---',
+                                    'label'=> 'Setting hidden button connect-snow',
+                                    'value' => $hidden_connect,
+                                    'escape' => false,
+                                    'error' => false,
+                                    'class' => 'form-control required input_select_medium'
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped dataTable table-hover">
+                                <thead>
+                                <tr>
+                                    <th width="25%">Ảnh logo</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <?php if (isset($campaign_group->path_logo) && $campaign_group->path_logo != '') {
+                                    $list_background = explode(',', $campaign_group->path_logo);
+                                    foreach ($list_background as $k => $vl) { ?>
+                                        <tr>
+                                            <td class="image"><embed src="<?= '/'.$vl ?>" width="450" height="300"></td>
+                                        </tr>
+                                    <?php }
+                                    ?>
+                                <?php } else { ?>
+                                <tr><td colspan="4" class="image">No file(s) found......</td>
+                                    <?php } ?>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="form-group">
+                            <label> Logo Image </label>
+                            <div class="form-line">
+                                <?php $logo_image = isset($campaign_group->path_logo) ? ($campaign_group->path_logo):''; ?>
+                                <input type="file" name="logo_image" id="file" value="<?php echo $logo_image;?>" class="form-control"/>
+                                <div class="help-info">logo_image</div>
+                            </div>
+                        </div>
                         <!-- Table -->
                         <div class="table-responsive">
                             <table class="table table-bordered table-striped dataTable table-hover">
@@ -258,79 +322,80 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
     </div>
 </section>
 <script type="application/javascript">
-//    $(document).ready(function () {
-//        var role = "<?php //echo $user_login['role'];?>//";
-//        var user_id_group = '<?php //echo $campaign_group->user_id_campaign_group;?>//';
-//        var devceid = $('#select_device').val();
-//        $.ajax({
-//            url: "/Adgroups/getUser",
-//            type: "POST",
-//            cache: false,
-//            data: {
-//                id : devceid,
-//                role : role
-//            },
-//            success: function (responce) {
-//                $('#user_id_group').find('option').remove().end()
-//                    .append('<option disabled selected value>--- Chọn user ---</option>')
-//                    .val('')
-//                ;
-//                var resp = [JSON.parse(responce)];
-//                $.each(resp, function () {
-//                    $.each(this, function (name, value) {
-//                        $('#user_id_group').append($('<option>',
-//                            {
-//                                value: name,
-//                                text : value
-//                            })
-//                        );
-//                    });
-//                });
-//                $('#user_id_group option[value=' + user_id_group + ']').prop('selected', 'selected');
-//            }
-//        });
-//    });
-//    $('#select_device').change(function () {
-//        var role = "<?php //echo $user_login['role'];?>//";
-//        var val = $(this).val();
-//        $.ajax({
-//            url: "/Adgroups/getUser",
-//            type: "POST",
-//            cache: false,
-//            data: {
-//                id : val,
-//                role : role
-//            },
-//            success: function (responce) {
-//                $('#user_id_group').find('option').remove().end()
-//                    .append('<option disabled selected value>--- Chọn user ---</option>')
-//                    .val('')
-//                ;
-//                var resp = [JSON.parse(responce)];
-//                $.each(resp, function () {
-//                    $.each(this, function (name, value) {
-//                        $('#user_id_group').append($('<option>',
-//                            {
-//                                value: name,
-//                                text : value
-//                            })
-//                        );
-//                    });
-//                });
-//            }
-//        });
-//    });
-//    function remove(value) {
-//        var select = $('select#user_id_group option');
-//        var assistantId = '#user_id_group';
-//        for (var i = 0; i < select.length; i++) {
-//            if (select[i].value !== '') {
-//                if (select[i].value === value) {
-//                    $(assistantId + " option[value='" + select[i].value + "']").remove();
-//                }
-//            }
-//        }
-//    }
+    $(document).ready(function () {
+        var role = "<?php echo $user_login['role'];?>";
+        var user_id_group = '<?php echo $campaign_group->user_id_campaign_group;?>';
+        var devceid = $('#select_device').val();
+        console.log(devceid);
+        $.ajax({
+            url: "/Adgroups/getUser",
+            type: "POST",
+            cache: false,
+            data: {
+                id : devceid,
+                role : role
+            },
+            success: function (responce) {
+                $('#user_id_group').find('option').remove().end()
+                    .append('<option disabled selected value>--- Chọn user ---</option>')
+                    .val('')
+                ;
+                var resp = [JSON.parse(responce)];
+                $.each(resp, function () {
+                    $.each(this, function (name, value) {
+                        $('#user_id_group').append($('<option>',
+                            {
+                                value: name,
+                                text : value
+                            })
+                        );
+                    });
+                });
+                $('#user_id_group option[value=' + user_id_group + ']').prop('selected', 'selected');
+            }
+        });
+    });
+    $('#select_device').change(function () {
+        var role = "<?php echo $user_login['role'];?>";
+        var val = $(this).val();
+        $.ajax({
+            url: "/Adgroups/getUser",
+            type: "POST",
+            cache: false,
+            data: {
+                id : val,
+                role : role
+            },
+            success: function (responce) {
+                $('#user_id_group').find('option').remove().end()
+                    .append('<option disabled selected value>--- Chọn user ---</option>')
+                    .val('')
+                ;
+                var resp = [JSON.parse(responce)];
+                $.each(resp, function () {
+                    $.each(this, function (name, value) {
+                        $('#user_id_group').append($('<option>',
+                            {
+                                value: name,
+                                text : value
+                            })
+                        );
+                    });
+                });
+            }
+        });
+    });
+    function remove(value) {
+        var select = $('select#user_id_group option');
+        var assistantId = '#user_id_group';
+        for (var i = 0; i < select.length; i++) {
+            if (select[i].value !== '') {
+                if (select[i].value === value) {
+                    $(assistantId + " option[value='" + select[i].value + "']").remove();
+                }
+            }
+        }
+    }
 
     $.validator.setDefaults({ ignore: ":hidden:not(select)" });
     $('#form_advanced').validate({

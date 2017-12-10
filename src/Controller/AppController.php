@@ -201,7 +201,7 @@ class AppController extends Controller
     /**
      * getAllData method
      *
-     * @return array
+     * @return void
      */
     public function getAllData()
     {
@@ -211,31 +211,10 @@ class AppController extends Controller
             ->order(['Devices.id'=> 'DESC'])
             ->combine('id', 'name')
             ->toArray();
-        $adgroups = $this->Adgroups->find()
-            ->where(['Adgroups.delete_flag !=' => DELETED])
-            ->select(['Adgroups.id', 'Adgroups.name'])
-            ->order(['Adgroups.id' => 'DESC'])
-            ->combine('id', 'name')
-            ->toArray();
-
         $landingpages = $this->Landingpages->find()
             ->where(['Landingpages.delete_flag !=' => DELETED])
             ->select(['Landingpages.id', 'Landingpages.name'])
             ->order(['Landingpages.id'=> 'DESC'])
-            ->combine('id', 'name')
-            ->toArray();
-
-        $campaignGroups = $this->CampaignGroups->find()
-            ->where(['CampaignGroups.delete_flag !=' => DELETED])
-            ->select(['CampaignGroups.id', 'CampaignGroups.name'])
-            ->order(['CampaignGroups.id'=> 'DESC'])
-            ->combine('id', 'name')
-            ->toArray();
-
-        $serviceGroups = $this->ServiceGroups->find()
-            ->where(['ServiceGroups.delete_flag !=' => DELETED])
-            ->select(['ServiceGroups.id', 'ServiceGroups.name'])
-            ->order(['ServiceGroups.id'=> 'DESC'])
             ->combine('id', 'name')
             ->toArray();
         $users = $this->Users->find()

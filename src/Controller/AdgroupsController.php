@@ -52,19 +52,37 @@ class AdgroupsController extends AppController
     {
         $users = $this->Auth->user();
         if ($users['role'] == User::ROLE_ONE) {
-            $condition = array(
-                'delete_flag !=' => DELETED,
-            );
+            $adgroups = $this->Adgroups->find('all',[
+                'contain'  => [
+                    'Users' => function ($q) {
+                        return $q
+                            ->select([
+                                'Users.id','Users.username'
+                            ]);
+                    }
+                ],
+                'conditions' => [
+                    'Adgroups.delete_flag !=' => DELETED,
+                ]
+            ])->order(['id' => 'DESC'])
+                ->toArray();
         } else {
-            $condition = array(
-                'delete_flag !=' => DELETED,
-                'user_id_group' => $users['id']
-            );
+            $adgroups = $this->Adgroups->find('all',[
+                'contain'  => [
+                    'Users' => function ($q) {
+                        return $q
+                            ->select([
+                                'Users.id','Users.username'
+                            ]);
+                    }
+                ],
+                'conditions' => [
+                    'Adgroups.delete_flag !=' => DELETED,
+                    'Adgroups.user_id_group' => $users['id']
+                ]
+            ])->order(['Adgroups.id' => 'DESC'])
+                ->toArray();
         }
-        $adgroups = $this->Adgroups->find()
-            ->where($condition)
-            ->order(['id' => 'DESC'])
-            ->toArray();
         $flag = false;
         if (!empty($adgroups)) {
             $device_id = array();
@@ -108,7 +126,7 @@ class AdgroupsController extends AppController
      * Add method group
      * @author hoannv
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return void Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
@@ -169,6 +187,21 @@ class AdgroupsController extends AppController
             $result_id_devices = Hash::extract($devices, '{n}.id');
             $data_service = array();
 
+            if (!empty($this->request->data['logo_image']['error'] != 4)) {
+                $list_file['file'] = $this->request->getData('logo_image');
+                $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
+                $path = $fileOK['urls'][0];
+                $image_up_load = $list_file['file']['name'];
+                if ($path != '') {
+                    $this->request->data['path_logo'] = $path;
+                }
+                if ($image_up_load != '') {
+                    $this->request->data['image_logo'] = $image_up_load;
+                }
+                unset($this->request->data['logo_image']);
+            } else {
+                unset($this->request->data['logo_image']);
+            }
             if (!empty($this->request->data['file'][0]['error'] != 4)) {
                 $new_arr = array();
                 $list_file = $this->request->getData('file');
@@ -208,6 +241,10 @@ class AdgroupsController extends AppController
                 'path' => isset($data_service['path']) ? $data_service['path'] : '',
                 'address' => $this->request->getData()['address'],
                 'user_id_group' => isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'',
+                'path_logo' => isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'',
+                'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
+                'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
+                'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
             );
 
             $device_group = $this->DeviceGroups->newEntity();
@@ -224,6 +261,10 @@ class AdgroupsController extends AppController
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
                 'address' => $this->request->getData()['address'],
                 'user_id_group' => isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'',
+                'path_logo' => isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'',
+                'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
+                'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
+                'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
             );
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             $adgroup->delete_flag = UN_DELETED;
@@ -559,10 +600,28 @@ class AdgroupsController extends AppController
                 'description' => $this->request->getData()['description'],
                 'langdingpage_id' => $this->request->getData()['langdingpage_id'],
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
-                'address' => $this->request->getData()['address']
+                'address' => $this->request->getData()['address'],
+                'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
+                'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
             );
 
-
+            if (!empty($this->request->data['logo_image']['error'] != 4)) {
+                $list_file['file'] = $this->request->getData('logo_image');
+                $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
+                $path = $fileOK['urls'][0];
+                $image_up_load = $list_file['file']['name'];
+                if ($path != '') {
+                    $this->request->data['path_logo'] = $path;
+                }
+                if ($image_up_load != '') {
+                    $this->request->data['image_logo'] = $image_up_load;
+                }
+                unset($this->request->data['logo_image']);
+            } else {
+                unset($this->request->data['logo_image']);
+            }
+            $data_group['path_logo'] = isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'';
+            $data_group['image_logo'] = isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:'';
             if (!empty($this->request->data['file'][0]['error'] != 4)) {
                 $new_arr = array();
                 $list_file = $this->request->getData('file');
@@ -598,8 +657,11 @@ class AdgroupsController extends AppController
                 'number_pass' => $this->request->getData()['apt_device_number'],
                 'tile_name' => $this->request->getData()['tile_name'],
                 'device_name' => $listUserid,
-                'address' => $this->request->getData()['address']
-
+                'address' => $this->request->getData()['address'],
+                'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
+                'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
+                'path_logo' => isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'',
+                'image_logo' => isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:''
             );
             if ($user['role'] == User::ROLE_ONE) {
                 $data_group['user_id_group'] = isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'';
@@ -749,17 +811,22 @@ class AdgroupsController extends AppController
                     ->select(['id','user_id'])
                     ->combine('id', 'user_id')
                     ->toArray();
-                if ($role == User::ROLE_ONE) {
-                    $conditions = array(
-                        'delete_flag !=' => DELETED,
-                        'id NOT IN' => 1,
-                    );
-                } else {
-                    $conditions = array(
-                        'id IN' => $user_id,
-                        'delete_flag !=' => DELETED
-                    );
-                }
+//                if ($role == User::ROLE_ONE) {
+//                    $conditions = array(
+//                        'delete_flag !=' => DELETED,
+//                        'id NOT IN' => 1,
+//                        'id IN' => $user_id,
+//                    );
+//                } else {
+//                    $conditions = array(
+//                        'id IN' => $user_id,
+//                        'delete_flag !=' => DELETED
+//                    );
+//                }
+                $conditions = array(
+                    'id IN' => $user_id,
+                    'delete_flag !=' => DELETED
+                );
                 $username = $this->Users->find()
                     ->select(['id', 'username'])
                     ->where($conditions)

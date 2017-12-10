@@ -47,6 +47,9 @@ class UsersTable extends Table
         $this->hasMany('Devices', [
             'className' => 'Devices'
         ]);
+        $this->hasMany('CampaignGroups', [
+            'className' => 'CampaignGroups'
+        ]);
 //        $this->belongsTo('Adgroups', [
 //            'foreignKey' => 'adgroup_id',
 //            'joinType' => 'INNER'

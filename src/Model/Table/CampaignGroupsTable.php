@@ -49,6 +49,10 @@ class CampaignGroupsTable extends Table
         $this->hasMany('PartnerVouchers', [
             'foreignKey' => 'campaign_group_id'
         ]);
+        $this->belongsTo('Users', [
+            'foreignKey' => 'user_id_campaign_group',
+            'joinType' => 'INNER'
+        ]);
     }
 
     /**

@@ -123,6 +123,8 @@
                                 </div>
                                 <div class="help-info">User quản lý nhóm thiết bị</div>
                             </div>
+                        <?php } else { ?>
+                            <input type="hidden" name="user_id_campaign_group"  value="<?php echo $user_login['id'];?>" class="form-control"/>
                         <?php } ?>
                         <div class="row clearfix">
                             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
@@ -136,7 +138,7 @@
                         <div class="form-group">
                             <div class="form-line">
                                 <?php
-                                $random = isset($campaign_group->random) ? $campaign_group->random: '1';
+                                $random = isset($campaign_group->random) ? $campaign_group->random: '2';
                                 echo  $this->Form->input('random', array(
                                     'type' => 'select',
                                     'options' => [
@@ -153,10 +155,16 @@
                                 ?>
                             </div>
                         </div>
-                        <h2 class="card-inside-title">Tên cơ sở dịch vụ</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <input type="text" name="tile_name" id="tile_name" class="form-control" value="<?php echo isset($device->tile_name) ? $device->tile_name :'';?>" placeholder="Điền tên..">
+                                <?php echo $this->Form->control('tile_name', array(
+                                    'label' => 'Tên cơ sở dịch vụ',
+                                    'class' => 'form-control',
+                                    'id' => 'tile_name',
+                                    'placeholder' => 'Điền tên..'
+                                ));
+                                ?>
+                                <div class="help-info">Tên cơ sở dịch vụ</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -169,10 +177,59 @@
                             ?>
                             <div class="help-info">Nội dung tin nhắn chúc mừng</div>
                         </div>
-                        <h2 class="card-inside-title">Địa chỉ nhóm thiết bị</h2>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
-                                <input type="text" name="address" id="slogan" class="form-control" value="<?php echo isset($device->address) ? $device->address :'';?>" placeholder="Điền địa chỉ nhóm thiết bị..">
+                                <?php $address = isset($campaign_group->address) ? ($campaign_group->address):'' ?>
+                                <?php echo $this->Form->control('address', array(
+                                    'label' => 'Địa chỉ nhóm thiết bị',
+                                    'class' => 'form-control',
+                                    'id' => 'slogan',
+                                    'value' => $address,
+                                    'placeholder' => 'Điền địa chỉ nhóm thiết bị..'
+                                ));
+                                ?>
+                                <div class="help-info">Địa chỉ nhóm thiết bị</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
+                                <?php echo $this->Form->control('title_connect', array(
+                                    'label' => 'Title button connect',
+                                    'class' => 'form-control',
+                                    'value' => $title_connect,
+                                    'placeholder' => 'Title_connect..'
+                                ));
+                                ?>
+                                <div class="help-info">Title_connect</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
+                                $hidden_connect = isset($campaign_group->hidden_connect) ? $campaign_group->hidden_connect: '1';
+                                echo  $this->Form->input('hidden_connect', array(
+                                    'type' => 'select',
+                                    'options' => [
+                                        '1' => 'Hiển thị button connect-snow',
+                                        '2' => 'Không hiển thị'
+                                    ],
+                                    'empty' => '--- Chọn hiển thị ---',
+                                    'label'=> 'Setting hidden button connect-snow',
+                                    'value' => $hidden_connect,
+                                    'escape' => false,
+                                    'error' => false,
+                                    'class' => 'form-control required input_select_medium'
+                                ));
+                                ?>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label> Logo Image </label>
+                            <div class="form-line">
+                                <?php $logo_image = isset($campaign_group->path_logo) ? ($campaign_group->path_logo):''; ?>
+                                <input type="file" name="logo_image" id="file" value="" class="form-control"/>
+                                <div class="help-info">logo_image</div>
                             </div>
                         </div>
                         <h2 class="card-inside-title"> Chọn một ảnh </h2>
@@ -191,6 +248,37 @@
     </div>
 </section>
 <script type="application/javascript">
+    $('#select_device').change(function () {
+        var role = "<?php echo $user_login['role'];?>";
+        var val = $(this).val();
+        console.log(val);
+        $.ajax({
+            url: "/Adgroups/getUser",
+            type: "POST",
+            cache: false,
+            data: {
+                id : val,
+                role : role
+            },
+            success: function (responce) {
+                $('#user_id_group').find('option').remove().end()
+                    .append('<option disabled selected value>--- Chọn user ---</option>')
+                    .val('')
+                ;
+                var resp = [JSON.parse(responce)];
+                $.each(resp, function () {
+                    $.each(this, function (name, value) {
+                        $('#user_id_group').append($('<option>',
+                            {
+                                value: name,
+                                text : value
+                            })
+                        );
+                    });
+                });
+            }
+        });
+    });
     $(document).ready(function () {
         //Advanced Form Validation
         $.validator.setDefaults({ ignore: ":hidden:not(select)" });
@@ -213,9 +301,6 @@
                     number : true
                 },
                 'device_id[]': {
-                    required : true
-                },
-                'tile_name': {
                     required : true
                 },
                 'random': {

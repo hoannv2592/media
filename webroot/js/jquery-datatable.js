@@ -181,7 +181,8 @@ $(function () {
             { "width": "5%" },
             { "width": "10%" },
             { "width": "10%" },
-            { "width": "10%" },
+            { "width": "8%" },
+            { "width": "8%" },
             { "width": "10%" }
         ],
         "language": {

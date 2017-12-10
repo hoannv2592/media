@@ -48,21 +48,56 @@ class CampaignGroupsController extends AppController
      */
     public function index()
     {
-        $campaignGroups = $this->CampaignGroups->find('all',[
-            'contain'  => ['PartnerVouchers' => function ($q) {
-                return $q
-                    ->where([
-                        'PartnerVouchers.confirm ' => 1
-                    ])
-                    ->select([
-                        'campaign_group_id','id'
-                    ]);
-            }],
-            'conditions' => [
-                'CampaignGroups.delete_flag !=' => 1
-            ]
-        ])->toArray();
-
+        $login = $this->Auth->user();
+        $user_login_id = $login['id'];
+        if ($login['role'] == User::ROLE_ONE) {
+            $campaignGroups = $this->CampaignGroups->find('all',[
+                'contain'  => [
+                    'PartnerVouchers' => function ($q) {
+                    return $q
+                        ->where([
+                            'PartnerVouchers.confirm ' => 1
+                        ])
+                        ->select([
+                            'campaign_group_id','id'
+                        ]);
+                },
+                    'Users' => function ($q) {
+                        return $q
+                        ->select([
+                            'Users.id','Users.username'
+                        ]);
+                    }
+                ],
+                'conditions' => [
+                    'CampaignGroups.delete_flag !=' => 1,
+                ]
+            ])->toArray();
+        } else {
+            $campaignGroups = $this->CampaignGroups->find('all',[
+                'contain'  => [
+                    'PartnerVouchers' => function ($q) {
+                        return $q
+                            ->where([
+                                'PartnerVouchers.confirm ' => 1
+                            ])
+                            ->select([
+                                'campaign_group_id','id'
+                            ]);
+                    },
+                    'Users' => function ($q) {
+                        return $q
+                            ->select([
+                                'Users.id','Users.username'
+                            ]);
+                    }
+                ],
+                'conditions' => [
+                    'CampaignGroups.delete_flag !=' => 1,
+                    'CampaignGroups.user_id_campaign_group' => $user_login_id
+                ]
+            ])->toArray();
+        }
         $this->set(compact('campaignGroups'));
         $this->set('_serialize', ['campaignGroups']);
     }
@@ -87,7 +122,7 @@ class CampaignGroupsController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Http\Response|null Redirects on successful add, renders view otherwise.
+     * @return void Redirects on successful add, renders view otherwise.
      */
     public function add()
     {
@@ -118,6 +153,7 @@ class CampaignGroupsController extends AppController
                     'user_id' => $user['id']
                 );
             }
+
             $devices = $this->Devices->find('all')
                 ->where($conditions)
                 ->combine('id','name')->toArray();
@@ -138,7 +174,6 @@ class CampaignGroupsController extends AppController
                 ->order(['Devices.id'=> 'DESC'])
                 ->combine('id', 'name')->toArray();
         }
-        $adgroup = $this->CampaignGroups->newEntity();
         $campaign_groups = $this->CampaignGroups->newEntity();
         if ($this->request->is('post')) {
             $listNameDevice = ($this->getNameDevice($this->request->getData()['device_id']));
@@ -147,6 +182,23 @@ class CampaignGroupsController extends AppController
                 ->hydrate(false)->toList();
             // Common Usage:
             $result_id_devices = Hash::extract($devices, '{n}.id');
+
+            if (!empty($this->request->data['logo_image']['error'] != 4)) {
+                $list_file['file'] = $this->request->getData('logo_image');
+                $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
+                $path = $fileOK['urls'][0];
+                $image_up_load = $list_file['file']['name'];
+                if ($path != '') {
+                    $this->request->data['path_logo'] = $path;
+                }
+                if ($image_up_load != '') {
+                    $this->request->data['image_logo'] = $image_up_load;
+                }
+                unset($this->request->data['logo_image']);
+            } else {
+                unset($this->request->data['logo_image']);
+            }
+
             if (!empty($this->request->data['file'][0]['error'] != 4)) {
                 $new_arr = array();
                 $list_file = $this->request->getData('file');
@@ -455,6 +507,22 @@ class CampaignGroupsController extends AppController
             $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
             $this->request->data['device_name'] = $listUserid;
             $this->request->data['device_id'] = json_encode($this->request->getData()['device_id']);
+            if (!empty($this->request->data['logo_image']['error'] != 4)) {
+                $list_file['file'] = $this->request->getData('logo_image');
+                $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
+                $path = $fileOK['urls'][0];
+                $image_up_load = $list_file['file']['name'];
+                if ($path != '') {
+                    $this->request->data['path_logo'] = $path;
+                }
+                if ($image_up_load != '') {
+                    $this->request->data['image_logo'] = $image_up_load;
+                }
+                unset($this->request->data['logo_image']);
+            } else {
+                unset($this->request->data['logo_image']);
+            }
+
             if (!empty($this->request->data['file'][0]['error'] != 4)) {
                 $new_arr = array();
                 $list_file = $this->request->getData('file');

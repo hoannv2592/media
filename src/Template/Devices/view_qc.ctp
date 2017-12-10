@@ -16,6 +16,8 @@ $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg'
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $passrord = $infor_devices->apt_device_number;
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
+$title_connect = isset($infor_devices->title_connect) ? $infor_devices->title_connect: 'Nhận voucher';
+$title_connect_normal = isset($infor_devices->title_connect) ? $infor_devices->title_connect: 'Đăng ký nhận voucher';
 echo $this->Html->script(['md5']);
 if ($voucher_flag == 1) {
     echo $this->Html->css('back_end/page1');
@@ -33,7 +35,11 @@ if ($voucher_flag == 1) {
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="logo">
                                             <div class="logo__inner">
-                                                <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt=""></a>
+                                                <?php if (isset($infor_devices->path_logo)) { ?>
+                                                    <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" alt="logo_image" style="height: 100px;"></a>
+                                                <?php } else { ?>
+                                                    <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                         <div class="c-spacer--xx-large c-spacer"></div>
@@ -41,16 +47,21 @@ if ($voucher_flag == 1) {
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="discount">
                                             <div class="c-spacer--x-large c-spacer"></div>
-                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal">Nhận voucher</a>
+                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php echo $title_connect;?></a>
                                         </div>
                                         <div class="c-spacer--x-large c-spacer"></div>
                                         <div class="redirect">
-                                            <a class="redirect__normal" href="<?php echo $infor_devices->auth_target; ?>">Connect now -
-                                                Slow</a>
+                                            <?php if ($infor_devices->hidden_connect == 2) { ?>
+                                                <a class="redirect__normal" href="<?php echo $infor_devices->auth_target; ?>">Connect now -Slow</a>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="u-ui-padding-x-large landing__cover-wrapper">
+                                <?php if ($infor_devices->hidden_connect == 2) { ?>
+                                    <div class="u-ui-padding-x-large landing__cover-wrapper" style="padding-top: 0px !important;">
+                                <?php } else { ?>
+                                        <div class="u-ui-padding-x-large landing__cover-wrapper">
+                                <?php } ?>
                                     <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
                                     <ul class="icons mbl">
                                         <li class="facebook"><a href="" target="_blank"><i class="fa fa-facebook"></i></a></li>
@@ -144,6 +155,7 @@ if ($voucher_flag == 1) {
 
             });
         </script>
+        </div>
     <?php } else { ?>
         <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
             <input type="hidden" class="need_push_username" name="username"/>
@@ -181,7 +193,11 @@ if ($voucher_flag == 1) {
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="logo">
                                             <div class="logo__inner">
-                                                <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt=""></a>
+                                                <?php if (isset($infor_devices->path_logo)) { ?>
+                                                    <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" style="height: 100px;" alt="logo image"></a>
+                                                <?php } else { ?>
+                                                    <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                         <div class="c-spacer--xx-large c-spacer"></div>
@@ -189,22 +205,27 @@ if ($voucher_flag == 1) {
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="discount">
                                             <div class="c-spacer--x-large c-spacer"></div>
-                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal">Nhận voucher</a>
+                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php echo $title_connect;?></a>
                                         </div>
                                         <div class="c-spacer--x-large c-spacer"></div>
                                         <div class="redirect">
-                                            <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
-                                                <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                                <input type="hidden" name="popup" value="true"/>
-                                                <input style="display: none;" name="username" type="text" value="wifimedia"/>
-                                                <input style="display: none;" name="password" type="password" value="wifimedia" />
-                                                <button class="redirect__normal">Connect now - Slow</button>
-                                            </form>
+                                            <?php if ($infor_devices->hidden_connect == 2) {?>
+                                                <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                                                    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                                    <input type="hidden" name="popup" value="true"/>
+                                                    <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                                    <input style="display: none;" name="password" type="password" value="wifimedia" />
+                                                    <button class="redirect__normal">Connect now - Slow</button>
+                                                </form>
+                                            <?php }?>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="u-ui-padding-x-large landing__cover-wrapper">
-                                    <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
+                                <?php if ($infor_devices->hidden_connect == 1) { ?>
+                                    <div class="u-ui-padding-x-large landing__cover-wrapper asasd" style="padding-top: 0px !important;">
+                                <?php } else { ?>
+                                        <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
+                                <?php } ?>
                                     <ul class="icons mbl">
                                         <li class="facebook"><a href="" target="_blank"><i class="fa fa-facebook"></i></a></li>
                                         <li class="youtube"><a href="" target="_blank"><i class="fa fa-youtube"></i></a></li>
@@ -258,12 +279,6 @@ if ($voucher_flag == 1) {
                     forceParse: 0,
                     format: "dd/mm/yyyy"
                 });
-                jQuery.validator.addMethod("nonNumeric", function (value, element) {
-                    return this.optional(element) || isNaN(parseInt(value));
-                }, "Hãy nhập đúng tên");
-                $.validator.addMethod('customphone', function (value, element) {
-                    return this.optional(element) || /^[0-9-+]+$/.test(value);
-                }, "Please enter a valid phone number");
                 var X_url = "<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'viewQcVoucher' . '/' . UrlUtil::_encodeUrl($infor_devices->id)])?>";
                 $('#info_mirkotic').validate({
                     onkeyup : false,
@@ -327,7 +342,11 @@ if ($voucher_flag == 1) {
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="logo">
                                             <div class="logo__inner">
-                                                <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt=""></a>
+                                                <?php if (isset($infor_devices->path_logo)) { ?>
+                                                    <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" alt="logo_image" style="height: 100px;"></a>
+                                                <?php } else { ?>
+                                                    <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                         <div class="c-spacer--xx-large c-spacer"></div>
@@ -335,17 +354,21 @@ if ($voucher_flag == 1) {
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="discount">
                                             <div class="c-spacer--x-large c-spacer"></div>
-                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal">Đăng ký nhận
-                                                voucher</a>
+                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php echo $title_connect_normal;?></a>
                                         </div>
                                         <div class="c-spacer--x-large c-spacer"></div>
                                         <div class="redirect">
-                                            <a class="redirect__normal" href="<?php echo $infor_devices->auth_target; ?>">Connect now -
-                                                Slow</a>
+                                            <?php if ($infor_devices->hidden_connect == 2) { ?>
+                                                <a class="redirect__normal" href="<?php echo $infor_devices->auth_target; ?>">Connect now - Slow</a>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
+                                <?php if ($infor_devices->hidden_connect == 1) { ?>
+                                <div class="u-ui-padding-x-large landing__cover-wrapper" style="padding-top: 0px !important;">
+                                <?php } else { ?>
                                 <div class="u-ui-padding-x-large landing__cover-wrapper">
+                                    <?php } ?>
                                     <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
                                     <ul class="icons mbl">
                                         <li class="facebook"> <a href="" target="_blank"><i class="fa fa-facebook"></i></a></li>
@@ -400,7 +423,11 @@ if ($voucher_flag == 1) {
                                     <div class="c-spacer--xx-large c-spacer"></div>
                                     <div class="logo">
                                         <div class="logo__inner">
-                                            <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo"></a>
+                                            <?php if (isset($infor_devices->path_logo)) { ?>
+                                                <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" alt="logo_image" style="height: 100px;"></a>
+                                            <?php } else { ?>
+                                                <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                     <div class="c-spacer--xx-large c-spacer"></div>
@@ -450,7 +477,13 @@ if ($voucher_flag == 1) {
                                     <div class="u-ui-padding-x-large landing__cover-wrapper">
                                         <div class="landing__cover-content u-color-white">
                                             <div class="logo">
-                                                <div class="logo__inner"> <a class="" href="javascript:void(0);"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt="crm.wifimedia.vn"></a>
+
+                                                <div class="logo__inner">
+                                                    <?php if (isset($infor_devices->path_logo)) { ?>
+                                                        <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" alt="logo_image" style="height: 100px;"></a>
+                                                    <?php } else { ?>
+                                                        <a class="" href="javascript:void(0);"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt="crm.wifimedia.vn"></a>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                             <div class="c-text--heading c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name; ?></div>
@@ -534,13 +567,6 @@ if ($voucher_flag == 1) {
                 $('#submit_password').removeAttr('disabled');
                 $('#user_password-error').remove();
             });
-
-            jQuery.validator.addMethod("nonNumeric", function (value, element) {
-                return this.optional(element) || isNaN(parseInt(value));
-            }, "Hãy nhập đúng tên");
-            $.validator.addMethod('customphone', function (value, element) {
-                return this.optional(element) || /^[0-9-+]+$/.test(value);
-            }, "Please enter a valid phone number");
             $('#register_form').validate({
                 rules: {
                     'name': {
@@ -649,7 +675,11 @@ if ($voucher_flag == 1) {
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="logo">
                                             <div class="logo__inner">
-                                                <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo"></a>
+                                                <?php if (isset($infor_devices->path_logo)) { ?>
+                                                    <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" alt="logo_image" style="height: 100px;"></a>
+                                                <?php } else { ?>
+                                                    <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo"></a>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                         <div class="c-spacer--xx-large c-spacer"></div>
@@ -699,7 +729,11 @@ if ($voucher_flag == 1) {
                                     <div class="landing__cover-content u-color-white">
                                         <div class="logo">
                                             <div class="logo__inner">
-                                                <a class="" href="javascript:void(0);"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt=""></a>
+                                                <?php if (isset($infor_devices->path_logo)) { ?>
+                                                    <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" alt="logo_image" style="height: 100px;"></a>
+                                                <?php } else { ?>
+                                                    <a class="" href="javascript:void(0);"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt=""></a>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                         <div class="c-text--heading c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name; ?></div>
@@ -738,7 +772,11 @@ if ($voucher_flag == 1) {
                                             <div class="c-spacer--xx-large c-spacer"></div>
                                             <div class="logo">
                                                 <div class="logo__inner">
-                                                    <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt=""></a>
+                                                    <?php if (isset($infor_devices->path_logo)) { ?>
+                                                        <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" alt="logo_image" style="height: 100px;"></a>
+                                                    <?php } else { ?>
+                                                        <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>
+                                                    <?php } ?>
                                                 </div>
                                             </div>
                                             <div class="c-spacer--xx-large c-spacer"></div>
@@ -746,21 +784,27 @@ if ($voucher_flag == 1) {
                                             <div class="c-spacer--xx-large c-spacer"></div>
                                             <div class="discount">
                                                 <div class="c-spacer--x-large c-spacer"></div>
-                                                <a class="redirect__discount" href="#modal_discount" data-toggle="modal">Đăng ký nhận voucher</a>
+                                                <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php echo $title_connect_normal;?></a>
                                             </div>
                                             <div class="c-spacer--x-large c-spacer"></div>
                                             <div class="redirect">
-                                                <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
-                                                    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                                    <input type="hidden" name="popup" value="true"/>
-                                                    <input style="display: none;" name="username" type="text" value="wifimedia"/>
-                                                    <input style="display: none;" name="password" type="password" value="wifimedia" />
-                                                    <button class="redirect__normal">Connect now - Slow</button>
-                                                </form>
+                                                <?php if ($infor_devices->hidden_connect == 2) { ?>
+                                                    <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                                                        <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                                        <input type="hidden" name="popup" value="true"/>
+                                                        <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                                        <input style="display: none;" name="password" type="password" value="wifimedia" />
+                                                        <button class="redirect__normal">Connect now - Slow</button>
+                                                    </form>
+                                                <?php } ?>
                                             </div>
                                         </div>
                                     </div>
+                                    <?php if ($infor_devices->hidden_connect == 1) { ?>
+                                    <div class="u-ui-padding-x-large landing__cover-wrapper" style="padding-top: 0px !important;">
+                                    <?php } else { ?>
                                     <div class="u-ui-padding-x-large landing__cover-wrapper">
+                                        <?php } ?>
                                         <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
                                         <ul class="icons mbl">
                                             <li class="facebook"><a href="" target="_blank"><i class="fa fa-facebook"></i></a></li>
@@ -976,5 +1020,8 @@ if ($voucher_flag == 1) {
     }
     h4.modal-title{
         text-align: center;
+    }
+    a:focus, a:hover {
+        color: #ffffff !important;
     }
 </style>

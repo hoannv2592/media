@@ -421,8 +421,6 @@ class ReportsController extends AppController
                     $data_device = $this->Devices->save($device);
                     if ($data_device) {
                         $partner->device_id = $data_device->id;
-                        pr($partner);
-                        pr(empty($partner->errors())); die;
                         if (empty($partner->errors())) {
                         var_dump($this->Partners->save($partner)); die;
                             if ($this->Partners->save($partner)) {
