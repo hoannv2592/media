@@ -58,7 +58,7 @@ if ($voucher_flag == 1) {
                                         </div>
                                         <div class="c-spacer--x-large c-spacer"></div>
                                         <div class="redirect">
-                                            <?php if ($infor_devices->hidden_connect == 2) { ?>
+                                            <?php if ($infor_devices->hidden_connect == 1) { ?>
                                                 <a class="redirect__normal" href="<?php echo $infor_devices->auth_target; ?>">Connect now -Slow</a>
                                             <?php } ?>
                                         </div>
@@ -223,7 +223,7 @@ if ($voucher_flag == 1) {
                                         </div>
                                         <div class="c-spacer--x-large c-spacer"></div>
                                         <div class="redirect">
-                                            <?php if ($infor_devices->hidden_connect == 2) {?>
+                                            <?php if ($infor_devices->hidden_connect == 1) {?>
                                                 <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                                     <input type="hidden" name="popup" value="true"/>
@@ -235,7 +235,7 @@ if ($voucher_flag == 1) {
                                         </div>
                                     </div>
                                 </div>
-                                <?php if ($infor_devices->hidden_connect == 1) { ?>
+                                <?php if ($infor_devices->hidden_connect == 2) { ?>
                                     <div class="u-ui-padding-x-large landing__cover-wrapper asasd" style="padding-top: 0px !important;">
                                 <?php } else { ?>
                                         <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
@@ -379,13 +379,13 @@ if ($voucher_flag == 1) {
                                         </div>
                                         <div class="c-spacer--x-large c-spacer"></div>
                                         <div class="redirect">
-                                            <?php if ($infor_devices->hidden_connect == 2) { ?>
+                                            <?php if ($infor_devices->hidden_connect == 1) { ?>
                                                 <a class="redirect__normal" href="<?php echo $infor_devices->auth_target; ?>">Connect now - Slow</a>
                                             <?php } ?>
                                         </div>
                                     </div>
                                 </div>
-                                <?php if ($infor_devices->hidden_connect == 1) { ?>
+                                <?php if ($infor_devices->hidden_connect == 2) { ?>
                                 <div class="u-ui-padding-x-large landing__cover-wrapper" style="padding-top: 0px !important;">
                                 <?php } else { ?>
                                 <div class="u-ui-padding-x-large landing__cover-wrapper">
@@ -853,7 +853,7 @@ if ($voucher_flag == 1) {
                                             </div>
                                             <div class="c-spacer--x-large c-spacer"></div>
                                             <div class="redirect">
-                                                <?php if ($infor_devices->hidden_connect == 2) { ?>
+                                                <?php if ($infor_devices->hidden_connect == 1) { ?>
                                                     <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                                         <input type="hidden" name="popup" value="true"/>
@@ -865,7 +865,7 @@ if ($voucher_flag == 1) {
                                             </div>
                                         </div>
                                     </div>
-                                    <?php if ($infor_devices->hidden_connect == 1) { ?>
+                                    <?php if ($infor_devices->hidden_connect == 2) { ?>
                                     <div class="u-ui-padding-x-large landing__cover-wrapper" style="padding-top: 0px !important;">
                                     <?php } else { ?>
                                     <div class="u-ui-padding-x-large landing__cover-wrapper">

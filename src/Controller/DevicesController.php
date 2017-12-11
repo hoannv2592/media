@@ -254,13 +254,27 @@ class DevicesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is('post')) {
+            if (!empty($this->request->data['logo_image']['error'] != 4)) {
+                $list_file['file'] = $this->request->getData('logo_image');
+                $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
+                $path = $fileOK['urls'][0];
+                $image_up_load = $list_file['file']['name'];
+                if ($path != '') {
+                    $this->request->data['path_logo'] = $path;
+                }
+                if ($image_up_load != '') {
+                    $this->request->data['image_logo'] = $image_up_load;
+                }
+                unset($this->request->data['logo_image']);
+            } else {
+                unset($this->request->data['logo_image']);
+            }
             if (!empty($this->request->data['file'][0]['error'] != 4)) {
                 // upload the file to the server
                 $new_arr = array();
                 $list_file = $this->request->getData('file');
                 foreach ($list_file as $k => $vl) {
                     $new_arr[]['file'] = $vl;
-
                 }
                 $fileOK = array();
                 foreach ($new_arr as $k => $vl) {
@@ -274,17 +288,18 @@ class DevicesController extends AppController
                 $device->path = implode(',', $path);
                 $device->image_backgroup = implode(',', $image_up_load);
                 $device = $this->Devices->patchEntity($device, $this->request->data);
+                $device_id = $this->request->getData('device_id');
                 if (empty($device->errors())) {
                     if ($this->Devices->save($device)) {
                         $conn->commit();
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
                 }
             } else {
                 unset($this->request->data['file']);
@@ -295,11 +310,11 @@ class DevicesController extends AppController
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . $this->request->getData('device_id') . '/' . $user_id]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
                 }
             }
         }
