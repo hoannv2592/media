@@ -47,7 +47,14 @@ if ($voucher_flag == 1) {
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="discount">
                                             <div class="c-spacer--x-large c-spacer"></div>
-                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php echo $title_connect;?></a>
+                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php
+                                                if ($title_connect != '') {
+                                                    echo $title_connect;
+                                                } else {
+                                                    echo 'Nhận voucher';
+                                                }
+                                                ?>
+                                            </a>
                                         </div>
                                         <div class="c-spacer--x-large c-spacer"></div>
                                         <div class="redirect">
@@ -205,7 +212,14 @@ if ($voucher_flag == 1) {
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="discount">
                                             <div class="c-spacer--x-large c-spacer"></div>
-                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php echo $title_connect;?></a>
+                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php
+                                                if ($title_connect != '') {
+                                                    echo $title_connect;
+                                                } else {
+                                                    echo 'Nhận voucher';
+                                                }
+                                                ?>
+                                            </a>
                                         </div>
                                         <div class="c-spacer--x-large c-spacer"></div>
                                         <div class="redirect">
@@ -354,7 +368,14 @@ if ($voucher_flag == 1) {
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="discount">
                                             <div class="c-spacer--x-large c-spacer"></div>
-                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php echo $title_connect_normal;?></a>
+                                            <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php
+                                                if ($title_connect_normal != '') {
+                                                    echo $title_connect_normal;
+                                                } else {
+                                                    echo 'Đăng ký nhận voucher';
+                                                }
+                                                ?>
+                                            </a>
                                         </div>
                                         <div class="c-spacer--x-large c-spacer"></div>
                                         <div class="redirect">
@@ -435,10 +456,8 @@ if ($voucher_flag == 1) {
                                     <div class="redirect">
                                         <div class="c-spacer--xx-large c-spacer"></div>
                                         <div class="c-spacer--xx-large c-spacer"></div>
-                                        <div class="redirect-wrapper">
-                                            <div class="m-text--desc ">Việc truy cập vào mạng wifi này đồng nghĩa với điều khoản sử dụng
-                                                của chúng tôi
-                                            </div>
+                                        <div class="redirect-wrapper" style="max-width: 250px !important;">
+                                            <div class="m-text--desc"></div>
                                             <div class=" c-spacer"></div>
                                             <label class="c-input--default c-input--password c-input" for="user_password">
                                                 <div class="c-input__content js-input-content">
@@ -460,6 +479,26 @@ if ($voucher_flag == 1) {
                             </div>
                         </div>
                     </div>
+                    <style>
+                        .redirect .btn{
+                            display: block;
+                            border: none;
+                            color: #fff;
+                            padding: 10px !important;
+                            font-size: 13px !important;
+                            line-height: 100%;
+                            text-align: center;
+                            width: 100%;
+                            text-decoration: none;
+                            position: relative;
+                        }
+                        label.error {
+                            color: red;
+                            font-size: 12px !important;
+                            float: left;
+                            padding-left:0px !important;
+                        }
+                    </style>
                 <?php } ?>
             </div>
         </div>
@@ -687,9 +726,8 @@ if ($voucher_flag == 1) {
                                         <div class="redirect">
                                             <div class="c-spacer--xx-large c-spacer"></div>
                                             <div class="c-spacer--xx-large c-spacer"></div>
-                                            <div class="redirect-wrapper">
-                                                <div class="m-text--desc ">Việc truy cập vào mạng wifi
-                                                    này đồng nghĩa với điều khoản sử dụng của chúng tôi</div>
+                                            <div class="redirect-wrapper" style="max-width: 250px !important;">
+                                                <div class="m-text--desc "></div>
                                                 <div class=" c-spacer"></div>
                                                 <div class="c-cell">
                                                     <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
@@ -713,6 +751,26 @@ if ($voucher_flag == 1) {
                     <?php } ?>
                 </div>
             </div>
+            <style>
+                .redirect .btn{
+                    display: block;
+                    border: none;
+                    color: #fff;
+                    padding: 10px !important;
+                    font-size: 13px !important;
+                    line-height: 100%;
+                    text-align: center;
+                    width: 100%;
+                    text-decoration: none;
+                    position: relative;
+                }
+                label.error {
+                    color: red;
+                    font-size: 12px !important;
+                    float: left;
+                    padding-left:0px !important;
+                }
+            </style>
         <?php } elseif ($langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
             echo $this->Html->css('back_end/page3');
             $path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
@@ -784,7 +842,14 @@ if ($voucher_flag == 1) {
                                             <div class="c-spacer--xx-large c-spacer"></div>
                                             <div class="discount">
                                                 <div class="c-spacer--x-large c-spacer"></div>
-                                                <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php echo $title_connect_normal;?></a>
+                                                <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php
+                                                    if ($title_connect_normal != '') {
+                                                        echo $title_connect_normal;
+                                                    } else {
+                                                        echo 'Đăng ký nhận voucher';
+                                                    }
+                                                    ?>
+                                                </a>
                                             </div>
                                             <div class="c-spacer--x-large c-spacer"></div>
                                             <div class="redirect">

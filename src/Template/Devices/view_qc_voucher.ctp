@@ -42,7 +42,7 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
                                 <div class="redirect">
                                     <div class="c-spacer--xx-large c-spacer"></div>
                                     <div class="c-spacer--xx-large c-spacer"></div>
-                                    <div class="redirect-wrapper">
+                                    <div class="redirect-wrapper" style="max-width: 280px !important;">
                                         <div class="m-text--desc " style="text-align: center;color: red">
                                             <?php echo $tile_congratulations; ?>
                                         </div>
@@ -100,7 +100,7 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
                                 <div class="redirect">
                                     <div class="c-spacer--xx-large c-spacer"></div>
                                     <div class="c-spacer--xx-large c-spacer"></div>
-                                    <div class="redirect-wrapper">
+                                    <div class="redirect-wrapper" style="max-width: 250px !important;">
                                         <div class="m-text--desc " style="text-align: center;color: red">
                                             <?php echo $tile_congratulations; ?>
                                         </div>
@@ -124,5 +124,25 @@ if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
         </div>
     </div>
 <?php } ?>
+<style>
+    .redirect .btn{
+        display: block;
+        border: none;
+        color: #fff;
+        padding: 10px !important;
+        font-size: 13px !important;
+        line-height: 100%;
+        text-align: center;
+        width: 100%;
+        text-decoration: none;
+        position: relative;
+    }
+    label.error {
+        color: red;
+        font-size: 12px !important;
+        float: left;
+        padding-left:0px !important;
+    }
+</style>
 
 
