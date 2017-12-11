@@ -64,7 +64,7 @@ class AdgroupsController extends AppController
                 'conditions' => [
                     'Adgroups.delete_flag !=' => DELETED,
                 ]
-            ])->order(['id' => 'DESC'])
+            ])->order(['Adgroups.id' => 'DESC'])
                 ->toArray();
         } else {
             $adgroups = $this->Adgroups->find('all',[
