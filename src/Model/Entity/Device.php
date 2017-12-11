@@ -15,7 +15,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\User $user
  * @property bool delete_fag
- * @property bool delete_flag
+ * @property bool name
  */
 class Device extends Entity
 {

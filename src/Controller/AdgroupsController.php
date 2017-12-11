@@ -245,6 +245,7 @@ class AdgroupsController extends AppController
                 'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
+                'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
             );
 
             $device_group = $this->DeviceGroups->newEntity();
@@ -265,6 +266,7 @@ class AdgroupsController extends AppController
                 'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
+                'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
             );
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             $adgroup->delete_flag = UN_DELETED;
@@ -603,6 +605,7 @@ class AdgroupsController extends AppController
                 'address' => $this->request->getData()['address'],
                 'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
+                'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
             );
 
             if (!empty($this->request->data['logo_image']['error'] != 4)) {
@@ -661,7 +664,8 @@ class AdgroupsController extends AppController
                 'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'path_logo' => isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'',
-                'image_logo' => isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:''
+                'image_logo' => isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:'',
+                'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
             );
             if ($user['role'] == User::ROLE_ONE) {
                 $data_group['user_id_group'] = isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'';

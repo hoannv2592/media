@@ -332,8 +332,9 @@ class DevicesController extends AppController
      * @param null $partner_id
      * @return \Cake\Http\Response|null
      */
-    public function viewQc($device_id = null, $voucher_flag = null, $partner_id = null)
+    public function viewQc($device_id = null, $voucher_flag = null, $partner_id = null, $flag_check_isexit_partner = null)
     {
+        $flag_check_isexit_partner = \UrlUtil::_decodeUrl($flag_check_isexit_partner);
         $partner_id = isset($partner_id) ? $partner_id :'';
         if ($partner_id != '') {
             $partner_id = \UrlUtil::_decodeUrl($partner_id);
@@ -391,6 +392,7 @@ class DevicesController extends AppController
                         $infor_devices->title_connect = $device_campaign->title_connect;
                         $infor_devices->hidden_connect = $device_campaign->hidden_connect;
                         $infor_devices->path_logo = $device_campaign->path_logo;
+                        $infor_devices->tile_congratulations_return = $device_campaign->tile_congratulations_return;
                     }
                 } elseif (isset($infor_devices->adgroup_id) && $infor_devices->adgroup_id != '') {
                     $device_group = $this->DeviceGroups->find()
@@ -403,10 +405,14 @@ class DevicesController extends AppController
                         $infor_devices->apt_device_number = $device_group->number_pass;
                         $infor_devices->message = $device_group->message;
                         $infor_devices->slogan = $device_group->slogan;
+                        $infor_devices->title_connect = $device_group->title_connect;
+                        $infor_devices->hidden_connect = $device_group->hidden_connect;
+                        $infor_devices->path_logo = $device_group->path_logo;
+                        $infor_devices->tile_congratulations_return = $device_group->tile_congratulations_return;
                     }
                 }
             }
-            $this->set(compact('infor_devices', 'voucher_flag', 'id_campaign', 'partner_id'));
+            $this->set(compact('infor_devices', 'voucher_flag', 'id_campaign', 'partner_id', 'flag_check_isexit_partner'));
         } else {
             return $this->redirect(['action' => 'index']);
         }
@@ -428,20 +434,8 @@ class DevicesController extends AppController
         $this->request->allowMethod(['post', 'get', 'put', 'ajax', 'delete']);
         $this->autoRender = false;
         if ($apt_key != '') {
-            $apt_key_check = $this->Devices->find()->where(
-                [
-                    'apt_key' => $apt_key,
-                    'delete_flag !=' => DELETED
-                ])
-                ->select()
-                ->hydrate(true)
-                ->first();
-            $vouchers = $this->CampaignGroups->find()
-                ->select(['id', 'device_id'])
-                ->where(['delete_flag !=' => 1])
-                ->hydrate(false)
-                ->combine('id', 'device_id')
-                ->toArray();
+            $apt_key_check = $this->Devices->find()->where(['apt_key' => $apt_key, 'delete_flag !=' => DELETED])->select()->hydrate(true)->first();
+            $vouchers = $this->CampaignGroups->find()->select(['id', 'device_id'])->where(['delete_flag !=' => 1])->hydrate(false)->combine('id', 'device_id')->toArray();
             if (!empty($apt_key_check)) {
                 $id_device = $apt_key_check->id;
                 $link_login_only = isset($this->request->data['link_login_only']) ? $this->request->data['link_login_only']:'';
@@ -492,17 +486,12 @@ class DevicesController extends AppController
                                 $number_voucher_userd = $this->PartnerVouchers->find()
                                     ->where(['confirm ' => '1'])
                                     ->count();
-
                                 if (!empty($pa_voucher)) {
                                     if ($pa_voucher->confirm == 1) {
                                         $flag_normal = false;
-                                        $pa_confirm = $this->Partners->find()->where(
-                                            array(
-                                                'device_id' => $id_device,
-                                                'client_mac' => $client_mac,
-                                            ))
-                                            ->first();
+                                        $pa_confirm = $this->Partners->find()->where(['device_id' => $id_device, 'client_mac' => $client_mac])->first();
                                         if (empty($pa_confirm)) {
+                                            $flag_check_isexit_partner = false;
                                             $save_new_pa_vou = array(
                                                 'device_id' => $apt_key_check->id,
                                                 'client_mac' => $client_mac,
@@ -522,6 +511,7 @@ class DevicesController extends AppController
                                                 }
                                             }
                                         } else {
+                                            $flag_check_isexit_partner = true;
                                             $pa_voucher_v = $this->PartnerVouchers->find()->where(
                                                 array(
                                                     'device_id' => $id_device,
@@ -557,6 +547,7 @@ class DevicesController extends AppController
                                             }
                                         }
                                     } else {
+                                        $flag_check_isexit_partner = true;
                                         $flag_normal = true;
                                         $pa_confirm = $this->Partners->find()->where(
                                             array(
@@ -597,6 +588,7 @@ class DevicesController extends AppController
                                                 $flag_normal = false;
                                             }
                                         }
+                                        $flag_check_isexit_partner = false;
                                         $save_new_pa_vou = array(
                                             'device_id' => $apt_key_check->id,
                                             'client_mac' => $client_mac,
@@ -624,6 +616,7 @@ class DevicesController extends AppController
                                             }
                                         }
                                     } else {
+                                        $flag_check_isexit_partner = false;
                                         $flag_normal = false;
                                         $save_new_pa_vou = array(
                                             'device_id' => $apt_key_check->id,
@@ -655,6 +648,7 @@ class DevicesController extends AppController
                                     ))
                                     ->first();
                                 if (empty($partner)) {
+                                    $flag_check_isexit_partner = false;
                                     $save_new_pa = array(
                                         'device_id' => $apt_key_check->id,
                                         'client_mac' => $client_mac,
@@ -673,6 +667,7 @@ class DevicesController extends AppController
                                         }
                                     }
                                 } else {
+                                    $flag_check_isexit_partner = true;
                                     $partner_id = $partner['id'];
                                     $data_update = array(
                                         'num_clients_connect' => $partner['num_clients_connect'] + 1,
@@ -697,6 +692,7 @@ class DevicesController extends AppController
                                 ))
                                 ->first();
                             if (empty($partner)) {
+                                $flag_check_isexit_partner = false;
                                 $save_new_pa = array(
                                     'device_id' => $apt_key_check->id,
                                     'client_mac' => $client_mac,
@@ -715,6 +711,7 @@ class DevicesController extends AppController
                                     }
                                 }
                             } else {
+                                $flag_check_isexit_partner = true;
                                 $partner_id = $partner['id'];
                                 $data_update = array(
                                     'num_clients_connect' => $partner['num_clients_connect'] + 1,
@@ -739,6 +736,7 @@ class DevicesController extends AppController
                             ))
                             ->first();
                         if (empty($partner)) {
+                            $flag_check_isexit_partner = false;
                             $save_new_pa = array(
                                 'device_id' => $apt_key_check->id,
                                 'client_mac' => $client_mac,
@@ -757,6 +755,12 @@ class DevicesController extends AppController
                                 }
                             }
                         } else {
+                            $flag_adgroup = $this->getFlagInAdgroup($apt_key_check['langdingpage_id'], $id_device);
+                            if ($flag_adgroup == 1) {
+                                $flag_check_isexit_partner = true;
+                            } else {
+                                $flag_check_isexit_partner = false;
+                            }
                             $partner_id = $partner['id'];
                             $data_update = array(
                                 'num_clients_connect' => $partner['num_clients_connect'] + 1,
@@ -782,24 +786,29 @@ class DevicesController extends AppController
                             $chk = true;
                         }
                     }
+                    if ($flag_check_isexit_partner) {
+                        $flag_check_isexit_partner = 1;
+                    } else {
+                        $flag_check_isexit_partner = 2;
+                    }
                     if (!$chk) {
-                            $conn->commit();
-                            if ($flag_normal) {
-                                $this->redirect([
-                                    'plugin' => null,
-                                    'controller' => 'Devices',
-                                    'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id)
-                                ]);
-                            } else {
-                                $this->redirect([
-                                    'plugin' => null,
-                                    'controller' => 'Devices',
-                                    'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id)
-                                ]);
-                            }
+                        $conn->commit();
+                        if ($flag_normal) {
+                            $this->redirect([
+                                'plugin' => null,
+                                'controller' => 'Devices',
+                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner)
+                            ]);
                         } else {
-                            $conn->rollback();
+                            $this->redirect([
+                                'plugin' => null,
+                                'controller' => 'Devices',
+                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner)
+                            ]);
                         }
+                    } else {
+                        $conn->rollback();
+                    }
                 } else {
                     $conn = ConnectionManager::get('default');
                     $conn->begin();
@@ -852,6 +861,7 @@ class DevicesController extends AppController
                                             ))
                                             ->first();
                                         if (empty($pa_confirm)) {
+                                            $flag_check_isexit_partner = false;
                                             $save_new_pa_vou = array(
                                                 'device_id' => $apt_key_check->id,
                                                 'client_mac' => $client_mac,
@@ -869,6 +879,7 @@ class DevicesController extends AppController
                                                 }
                                             }
                                         } else {
+                                            $flag_check_isexit_partner = true;
                                             $pa_voucher = $this->PartnerVouchers->find()->where(
                                                 array(
                                                     'device_id' => $id_device,
@@ -901,20 +912,18 @@ class DevicesController extends AppController
                                         }
                                     } else {
                                         $flag_normal = true;
+                                        $flag_check_isexit_partner = true;
                                         $pa_confirm = $this->Partners->find()->where(
                                             array(
                                                 'device_id' => $id_device,
                                                 'client_mac' => $client_mac,
-                                            ))
-                                            ->first();
+                                            ))->first();
                                         $partner_id = $pa_confirm['id'];
                                         $data_update = array(
                                             'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
                                             'auth_target' => $auth_target,
                                             'campaign_group_id' => $id_campaign,
                                         );
-
-
                                         $partner_v = $this->PartnerVouchers->patchEntity($pa_confirm, $data_update);
                                         if (empty($partner_v->errors())) {
                                             if (!$this->PartnerVouchers->save($partner_v)) {
@@ -941,6 +950,7 @@ class DevicesController extends AppController
                                                 $flag_normal = false;
                                             }
                                         }
+                                        $flag_check_isexit_partner = false;
                                         $save_new_pa_vou_v = array(
                                             'device_id' => $apt_key_check->id,
                                             'client_mac' => $client_mac,
@@ -969,6 +979,7 @@ class DevicesController extends AppController
                                         }
                                     } else {
                                         $flag_normal = false;
+                                        $flag_check_isexit_partner = false;
                                         $save_new_pa_vou_v = array(
                                             'device_id' => $apt_key_check->id,
                                             'client_mac' => $client_mac,
@@ -998,6 +1009,7 @@ class DevicesController extends AppController
                                     ))
                                     ->first();
                                 if (empty($partner)) {
+                                    $flag_check_isexit_partner = false;
                                     $save_new_pa = array(
                                         'device_id' => $apt_key_check->id,
                                         'client_mac' => $client_mac,
@@ -1015,6 +1027,7 @@ class DevicesController extends AppController
                                         }
                                     }
                                 } else {
+                                    $flag_check_isexit_partner = true;
                                     $partner_id = $partner['id'];
                                     $data_update = array(
                                         'num_clients_connect' => $partner['num_clients_connect'] + 1,
@@ -1038,6 +1051,7 @@ class DevicesController extends AppController
                                 ))
                                 ->first();
                             if (empty($partner)) {
+                                $flag_check_isexit_partner = false;
                                 $save_new_pa = array(
                                     'device_id' => $apt_key_check->id,
                                     'client_mac' => $client_mac,
@@ -1055,6 +1069,12 @@ class DevicesController extends AppController
                                     }
                                 }
                             } else {
+                                $flag_adgroup = $this->getFlagInAdgroup($apt_key_check['langdingpage_id'], $id_device);
+                                if ($flag_adgroup == 1) {
+                                    $flag_check_isexit_partner = true;
+                                } else {
+                                    $flag_check_isexit_partner = false;
+                                }
                                 $partner_id = $partner['id'];
                                 $data_update = array(
                                     'num_clients_connect' => $partner['num_clients_connect'] + 1,
@@ -1077,6 +1097,7 @@ class DevicesController extends AppController
                             ))
                             ->first();
                         if (empty($partner)) {
+                            $flag_check_isexit_partner = false;
                             $save_new_pa = array(
                                 'device_id' => $apt_key_check->id,
                                 'client_mac' => $client_mac,
@@ -1094,6 +1115,12 @@ class DevicesController extends AppController
                                 }
                             }
                         } else {
+                            $flag_adgroup = $this->getFlagInAdgroup($apt_key_check['langdingpage_id'], $id_device);
+                            if ($flag_adgroup == 1) {
+                                $flag_check_isexit_partner = true;
+                            } else {
+                                $flag_check_isexit_partner = false;
+                            }
                             $partner_id = $partner['id'];
                             $data_update = array(
                                 'num_clients_connect' => $partner['num_clients_connect'] + 1,
@@ -1117,19 +1144,24 @@ class DevicesController extends AppController
                             $chk = true;
                         }
                     }
+                    if ($flag_check_isexit_partner) {
+                        $flag_check_isexit_partner = 1;
+                    } else {
+                        $flag_check_isexit_partner = 2;
+                    }
                     if (!$chk) {
                         $conn->commit();
                         if ($flag_normal) {
                             $this->redirect([
                                 'plugin' => null,
                                 'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id)
+                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner)
                             ]);
                         } else {
                             $this->redirect([
                                 'plugin' => null,
                                 'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id)
+                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner)
                             ]);
                         }
                     } else {
@@ -1149,8 +1181,8 @@ class DevicesController extends AppController
                     'role' => User::ROLE_TOW
                 ];
                 $this->request->data['type'] = $flag_id;
-                $device = $this->Devices->newEntity();
                 $this->request->data['apt_key'] = $apt_key;
+                $device = $this->Devices->newEntity();
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 $device->delete_flag = UN_DELETED;
                 $device->status = UN_DELETED;
@@ -1195,7 +1227,7 @@ class DevicesController extends AppController
                                         $this->redirect([
                                             'plugin' => null,
                                             'controller' => 'Devices',
-                                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id)
+                                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_decodeUrl(2)
                                         ]);
                                     }
                                 }
@@ -1489,5 +1521,40 @@ class DevicesController extends AppController
         }
         $this->set(compact('device'));
         $this->set('_serialize', ['device']);
+    }
+
+    private function getFlagInAdgroup($ladingpage_id = null, $id_device = null)
+    {
+        $ad_group = $this->Adgroups->find()
+            ->select(['device_id'])
+            ->where(['delete_flag !=' => DELETED, 'langdingpage_id' => 3])
+            ->combine('id', 'device_id')
+            ->toArray();
+        if (!empty($ad_group)) {
+            $flag_check = false;
+            foreach ($ad_group as $k => $vl) {
+                foreach (json_decode($vl)  as $key => $item) {
+                    if ($item == $id_device) {
+                        $flag_check = true;
+                    }
+                }
+            }
+            if ($flag_check) {
+                $flag_check_isexit_partner = 1;
+            } else {
+                if ($ladingpage_id == 3) {
+                    $flag_check_isexit_partner = 1;
+                } else {
+                    $flag_check_isexit_partner = 2;
+                }
+            }
+        } else {
+            if ($ladingpage_id == 3) {
+                $flag_check_isexit_partner = 1;
+            } else {
+                $flag_check_isexit_partner = 2;
+            }
+        }
+        return $flag_check_isexit_partner;
     }
 }

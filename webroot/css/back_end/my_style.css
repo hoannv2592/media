@@ -3,7 +3,7 @@ label.error {
     color: red;
     font-size: 14px;
     float: left;
-    padding-left: 20px;
+    padding-left: 0px;
 }
 .fp-next,.fp-prev {
     display: none;

@@ -84,7 +84,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                             </div>
                         </div>
                         <?php if ($user_login['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
-                            <h2 class="card-inside-title" for="description">User quản lý nhóm thiết bị</h2>
+                            <label class="" for="description">User quản lý nhóm thiết bị</label>
                                 <div class="form-group form-float">
                                     <div class="form-line">
                                         <select class="form-control required" name="user_id_group" id="user_id_group">
@@ -143,21 +143,34 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                             <div class="help-info">Địa chỉ nhóm thiết bị</div>
                         </div>
                         <div class="check_pass_device">
-                        <div class="form-group">
-                            <div class="form-line">
-                                <?php $apt_device_number = isset($adgroup->apt_device_number) ? ($adgroup->apt_device_number):'' ?>
-                                <?php echo $this->Form->control('apt_device_number', array(
-                                    'label' => 'Mật khẩu thiết bị',
-                                    'class' => 'form-control',
-                                    'id' => 'apt_device_number',
-                                    'value' => $apt_device_number,
-                                    'placeholder' => "Điền mật khẩu.."
-                                ));
-                                ?>
-                                <div class="help-info">Mật khẩu thiết bị</div>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php $apt_device_number = isset($adgroup->apt_device_number) ? ($adgroup->apt_device_number):'' ?>
+                                    <?php echo $this->Form->control('apt_device_number', array(
+                                        'label' => 'Mật khẩu thiết bị',
+                                        'class' => 'form-control',
+                                        'id' => 'apt_device_number',
+                                        'value' => $apt_device_number,
+                                        'placeholder' => "Điền mật khẩu.."
+                                    ));
+                                    ?>
+                                    <div class="help-info">Mật khẩu thiết bị</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php $tile_congratulations_return = isset($adgroup->tile_congratulations_return) ? ($adgroup->tile_congratulations_return):'' ?>
+                                <?php echo $this->Form->control('tile_congratulations_return', array(
+                                    'label' => 'Tile congratulations return',
+                                    'class' => 'form-control',
+                                    'value' => $tile_congratulations_return,
+                                    'placeholder' => 'Tile congratulations return..'
+                                ));
+                                ?>
+                                <div class="help-info">Tile congratulations return</div>
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $title_connect = isset($adgroup->title_connect) ? ($adgroup->title_connect):'' ?>

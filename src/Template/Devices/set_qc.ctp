@@ -93,6 +93,19 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                         </div>
                         <div class="form-group">
                             <div class="form-line">
+                                <?php $tile_congratulations_return = isset($device->tile_congratulations_return) ? ($device->tile_congratulations_return):'' ?>
+                                <?php echo $this->Form->control('tile_congratulations_return', array(
+                                    'label' => 'Tile congratulations return',
+                                    'class' => 'form-control',
+                                    'value' => $tile_congratulations_return,
+                                    'placeholder' => 'Tile congratulations return..'
+                                ));
+                                ?>
+                                <div class="help-info">Tile congratulations return</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
                                 <?php $title_connect = isset($device->title_connect) ? ($device->title_connect):'' ?>
                                 <?php echo $this->Form->control('title_connect', array(
                                     'label' => 'Title button connect',
