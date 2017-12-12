@@ -219,7 +219,7 @@ $cakeDescription = 'Media ';
                     <?php } ?>
                     <a href="<?php echo $this->Url->build(["controller" => "AdgroupChangeHistories", "action" => "index"]); ?>">
                         <i class="material-icons">history</i>
-                        <span>Lịch sử thay đổi nhóm thiết bị</span>
+                        <span>History nhóm thiết bị</span>
                     </a>
                 </li>
                 <?php if ($controller == 'Landingpages') { ?>

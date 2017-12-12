@@ -65,7 +65,7 @@ $cakeDescription = 'Media ';
             afterRender: function () {
                 setInterval(function () {
                     $.fn.fullpage.moveSlideRight();
-                }, 50000);
+                }, 10000);
             }
         });
     });

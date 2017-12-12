@@ -51,7 +51,7 @@ $this->assign('title', 'Quản lý thiết bị');
                                                 <th>STT</th>
                                                 <th>Tên thiết bị</th>
                                                 <th>Thời gian online</th>
-                                                <th>Số lượng thiết bị kết nối tức thời</th>
+                                                <th>Số lượng thiết bị kết nối</th>
                                                 <th>User quản lý</th>
                                                 <th>Nhóm thiết bị</th>
                                                 <th>Mã thiết bị</th>
