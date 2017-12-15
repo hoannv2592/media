@@ -3,10 +3,16 @@ label.error {
     color: red;
     font-size: 14px;
     float: left;
-    padding-left: 0px;
+    font-weight: normal !important;
+    font-style: italic;
+    padding-left: 15px !important;
 }
 .fp-next,.fp-prev {
     display: none;
+}
+.txt_input {
+    color: #0f0f0f !important;
+    padding-left: 15px !important;
 }
 h1 {
     font-size: 5em;

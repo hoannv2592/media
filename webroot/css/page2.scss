@@ -31,6 +31,7 @@ a:hover,
 a:focus{
     text-decoration: none;
 }
+
 .body-content {
     position: relative;   
 }
@@ -103,19 +104,14 @@ a:focus{
 .c-text--heading {
     font-size: 24px;
     line-height: 32px;
-    color: #FFF;
-    font{
-        color: #000;
-        font-weight: bold;
-    }
+    color: #fff;
+    font-weight: 700;
 }
 .c-text--name {
     font-size: 24px;
     line-height: 32px;
-    color: #D80E10;
-    font-weight: bold;
-    font-family: "MyriadPro-Regular";
-    text-transform: uppercase;
+    color: #ffffff;
+    font-weight: 500;
 }
 
 .c-text--discount {
@@ -125,7 +121,7 @@ a:focus{
 }
 .m-text--desc{
     font-size: 14px;
-    color: #fff;
+    color: #666;
 }
 
 .c-text--social {
@@ -219,7 +215,7 @@ a:focus{
 
 .logo {
     position: relative;
-    height: 92px;
+    height: 80px;
     display: -webkit-box;
     display: -moz-box;
     display: -ms-flexbox;
@@ -246,7 +242,8 @@ a:focus{
     -ms-flex-pack: center;
     -webkit-justify-content: center;
     justify-content: center;
- }
+    
+}
 .logo__inner a{
 }
 .logo__inner img{
@@ -296,4 +293,143 @@ a:focus{
             line-height: 42px;
         }
     }
+}
+
+.c-input {
+    display: block;
+    padding: 10px 15px;;
+    font-size: 0;
+    background: #fff;
+    align-items: center;
+    margin: 0;
+      .c-input__value {
+	    font-size: 16px;
+	    line-height: 28px;
+	    color: #666;
+	    font-weight: 400;
+	    -moz-osx-font-smoothing: grayscale;
+	    -webkit-font-smoothing: antialiased;
+	    width: 100%;
+	    padding: 0 0 4px;
+	    font-family: inherit;
+	    background-color: transparent;
+	    border: 0;
+	    border-bottom: 1px solid rgba(0,0,0,0.08);
+	    border-radius: 0;
+	    resize: none;
+	    outline: none;
+	    -moz-appearance: none;
+	    -webkit-appearance: none;
+	    &:focus {
+		    border-color: rgba(68,188,210,0.48);
+		    outline: none;
+		}
+	}
+}
+
+.c-input__content {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    font-size: 0;
+}
+.c-input__icon {
+    position: absolute;
+    right: 0;
+    bottom: 8px;
+  
+}
+.c-icon {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    box-sizing: border-box;
+    overflow: hidden;
+    font-size: 0;
+    line-height: 0;
+    text-align: center;
+}
+.c-icon--medium {
+    width: 16px;
+    height: 16px;
+}
+.u-cursor-pointer {
+    cursor: pointer;
+}
+.c-icon svg {
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+}
+.c-cell {
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-align: center;
+    align-items: center;
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 16px;
+    background: #fff;
+}
+.c-cell__content {
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    min-width: 0;
+}
+.c-cell__body {
+    font-size: 16px;
+    line-height: 22px;
+    color: #666;
+    font-weight: 400;
+    display: block;
+}
+.c-button {
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-font-smoothing: antialiased;
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    font-size: 16px;
+    line-height: 22px;
+    font-weight: 500;
+    color: #44bcd2;
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 40px;
+    padding: 8px 16px;
+    margin: 0;
+    line-height: 24px;
+    text-align: center;
+    cursor: pointer;
+    background: none;
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    outline: 0;
+}
+.c-button--filled {
+    background: currentColor;
+    border-color: currentColor;
+}
+
+
+.c-button__content {
+    position: relative;
+    z-index: 1;
+    display: inline-block;
+    color: inherit;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+.c-button--filled .c-button__content {
+    color: #fff;
 }

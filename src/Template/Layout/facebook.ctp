@@ -5,6 +5,13 @@
  */
 $cakeDescription = 'Media ';
 ?>
+<?php
+/**
+ * @var \App\View\AppView $apt_key_check
+ * @var \App\View\AppView $this
+ */
+$cakeDescription = 'Media ';
+?>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6 no-js" lang="en"><![endif]-->
 <!--[if IE 7 ]><html class="ie ie7 no-js" lang="en"><![endif]-->
@@ -18,9 +25,12 @@ $cakeDescription = 'Media ';
     <meta name="description" content="Fullscreen Background Image Slideshow with CSS3 - A Css-only fullscreen background image slideshow" />
     <meta name="keywords" content="css3, css-only, fullscreen, background, slideshow, images, content" />
     <meta name="author" content="Codrops" />
+    <?php echo $this->Html->css(['back_end/font-awesome.min']); ?>
     <?php echo $this->Html->css([
             'password/bootstrap.min',
-            'password/main',
+//            'password/main',
+            'back_end/my_style',
+            'page3',
         ]
     );
     ?>
@@ -28,9 +38,11 @@ $cakeDescription = 'Media ';
             'back_end/jquery-1.11.0.min',
             'back_end/md5',
             'jquery.validate',
+            'back_end/commom',
             'bootstrap.min'
         ]
     );
+    echo $this->Html->css('back_end/page3');
     ?>
 
 </head>
@@ -57,22 +69,22 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
             if ($k == 0) { ?>
                 <div class="item active"
                      style="
-                        background: url('/<?php echo $vl; ?>');
-                        -webkit-background-size: cover;
-                        -moz-background-size: cover;
-                        -o-background-size: cover;
-                        background-size: cover;
-                     ">
+                         background: url('/<?php echo $vl; ?>');
+                         -webkit-background-size: cover;
+                         -moz-background-size: cover;
+                         -o-background-size: cover;
+                         background-size: cover;
+                         ">
 
                 </div>
             <?php } else { ?>
                 <div class="item" style="
-                        background: url('/<?php echo $vl; ?>');
-                        -webkit-background-size: cover;
-                        -moz-background-size: cover;
-                        -o-background-size: cover;
-                        background-size: cover;
-                        ">
+                    background: url('/<?php echo $vl; ?>');
+                    -webkit-background-size: cover;
+                    -moz-background-size: cover;
+                    -o-background-size: cover;
+                    background-size: cover;
+                    ">
 
                 </div>
             <?php }
@@ -80,61 +92,57 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     </div>
 </div>
 <div class="title text-center">
-    <header id="header">
-        <h1>
-            <div class="logo__inner">
-                <?php if (isset($infor_devices->path_logo)) { ?>
-                        <img src="<?php echo '/' . $infor_devices->path_logo; ?>" alt="logo_image" style="height: 100px;">
-                <?php } else { ?>
-                        <img src="/webroot/images/logo.png" alt="logo image">
-                <?php } ?>
+    <div class="body-content">
+        <div class="landing">
+            <div class="landing__cover landing__cover--main landing__cover--flexible" >
+                <div class="u-ui-padding-x-large landing__cover-wrapper">
+                    <div class="landing__cover-content u-color-white">
+                        <div class="logo" style="margin-bottom: 20px;">
+                            <div class="logo__inner">
+                                <?php if (isset($infor_devices->path_logo)) { ?>
+                                    <a class="" href="javascript:void(0)"><img src="<?php echo '/' . $infor_devices->path_logo; ?>" alt="logo_image" style="height: 100px;"></a>
+                                <?php } else { ?>
+                                    <a class="" href="javascript:void(0);"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt=""></a>
+                                <?php } ?>
+                            </div>
+                        </div>
+                        <div class="c-spacer--x-large c-spacer"></div>
+                        <div class="c-text--heading c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name; ?></div>
+                        <div class="c-spacer--xx-large c-spacer"></div>
+                        <div class="c-spacer--xx-large c-spacer"></div>
+                        <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
+                            <div class="redirect">
+                                <a class="btn _face" href="<?php echo $infor_devices->auth_target; ?>"><i class="fa fa-facebook"></i>Login with Facebook</a>
+                                <div class="c-spacer"></div>
+                                <a class="btn _goog" href="<?php echo $infor_devices->auth_target; ?>"><i class="fa fa-google-plus"></i>Login with Google</a>
+                                <div class="c-spacer"></div>
+                                <a class="btn _wifi" href="<?php echo $infor_devices->auth_target; ?>"><i class="fa fa-wifi"></i>Connect now - Slow</a>
+                            </div>
+                        <?php } else { ?>
+                            <div class="redirect">
+                                <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
+                                    <input type="hidden" class="need_push_username" name="username"/>
+                                    <input type="hidden" name="password"/>
+                                    <input type="hidden" class="need_push_password" name="password"/>
+                                    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                    <input type="hidden" name="popup" value="true"/>
+                                </form>
+                                <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                                    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                    <input type="hidden" name="popup" value="true"/>
+                                    <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                    <input style="display: none;" name="password" type="password" value="wifimedia"/>
+                                    <button class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
+                                    <button class="btn btn-primary btn-success mb-10 br-2 _goog"><i class="fa fa-google-plus"></i>Login with Google </button>
+                                    <div class="c-spacer"></div>
+                                    <button class="btn btn-primary btn-success mb-10 br-2 _wifi"><i class="fa fa-wifi"></i>Connect now - Slow </button>
+                                </form>
+                            </div>
+                        <?php } ?>
+                    </div>
+                </div>
             </div>
-        </h1>
-        <p><?php echo $infor_devices->tile_name; ?></p>
-    </header>
-    <div class="container">
-        <div class="col-md-6 col-md-offset-3">
-            <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
-                <form id="signup_form_tplink" method="post" action="#">
-                    <div class="form-group">
-                        <div class="form-line">
-                            <input type="password" name="password" id="password" placeholder="Nhập mật khẩu" />
-                            <input type="hidden" name="password_check" id="password_check" value="<?php echo $apt_device_number;?>" />
-                        </div>
-                    </div><div class="form-group">
-                        <div class="form-line">
-                            <input type="submit" value="Connect now" />
-                        </div>
-                    </div>
-                </form>
-            <?php } else { ?>
-                <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
-                    <input type="hidden" class="need_push_username" name="username"/>
-                    <input type="hidden" name="password"/>
-                    <input type="hidden" class="need_push_password" name="password"/>
-                    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                    <input type="hidden" name="popup" value="true"/>
-                </form>
-                <form id="signup_form_mirkotic" method="post" action="<?php echo $infor_devices->link_login_only; ?>">
-                    <div class="form-group">
-                        <div class="form-line">
-                            <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                            <input type="hidden" name="popup" value="true"/>
-                            <input type="password" name="password" id="password" placeholder="Nhập mật khẩu" />
-                            <input style="display: none;" name="username" type="text" value="wifimedia"/>
-                            <input style="display: none;" name="password" type="password" value="wifimedia"/>
-                            <input type="hidden" name="password_check" id="password_check" value="<?php echo $apt_device_number;?>" />
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="form-line">
-                            <input type="submit" value="Connect now" />
-                        </div>
-                    </div>
-                </form>
-            <?php } ?>
         </div>
-    </div>
 </div>
 </body>
 </html>
@@ -147,41 +155,6 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
         return false;
     }
     $('.carousel').carousel();
-    $('#signup_form_tplink').validate({
-        rules: {
-            'password': {
-                required: true,
-                equalTo: "#password_check"
-            }
-        },
-        messages: {
-            'password': {
-                required: 'Hãy nhập mật khẩu',
-                equalTo: 'Bạn đã nhập sai mật khẩu',
-            }
-        },
-        submitHandler: function (form) {
-            window.location = "<?php echo $auth_target ?>";
-        }
-    });
-    $('#signup_form_mirkotic').validate({
-        onkeyup: false,
-        rules: {
-            'password': {
-                required: true,
-                equalTo: "#password_check"
-            }
-        },
-        messages: {
-            'password': {
-                required: 'Hãy nhập mật khẩu',
-                equalTo: 'Bạn đã nhập sai mật khẩu, hãy thử lại'
-            }
-        },
-        submitHandler: function () {
-            return doLogin();
-        }
-    });
 </script>
 <style>
     html {
@@ -240,7 +213,6 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     }
     .title {
         text-align: center;
-        margin-top: 100px;
         padding: 10px;
         color: #FFF;
     }

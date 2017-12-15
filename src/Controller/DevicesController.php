@@ -1389,12 +1389,14 @@ class DevicesController extends AppController
                 }
             }
             $partner_voucher = $this->PartnerVouchers->find()->where(['partner_id'=> $partner_id])->first();
-            $partner_v_id = $partner_voucher['id'];
-            $voucher_pa = $this->PartnerVouchers->get($partner_v_id);
-            $voucher_pa = $this->Partners->patchEntity($voucher_pa, $data_save_pa);
-            if (empty($voucher_pa->errors())) {
-                if (!$this->PartnerVouchers->save($voucher_pa)) {
-                    $chk = true;
+            if (!empty($partner_voucher)) {
+                $partner_v_id = $partner_voucher['id'];
+                $voucher_pa = $this->PartnerVouchers->get($partner_v_id);
+                $voucher_pa = $this->Partners->patchEntity($voucher_pa, $data_save_pa);
+                if (empty($voucher_pa->errors())) {
+                    if (!$this->PartnerVouchers->save($voucher_pa)) {
+                        $chk = true;
+                    }
                 }
             }
             if (!$chk) {

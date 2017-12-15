@@ -485,47 +485,54 @@ class UsersController extends AppController
         $this->set(compact('user'));
     }
 
-    public function exportExcel($number = null)
+    public function exportExcel($number = null, $device_id = null)
     {
         $this->autoRender = false;
         $objPHPExcel = $this->PhpExcel->createWorksheet();
         $objPHPExcel->setActiveSheet(0);
         if ($number == 3) {
             $conditions = array(
-                'num_clients_connect IN' => array(1, 2, 3)
+                'num_clients_connect IN' => array(1, 2),
+                'device_id' => $device_id
             );
         } elseif ($number > 3 && $number < 10) {
             $conditions = array(
-                'num_clients_connect IN ' => array(4, 5, 6, 7, 8, 9, 10)
+                'num_clients_connect IN ' => array(3, 4, 5, 6, 7, 8, 9, 10),
+                'device_id' => $device_id
             );
         } else {
             $conditions = array(
-                'num_clients_connect NOT IN  ' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+                'num_clients_connect NOT IN  ' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
+                'device_id' => $device_id
             );
         }
         $partners = $this->Partners->find()->where($conditions)
             ->hydrate(false)
             ->select(['name', 'birthday', 'phone', 'address', 'num_clients_connect'])
             ->toList();
-        $lable = array();
-        $k = 1;
-        $lable[0]['label'] = 'No';
-        foreach ($partners[0] as $key => $val) {
-            $lable[$k+1]['label'] = $key;
-            $k++;
+        if (!empty($partners)) {
+            $lable = array();
+            $k = 1;
+            $lable[0]['label'] = 'No';
+            foreach ($partners[0] as $key => $val) {
+                $lable[$k+1]['label'] = $key;
+                $k++;
+            }
+            $headerStyle = array(
+                'font' => array(
+                    'bold' => true
+                )
+            );
+            $objPHPExcel->addTableHeader($lable, array('bold' => true, 'headerStyle' => $headerStyle));
+            $objPHPExcel->addTableFooter();
+            foreach ($partners as $k => $row) {
+                $objPHPExcel->addTableRow($k, $row);
+            }
+            $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
+            $objPHPExcel->save($fileName, 'Excel2007');
+            $objPHPExcel->output($fileName, 'Excel2007');
+        } else {
+            $this->redirect('partners/index');
         }
-        $headerStyle = array(
-            'font' => array(
-                'bold' => true
-            )
-        );
-        $objPHPExcel->addTableHeader($lable, array('bold' => true, 'headerStyle' => $headerStyle));
-        $objPHPExcel->addTableFooter();
-        foreach ($partners as $k => $row) {
-            $objPHPExcel->addTableRow($k, $row);
-        }
-        $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
-        $objPHPExcel->save($fileName, 'Excel2007');
-        $objPHPExcel->output($fileName, 'Excel2007');
     }
 }
