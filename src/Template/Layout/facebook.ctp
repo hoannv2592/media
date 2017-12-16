@@ -36,10 +36,10 @@ $cakeDescription = 'Media ';
     ?>
     <?php echo $this->Html->script([
             'back_end/jquery-1.11.0.min',
-            'back_end/md5',
             'jquery.validate',
             'back_end/commom',
-            'bootstrap.min'
+            'bootstrap.min',
+            'back_end/md5',
         ]
     );
     echo $this->Html->css('back_end/page3');
@@ -156,7 +156,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     function doLogin() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login.username.value;
-        document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }
@@ -164,7 +164,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     function doLoginSlow() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login_slow.username.value;
-        document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }
