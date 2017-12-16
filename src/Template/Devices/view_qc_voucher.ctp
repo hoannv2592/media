@@ -63,7 +63,7 @@ $list_path = explode(',', $infor_devices->path);?>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="redirect-wrapper" style="max-width: 280px !important;">
-                            <div class="m-text--desc " style="text-align: center;color: red">
+                            <div class="m-text--desc " style="text-align: center;color: red; word-wrap: break-word; font-weight: bold">
                                 <?php echo $tile_congratulations; ?>
                             </div>
                             <div class=" c-spacer"></div>
