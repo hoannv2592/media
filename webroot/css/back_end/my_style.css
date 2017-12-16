@@ -41,3 +41,16 @@ h1 {
 button.btn > i {
 
 }
+.c-cell{
+    background: transparent !important;
+}
+
+.redirect .btn {
+    padding: 12px !important;
+}
+.redirect .redirect-wrapper {
+    border-radius: 4px;
+}
+.c-text--name {
+    color: #fff !important;
+}

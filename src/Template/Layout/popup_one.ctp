@@ -86,11 +86,8 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
 <div class="title text-center">
     <div class="body-content">
         <div class="landing">
-        <div class="landing__cover-overlay"></div>
-        <div class="landing__cover landing__cover--main landing__cover--flexible">
+            <div class="landing__cover landing__cover--main landing__cover--flexible">
             <div class="u-ui-padding-x-large landing__cover-wrapper">
-                <div class="landing__cover-content u-color-white"></div>
-                <div class="c-spacer--xx-large c-spacer"></div>
                 <div class="logo">
                     <div class="logo__inner">
                         <?php if (isset($infor_devices->path_logo)) { ?>
@@ -107,7 +104,6 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="redirect-wrapper" style="max-width: 250px !important;">
                         <div class="m-text--desc" style="text-align: center;color: red ; word-wrap: break-word;"> <?php echo $tile_congratulations_return; ?> </div>
-                        <div class=" c-spacer"></div>
                         <div class="c-cell">
                             <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
                                 <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->auth_target; ?>" method="post">
@@ -134,7 +130,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 </div>
             </div>
         </div>
-    </div>
+        </div>
     </div>
 </div>
 </body>

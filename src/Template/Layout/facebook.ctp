@@ -135,6 +135,12 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                     <button class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
                                     <button class="btn btn-primary btn-success mb-10 br-2 _goog"><i class="fa fa-google-plus"></i>Login with Google </button>
                                     <div class="c-spacer"></div>
+                                </form>
+                                <form class="form-validation" style="width: 100%" name="login_slow" id="" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLoginSlow()">
+                                    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                    <input type="hidden" name="popup" value="true"/>
+                                    <input style="display: none;" name="username" type="text" value="wifimediaslow"/>
+                                    <input style="display: none;" name="password" type="password" value="wifimediaslow"/>
                                     <button class="btn btn-primary btn-success mb-10 br-2 _wifi"><i class="fa fa-wifi"></i>Connect now - Slow </button>
                                 </form>
                             </div>
@@ -151,6 +157,14 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login.username.value;
         document.sendin.password.value = hexMD5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.submit();
+        return false;
+    }
+
+    function doLoginSlow() {
+        <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
+        document.sendin.username.value = document.login_slow.username.value;
+        document.sendin.password.value = hexMD5('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }

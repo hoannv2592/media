@@ -120,8 +120,8 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                     <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                         <input type="hidden" name="popup" value="true"/>
-                                        <input style="display: none;" name="username" type="text" value="wifimedia"/>
-                                        <input style="display: none;" name="password" type="password" value="wifimedia"/>
+                                        <input style="display: none;" name="username" type="text" value="wifimediaslow"/>
+                                        <input style="display: none;" name="password" type="password" value="wifimediaslow"/>
                                         <button class="redirect__normal">Connect now - Slow</button>
                                     </form>
                                 <?php } ?>
