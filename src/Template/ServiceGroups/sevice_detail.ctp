@@ -29,7 +29,7 @@
                     <div class="body">
                         <span class="label label-warning font-14">Danh sách khách hàng truy cập dưới 3 lần.</span>
                         <div class="m-t-10">
-                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/3/'.$partners[0]['device_id']]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/3/'.$list_id_devices]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
                         </div>
                         <div class="table-responsive m-b-15 m-t-5">
                             <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">
@@ -40,13 +40,14 @@
                                     <th>Số điện thoại</th>
                                     <th>Ngày sinh</th>
                                     <th>Địa chỉ</th>
+                                    <th>Number connect</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php
                                 $count = 0;
                                 foreach ($partners as $key => $partner) {
-                                    if ($partner->num_clients_connect < 3) { ?>
+                                    if ($partner->num_clients_connect < 3) { $count++; ?>
                                         <tr>
                                             <td><?php echo $count;?></td>
                                             <td class="advertise font-bold col-cyan">
@@ -57,6 +58,7 @@
                                             <td><?php echo nl2br($partner->phone); ?></td>
                                             <td><?php echo nl2br($partner->birthday); ?></td>
                                             <td><?php echo nl2br($partner->address); ?></td>
+                                            <td><?php echo nl2br($partner->num_clients_connect); ?></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } ?>
@@ -65,7 +67,7 @@
                         </div>
                         <span class="label label-warning font-14">Danh sách khách hàng truy cập <strong> Từ 3 -> 10 lần.</strong></span>
                         <div class="m-t-10">
-                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/4/'.$partners[0]['device_id']]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/4/'.$list_id_devices]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
                         </div>
                         <div class="table-responsive m-b-15 m-t-5">
                             <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">
@@ -76,6 +78,7 @@
                                     <th>Số điện thoại</th>
                                     <th>Ngày sinh</th>
                                     <th>Địa chỉ</th>
+                                    <th>Number connect</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -93,6 +96,7 @@
                                             <td><?php echo nl2br($partner->phone); ?></td>
                                             <td><?php echo nl2br($partner->birthday); ?></td>
                                             <td><?php echo nl2br($partner->address); ?></td>
+                                            <td><?php echo nl2br($partner->num_clients_connect); ?></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } ?>
@@ -101,7 +105,7 @@
                         </div>
                         <span class="label label-warning font-14">Danh sách khách hàng truy cập <strong> lớn hơn 10 lần.</strong></span>
                         <div class="m-t-10">
-                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/10/'.$partners[0]['device_id']]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/10/'.$list_id_devices]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
                         </div>
                         <div class="table-responsive m-b-15 m-t-5">
                             <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">
@@ -112,6 +116,7 @@
                                     <th>Số điện thoại</th>
                                     <th>Ngày sinh</th>
                                     <th>Địa chỉ</th>
+                                    <th>Number connect</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -119,7 +124,7 @@
                                 $count = 0;
                                 foreach ($partners as $key => $partner) {
                                     $count_number_connect = count($partner->num_clients_connect);
-                                    if ($partner->num_clients_connect >= 10) { $count++ ; ?>
+                                    if ($partner->num_clients_connect > 10) { $count++ ; ?>
                                         <tr>
                                             <td><?php echo $count;?></td>
                                             <td class="advertise font-bold col-cyan">
@@ -130,6 +135,7 @@
                                             <td><?php echo nl2br($partner->phone); ?></td>
                                             <td><?php echo nl2br($partner->birthday); ?></td>
                                             <td><?php echo nl2br($partner->address); ?></td>
+                                            <td><?php echo nl2br($partner->num_clients_connect); ?></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } ?>

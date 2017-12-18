@@ -245,7 +245,7 @@
                                 <div class="help-info">logo_image</div>
                             </div>
                         </div>
-                        <h2 class="card-inside-title"> Chọn một ảnh </h2>
+                        <h2 class="card-inside-title"> Chọn ảnh nền </h2>
                         <div class="form-group">
                             <div class="form-line">
                                 <input type="file" name="file[]" multiple = multiple id="file" value="<?php echo isset($device->path) ? '/'.$device->path: '';?>" class="form-control">
@@ -264,7 +264,6 @@
     $('#select_device').change(function () {
         var role = "<?php echo $user_login['role'];?>";
         var val = $(this).val();
-        console.log(val);
         $.ajax({
             url: "/Adgroups/getUser",
             type: "POST",

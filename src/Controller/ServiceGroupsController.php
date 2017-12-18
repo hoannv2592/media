@@ -281,7 +281,8 @@ class ServiceGroupsController extends AppController
         ])->first();
         $list_id_devices = Hash::extract($users['devices'], '{n}.id');
         $partners = $this->Partners->find()->where(['device_id IN' => $list_id_devices])->toArray();
-        $this->set(compact('partners'));
+        $list_id_devices = json_encode($list_id_devices);
+        $this->set(compact('partners', 'list_id_devices'));
     }
 }
 

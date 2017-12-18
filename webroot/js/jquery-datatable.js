@@ -229,14 +229,15 @@ $(function () {
         dom: 'Bfrtip',
         "scrollX": false,
         responsive: true,
-        "paging":   false,
+        "paging":   true,
         "info":     false,
         "columns": [
             { "width": "1%" },
             { "width": "8%" },
             { "width": "10%" },
             { "width": "10%" },
-            { "width": "10%" }
+            { "width": "10%" },
+            { "width": "10%" },
         ],
         "language": {
             "lengthMenu": "Display _MENU_ records per page",

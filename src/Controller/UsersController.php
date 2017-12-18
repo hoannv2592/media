@@ -485,25 +485,26 @@ class UsersController extends AppController
         $this->set(compact('user'));
     }
 
-    public function exportExcel($number = null, $device_id = null)
+    public function exportExcel($number = null, $device_id = array())
     {
         $this->autoRender = false;
+        $device_id = json_decode($device_id);
         $objPHPExcel = $this->PhpExcel->createWorksheet();
         $objPHPExcel->setActiveSheet(0);
         if ($number == 3) {
             $conditions = array(
                 'num_clients_connect IN' => array(1, 2),
-                'device_id' => $device_id
+                'device_id IN' => $device_id
             );
         } elseif ($number > 3 && $number < 10) {
             $conditions = array(
                 'num_clients_connect IN ' => array(3, 4, 5, 6, 7, 8, 9, 10),
-                'device_id' => $device_id
+                'device_id IN' => $device_id
             );
         } else {
             $conditions = array(
                 'num_clients_connect NOT IN  ' => array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10),
-                'device_id' => $device_id
+                'device_id IN' => $device_id
             );
         }
         $partners = $this->Partners->find()->where($conditions)

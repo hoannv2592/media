@@ -130,11 +130,32 @@ class CampaignGroupsController extends AppController
         $conn->begin();
         $this->getAllData();
         $user = $this->Auth->user();
-        $groups = $this->CampaignGroups->find()
-            ->select(['id', 'device_id'])
+        $campaign = $this->CampaignGroups->find()
+            ->select(['id', 'time'])
             ->where(['delete_flag !=' => DELETED])
-            ->hydrate(false)
-            ->combine('id', 'device_id')->toList();
+            ->combine('id', 'time')
+            ->toArray();
+        $current_date = date('d/m/Y');
+        $campaing_id = array();
+        if (!empty($campaign)) {
+            foreach ($campaign as $k => $vl) {
+                $vl = explode('-', $vl);
+                $my_date = date('d/m/Y', strtotime($vl[1]));
+                if ($my_date >= $current_date) {
+                    $campaing_id[$k] = $k;
+                }
+            }
+        }
+        $groups = array();
+        if (!empty($campaing_id)) {
+            $groups = $this->CampaignGroups->find()
+                ->select(['id', 'device_id'])
+                ->where([
+                    'id IN' => $campaing_id,
+                    'delete_flag !=' => DELETED
+                ])
+                ->combine('id', 'device_id')->toArray();
+        }
         if (!empty($groups)) {
             $device_id = array();
             foreach ($groups as $k => $vl) {
@@ -430,15 +451,48 @@ class CampaignGroupsController extends AppController
         $user = $this->Auth->user();
         $this->getAllData();
         $campaign_group = $this->CampaignGroups->get($id);
+        $device_id = $campaign_group->device_id;
+
+        $campaign = $this->CampaignGroups->find()
+            ->select(['id', 'time'])
+            ->where(['delete_flag !=' => DELETED])
+            ->combine('id', 'time')
+            ->toArray();
+        $current_date = date('d/m/Y');
+        $campaing_id = array();
+        if (!empty($campaign)) {
+            foreach ($campaign as $k => $vl) {
+                $vl = explode('-', $vl);
+                $my_date = date('d/m/Y', strtotime($vl[1]));
+                if ($my_date < $current_date) {
+                    $campaing_id[$k] = $k;
+                }
+            }
+        }
+
+        $groups = array();
+        if (!empty($campaing_id)) {
+            $groups = $this->CampaignGroups->find()
+                ->select(['id', 'device_id'])
+                ->where([
+                    'id IN' => $campaing_id,
+                    'delete_flag !=' => DELETED
+                ])
+                ->combine('id', 'device_id')->toArray();
+        }
+        $device_id_old = array();
+        foreach ($groups as $k => $vl) {
+            $device_id_old[] = json_decode($vl);
+        }
+        $list_old_device_id = call_user_func_array('array_merge', $device_id_old);
         $campaign_groups = $this->CampaignGroups->find()
             ->select(['id', 'device_id'])
             ->where(['delete_flag !=' => DELETED])
-            ->hydrate(false)
-            ->combine('id', 'device_id')->toList();
+            ->combine('id', 'device_id')->toArray();
         if (!empty($campaign_groups)) {
             $list_device_id = array();
             foreach ($campaign_groups as $group) {
-                if ($campaign_group->device_id != $campaign_group) {
+                if ($device_id != $group) {
                     $list_device_id[] = ($group);
                 }
             }
@@ -448,17 +502,36 @@ class CampaignGroupsController extends AppController
             }
             if (!empty($device_id)) {
                 $merged = call_user_func_array('array_merge', $device_id);
-                if ($user['role'] == User::ROLE_ONE) {
-                    $conditions = array(
-//                        'id NOT IN' => $merged,
-                        'delete_flag !=' => DELETED,
-                    );
+                $list_device_end = array();
+                foreach ($merged as $k => $vl) {
+                    if (!in_array($vl, $list_old_device_id)) {
+                        $list_device_end[$k] = $vl;
+                    }
+                }
+                if (!empty($list_device_end)) {
+                    if ($user['role'] == User::ROLE_ONE) {
+                        $conditions = array(
+                            'id NOT IN' => $list_device_end,
+                            'delete_flag !=' => DELETED,
+                        );
+                    } else {
+                        $conditions = array(
+                            'id NOT IN' => $list_device_end,
+                            'delete_flag !=' => DELETED,
+                            'user_id' => $user['id']
+                        );
+                    }
                 } else {
-                    $conditions = array(
-//                        'id NOT IN' => $merged,
-                        'delete_flag !=' => DELETED,
-                        'user_id' => $user['id']
-                    );
+                    if ($user['role'] == User::ROLE_ONE) {
+                        $conditions = array(
+                            'delete_flag !=' => DELETED,
+                        );
+                    } else {
+                        $conditions = array(
+                            'delete_flag !=' => DELETED,
+                            'user_id' => $user['id']
+                        );
+                    }
                 }
                 $devices = $this->Devices->find('all')
                     ->where($conditions)

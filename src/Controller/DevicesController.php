@@ -368,31 +368,34 @@ class DevicesController extends AppController
             }
             $this->loadModel('Partners');
             $infor_devices = $this->Devices->get($device_id);
-//            $info_partner = $this->Partners->get($partner_id);
-//            if (!empty($info_partner)) {
-//                $infor_devices->link_orig = $info_partner->link_orig;
-//                $infor_devices->chap_id = $info_partner->chap_id;
-//                $infor_devices->mac_esc = $info_partner->mac_esc;
-//                $infor_devices->link_login_only = $info_partner->link_login_only;
-//                $infor_devices->auth_target = $info_partner->auth_target;
-//                $infor_devices->apt_device_number = $info_partner->link_orig;
-//            }
+
             if (!empty($infor_devices)) {
                 if (isset($infor_devices->campaign_group_id) && $infor_devices->campaign_group_id != '') {
                     $device_campaign = $this->CampaignGroups->find()
                         ->where(['id' => $infor_devices->campaign_group_id, 'delete_flag !=' => DELETED])
                         ->first();
-                    if (!empty($device_campaign)) {
-                        $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
-                        $infor_devices->path = $device_campaign->path;
-                        $infor_devices->tile_name = $device_campaign->tile_name;
-                        $infor_devices->apt_device_number = $device_campaign->number_pass;
-                        $infor_devices->message = $device_campaign->message;
-                        $infor_devices->slogan = $device_campaign->slogan;
-                        $infor_devices->title_connect = $device_campaign->title_connect;
-                        $infor_devices->hidden_connect = $device_campaign->hidden_connect;
-                        $infor_devices->path_logo = $device_campaign->path_logo;
-                        $infor_devices->tile_congratulations_return = $device_campaign->tile_congratulations_return;
+                    $end_campaign = explode(' - ', $device_campaign['time']);
+                    $end_time = $end_campaign[1];
+                    $my_date = date('d/m/Y', strtotime($end_time));
+                    $current_date = date('d/m/Y');
+                    if ($current_date >= $my_date) {
+                        $flag_campaign = false;
+                    } else {
+                        $flag_campaign = true;
+                    }
+                    if ($flag_campaign) {
+                        if (!empty($device_campaign)) {
+                            $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
+                            $infor_devices->path = $device_campaign->path;
+                            $infor_devices->tile_name = $device_campaign->tile_name;
+                            $infor_devices->apt_device_number = $device_campaign->number_pass;
+                            $infor_devices->message = $device_campaign->message;
+                            $infor_devices->slogan = $device_campaign->slogan;
+                            $infor_devices->title_connect = $device_campaign->title_connect;
+                            $infor_devices->hidden_connect = $device_campaign->hidden_connect;
+                            $infor_devices->path_logo = $device_campaign->path_logo;
+                            $infor_devices->tile_congratulations_return = $device_campaign->tile_congratulations_return;
+                        }
                     }
                 } elseif (isset($infor_devices->adgroup_id) && $infor_devices->adgroup_id != '') {
                     $device_group = $this->DeviceGroups->find()
@@ -470,10 +473,12 @@ class DevicesController extends AppController
                             $end_time = $end_campaign[1];
                             $my_date = date('d/m/Y', strtotime($end_time));
                             $current_date = date('d/m/Y');
-                            $ts1 = strtotime($my_date);
-                            $ts2 = strtotime($current_date);
-                            $seconds_diff = $ts1 - $ts2;
-                            if ($seconds_diff >= 0) {
+                            if ($current_date >= $my_date) {
+                                $flag_campaign = false;
+                            } else {
+                                $flag_campaign = true;
+                            }
+                            if ($flag_campaign) {
                                 $campaign_id = false;
                                 // todo kiem tra partner da ton tai trong partner_voucher.
                                 $pa_voucher = $this->PartnerVouchers->find()->where(
