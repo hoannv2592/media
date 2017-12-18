@@ -36,10 +36,10 @@ $cakeDescription = 'Media ';
     ?>
     <?php echo $this->Html->script([
             'back_end/jquery-1.11.0.min',
-            'back_end/md5',
             'jquery.validate',
             'back_end/commom',
-            'bootstrap.min'
+            'bootstrap.min',
+            'back_end/md5',
         ]
     );
     echo $this->Html->css('back_end/page3');
@@ -125,7 +125,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                     <input type="hidden" name="password"/>
                                     <input type="hidden" class="need_push_password" name="password"/>
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                    <input type="hidden" name="popup" value="true"/>
+                                    <input type="hidden" name="popup" value="false"/>
                                 </form>
                                 <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
@@ -138,7 +138,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                 </form>
                                 <form class="form-validation" style="width: 100%" name="login_slow" id="" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLoginSlow()">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                    <input type="hidden" name="popup" value="true"/>
+                                    <input type="hidden" name="popup" value="false"/>
                                     <input style="display: none;" name="username" type="text" value="wifimediaslow"/>
                                     <input style="display: none;" name="password" type="password" value="wifimediaslow"/>
                                     <button class="btn btn-primary btn-success mb-10 br-2 _wifi"><i class="fa fa-wifi"></i>Connect now - Slow </button>
@@ -156,7 +156,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     function doLogin() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login.username.value;
-        document.sendin.password.value = hexMD5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }
@@ -164,7 +164,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     function doLoginSlow() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login_slow.username.value;
-        document.sendin.password.value = hexMD5('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }
