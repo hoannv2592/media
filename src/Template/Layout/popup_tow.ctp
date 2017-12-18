@@ -207,7 +207,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                             echo $this->Form->control('popup', array(
                                 'type' => 'hidden',
                                 'class' => 'form-control',
-                                'value' => 'true',
+                                'value' => true,
                                 'label' => false,
                             ));
                             echo $this->Form->control('username', array(

@@ -103,15 +103,12 @@ $tile_congratulations_return = isset($infor_devices->tile_congratulations_return
                             <div class="row ">
                                 <div class="col-xs-6 col-xs-offset-3">
 
-                                    <form class="form-validation" style="width: 100%" name="login" id="login"
-                                          action="<?php echo $infor_devices->link_login_only; ?>" method="post"
-                                          onSubmit="return doLogin()">
+                                    <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                        <input type="hidden" name="popup" value="false"/>
+                                        <input type="hidden" name="popup" value="true"/>
                                         <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                         <input style="display: none;" name="password" type="password" value="wifimedia"/>
-                                        <input style="width: 100%" type="submit" value="Connect to wifi"
-                                               class="btn btn-lg btn-block bg-pink waves-effect">
+                                        <input style="width: 100%" type="submit" value="Connect to wifi" class="btn btn-lg btn-block bg-pink waves-effect">
                                     </form>
                                 </div>
                             </div>

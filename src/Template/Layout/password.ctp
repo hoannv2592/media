@@ -119,7 +119,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     <div class="form-group">
                         <div class="form-line">
                             <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                            <input type="hidden" name="popup" value="false"/>
+                            <input type="hidden" name="popup" value="true"/>
                             <input type="password" name="password" id="password" placeholder="Nhập mật khẩu" />
                             <input style="display: none;" name="username" type="text" value="wifimedia"/>
                             <input style="display: none;" name="password" type="password" value="wifimedia"/>
