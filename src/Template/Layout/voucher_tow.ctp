@@ -121,7 +121,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                 <?php if ($infor_devices->hidden_connect == 1) { ?>
                                     <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                        <input type="hidden" name="popup" value="true"/>
+                                        <input type="hidden" name="popup" value="false"/>
                                         <input style="display: none;" name="username" type="text" value="wifimediaslow"/>
                                         <input style="display: none;" name="password" type="password" value="wifimediaslow"/>
                                         <button class="redirect__normal" type="submit">Connect now - Slow</button>
@@ -186,7 +186,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                             <div class="c-spacer--x-large c-spacer"></div>
                             <form class="form-validation" style="width: 100%" name="login_popup" id="info_mirkotic" action="#" method="post">
                                 <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                <input type="hidden" name="popup" value="true"/>
+                                <input type="hidden" name="popup" value="false"/>
                                 <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                 <input style="display: none;" name="password" type="password" value="wifimedia"/>
                                 <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign : ''; ?>"/>

@@ -85,7 +85,7 @@ $list_path = explode(',', $infor_devices->path);?>
         <input type="hidden" name="password"/>
         <input type="hidden" class="need_push_password" name="password"/>
         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-        <input type="hidden" name="popup" value="true"/>
+        <input type="hidden" name="popup" value="false"/>
     </form>
     <script type="text/javascript">
         function doLogin() {
@@ -124,7 +124,7 @@ $list_path = explode(',', $infor_devices->path);?>
                             <div class="c-cell">
                                 <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                    <input type="hidden" name="popup" value="true"/>
+                                    <input type="hidden" name="popup" value="false"/>
                                     <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                     <input style="display: none;" name="password" type="password" value="wifimedia" />
                                     <input style="width: 100%" type="submit" value="Connect now" class="btn btn-success br-2 mr-5 block /">

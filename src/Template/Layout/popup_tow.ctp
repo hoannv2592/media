@@ -119,7 +119,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                 <?php if ($infor_devices->hidden_connect == 1) { ?>
                                     <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                        <input type="hidden" name="popup" value="true"/>
+                                        <input type="hidden" name="popup" value="false"/>
                                         <input style="display: none;" name="username" type="text" value="wifimediaslow"/>
                                         <input style="display: none;" name="password" type="password" value="wifimediaslow"/>
                                         <button class="redirect__normal">Connect now - Slow</button>
@@ -174,7 +174,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 <input type="hidden" name="password"/>
                 <input type="hidden" class="need_push_password" name="password"/>
                 <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                <input type="hidden" name="popup" value="true"/>
+                <input type="hidden" name="popup" value="false"/>
             </form>
             <div id="modal_discount" class="modal fade">
                 <div class="modal-dialog">

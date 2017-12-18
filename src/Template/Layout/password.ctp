@@ -113,13 +113,13 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     <input type="hidden" name="password"/>
                     <input type="hidden" class="need_push_password" name="password"/>
                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                    <input type="hidden" name="popup" value="true"/>
+                    <input type="hidden" name="popup" value="false"/>
                 </form>
                 <form id="signup_form_mirkotic" method="post" action="<?php echo $infor_devices->link_login_only; ?>">
                     <div class="form-group">
                         <div class="form-line">
                             <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                            <input type="hidden" name="popup" value="true"/>
+                            <input type="hidden" name="popup" value="false"/>
                             <input type="password" name="password" id="password" placeholder="Nhập mật khẩu" />
                             <input style="display: none;" name="username" type="text" value="wifimedia"/>
                             <input style="display: none;" name="password" type="password" value="wifimedia"/>

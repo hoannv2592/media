@@ -122,12 +122,12 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                     <input type="hidden" name="password"/>
                                     <input type="hidden" class="need_push_password" name="password"/>
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                    <input type="hidden" name="popup" value="true"/>
+                                    <input type="hidden" name="popup" value="false"/>
                                 </form>
                                 <form class="form-validation" style="width: 100%" name="login" id="login"
                                       action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                    <input type="hidden" name="popup" value="true"/>
+                                    <input type="hidden" name="popup" value="false"/>
                                     <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                     <input style="display: none;" name="password" type="password" value="wifimedia"/>
                                     <input style="width: 100%" type="submit" value="Connect now" class="btn btn-success br-2 mr-5 block /">
