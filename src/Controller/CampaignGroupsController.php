@@ -484,7 +484,9 @@ class CampaignGroupsController extends AppController
         foreach ($groups as $k => $vl) {
             $device_id_old[] = json_decode($vl);
         }
-        $list_old_device_id = call_user_func_array('array_merge', $device_id_old);
+        if (!empty($device_id_old)) {
+            $list_old_device_id = call_user_func_array('array_merge', $device_id_old);
+        }
         $campaign_groups = $this->CampaignGroups->find()
             ->select(['id', 'device_id'])
             ->where(['delete_flag !=' => DELETED])
