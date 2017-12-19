@@ -97,7 +97,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="form-line">
+                                    <div class="form-line">
                                 <?php $description = isset($campaign_group->description) ? ($campaign_group->description):'' ?>
                                 <?php echo $this->Form->control('description', array(
                                     'label' => 'Mô tả chiến dịch',
@@ -230,11 +230,13 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                         </div>
                         <div class="form-group">
                             <div class="form-line">
-                                <?php $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
+                                <?php
+                                $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
                                 <?php echo $this->Form->control('title_connect', array(
                                     'label' => 'Title button connect',
                                     'class' => 'form-control',
-                                    'value' => $title_connect
+                                    'value' => $title_connect,
+                                    'placeholder' => 'Title conect..'
                                 ));
                                 ?>
                                 <div class="help-info">Title_connect</div>

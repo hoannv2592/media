@@ -332,7 +332,7 @@ class DevicesController extends AppController
      * @param null $partner_id
      * @return \Cake\Http\Response|null
      */
-    public function viewQc($device_id = null, $voucher_flag = null, $partner_id = null, $flag_check_isexit_partner = null)
+    public function viewQc($device_id = null, $voucher_flag = null, $partner_id = null, $flag_check_isexit_partner = null, $return_flag = null)
     {
         $flag_check_isexit_partner = \UrlUtil::_decodeUrl($flag_check_isexit_partner);
         $partner_id = isset($partner_id) ? $partner_id :'';
@@ -414,7 +414,7 @@ class DevicesController extends AppController
                     }
                 }
             }
-            $this->set(compact('infor_devices', 'voucher_flag', 'id_campaign', 'partner_id', 'flag_check_isexit_partner'));
+            $this->set(compact('infor_devices', 'voucher_flag', 'id_campaign', 'partner_id', 'flag_check_isexit_partner', 'return_flag'));
         } else {
             return $this->redirect(['action' => 'index']);
         }
@@ -472,24 +472,22 @@ class DevicesController extends AppController
                             $end_time = $end_campaign[1];
                             $my_date = date('d/m/Y', strtotime($end_time));
                             $current_date = date('d/m/Y');
-                            if ($current_date >= $my_date) {
+                            if ($my_date >= $current_date) {
                                 $flag_campaign = false;
                             } else {
                                 $flag_campaign = true;
                             }
-                            if ($flag_campaign) {
+                            if (!$flag_campaign) {
                                 $campaign_id = false;
                                 // todo kiem tra partner da ton tai trong partner_voucher.
                                 $pa_voucher = $this->PartnerVouchers->find()->where(
                                     array(
                                         'device_id' => $id_device,
                                         'client_mac' => $client_mac,
-                                    ))
-                                    ->first();
+                                    ))->first();
                                 // todo dem so luong voucher phat ra.
-                                $number_voucher_userd = $this->PartnerVouchers->find()
-                                    ->where(['confirm ' => '1'])
-                                    ->count();
+                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1'])->count();
+                                // test
                                 if (!empty($pa_voucher)) {
                                     if ($pa_voucher->confirm == 1) {
                                         $flag_normal = false;
@@ -551,8 +549,8 @@ class DevicesController extends AppController
                                             }
                                         }
                                     } else {
-                                        $flag_check_isexit_partner = true;
                                         $flag_normal = true;
+                                        $flag_check_isexit_partner = true;
                                         $pa_confirm = $this->Partners->find()->where(
                                             array(
                                                 'device_id' => $id_device,
@@ -801,13 +799,13 @@ class DevicesController extends AppController
                             $this->redirect([
                                 'plugin' => null,
                                 'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner)
+                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner). '/1'
                             ]);
                         } else {
                             $this->redirect([
                                 'plugin' => null,
                                 'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner)
+                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner). '/2'
                             ]);
                         }
                     } else {
@@ -1159,13 +1157,13 @@ class DevicesController extends AppController
                             $this->redirect([
                                 'plugin' => null,
                                 'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner)
+                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner).'/1'
                             ]);
                         } else {
                             $this->redirect([
                                 'plugin' => null,
                                 'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner)
+                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner).'/2'
                             ]);
                         }
                     } else {
