@@ -368,7 +368,6 @@ class DevicesController extends AppController
             }
             $this->loadModel('Partners');
             $infor_devices = $this->Devices->get($device_id);
-
             if (!empty($infor_devices)) {
                 if (isset($infor_devices->campaign_group_id) && $infor_devices->campaign_group_id != '') {
                     $device_campaign = $this->CampaignGroups->find()
@@ -378,12 +377,12 @@ class DevicesController extends AppController
                     $end_time = $end_campaign[1];
                     $my_date = date('d/m/Y', strtotime($end_time));
                     $current_date = date('d/m/Y');
-                    if ($current_date >= $my_date) {
+                    if ($my_date >= $current_date) {
                         $flag_campaign = false;
                     } else {
                         $flag_campaign = true;
                     }
-                    if ($flag_campaign) {
+                    if (!$flag_campaign) {
                         if (!empty($device_campaign)) {
                             $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
                             $infor_devices->path = $device_campaign->path;
