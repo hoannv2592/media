@@ -59,4 +59,7 @@ class Device extends Entity
         Device::TB_NORMAR => 'Thiết bị thường',
         Device::TB_MIRKOTIC => 'Thiết bị Mirkotic',
     );
+
+    const HAS_RETURN = 1;
+    const NO_RETURN = 2;
 }

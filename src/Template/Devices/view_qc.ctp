@@ -23,7 +23,7 @@ $tile_congratulations_return = isset($infor_devices->tile_congratulations_return
     if ($voucher_flag == 1) {
         $this->layout = 'voucher_tow';
     } else {
-        if ($return_flag == 2) {
+        if ($flag_client_mac == 1) {
             $this->layout = 'voucher_one';
         } else {
             if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) {
