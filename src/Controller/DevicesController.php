@@ -444,8 +444,6 @@ class DevicesController extends AppController
                 $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
                 if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
                     $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
-                    // test data
-                    $client_mac = '00:0C:29:D9:4B:2E:45';
                     $conn = ConnectionManager::get('default');
                     $conn->begin();
                     $chk = false;
