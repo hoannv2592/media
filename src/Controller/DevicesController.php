@@ -35,6 +35,7 @@ class DevicesController extends AppController
     }
     public function initialize()
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         parent::initialize();
         // Include the FlashComponent
         $this->loadComponent('Flash');
@@ -366,32 +367,55 @@ class DevicesController extends AppController
             $this->loadModel('Partners');
             $infor_devices = $this->Devices->get($device_id);
             if (!empty($infor_devices)) {
-                if (isset($infor_devices->campaign_group_id) && $infor_devices->campaign_group_id != '') {
-                    $device_campaign = $this->CampaignGroups->find()
-                        ->where(['id' => $infor_devices->campaign_group_id, 'delete_flag !=' => DELETED])
-                        ->first();
-                    $end_campaign = explode(' - ', $device_campaign['time']);
-                    $end_time = $end_campaign[1];
-                    $my_date = date('d/m/Y', strtotime($end_time));
-                    $current_date = date('d/m/Y');
-                    if ($my_date >= $current_date) {
-                        $flag_campaign = false;
-                    } else {
-                        $flag_campaign = true;
+                $vouchers = $this->CampaignGroups->find()
+                    ->where(['delete_flag !=' => DELETED])->combine('id', 'device_id')
+                    ->toArray();
+                if (!empty($vouchers)) {
+                    $list_device_id_voucher = array();
+                    foreach ($vouchers as $k => $voucher) {
+                        $list_device_id_voucher[$k] = json_decode($voucher);
                     }
-                    if (!$flag_campaign) {
-                        if (!empty($device_campaign)) {
-                            $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
-                            $infor_devices->path = $device_campaign->path;
-                            $infor_devices->tile_name = $device_campaign->tile_name;
-                            $infor_devices->apt_device_number = $device_campaign->number_pass;
-                            $infor_devices->message = $device_campaign->message;
-                            $infor_devices->slogan = $device_campaign->slogan;
-                            $infor_devices->title_connect = $device_campaign->title_connect;
-                            $infor_devices->hidden_connect = $device_campaign->hidden_connect;
-                            $infor_devices->path_logo = $device_campaign->path_logo;
-                            $infor_devices->tile_congratulations_return = $device_campaign->tile_congratulations_return;
+                    $id_campaign = array();
+                    foreach ($list_device_id_voucher as $k => $vl) {
+                        foreach ($vl as $key => $item) {
+                            if ($device_id == $item) {
+                                $id_campaign[$k] = $k;
+                            }
                         }
+                    }
+                }
+                if (!empty($id_campaign)) {
+                    $device_campaign = $this->CampaignGroups->find()
+                        ->where(['delete_flag !=' => DELETED])->combine('id', 'time')
+                        ->toArray();
+                    $current_date = date('d/m/Y');
+                    $campaing_id = array();
+                    foreach ($device_campaign as $k => $vl) {
+                        $vl = explode('-', $vl);
+                        $my_date = date('d/m/Y', strtotime($vl[1]));
+                        if ($my_date >= $current_date) {
+                            $campaing_id[$k] = $vl[1];
+                        }
+                    }
+                    foreach ($campaing_id as $k => $vl) {
+                        $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
+                    }
+                    asort($interval);
+                    $campaign_id = key($interval);
+                    $device_campaign = $this->CampaignGroups->find()
+                        ->where(['id' => $campaign_id, 'delete_flag !=' => DELETED])
+                        ->first();
+                    if (!empty($device_campaign)) {
+                        $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
+                        $infor_devices->path = $device_campaign->path;
+                        $infor_devices->tile_name = $device_campaign->tile_name;
+                        $infor_devices->apt_device_number = $device_campaign->number_pass;
+                        $infor_devices->message = $device_campaign->message;
+                        $infor_devices->slogan = $device_campaign->slogan;
+                        $infor_devices->title_connect = $device_campaign->title_connect;
+                        $infor_devices->hidden_connect = $device_campaign->hidden_connect;
+                        $infor_devices->path_logo = $device_campaign->path_logo;
+                        $infor_devices->tile_congratulations_return = $device_campaign->tile_congratulations_return;
                     }
                 } elseif (isset($infor_devices->adgroup_id) && $infor_devices->adgroup_id != '') {
                     $device_group = $this->DeviceGroups->find()
@@ -411,7 +435,7 @@ class DevicesController extends AppController
                     }
                 }
             }
-            $this->set(compact('infor_devices', 'voucher_flag', 'id_campaign', 'partner_id', 'flag_check_isexit_partner', 'flag_client_mac'));
+            $this->set(compact('infor_devices', 'voucher_flag', 'campaign_id', 'partner_id', 'flag_check_isexit_partner', 'flag_client_mac'));
         } else {
             return $this->redirect(['action' => 'index']);
         }
@@ -453,37 +477,46 @@ class DevicesController extends AppController
                         foreach ($vouchers as $k => $voucher) {
                             $list_device_id_voucher[$k] = json_decode($voucher);
                         }
-                        $id_campaign = '';
+                        $id_campaign = array();
                         foreach ($list_device_id_voucher as $k => $vl) {
                             foreach ($vl as $key => $item) {
                                 if ($id_device == $item) {
-                                    $id_campaign = $k;
+                                    $id_campaign[$k] = $k;
                                 }
                             }
                         }
-                        if ($id_campaign != '') {
-                            $campaign = $this->CampaignGroups->find()
-                                ->where(['id' => $id_campaign])
-                                ->first();
-                            $end_campaign = explode(' - ', $campaign['time']);
-                            $end_time = $end_campaign[1];
-                            $my_date = date('d/m/Y', strtotime($end_time));
+                        if (!empty($id_campaign)) {
+                            $device_campaign = $this->CampaignGroups->find()
+                                ->where(['id IN' => $id_campaign])->combine('id', 'time')
+                                ->toArray();
                             $current_date = date('d/m/Y');
-                            if ($my_date >= $current_date) {
-                                $flag_campaign = false;
-                            } else {
-                                $flag_campaign = true;
+                            $campaing_id = array();
+                            foreach ($device_campaign as $k => $vl) {
+                                $vl = explode('-', $vl);
+                                $my_date = date('d/m/Y', strtotime($vl[1]));
+                                if ($my_date >= $current_date) {
+                                    $campaing_id[$k] = $vl[1];
+                                }
                             }
-                            if (!$flag_campaign) {
+                            foreach ($campaing_id as $k => $vl) {
+                                $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
+                            }
+                            asort($interval);
+                            $campaign_id_only = key($interval);
+                            $device_campaign = $this->CampaignGroups->find()
+                                ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
+                                ->first();
+                            if (!empty($device_campaign)) {
                                 $campaign_id = false;
                                 // todo kiem tra partner da ton tai trong partner_voucher.
                                 $pa_voucher = $this->PartnerVouchers->find()->where(
                                     array(
                                         'device_id' => $id_device,
                                         'client_mac' => $client_mac,
+                                        'campaign_group_id' => $campaign_id_only,
                                     ))->first();
                                 // todo dem so luong voucher phat ra.
-                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1'])->count();
+                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
                                 // test
                                 if (!empty($pa_voucher)) {
                                     if ($pa_voucher->confirm == 1) {
@@ -579,8 +612,8 @@ class DevicesController extends AppController
                                     }
                                 } else {
                                     $flag_return = Device::NO_RETURN;
-                                    if ($number_voucher_userd <= $campaign->number_voucher) {
-                                        if ($campaign->random == 2) {
+                                    if ($number_voucher_userd <= $device_campaign->number_voucher) {
+                                        if ($device_campaign->random == 2) {
                                             $flag_normal = true;
                                         } else {
                                             $flag_get_voucher = $this->getVoucher($client_mac);
@@ -824,35 +857,45 @@ class DevicesController extends AppController
                         foreach ($vouchers as $k => $voucher) {
                             $list_device_id_voucher[$k] = json_decode($voucher);
                         }
-                        $id_campaign = '';
+                        $id_campaign = array();
                         foreach ($list_device_id_voucher as $k => $vl) {
                             foreach ($vl as $key => $item) {
                                 if ($id_device == $item) {
-                                    $id_campaign = $k;
+                                    $id_campaign[$k] = $k;
                                 }
                             }
                         }
-                        if ($id_campaign != '') {
-                            $campaign = $this->CampaignGroups->find()
-                                ->where(['id' => $id_campaign])
+                        if (!empty($id_campaign)) {
+                            $device_campaign = $this->CampaignGroups->find()
+                                ->where(['id IN' => $id_campaign])->combine('id', 'time')
+                                ->toArray();
+                            $current_date = date('d/m/Y');
+                            $campaing_id = array();
+                            foreach ($device_campaign as $k => $vl) {
+                                $vl = explode('-', $vl);
+                                $my_date = date('d/m/Y', strtotime($vl[1]));
+                                if ($my_date >= $current_date) {
+                                    $campaing_id[$k] = $vl[1];
+                                }
+                            }
+                            foreach ($campaing_id as $k => $vl) {
+                                $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
+                            }
+                            asort($interval);
+                            $campaign_id_only = key($interval);
+                            $device_campaign = $this->CampaignGroups->find()
+                                ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
                                 ->first();
                             // todo kiem tra partner da ton tai trong partner_voucher.
                             $pa_voucher = $this->PartnerVouchers->find()->where(array(
                                     'device_id' => $id_device,
                                     'client_mac' => $client_mac,
-                                ))->first();
+                                    'campaign_group_id' => $campaign_id_only,
+                                ))->first()
+                            ;
                             // todo dem so luong voucher phat ra.
-                            $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1'])->count();
-                            $end_campaign = explode(' - ', $campaign['time']);
-                            $end_time = $end_campaign[1];
-                            $my_date = date('d/m/Y', strtotime($end_time));
-                            $current_date = date('d/m/Y');
-                            if ($my_date >= $current_date) {
-                                $flag_campaign = false;
-                            } else {
-                                $flag_campaign = true;
-                            }
-                            if (!$flag_campaign) {
+                            $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
+                            if (!empty($device_campaign)) {
                                 $campaign_id = false;
                                 if (!empty($pa_voucher)) {
                                     if ($pa_voucher->confirm == 1) {
@@ -944,9 +987,8 @@ class DevicesController extends AppController
                                     }
                                 } else {
                                     $flag_return = Device::NO_RETURN;
-                                    if ($number_voucher_userd <= $campaign->number_voucher) {
-                                        $campaign->random = 1;
-                                        if ($campaign->random == 2) {
+                                    if ($number_voucher_userd <= $device_campaign->number_voucher) {
+                                        if ($device_campaign->random == 2) {
                                             $flag_normal = true;
                                         } else {
                                             $flag_get_voucher = $this->getVoucher($client_mac);
@@ -1564,5 +1606,21 @@ class DevicesController extends AppController
             }
         }
         return $flag_check_isexit_partner;
+    }
+
+    public function find_closest($array, $date)
+    {
+        pr($array);
+        pr($date);
+        //$count = 0;
+        foreach($array as $day)
+        {
+            $interval[] = abs(strtotime($date) - strtotime($day));
+        }
+        pr($interval);
+        asort($interval);
+        $closest = key($interval);
+        pr($closest); die;
+//        return $array[$closest];
     }
 }

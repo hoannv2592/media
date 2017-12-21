@@ -28,6 +28,7 @@ class CampaignGroupsController extends AppController
 
     public function initialize()
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         parent::initialize();
         // Include the FlashComponent
         $this->loadComponent('Flash');
@@ -130,144 +131,100 @@ class CampaignGroupsController extends AppController
         $conn->begin();
         $this->getAllData();
         $user = $this->Auth->user();
-        $campaign = $this->CampaignGroups->find()
-            ->select(['id', 'time'])
-            ->where(['delete_flag !=' => DELETED])
-            ->combine('id', 'time')
-            ->toArray();
-        $current_date = date('d/m/Y');
-        $campaing_id = array();
-        if (!empty($campaign)) {
-            foreach ($campaign as $k => $vl) {
-                $vl = explode('-', $vl);
-                $my_date = date('d/m/Y', strtotime($vl[1]));
-                if ($my_date >= $current_date) {
-                    $campaing_id[$k] = $k;
-                }
-            }
-        }
-        $groups = array();
-        if (!empty($campaing_id)) {
-            $groups = $this->CampaignGroups->find()
-                ->select(['id', 'device_id'])
-                ->where([
-                    'id IN' => $campaing_id,
-                    'delete_flag !=' => DELETED
-                ])
-                ->combine('id', 'device_id')->toArray();
-        }
-        if (!empty($groups)) {
-            $device_id = array();
-            foreach ($groups as $k => $vl) {
-                $device_id[] = json_decode($vl);
-            }
-            $merged = call_user_func_array('array_merge', $device_id);
-            if ($user['role'] == User::ROLE_ONE) {
-                $conditions = array(
-                    'id NOT IN' => $merged,
-                    'Devices.delete_flag !=' => DELETED,
-                );
-            } else {
-                $conditions = array(
-                    'id NOT IN' => $merged,
-                    'delete_flag !=' => DELETED,
-                    'user_id' => $user['id']
-                );
-            }
-
-            $devices = $this->Devices->find('all')
-                ->where($conditions)
-                ->combine('id','name')->toArray();
+        if ($user['role'] == User::ROLE_ONE) {
+            $conditions = array(
+                'Devices.delete_flag !=' => DELETED,
+            );
         } else {
-            if ($user['role'] == User::ROLE_ONE) {
-                $conditions = array(
-                    'Devices.delete_flag !=' => DELETED,
-                );
-            } else {
-                $conditions = array(
-                    'Devices.delete_flag !=' => DELETED,
-                    'user_id' => $user['id']
-                );
-            }
-            $devices = $this->Devices->find()
-                ->where($conditions)
-                ->select(['Devices.id', 'Devices.name'])
-                ->order(['Devices.id'=> 'DESC'])
-                ->combine('id', 'name')->toArray();
+            $conditions = array(
+                'Devices.delete_flag !=' => DELETED,
+                'user_id' => $user['id']
+            );
         }
+        $devices = $this->Devices->find()
+            ->where($conditions)
+            ->select(['Devices.id', 'Devices.name'])
+            ->order(['Devices.id'=> 'DESC'])
+            ->combine('id', 'name')->toArray();
         $campaign_groups = $this->CampaignGroups->newEntity();
         if ($this->request->is('post')) {
-            $listNameDevice = ($this->getNameDevice($this->request->getData()['device_id']));
-            $devices = $this->Devices->find()
-                ->where(['id IN' => $this->request->getData('device_id')])->select(['id'])
-                ->hydrate(false)->toList();
-            // Common Usage:
-            $result_id_devices = Hash::extract($devices, '{n}.id');
+            $time = $this->request->getData('time');
+            $campaign_old = $this->CampaignGroups->find()->where(['time' => $time, 'delete_flag !=' => DELETED])->count();
+            if ($campaign_old < 1) {
+                $listNameDevice = ($this->getNameDevice($this->request->getData()['device_id']));
+                $devices = $this->Devices->find()
+                    ->where(['id IN' => $this->request->getData('device_id')])->select(['id'])
+                    ->hydrate(false)->toList();
+                // Common Usage:
+                $result_id_devices = Hash::extract($devices, '{n}.id');
 
-            if (!empty($this->request->data['logo_image']['error'] != 4)) {
-                $list_file['file'] = $this->request->getData('logo_image');
-                $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
-                $path = $fileOK['urls'][0];
-                $image_up_load = $list_file['file']['name'];
+                if (!empty($this->request->data['logo_image']['error'] != 4)) {
+                    $list_file['file'] = $this->request->getData('logo_image');
+                    $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
+                    $path = $fileOK['urls'][0];
+                    $image_up_load = $list_file['file']['name'];
+                    if ($path != '') {
+                        $this->request->data['path_logo'] = $path;
+                    }
+                    if ($image_up_load != '') {
+                        $this->request->data['image_logo'] = $image_up_load;
+                    }
+                    unset($this->request->data['logo_image']);
+                } else {
+                    unset($this->request->data['logo_image']);
+                }
+
+                if (!empty($this->request->data['file'][0]['error'] != 4)) {
+                    $new_arr = array();
+                    $list_file = $this->request->getData('file');
+                    foreach ($list_file as $k => $vl) {
+                        $new_arr[]['file'] = $vl;
+
+                    }
+                    $fileOK = array();
+                    foreach ($new_arr as $k => $vl) {
+                        $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                    }
+                    $result = Hash::extract($fileOK, '{n}.urls');
+                    $path = call_user_func_array('array_merge', $result);
+                    $image_up_load = Hash::extract($list_file, '{n}.name');
+                    unset($this->request->data['file']);
+                } else {
+                    $path = '';
+                    $image_up_load = '';
+                }
                 if ($path != '') {
-                    $this->request->data['path_logo'] = $path;
+                    $this->request->data['path'] = implode(',', $path);
                 }
                 if ($image_up_load != '') {
-                    $this->request->data['image_logo'] = $image_up_load;
+                    $this->request->data['image_backgroup'] = implode(',', $image_up_load);
                 }
-                unset($this->request->data['logo_image']);
-            } else {
-                unset($this->request->data['logo_image']);
-            }
-
-            if (!empty($this->request->data['file'][0]['error'] != 4)) {
-                $new_arr = array();
-                $list_file = $this->request->getData('file');
-                foreach ($list_file as $k => $vl) {
-                    $new_arr[]['file'] = $vl;
-
-                }
-                $fileOK = array();
-                foreach ($new_arr as $k => $vl) {
-                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
-                }
-                $result = Hash::extract($fileOK, '{n}.urls');
-                $path = call_user_func_array('array_merge', $result);
-                $image_up_load = Hash::extract($list_file, '{n}.name');
-                unset($this->request->data['file']);
-            } else {
-                $path = '';
-                $image_up_load = '';
-            }
-            if ($path != '') {
-                $this->request->data['path'] = implode(',', $path);
-            }
-            if ($image_up_load != '') {
-                $this->request->data['image_backgroup'] = implode(',', $image_up_load);
-            }
-            $list_device_id = json_encode(array_values($this->request->getData('device_id')));
-            $this->request->data['device_id'] = $list_device_id;
-            $this->request->data['device_name'] = $listNameDevice;
-            $campaign_groups = $this->CampaignGroups->patchEntity($campaign_groups, $this->request->data);
-            $campaign_groups->delete_flag = UN_DELETED;
-            if (empty($campaign_groups->errors())) {
-                $save_ad = $this->CampaignGroups->save($campaign_groups);
-                if ($save_ad) {
-                    $campaign_group_id = $save_ad->id;
-                    //todo update data devices add to group
-                    $device_adgroup = array(
-                        'campaign_group_id' => $campaign_group_id,
-                        'user_id_campaign' => $this->request->getData('user_id_campaign_group')
-                    );
-                    $this->publishall($result_id_devices, $device_adgroup);
-                    $conn->commit();
-                    $this->redirect(['action' => 'index']);
+                $list_device_id = json_encode(array_values($this->request->getData('device_id')));
+                $this->request->data['device_id'] = $list_device_id;
+                $this->request->data['device_name'] = $listNameDevice;
+                $campaign_groups = $this->CampaignGroups->patchEntity($campaign_groups, $this->request->data);
+                $campaign_groups->delete_flag = UN_DELETED;
+                if (empty($campaign_groups->errors())) {
+                    $save_ad = $this->CampaignGroups->save($campaign_groups);
+                    if ($save_ad) {
+                        $campaign_group_id = $save_ad->id;
+                        //todo update data devices add to group
+                        $device_adgroup = array(
+                            'campaign_group_id' => $campaign_group_id,
+                            'user_id_campaign' => $this->request->getData('user_id_campaign_group')
+                        );
+                        $this->publishall($result_id_devices, $device_adgroup);
+                        $conn->commit();
+                        $this->redirect(['action' => 'index']);
+                    } else {
+                        $conn->rollback();
+                        $this->redirect(['action' => 'add']);
+                    }
                 } else {
                     $conn->rollback();
                     $this->redirect(['action' => 'add']);
                 }
             } else {
-                $conn->rollback();
                 $this->redirect(['action' => 'add']);
             }
         }
@@ -451,202 +408,99 @@ class CampaignGroupsController extends AppController
         $user = $this->Auth->user();
         $this->getAllData();
         $campaign_group = $this->CampaignGroups->get($id);
-        $device_id = $campaign_group->device_id;
-
-        $campaign = $this->CampaignGroups->find()
-            ->select(['id', 'time'])
-            ->where(['delete_flag !=' => DELETED])
-            ->combine('id', 'time')
-            ->toArray();
-        $current_date = date('d/m/Y');
-        $campaing_id = array();
-        if (!empty($campaign)) {
-            foreach ($campaign as $k => $vl) {
-                $vl = explode('-', $vl);
-                $my_date = date('d/m/Y', strtotime($vl[1]));
-                if ($my_date < $current_date) {
-                    $campaing_id[$k] = $k;
-                }
-            }
-        }
-
-        $groups = array();
-        if (!empty($campaing_id)) {
-            $groups = $this->CampaignGroups->find()
-                ->select(['id', 'device_id'])
-                ->where([
-                    'id IN' => $campaing_id,
-                    'delete_flag !=' => DELETED
-                ])
-                ->combine('id', 'device_id')->toArray();
-        }
-        $device_id_old = array();
-        foreach ($groups as $k => $vl) {
-            $device_id_old[] = json_decode($vl);
-        }
-        if (!empty($device_id_old)) {
-            $list_old_device_id = call_user_func_array('array_merge', $device_id_old);
-        }
-        $campaign_groups = $this->CampaignGroups->find()
-            ->select(['id', 'device_id'])
-            ->where(['delete_flag !=' => DELETED])
-            ->combine('id', 'device_id')->toArray();
-        if (!empty($campaign_groups)) {
-            $list_device_id = array();
-            foreach ($campaign_groups as $group) {
-                if ($device_id != $group) {
-                    $list_device_id[] = ($group);
-                }
-            }
-            $device_id = array();
-            foreach ($list_device_id as $k => $vl) {
-                $device_id[] = json_decode($vl);
-            }
-            if (!empty($device_id)) {
-                $merged = call_user_func_array('array_merge', $device_id);
-                $list_device_end = array();
-                foreach ($merged as $k => $vl) {
-                    if (!in_array($vl, $list_old_device_id)) {
-                        $list_device_end[$k] = $vl;
-                    }
-                }
-                if (!empty($list_device_end)) {
-                    if ($user['role'] == User::ROLE_ONE) {
-                        $conditions = array(
-                            'id NOT IN' => $list_device_end,
-                            'delete_flag !=' => DELETED,
-                        );
-                    } else {
-                        $conditions = array(
-                            'id NOT IN' => $list_device_end,
-                            'delete_flag !=' => DELETED,
-                            'user_id' => $user['id']
-                        );
-                    }
-                } else {
-                    if ($user['role'] == User::ROLE_ONE) {
-                        $conditions = array(
-                            'delete_flag !=' => DELETED,
-                        );
-                    } else {
-                        $conditions = array(
-                            'delete_flag !=' => DELETED,
-                            'user_id' => $user['id']
-                        );
-                    }
-                }
-                $devices = $this->Devices->find('all')
-                    ->where($conditions)
-                    ->combine('id','name')->toArray()
-                ;
-            } else {
-                if ($user['role'] == User::ROLE_ONE) {
-                    $conditions = array(
-                        'Devices.delete_flag !=' => DELETED,
-                    );
-                } else {
-                    $conditions = array(
-                        'Devices.delete_flag !=' => DELETED,
-                        'user_id' => $user['id']
-                    );
-                }
-                $devices = $this->Devices->find()
-                    ->where($conditions)
-                    ->select(['Devices.id', 'Devices.name'])
-                    ->order(['Devices.id'=> 'DESC'])
-                    ->combine('id', 'name')
-                    ->toArray()
-                ;
-            }
+        if ($user['role'] == User::ROLE_ONE) {
+            $conditions = array(
+                'Devices.delete_flag !=' => DELETED,
+            );
         } else {
-            if ($user['role'] == User::ROLE_ONE) {
-                $conditions = array(
-                    'Devices.delete_flag !=' => DELETED,
-                );
-            } else {
-                $conditions = array(
-                    'Devices.delete_flag !=' => DELETED,
-                    'user_id' => $user['id']
-                );
-            }
-            $devices = $this->Devices->find()
-                ->where($conditions)
-                ->select(['Devices.id', 'Devices.name'])
-                ->order(['Devices.id'=> 'DESC'])
-                ->combine('id', 'name')->toArray()
-            ;
+            $conditions = array(
+                'Devices.delete_flag !=' => DELETED,
+                'user_id' => $user['id']
+            );
         }
+        $devices = $this->Devices->find()
+            ->where($conditions)
+            ->select(['Devices.id', 'Devices.name'])
+            ->order(['Devices.id'=> 'DESC'])
+            ->combine('id', 'name')->toArray()
+        ;
         $before_device = json_decode($campaign_group->device_id);
         if ($this->request->is('post')) {
-            $new_device = $this->request->getData()['device_id'];
-            $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
-            $this->request->data['device_name'] = $listUserid;
-            $this->request->data['device_id'] = json_encode($this->request->getData()['device_id']);
-            if (!empty($this->request->data['logo_image']['error'] != 4)) {
-                $list_file['file'] = $this->request->getData('logo_image');
-                $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
-                $path = $fileOK['urls'][0];
-                $image_up_load = $list_file['file']['name'];
-                if ($path != '') {
-                    $this->request->data['path_logo'] = $path;
+            $time = $this->request->getData('time');
+            $campaign_old = $this->CampaignGroups->find()->where(['time' => $time, 'delete_flag !=' => DELETED])->count();
+            if ($campaign_old < 1) {
+                $new_device = $this->request->getData()['device_id'];
+                $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
+                $this->request->data['device_name'] = $listUserid;
+                $this->request->data['device_id'] = json_encode($this->request->getData()['device_id']);
+                if (!empty($this->request->data['logo_image']['error'] != 4)) {
+                    $list_file['file'] = $this->request->getData('logo_image');
+                    $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
+                    $path = $fileOK['urls'][0];
+                    $image_up_load = $list_file['file']['name'];
+                    if ($path != '') {
+                        $this->request->data['path_logo'] = $path;
+                    }
+                    if ($image_up_load != '') {
+                        $this->request->data['image_logo'] = $image_up_load;
+                    }
+                    unset($this->request->data['logo_image']);
+                } else {
+                    unset($this->request->data['logo_image']);
                 }
-                if ($image_up_load != '') {
-                    $this->request->data['image_logo'] = $image_up_load;
-                }
-                unset($this->request->data['logo_image']);
-            } else {
-                unset($this->request->data['logo_image']);
-            }
 
-            if (!empty($this->request->data['file'][0]['error'] != 4)) {
-                $new_arr = array();
-                $list_file = $this->request->getData('file');
-                foreach ($list_file as $k => $vl) {
-                    $new_arr[]['file'] = $vl;
+                if (!empty($this->request->data['file'][0]['error'] != 4)) {
+                    $new_arr = array();
+                    $list_file = $this->request->getData('file');
+                    foreach ($list_file as $k => $vl) {
+                        $new_arr[]['file'] = $vl;
 
+                    }
+                    $fileOK = array();
+                    foreach ($new_arr as $k => $vl) {
+                        $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                    }
+                    $result = Hash::extract($fileOK, '{n}.urls');
+                    $path = call_user_func_array('array_merge', $result);
+                    $image_up_load = Hash::extract($list_file, '{n}.name');
+                    if ($path != '') {
+                        $this->request->data['path'] = implode(',', $path);
+                    }
+                    if ($image_up_load != '') {
+                        $this->request->data['image_backgroup'] = implode(',', $image_up_load);
+                    }
+                    unset($this->request->data['file']);
+                } else {
+                    unset($this->request->data['file']);
                 }
-                $fileOK = array();
-                foreach ($new_arr as $k => $vl) {
-                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
-                }
-                $result = Hash::extract($fileOK, '{n}.urls');
-                $path = call_user_func_array('array_merge', $result);
-                $image_up_load = Hash::extract($list_file, '{n}.name');
-                if ($path != '') {
-                    $this->request->data['path'] = implode(',', $path);
-                }
-                if ($image_up_load != '') {
-                    $this->request->data['image_backgroup'] = implode(',', $image_up_load);
-                }
-                unset($this->request->data['file']);
-            } else {
-                unset($this->request->data['file']);
-            }
 
-            $list_remove_device_id = array();
-            foreach ($before_device as $k => $vl) {
-                if (!in_array($vl, $new_device)) {
-                    $list_remove_device_id[] = $vl;
+                $list_remove_device_id = array();
+                foreach ($before_device as $k => $vl) {
+                    if (!in_array($vl, $new_device)) {
+                        $list_remove_device_id[] = $vl;
+                    }
                 }
-            }
-            //todo update data devices add to group
-            $device_adgroup = array(
-                'campaign_group_id' => $campaign_group->id,
-                'user_id_campaign' => $this->request->getData('user_id_campaign_group')
-            );
-            $this->publishall($new_device, $device_adgroup);
-            $this->removeAdgroupIdDevice($list_remove_device_id);
-            $campaign_group = $this->CampaignGroups->patchEntity($campaign_group, $this->request->data);
-            if (empty($campaign_group->errors())) {
-                if ($this->CampaignGroups->save($campaign_group)) {
-                    $conn->commit();
-                    return $this->redirect(['action' => 'index']);
+                //todo update data devices add to group
+                $device_adgroup = array(
+                    'campaign_group_id' => $campaign_group->id,
+                    'user_id_campaign' => $this->request->getData('user_id_campaign_group')
+                );
+                $this->publishall($new_device, $device_adgroup);
+                $this->removeAdgroupIdDevice($list_remove_device_id);
+                $campaign_group = $this->CampaignGroups->patchEntity($campaign_group, $this->request->data);
+                if (empty($campaign_group->errors())) {
+                    if ($this->CampaignGroups->save($campaign_group)) {
+                        $conn->commit();
+                        return $this->redirect(['action' => 'index']);
+                    } else {
+                        $conn->rollback();
+                        return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
+                    }
                 } else {
                     $conn->rollback();
                     return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
                 }
             } else {
-                $conn->rollback();
                 return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
             }
         }

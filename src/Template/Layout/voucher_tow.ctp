@@ -196,7 +196,6 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                 <input type="hidden" name="popup" value="true"/>
                                 <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                 <input style="display: none;" name="password" type="password" value="wifimedia"/>
-                                <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign : ''; ?>"/>
                                 <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                 <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
                                 <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
@@ -204,6 +203,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                 <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                 <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
                                 <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>">
+                                <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($campaign_id) ? $campaign_id : ''; ?>"/>
                                 <p><input type="submit" class="_btn" value="Đăng ký"></p>
                             </form>
                         </div>

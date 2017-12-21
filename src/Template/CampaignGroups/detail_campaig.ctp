@@ -16,7 +16,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <ol class="breadcrumb breadcrumb-bg-blue-grey">
                     <li>
-                        <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'index']) ?>">
+                        <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'index']) ?>">
                             <i class="material-icons">home</i> Trang chủ
                         </a>
                     </li>
