@@ -33,7 +33,6 @@ class CampaignGroupsController extends AppController
         // Include the FlashComponent
         $this->loadComponent('Flash');
         $this->loadComponent('UploadImage');
-
         // Load Files model
         $this->loadModel('Logs');
         $this->loadModel('DeviceGroups');

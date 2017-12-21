@@ -397,14 +397,18 @@ class DevicesController extends AppController
                             $campaing_id[$k] = $vl[1];
                         }
                     }
+                    $interval = array();
                     foreach ($campaing_id as $k => $vl) {
                         $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
                     }
-                    asort($interval);
-                    $campaign_id = key($interval);
-                    $device_campaign = $this->CampaignGroups->find()
-                        ->where(['id' => $campaign_id, 'delete_flag !=' => DELETED])
-                        ->first();
+                    $device_campaign = array();
+                    if (!empty($interval)) {
+                        asort($interval);
+                        $campaign_id = key($interval);
+                        $device_campaign = $this->CampaignGroups->find()
+                            ->where(['id' => $campaign_id, 'delete_flag !=' => DELETED])
+                            ->first();
+                    }
                     if (!empty($device_campaign)) {
                         $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
                         $infor_devices->path = $device_campaign->path;
@@ -498,14 +502,18 @@ class DevicesController extends AppController
                                     $campaing_id[$k] = $vl[1];
                                 }
                             }
+                            $interval = array();
                             foreach ($campaing_id as $k => $vl) {
                                 $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
                             }
-                            asort($interval);
-                            $campaign_id_only = key($interval);
-                            $device_campaign = $this->CampaignGroups->find()
-                                ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
-                                ->first();
+                            $device_campaign = array();
+                            if (!empty($interval)) {
+                                asort($interval);
+                                $campaign_id_only = key($interval);
+                                $device_campaign = $this->CampaignGroups->find()
+                                    ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
+                                    ->first();
+                            }
                             if (!empty($device_campaign)) {
                                 $campaign_id = false;
                                 // todo kiem tra partner da ton tai trong partner_voucher.
@@ -878,24 +886,28 @@ class DevicesController extends AppController
                                     $campaing_id[$k] = $vl[1];
                                 }
                             }
+                            $interval = array();
                             foreach ($campaing_id as $k => $vl) {
                                 $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
                             }
-                            asort($interval);
-                            $campaign_id_only = key($interval);
-                            $device_campaign = $this->CampaignGroups->find()
-                                ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
-                                ->first();
-                            // todo kiem tra partner da ton tai trong partner_voucher.
-                            $pa_voucher = $this->PartnerVouchers->find()->where(array(
-                                    'device_id' => $id_device,
-                                    'client_mac' => $client_mac,
-                                    'campaign_group_id' => $campaign_id_only,
-                                ))->first()
-                            ;
-                            // todo dem so luong voucher phat ra.
-                            $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
+                            $device_campaign = array();
+                            if (!empty($interval)) {
+                                asort($interval);
+                                $campaign_id_only = key($interval);
+                                $device_campaign = $this->CampaignGroups->find()
+                                    ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
+                                    ->first();
+                            }
                             if (!empty($device_campaign)) {
+                                // todo kiem tra partner da ton tai trong partner_voucher.
+                                $pa_voucher = $this->PartnerVouchers->find()->where(array(
+                                        'device_id' => $id_device,
+                                        'client_mac' => $client_mac,
+                                        'campaign_group_id' => $campaign_id_only,
+                                    ))->first()
+                                ;
+                                // todo dem so luong voucher phat ra.
+                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
                                 $campaign_id = false;
                                 if (!empty($pa_voucher)) {
                                     if ($pa_voucher->confirm == 1) {
