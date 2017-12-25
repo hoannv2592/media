@@ -99,7 +99,6 @@ class AdgroupsController extends AppController
                 $flag = true;
             }
         }
-
         $this->getAllData();
         $this->set(compact('adgroups', 'flag'));
         $this->set('_serialize', ['adgroups']);
@@ -277,7 +276,7 @@ class AdgroupsController extends AppController
                     //todo update data devices add to group
                     $device_adgroup = array(
                         'adgroup_id' => $group_id,
-                        'user_id' => $data_group['user_id_group']
+//                        'user_id' => $data_group['user_id_group']
                     );
                     $this->publishall($result_id_devices, $device_adgroup);
                     $device_group->adgroup_id = $group_id;
@@ -515,7 +514,6 @@ class AdgroupsController extends AppController
         $user = $this->Auth->user();
         $this->getAllData();
         $adgroup = $this->Adgroups->get($id);
-
         $groups = $this->Adgroups->find()
             ->select(['id', 'device_id'])
             ->where(['delete_flag !=' => DELETED])
@@ -533,6 +531,7 @@ class AdgroupsController extends AppController
             foreach ($list_device_id as $k => $vl) {
                 $device_id[] = json_decode($vl);
             }
+            $device_list_id = json_decode($adgroup['device_id']);
             if (!empty($device_id)) {
                 $merged = call_user_func_array('array_merge', $device_id);
                 if ($user['role'] == User::ROLE_ONE) {
@@ -542,9 +541,9 @@ class AdgroupsController extends AppController
                     );
                 } else {
                     $conditions = array(
-                        'id NOT IN' => $merged,
+//                        'id NOT IN' => $merged,
                         'delete_flag !=' => DELETED,
-                        'user_id' => $user['id']
+                        'id IN' => $device_list_id
                     );
                 }
                 $devices = $this->Devices->find('all')
@@ -559,7 +558,7 @@ class AdgroupsController extends AppController
                 } else {
                     $conditions = array(
                         'Devices.delete_flag !=' => DELETED,
-                        'user_id' => $user['id']
+                        'id IN' => $device_list_id
                     );
                 }
                 $devices = $this->Devices->find()
@@ -684,7 +683,7 @@ class AdgroupsController extends AppController
             $result_id_devices = $this->request->getData()['device_id'];
             $device_adgroup = array(
                 'adgroup_id' => $id,
-                'user_id' => $device_group['user_id_group']
+                //'user_id' => $device_group['user_id_group']
             );
             $this->publishall($result_id_devices, $device_adgroup);
             $this->removeAdgroupIdDevice($list_remove_device_id);
@@ -728,15 +727,15 @@ class AdgroupsController extends AppController
                         return $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
+                        return $this->redirect(['action' => 'detailGroup'.'/'.\UrlUtil::_encodeUrl($id)]);
                     }
                 } else {
                     $conn->rollback();
-                    return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
+                    return $this->redirect(['action' => 'detailGroup'.'/'.\UrlUtil::_encodeUrl($id)]);
                 }
             } else {
                 $conn->rollback();
-                return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
+                return $this->redirect(['action' => 'detailGroup'.'/'.\UrlUtil::_encodeUrl($id)]);
             }
         }
         $apt_device_number = $this->radompassWord();

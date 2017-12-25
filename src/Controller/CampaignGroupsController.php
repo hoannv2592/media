@@ -412,9 +412,10 @@ class CampaignGroupsController extends AppController
                 'Devices.delete_flag !=' => DELETED,
             );
         } else {
+            $device_id = json_decode($campaign_group['device_id']);
             $conditions = array(
                 'Devices.delete_flag !=' => DELETED,
-                'user_id' => $user['id']
+                'id IN' => $device_id
             );
         }
         $devices = $this->Devices->find()
@@ -425,82 +426,78 @@ class CampaignGroupsController extends AppController
         ;
         $before_device = json_decode($campaign_group->device_id);
         if ($this->request->is('post')) {
-            $time = $this->request->getData('time');
-            $campaign_old = $this->CampaignGroups->find()->where(['time' => $time, 'delete_flag !=' => DELETED])->count();
-            if ($campaign_old < 1) {
-                $new_device = $this->request->getData()['device_id'];
-                $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
-                $this->request->data['device_name'] = $listUserid;
-                $this->request->data['device_id'] = json_encode($this->request->getData()['device_id']);
-                if (!empty($this->request->data['logo_image']['error'] != 4)) {
-                    $list_file['file'] = $this->request->getData('logo_image');
-                    $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
-                    $path = $fileOK['urls'][0];
-                    $image_up_load = $list_file['file']['name'];
-                    if ($path != '') {
-                        $this->request->data['path_logo'] = $path;
-                    }
-                    if ($image_up_load != '') {
-                        $this->request->data['image_logo'] = $image_up_load;
-                    }
-                    unset($this->request->data['logo_image']);
-                } else {
-                    unset($this->request->data['logo_image']);
+            //$time = $this->request->getData('time');
+            //$campaign_old = $this->CampaignGroups->find()->where(['time' => $time, 'delete_flag !=' => DELETED])->count();
+            $new_device = $this->request->getData()['device_id'];
+            $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
+            $this->request->data['device_name'] = $listUserid;
+            $this->request->data['device_id'] = json_encode($this->request->getData()['device_id']);
+            if (!empty($this->request->data['logo_image']['error'] != 4)) {
+                $list_file['file'] = $this->request->getData('logo_image');
+                $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
+                $path = $fileOK['urls'][0];
+                $image_up_load = $list_file['file']['name'];
+                if ($path != '') {
+                    $this->request->data['path_logo'] = $path;
                 }
-
-                if (!empty($this->request->data['file'][0]['error'] != 4)) {
-                    $new_arr = array();
-                    $list_file = $this->request->getData('file');
-                    foreach ($list_file as $k => $vl) {
-                        $new_arr[]['file'] = $vl;
-
-                    }
-                    $fileOK = array();
-                    foreach ($new_arr as $k => $vl) {
-                        $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
-                    }
-                    $result = Hash::extract($fileOK, '{n}.urls');
-                    $path = call_user_func_array('array_merge', $result);
-                    $image_up_load = Hash::extract($list_file, '{n}.name');
-                    if ($path != '') {
-                        $this->request->data['path'] = implode(',', $path);
-                    }
-                    if ($image_up_load != '') {
-                        $this->request->data['image_backgroup'] = implode(',', $image_up_load);
-                    }
-                    unset($this->request->data['file']);
-                } else {
-                    unset($this->request->data['file']);
+                if ($image_up_load != '') {
+                    $this->request->data['image_logo'] = $image_up_load;
                 }
+                unset($this->request->data['logo_image']);
+            } else {
+                unset($this->request->data['logo_image']);
+            }
 
-                $list_remove_device_id = array();
-                foreach ($before_device as $k => $vl) {
-                    if (!in_array($vl, $new_device)) {
-                        $list_remove_device_id[] = $vl;
-                    }
+            if (!empty($this->request->data['file'][0]['error'] != 4)) {
+                $new_arr = array();
+                $list_file = $this->request->getData('file');
+                foreach ($list_file as $k => $vl) {
+                    $new_arr[]['file'] = $vl;
+
                 }
-                //todo update data devices add to group
-                $device_adgroup = array(
-                    'campaign_group_id' => $campaign_group->id,
-                    'user_id_campaign' => $this->request->getData('user_id_campaign_group')
-                );
-                $this->publishall($new_device, $device_adgroup);
-                $this->removeAdgroupIdDevice($list_remove_device_id);
-                $campaign_group = $this->CampaignGroups->patchEntity($campaign_group, $this->request->data);
-                if (empty($campaign_group->errors())) {
-                    if ($this->CampaignGroups->save($campaign_group)) {
-                        $conn->commit();
-                        return $this->redirect(['action' => 'index']);
-                    } else {
-                        $conn->rollback();
-                        return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
-                    }
+                $fileOK = array();
+                foreach ($new_arr as $k => $vl) {
+                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                }
+                $result = Hash::extract($fileOK, '{n}.urls');
+                $path = call_user_func_array('array_merge', $result);
+                $image_up_load = Hash::extract($list_file, '{n}.name');
+                if ($path != '') {
+                    $this->request->data['path'] = implode(',', $path);
+                }
+                if ($image_up_load != '') {
+                    $this->request->data['image_backgroup'] = implode(',', $image_up_load);
+                }
+                unset($this->request->data['file']);
+            } else {
+                unset($this->request->data['file']);
+            }
+
+            $list_remove_device_id = array();
+            foreach ($before_device as $k => $vl) {
+                if (!in_array($vl, $new_device)) {
+                    $list_remove_device_id[] = $vl;
+                }
+            }
+            //todo update data devices add to group
+            $device_adgroup = array(
+                'campaign_group_id' => $campaign_group->id,
+                'user_id_campaign' => $this->request->getData('user_id_campaign_group')
+            );
+            $this->publishall($new_device, $device_adgroup);
+            $this->removeAdgroupIdDevice($list_remove_device_id);
+            $campaign_group = $this->CampaignGroups->patchEntity($campaign_group, $this->request->data);
+            if (empty($campaign_group->errors())) {
+                if ($this->CampaignGroups->save($campaign_group)) {
+                    $conn->commit();
+                    return $this->redirect(['action' => 'index']);
                 } else {
                     $conn->rollback();
-                    return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
+                    return $this->redirect(['action' => 'detailCampaig'.'/'.\UrlUtil::_encodeUrl($id)]);
                 }
             } else {
-                return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
+                $conn->rollback();
+                return $this->redirect(['action' => 'detailCampaig'.'/'.\UrlUtil::_encodeUrl($id)]);
             }
         }
         $this->set(compact('campaign_group', 'devices', 'list_users'));

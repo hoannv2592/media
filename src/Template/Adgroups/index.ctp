@@ -64,10 +64,18 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                         </td>
 
                                         <td>
-                                            <?php if (!empty($adgroup->device_name)) {
-                                                $array =  (array) json_decode($adgroup->device_name);
-                                                echo count($array);
-                                             } ?>
+                                            <table style="width: 100%;">
+                                                <tbody>
+                                                <?php if (!empty($adgroup->device_name)) {
+                                                    $array =  (array) json_decode($adgroup->device_name);
+                                                    foreach ($array as $item) {?>
+                                                        <tr>
+                                                            <td><?php echo $item;?></td>
+                                                        </tr>
+                                                    <?php }
+                                                    } ?>
+                                                </tbody>
+                                            </table>
                                         </td>
                                         <td class="advertise font-bold col-cyan">
                                             <a href="<?php echo $this->Url->build(['controller' => 'users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($adgroup['user']['id'])]) ?>">
