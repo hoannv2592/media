@@ -40,7 +40,6 @@
                         </ul>
                     </div>
                     <div class="body">
-
                         <?php
                         foreach ($campaignGroups_title as $k => $campaign) { if ($k == 0) { ?>
 
@@ -50,7 +49,7 @@
                                 echo $number.'/'.$campaign->number_voucher; ?> </h2>
                             <h2 class="card-inside-title">Thời gian : <?php echo $campaign->time?> </h2>
                          <?php } } ?>
-                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'componentExcel']);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'componentExcel'.'/'.$campaignGroups_title[0]['id']]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="home">
                                 <?php if (!empty($campaigns)) { ?>

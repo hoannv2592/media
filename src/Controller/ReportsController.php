@@ -44,13 +44,22 @@ class ReportsController extends AppController
      */
     public function index()
     {
+        $login = $this->Auth->user();
+        if ($login['role'] == User::ROLE_ONE) {
+            $conditions = array(
+                'CampaignGroups.delete_flag !=' => 1
+            );
+        } else {
+            $conditions = array(
+                'CampaignGroups.delete_flag !=' => 1,
+                'user_id_campaign_group' => $login['id']
+            );
+        }
         $list_campaign = $this->CampaignGroups->find('all', [
             'contain'  => ['PartnerVouchers' => function ($q) {
                 return $q ;
             }],
-            'conditions' => [
-                'CampaignGroups.delete_flag !=' => 1
-            ]
+            'conditions' => $conditions
         ]) ->toArray();
         $this->set(compact('list_campaign'));
     }
@@ -75,7 +84,7 @@ class ReportsController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
+     * @return \Cake\Http\Response
      */
     public function add()
     {
@@ -84,7 +93,6 @@ class ReportsController extends AppController
             $report = $this->Reports->patchEntity($report, $this->request->getData());
             if ($this->Reports->save($report)) {
                 $this->Flash->success(__('The report has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The report could not be saved. Please, try again.'));
@@ -99,7 +107,7 @@ class ReportsController extends AppController
      * Edit method
      *
      * @param string|null $id Report id.
-     * @return \Cake\Network\Response|null Redirects on successful edit, renders view otherwise.
+     * @return \Cake\Http\Response
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
@@ -111,7 +119,6 @@ class ReportsController extends AppController
             $report = $this->Reports->patchEntity($report, $this->request->getData());
             if ($this->Reports->save($report)) {
                 $this->Flash->success(__('The report has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The report could not be saved. Please, try again.'));
