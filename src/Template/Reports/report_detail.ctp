@@ -23,7 +23,7 @@
                 <div class="card">
                     <div class="header bg-green">
                         <h2>
-                            Báo cáo khách hàng chiến dịch
+                            Báo cáo chiến dịch
                             <small>Description text here...</small>
                         </h2>
                         <ul class="header-dropdown m-r-0">

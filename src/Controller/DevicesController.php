@@ -340,27 +340,6 @@ class DevicesController extends AppController
         $voucher_flag = \UrlUtil::_decodeUrl($voucher_flag);
         if (isset($device_id)) {
             $device_id = \UrlUtil::_decodeUrl($device_id);
-            $vouchers = $this->CampaignGroups->find()
-                ->select(['id', 'device_id'])
-                ->where(['delete_flag !=' => 1])
-                ->hydrate(false)
-                ->combine('id', 'device_id')
-                ->toArray();
-            if (!empty($vouchers)) {
-                foreach ($vouchers as $k => $voucher) {
-                    $list_device_id_voucher[$k] = json_decode($voucher);
-                }
-                if (!empty($list_device_id_voucher)) {
-                    $id_campaign = '';
-                    foreach ($list_device_id_voucher as $k => $vl) {
-                        foreach ($vl as $key => $item) {
-                            if ($device_id == $item) {
-                                $id_campaign = $k;
-                            }
-                        }
-                    }
-                }
-            }
             if (!$this->Devices->exists(['Devices.id' => $device_id])) {
                 return $this->redirect(['action' => 'index']);
             }
@@ -386,20 +365,22 @@ class DevicesController extends AppController
                 }
                 if (!empty($id_campaign)) {
                     $device_campaign = $this->CampaignGroups->find()
-                        ->where(['delete_flag !=' => DELETED])->combine('id', 'time')
+                        ->where(['delete_flag !=' => DELETED, 'id IN' => $id_campaign])->combine('id', 'time')
                         ->toArray();
-                    $current_date = date('d/m/Y');
+                    $current_date = date('Y-m-d');
                     $campaing_id = array();
                     foreach ($device_campaign as $k => $vl) {
                         $vl = explode('-', $vl);
-                        $my_date = date('d/m/Y', strtotime($vl[1]));
+                        $my_date = date('Y-m-d', strtotime($vl[1]));
                         if ($my_date >= $current_date) {
                             $campaing_id[$k] = $vl[1];
                         }
                     }
                     $interval = array();
-                    foreach ($campaing_id as $k => $vl) {
-                        $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
+                    if (!empty($campaing_id)) {
+                        foreach ($campaing_id as $k => $vl) {
+                            $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
+                        }
                     }
                     $device_campaign = array();
                     if (!empty($interval)) {
@@ -493,11 +474,11 @@ class DevicesController extends AppController
                             $device_campaign = $this->CampaignGroups->find()
                                 ->where(['id IN' => $id_campaign])->combine('id', 'time')
                                 ->toArray();
-                            $current_date = date('d/m/Y');
+                            $current_date = date('Y-m-d');
                             $campaing_id = array();
                             foreach ($device_campaign as $k => $vl) {
                                 $vl = explode('-', $vl);
-                                $my_date = date('d/m/Y', strtotime($vl[1]));
+                                $my_date = date('Y-m-d', strtotime($vl[1]));
                                 if ($my_date >= $current_date) {
                                     $campaing_id[$k] = $vl[1];
                                 }
@@ -877,11 +858,11 @@ class DevicesController extends AppController
                             $device_campaign = $this->CampaignGroups->find()
                                 ->where(['id IN' => $id_campaign])->combine('id', 'time')
                                 ->toArray();
-                            $current_date = date('d/m/Y');
+                            $current_date = date('Y-m-d');
                             $campaing_id = array();
                             foreach ($device_campaign as $k => $vl) {
                                 $vl = explode('-', $vl);
-                                $my_date = date('d/m/Y', strtotime($vl[1]));
+                                $my_date = date('Y-m-d', strtotime($vl[1]));
                                 if ($my_date >= $current_date) {
                                     $campaing_id[$k] = $vl[1];
                                 }
