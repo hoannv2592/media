@@ -73,7 +73,8 @@ class DevicesController extends AppController
                     }],
                 'conditions' => [
                     'Devices.delete_flag !=' => DELETED
-                ]
+                ],
+                'order' => ['Devices.id' => 'DESC']
             ])->toArray();
         } else {
             $devices = $this->Devices->find('all', [
@@ -92,7 +93,8 @@ class DevicesController extends AppController
                 'conditions' => [
                     'Devices.user_id ' => $login['id'],
                     'Devices.delete_flag !=' => DELETED
-                ]
+                ],
+                'order' => ['Devices.id' => 'DESC']
             ])->toArray();
         }
         $result = Hash::combine($devices, '{n}.id', '{n}.adgroup_id');
@@ -1543,6 +1545,28 @@ class DevicesController extends AppController
         $device = $this->Devices->get($id, [
             'contain' => []
         ]);
+        $campaign_id = $this->CampaignGroups->find()->select()->where(['delete_flag !=' => 1])->combine('id', 'device_id')->toArray();
+        $list_campaign = array();
+        if (!empty($campaign_id)) {
+            foreach ($campaign_id as $k => $vl) {
+                $vl = json_decode($vl);
+                foreach ($vl as $key => $item) {
+                    if ($id == $item) {
+                        $list_campaign[$k][$key] = $k;
+                    }
+                }
+            }
+            if (!empty($list_campaign)) {
+                $list_campaign = call_user_func_array('array_merge', $list_campaign);
+                $list_campaign = array_unique($list_campaign);
+                $campaign_name = $this->CampaignGroups->find()->select()
+                    ->where([
+                        'id IN' => $list_campaign,
+                        'delete_flag !=' => 1,
+                    ])->combine('id', 'name')->toArray();
+                $campaign_name = implode(',',$campaign_name);
+            }
+        }
         $this->getAllData();
         if ($this->request->getData()) {
             $device = $this->Devices->patchEntity($device, $this->request->getData());
@@ -1562,10 +1586,13 @@ class DevicesController extends AppController
                 return $this->redirect(['action' => 'edit' . '/' . \UrlUtil::_encodeUrl($id)]);
             }
         }
-        $this->set(compact('device'));
+        $Adgroups = array();
+        if (!empty($device['adgroup_id'])) {
+            $Adgroups = $this->Adgroups->find()->where(['id' => $device['adgroup_id']])->combine('id', 'name')->toArray();
+        }
+        $this->set(compact('device', 'Adgroups', 'campaign_name'));
         $this->set('_serialize', ['device']);
     }
-
     private function getFlagInAdgroup($ladingpage_id = null, $id_device = null)
     {
         $ad_group = $this->Adgroups->find()
