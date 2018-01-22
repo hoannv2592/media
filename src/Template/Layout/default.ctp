@@ -51,6 +51,7 @@ $cakeDescription = 'Media ';
         'chosen',
         'bootstrap-datetimepicker',
         'daterangepicker',
+        'daterangepicker.min'
 
     )) ?>
     <?= $this->Html->script(array(
@@ -73,7 +74,8 @@ $cakeDescription = 'Media ';
         'jquery.multi-select',
         'bootstrap-datetimepicker',
         'moment',
-        'daterangepicker'
+        'daterangepicker',
+        'jquery.daterangepicker'
     )) ?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -212,16 +214,16 @@ $cakeDescription = 'Media ';
                         <span>Chăm sóc khách hàng</span>
                     </a>
                 </li>
-                <?php if ($controller == 'AdgroupChangeHistories') { ?>
-            <li class="left_menu active ">
-            <?php } else { ?>
-                <li class="left_menu">
-                    <?php } ?>
-                    <a href="<?php echo $this->Url->build(["controller" => "AdgroupChangeHistories", "action" => "index"]); ?>">
-                        <i class="material-icons">history</i>
-                        <span>History nhóm thiết bị</span>
-                    </a>
-                </li>
+<!--                --><?php //if ($controller == 'AdgroupChangeHistories') { ?>
+<!--            <li class="left_menu active ">-->
+<!--            --><?php //} else { ?>
+<!--                <li class="left_menu">-->
+<!--                    --><?php //} ?>
+<!--                    <a href="--><?php //echo $this->Url->build(["controller" => "AdgroupChangeHistories", "action" => "index"]); ?><!--">-->
+<!--                        <i class="material-icons">history</i>-->
+<!--                        <span>History nhóm thiết bị</span>-->
+<!--                    </a>-->
+<!--                </li>-->
                 <?php if ($controller == 'Landingpages') { ?>
             <li class="left_menu active ">
             <?php } else { ?>

@@ -450,7 +450,19 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         //Multi-select
         $('#optgroup').multiSelect({ selectableOptgroup: true });
     });
-    $('#config-demo').daterangepicker({}, function(start, end, label) {});
+    $('#config-demo').dateRangePicker({
+        language:'vi',
+        showShortcuts: true,
+        shortcuts :
+            {
+                'next-days': [3,5,7],
+                'next': ['week','month','year'],
+            },
+
+        format: 'DD/MM/YYYY',
+        separator: ' - '
+    });
+    // $('#config-demo').daterangepicker({}, function(start, end, label) {});
 </script>
 <style>
     .chosen-container{

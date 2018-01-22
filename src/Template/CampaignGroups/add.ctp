@@ -321,7 +321,9 @@
             }
         });
     });
-    $('#config-demo').daterangepicker({}, function(start, end, label) {});
+   // $('#config-demo').daterangepicker({}, function(start, end, label) {});
+   //  $('#config-demo').daterangepicker({}, function(start, end, label) {});
+    $('#config-demo').dateRangePicker({language:'vn'});
 </script>
 <style>
     .chosen-container {
