@@ -252,6 +252,7 @@ class DevicesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is('post')) {
+            pr($this->request->data); die;
             if (!empty($this->request->data['logo_image']['error'] != 4)) {
                 $list_file['file'] = $this->request->getData('logo_image');
                 $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
@@ -1593,6 +1594,67 @@ class DevicesController extends AppController
         $this->set(compact('device', 'Adgroups', 'campaign_name'));
         $this->set('_serialize', ['device']);
     }
+
+    public function loadLogPartnerHistories()
+    {
+        ob_start();
+        $this->autoRender = false;
+        $id = $this->request->data['id'];
+        if (!$this->Devices->exists(['id' => $id])) {
+            return $this->redirect(array('controller' => 'Devices', 'action' => 'index'));
+        }
+        $device = $this->Devices->get($id, [
+            'contain' => []
+        ]);
+        // render to a variable
+        $campaign_id = $this->CampaignGroups->find()->select()->where(['delete_flag !=' => 1])->combine('id', 'device_id')->toArray();
+        $list_campaign = array();
+        if (!empty($campaign_id)) {
+            foreach ($campaign_id as $k => $vl) {
+                $vl = json_decode($vl);
+                foreach ($vl as $key => $item) {
+                    if ($id == $item) {
+                        $list_campaign[$k][$key] = $k;
+                    }
+                }
+            }
+            $campaign_name = '';
+            if (!empty($list_campaign)) {
+                $list_campaign = call_user_func_array('array_merge', $list_campaign);
+                $list_campaign = array_unique($list_campaign);
+                $campaign_name = $this->CampaignGroups->find()->select()
+                    ->where([
+                        'id IN' => $list_campaign,
+                        'delete_flag !=' => 1,
+                    ])->combine('id', 'name')->toArray();
+                $campaign_name = implode(',',$campaign_name);
+            }
+        }
+        $Adgroups = array();
+        if (!empty($device['adgroup_id'])) {
+            $Adgroups = $this->Adgroups->find()->where(['id' => $device['adgroup_id']])->combine('id', 'name')->toArray();
+        }
+        $users = $this->Users->find()
+            ->where(['Users.delete_flag !=' => DELETED])
+            ->select(['Users.id', 'Users.username'])
+            ->order(['Users.id'=> 'ASC'])
+            ->combine('id', 'username')
+            ->toArray();
+        $builder = $this->viewBuilder();
+        $builder->autoLayout(false);
+        $builder->template('/Element/device_groups/modal-02');
+        $builder->helpers(['Html']);
+        $view = $builder->build([
+            'device' => $device,
+            'Adgroups' => $Adgroups,
+            'campaign_name' => $campaign_name,
+            'userData' => $this->Auth->user(),
+            'users' => $users
+        ]);
+        echo $view->render();
+    }
+
+
     private function getFlagInAdgroup($ladingpage_id = null, $id_device = null)
     {
         $ad_group = $this->Adgroups->find()
