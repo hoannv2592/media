@@ -156,7 +156,7 @@ tr:last-child {
 }
 
 .demo-checkbox label, .demo-radio-button label {
-    min-width: 250px !important;
+    min-width: 130px !important;
 }
 
 .button-demo .btn {
@@ -201,4 +201,12 @@ section.content {
     -o-transition: .5s;
     -webkit-transition: .5s;
     transition: .5s;
+}
+
+[type="radio"]:not(:checked)+label {
+    padding-left: 26px;
+    height: 29px !important;
+    line-height: 25px;
+    font-size: 13px;
+    font-weight: normal;
 }

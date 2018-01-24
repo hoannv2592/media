@@ -50,6 +50,7 @@ $this->assign('title', 'Quản lý thiết bị');
                                             <tr class="bg-blue-grey">
                                                 <th style="text-align: center">No</th>
                                                 <th>Name</th>
+<!--                                                <th>Name</th>-->
                                                 <th>Code</th>
                                                 <th>Type</th>
                                                 <th>Ad type</th>
@@ -64,9 +65,8 @@ $this->assign('title', 'Quản lý thiết bị');
                                                 $count++; ?>
                                                 <tr valign="middle">
                                                     <td style="text-align: center"><?php echo $count; ?></td>
-                                                    <td class="advertise font-bold col-cyan">
-                                                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>"><?php echo h($device->name); ?></a>
-                                                    </td>
+                                                    <td class="advertise font-bold col-cyan"><a href="#" onclick="view_log_partner_histories(<?php echo $device->id; ?>)" data-toggle="modal" data-target="#defaultModal"><?php echo h($device->name); ?></a></td>
+<!--                                                    <td class="advertise font-bold col-cyan"><a href="--><?php //echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->id)]) ?><!--">--><?php //echo h($device->name); ?><!--</a></td>-->
                                                     <td><?php echo nl2br($device->apt_key); ?></td>
                                                     <td><?php echo isset($device->type) ? \App\Model\Entity\Device::$category[$device->type] : 'Thiết bị thường'; ?></td>
                                                     <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : 'Mặc định'; ?></td>
@@ -118,5 +118,25 @@ $this->assign('title', 'Quản lý thiết bị');
         </div>
     </div>
     </div>
-    <?php echo $this->element('device_groups/get_device_group'); ?>
+    <div class="modal" id="defaultModal" tabindex="-1" role="dialog">
+        <?php echo $this->element('device_groups/modal-02'); ?>
+    </div>
 </section>
+<script type="application/javascript">
+    view_log_partner_histories = function (id) {
+        $.ajax({
+            url: '/devices/loadLogPartnerHistories',
+            type: 'POST',
+            dataType: 'html',
+            data: {
+                id: id
+            },
+            success: function (response) {
+                $('#defaultModal').html(response);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+    };
+
+</script>
