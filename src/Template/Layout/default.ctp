@@ -51,6 +51,10 @@ $cakeDescription = 'Media ';
         'chosen',
         'bootstrap-datetimepicker',
         'daterangepicker',
+        'font-awesome.min',
+        'fileinput/fileinput',
+
+
 
     )) ?>
     <?= $this->Html->script(array(
@@ -73,7 +77,16 @@ $cakeDescription = 'Media ';
         'jquery.multi-select',
         'bootstrap-datetimepicker',
         'moment',
-        'daterangepicker'
+        'daterangepicker',
+//        'fileinput/jquery-3.2.1.min',
+        'fileinput/fileinput',
+        'fileinput/themes/explorer-fa/theme',
+        'fileinput/popper.min',
+        'fileinput/sortable',
+        'fileinput/locales/fr',
+        'fileinput/locales/es',
+        'fileinput/themes/explorer-fa/theme',
+        'fileinput/themes/fa/theme',
     )) ?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>

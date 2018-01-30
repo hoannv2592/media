@@ -213,6 +213,13 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     </tbody>
                                 </table>
                             </div>
+                            <form enctype="multipart/form-data">
+                                <div class="form-group">
+                                    <div class="file-loading">
+                                        <input id="file-1" type="file" multiple class="file" name="file_upload[]" data-overwrite-initial="false" data-min-file-count="2">
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                         <?php echo $this->Form->input('device_id', [
                             'type' => 'hidden',
@@ -230,13 +237,38 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             <button class="btn btn-primary waves-effect" id="submit_delete" type="submit"> CÀI ĐẶT</button>
                         </div>
                         <?php echo $this->Form->end(); ?>
+
+<!--                        <div class="container kv-main">-->
+<!--                            <form enctype="multipart/form-data">-->
+<!--                                <div class="form-group">-->
+<!--                                    <div class="file-loading">-->
+<!--                                        <input id="file-1" type="file" multiple class="file" name="file_upload[]" data-overwrite-initial="false" data-min-file-count="2">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+<!--                            </form>-->
+<!--                        </div>-->
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
+<script>
+    $("#file-1").fileinput({
+        theme: 'fa',
+        uploadUrl: '/Devices/upload', // you must set a valid URL here else you will get an error
+        allowedFileExtensions: ['jpg', 'png', 'gif'],
+        overwriteInitial: false,
+        maxFileSize: 10000,
+        maxFilesNum: 10,
+        //allowedFileTypes: ['image', 'video', 'flash'],
+        slugCallback: function (filename) {
+            return filename.replace('(', '_').replace(']', '_');
+        }
+    });
+</script>
 <script type="application/javascript">
+
     function checkuploadfile() {
         var $fileUpload = $("input[type='file']");
         if (parseInt($fileUpload.get(0).files.length) > 5){
