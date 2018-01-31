@@ -6,6 +6,8 @@
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $devices
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $device
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $userData
+ * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $back_group
+ * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $logo
  */
 $this->assign('title', 'Tạo quảng cáo thiết bị');
 ?>
@@ -76,18 +78,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     ?>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <?php $tile_congratulations_return = isset($device->tile_congratulations_return) ? ($device->tile_congratulations_return):'' ?>
-                                    <?php echo $this->Form->control('tile_congratulations_return', array(
-                                        'label' => 'Tile congratulations return',
-                                        'class' => 'form-control',
-                                        'value' => $tile_congratulations_return,
-                                        'placeholder' => 'Tile congratulations return..'
-                                    ));
-                                    ?>
-                                </div>
-                            </div>
+
                             <div class="form-group">
                                 <label> Ảnh logo </label>
                                 <div class="form-line">
@@ -101,18 +92,16 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     <thead>
                                     <tr>
                                         <th width="20%">Ảnh logo</th>
-                                        <th width="10%"></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php if (isset($device->path_logo) && $device->path_logo != '') {
-                                        $list_background = explode(',', $device->path_logo);
-                                        foreach ($list_background as $k => $vl) { ?>
+                                    <?php if (!empty($logo)) {
+                                        foreach ($logo as $k => $vl) {  if ($vl != '') { ?>
                                             <tr>
-                                                <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="200"></td>
-                                                <td class="image"></td>
+                                                <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="180"></td>
                                             </tr>
                                         <?php }
+                                        }
                                         ?>
                                     <?php } else { ?>
                                     <tr><td colspan="4" class="image">No file(s) found......</td>
@@ -122,7 +111,18 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             </div>
                         </div>
                         <div class="col-md-6">
-
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php $tile_congratulations_return = isset($device->tile_congratulations_return) ? ($device->tile_congratulations_return):'' ?>
+                                    <?php echo $this->Form->control('tile_congratulations_return', array(
+                                        'label' => 'Tile congratulations return',
+                                        'class' => 'form-control',
+                                        'value' => $tile_congratulations_return,
+                                        'placeholder' => 'Tile congratulations return..'
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="form-line">
                                     <?php $title_connect = isset($device->title_connect) ? ($device->title_connect):'' ?>
@@ -184,11 +184,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                 </div>
                             </div>
                             <label class=""> Chọn một ảnh </label>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <input type="file" name="file[]" id="file" multiple="multiple" value="<?php echo isset($device->path) ? '/'.$device->path: '';?>" class="form-control">
-                                </div>
-                            </div>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped dataTable table-hover">
                                     <thead>
@@ -198,14 +193,13 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <?php if (isset($device->path) && $device->path != '') {
-                                        $list_background = explode(',', $device->path);
-                                        foreach ($list_background as $k => $vl) { ?>
-                                            <tr>
-                                                <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="200"></td>
-                                                <td><?php echo $device->created; ?></td>
+                                    <?php if (!empty($back_group)) {
+                                        foreach ($back_group as $k => $vl) {  if ($vl != '') { ?>
+                                            <tr id="<?php echo $k; ?>">
+                                                <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="180"></td>
+                                                <td><a href="javascript:void(0);"  id="delete_bak" onclick="delete_bak(<?php echo $k; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
                                             </tr>
-                                        <?php }
+                                        <?php } }
                                         ?>
                                     <?php } else { ?>
                                         <tr><td colspan="4" class="image">No file(s) found......</td></tr>
@@ -213,13 +207,12 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     </tbody>
                                 </table>
                             </div>
-                            <form enctype="multipart/form-data">
-                                <div class="form-group">
-                                    <div class="file-loading">
-                                        <input id="file-1" type="file" multiple class="file" name="file_upload[]" data-overwrite-initial="false" data-min-file-count="2">
-                                    </div>
+                            <label class=""> Chọn một ảnh </label>
+                            <div class="form-group">
+                                <div class="file-loading">
+                                    <input id="file-1" type="file" multiple class="file" name="file_upload[]" data-overwrite-initial="false" data-min-file-count="2">
                                 </div>
-                            </form>
+                            </div>
                         </div>
                         <?php echo $this->Form->input('device_id', [
                             'type' => 'hidden',
@@ -237,16 +230,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             <button class="btn btn-primary waves-effect" id="submit_delete" type="submit"> CÀI ĐẶT</button>
                         </div>
                         <?php echo $this->Form->end(); ?>
-
-<!--                        <div class="container kv-main">-->
-<!--                            <form enctype="multipart/form-data">-->
-<!--                                <div class="form-group">-->
-<!--                                    <div class="file-loading">-->
-<!--                                        <input id="file-1" type="file" multiple class="file" name="file_upload[]" data-overwrite-initial="false" data-min-file-count="2">-->
-<!--                                    </div>-->
-<!--                                </div>-->
-<!--                            </form>-->
-<!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -254,18 +237,37 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
     </div>
 </section>
 <script>
-    $("#file-1").fileinput({
-        theme: 'fa',
-        uploadUrl: '/Devices/upload', // you must set a valid URL here else you will get an error
-        allowedFileExtensions: ['jpg', 'png', 'gif'],
-        overwriteInitial: false,
-        maxFileSize: 10000,
-        maxFilesNum: 10,
-        //allowedFileTypes: ['image', 'video', 'flash'],
-        slugCallback: function (filename) {
-            return filename.replace('(', '_').replace(']', '_');
-        }
-    });
+    function delete_bak(id) {
+        $.ajax({
+            type: 'POST',
+            url: '/Devices/delete_backgroud',
+            async: true,
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function (rp) {
+                if (rp == true) {
+                    $('tr#'+id).remove()
+                }
+            }
+        });
+    }
+
+        $("#file-1").fileinput({
+            theme: 'fa',
+            uploadUrl: '/Devices/upload', // you must set a valid URL here else you will get an error
+            allowedFileExtensions: ['jpg', 'png', 'gif'],
+            overwriteInitial: false,
+            maxFileSize: 10000,
+            maxFilesNum: 5,
+            dropZoneEnabled : false,
+            showUpload : false,
+            //allowedFileTypes: ['image', 'video', 'flash'],
+            // slugCallback: function (filename) {
+            //     return filename.replace('(', '_').replace(']', '_');
+            // }
+        });
 </script>
 <script type="application/javascript">
 
@@ -332,3 +334,10 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         }
     });
 </script>
+<style>
+    .kv-file-upload, .kv-file-remove{
+        color:#fff !important;
+        visibility: hidden !important;
+
+    }
+</style>

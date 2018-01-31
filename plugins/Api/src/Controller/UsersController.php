@@ -353,7 +353,6 @@ class UsersController extends AppController
                     $data[$i - 2][$j] = $sheet->getCellByColumnAndRow($j, $i)->getValue();
                 }
             }
-            pr($data);
             die;
         }
     }

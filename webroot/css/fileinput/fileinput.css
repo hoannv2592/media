@@ -574,5 +574,11 @@ i.fa.fa-caret-right.fa-lg, i.fa.fa-caret-left.fa-lg{
 .btn-secondary {
     color: #fff;
     background-color: #868e96 !important;
-    border-color: #868e96;
+    border-color: #868e96 !important;
+}
+
+.btn-secondary:hover {
+    color: #fff;
+    background-color: #868e96 !important;
+    border-color: #868e96 !important;
 }
