@@ -102,7 +102,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="logo">
                             <div class="logo__inner">
-                                <?php if (isset($infor_devices->path_logo)) { ?>
+                                <?php if (isset($infor_devices->path_logo) && $infor_devices->path_logo != '') { ?>
                                     <a class="" href="javascript:void(0)"><img src="<?php echo '/' . $infor_devices->path_logo; ?>" alt="logo_image" style="height: 100px;"></a>
                                 <?php } else { ?>
                                     <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>

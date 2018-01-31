@@ -3,7 +3,7 @@
  * @var \App\View\AppView $apt_key_check
  * @var \App\View\AppView $this
  */
-pr($apt_key_check);
+
 $this->layout = 'landing';
 if ($apt_key_check['langdingpage_id'] == \App\Model\Entity\Device::LANDING_THREE) {
     echo $this->Html->css('back_end/page1'); ?>

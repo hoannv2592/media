@@ -99,7 +99,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     <div class="landing__cover-content u-color-white">
                         <div class="logo" style="margin-bottom: 20px;">
                             <div class="logo__inner">
-                                <?php if (isset($infor_devices->path_logo)) { ?>
+                                <?php if (isset($infor_devices->path_logo) && $infor_devices->path_logo != '') { ?>
                                     <a class="" href="javascript:void(0)"><img src="<?php echo '/' . $infor_devices->path_logo; ?>" alt="logo_image" style="height: 100px;"></a>
                                 <?php } else { ?>
                                     <a class="" href="javascript:void(0);"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt=""></a>

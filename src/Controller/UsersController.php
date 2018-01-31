@@ -239,7 +239,6 @@ class UsersController extends AppController
     {
         $user = $this->Users->newEntity();
         $session = $this->request->session()->read('Users');
-        //pr($session);
         if (!empty($session)) {
             $user = $this->Users->get($session['id']);
             if (!empty($user)) {

@@ -26,6 +26,7 @@ use Cake\Utility\Hash;
  *
  * @property  \App\Controller\Component\UploadImageComponent $UploadImage
  * @property \App\Model\Table\PartnersTable $Partners
+ * @property \App\Model\Table\DeviceFilesTable $DeviceFiles
  */
 class DevicesController extends AppController
 {
@@ -47,6 +48,7 @@ class DevicesController extends AppController
         $this->loadModel('DeviceGroups');
         $this->loadModel('PartnerVouchers');
         $this->loadModel('PartnerVoucherLogs');
+        $this->loadModel('DeviceFiles');
     }
 
     /**
@@ -252,26 +254,39 @@ class DevicesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is('post')) {
-            pr($this->request->data); die;
             if (!empty($this->request->data['logo_image']['error'] != 4)) {
                 $list_file['file'] = $this->request->getData('logo_image');
                 $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
                 $path = $fileOK['urls'][0];
                 $image_up_load = $list_file['file']['name'];
+                $request = array();
                 if ($path != '') {
-                    $this->request->data['path_logo'] = $path;
+                    $request['path'] = $path;
                 }
                 if ($image_up_load != '') {
-                    $this->request->data['image_logo'] = $image_up_load;
+                    $request['name'] = $image_up_load;
+                }
+                $request['type'] = 2;
+                $request['active'] = 0;
+                $request['device_id'] = $device_id;
+                $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select()->first();
+                if (!empty($logo)) {
+                    $logo->active_flag = 1;
+                    $this->DeviceFiles->save($logo);
+                }
+                $new_back_group = $this->DeviceFiles->newEntity();
+                $new_back_group = $this->DeviceFiles->patchEntity($new_back_group, $request);
+                if (!$this->DeviceFiles->save($new_back_group)) {
+                    $conn->rollback();
                 }
                 unset($this->request->data['logo_image']);
             } else {
                 unset($this->request->data['logo_image']);
             }
-            if (!empty($this->request->data['file'][0]['error'] != 4)) {
+            if (!empty($this->request->data['file_upload'][0]['error'] != 4)) {
                 // upload the file to the server
                 $new_arr = array();
-                $list_file = $this->request->getData('file');
+                $list_file = $this->request->getData('file_upload');
                 foreach ($list_file as $k => $vl) {
                     $new_arr[]['file'] = $vl;
                 }
@@ -282,10 +297,28 @@ class DevicesController extends AppController
                 $result = Hash::extract($fileOK, '{n}.urls');
                 $path = call_user_func_array('array_merge', $result);
                 $image_up_load = Hash::extract($list_file, '{n}.name');
-                unset($this->request->data['file']);
+
+                foreach ($image_up_load as $k => $vl) {
+                    $data_file[] = array(
+                        'device_id' => $device_id,
+                        'path' => $path[$k],
+                        'name' => $vl,
+                        'active_flag' => 0,
+                        'type' => 1
+                    );
+                }
+                foreach ($data_file as $k => $item) {
+                    $new_back_group = $this->DeviceFiles->newEntity();
+                    $new_back_group = $this->DeviceFiles->patchEntity($new_back_group, $item);
+                    if (!$this->DeviceFiles->save($new_back_group)) {
+                        $conn->rollback();
+                    }
+                }
+
+                unset($this->request->data['file_upload']);
                 unset($this->request->data['device_id']);
-                $device->path = implode(',', $path);
-                $device->image_backgroup = implode(',', $image_up_load);
+//                $device->path = implode(',', $path);
+//                $device->image_backgroup = implode(',', $image_up_load);
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 $device_id = $this->request->getData('device_id');
                 if (empty($device->errors())) {
@@ -301,7 +334,7 @@ class DevicesController extends AppController
                     $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
                 }
             } else {
-                unset($this->request->data['file']);
+                unset($this->request->data['file_upload']);
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 if (empty($device->errors())) {
                     if ($this->Devices->save($device)) {
@@ -322,7 +355,9 @@ class DevicesController extends AppController
         $this->set('files', $files);
         $this->set('filesRowNum', $filesRowNum);
         $apt = $this->radompassWord();
-        $this->set(compact('device', 'device_id', 'user_id', 'apt'));
+        $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select([ 'id','device_id', 'path'])->combine('id', 'path')->toArray();
+        $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select([ 'id','device_id','path'])->combine('id', 'path')->toArray();
+        $this->set(compact('logo','back_group','device', 'device_id', 'user_id', 'apt'));
     }
 
     /**
@@ -348,6 +383,12 @@ class DevicesController extends AppController
             }
             $this->loadModel('Partners');
             $infor_devices = $this->Devices->get($device_id);
+            $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select([ 'id','device_id','path'])->combine('id', 'path')->toArray();
+            $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select([ 'id','device_id', 'path'])->combine('id', 'path')->toArray();
+            $back_group = implode(',', $back_group);
+            $logo = implode(',', $logo);
+            $infor_devices->path = $back_group;
+            $infor_devices->path_logo = $logo;
             if (!empty($infor_devices)) {
                 $vouchers = $this->CampaignGroups->find()
                     ->where(['delete_flag !=' => DELETED])->combine('id', 'device_id')
@@ -508,7 +549,8 @@ class DevicesController extends AppController
                                         'campaign_group_id' => $campaign_id_only,
                                     ))->first();
                                 // todo dem so luong voucher phat ra.
-                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
+//                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
+                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['campaign_group_id' => $campaign_id_only])->count();
                                 // test
                                 if (!empty($pa_voucher)) {
                                     if ($pa_voucher->confirm == 1) {
@@ -891,7 +933,8 @@ class DevicesController extends AppController
                                     ))->first()
                                 ;
                                 // todo dem so luong voucher phat ra.
-                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
+//                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
+                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['campaign_group_id' => $campaign_id_only])->count();
                                 $campaign_id = false;
                                 if (!empty($pa_voucher)) {
                                     if ($pa_voucher->confirm == 1) {
@@ -1313,20 +1356,34 @@ class DevicesController extends AppController
                 $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
                 $path = $fileOK['urls'][0];
                 $image_up_load = $list_file['file']['name'];
+                $request = array();
                 if ($path != '') {
-                    $this->request->data['path_logo'] = $path;
+                    $request['path'] = $path;
                 }
                 if ($image_up_load != '') {
-                    $this->request->data['image_logo'] = $image_up_load;
+                    $request['name'] = $image_up_load;
+                }
+                $request['type'] = 2;
+                $request['active'] = 0;
+                $request['device_id'] = $device_id;
+                $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select()->first();
+                if (!empty($logo)) {
+                    $logo->active_flag = 1;
+                    $this->DeviceFiles->save($logo);
+                }
+                $new_back_group = $this->DeviceFiles->newEntity();
+                $new_back_group = $this->DeviceFiles->patchEntity($new_back_group, $request);
+                if (!$this->DeviceFiles->save($new_back_group)) {
+                    $conn->rollback();
                 }
                 unset($this->request->data['logo_image']);
             } else {
                 unset($this->request->data['logo_image']);
             }
-            if (!empty($this->request->data['file'][0]['error'] != 4)) {
+            if (!empty($this->request->data['file_upload'][0]['error'] != 4)) {
                 // upload the file to the server
                 $new_arr = array();
-                $list_file = $this->request->getData('file');
+                $list_file = $this->request->getData('file_upload');
                 foreach ($list_file as $k => $vl) {
                     $new_arr[]['file'] = $vl;
 
@@ -1338,10 +1395,24 @@ class DevicesController extends AppController
                 $result = Hash::extract($fileOK, '{n}.urls');
                 $path = call_user_func_array('array_merge', $result);
                 $image_up_load = Hash::extract($list_file, '{n}.name');
-                unset($this->request->data['file']);
+                foreach ($image_up_load as $k => $vl) {
+                    $data_file[] = array(
+                        'device_id' => $device_id,
+                        'path' => $path[$k],
+                        'name' => $vl,
+                        'active_flag' => 0,
+                        'type' => 1
+                    );
+                }
+                foreach ($data_file as $k => $item) {
+                    $new_back_group = $this->DeviceFiles->newEntity();
+                    $new_back_group = $this->DeviceFiles->patchEntity($new_back_group, $item);
+                    if (!$this->DeviceFiles->save($new_back_group)) {
+                        $conn->rollback();
+                    }
+                }
+                unset($this->request->data['file_upload']);
                 unset($this->request->data['device_id']);
-                $device->path = implode(',', $path);
-                $device->image_backgroup = implode(',', $image_up_load);
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 $device_id = $this->request->getData('device_id');
                 if (empty($device->errors())) {
@@ -1357,7 +1428,7 @@ class DevicesController extends AppController
                     $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
                 }
             } else {
-                unset($this->request->data['file']);
+                unset($this->request->data['file_upload']);
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 if (empty($device->errors())) {
                     if ($this->Devices->save($device)) {
@@ -1374,11 +1445,13 @@ class DevicesController extends AppController
             }
         }
         $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
+        $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select([ 'id','device_id', 'path'])->combine('id', 'path')->toArray();
+        $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select([ 'id','device_id','path'])->combine('id', 'path')->toArray();
         $filesRowNum = $files->count();
         $this->set('files', $files);
         $this->set('filesRowNum', $filesRowNum);
         $apt = $this->radompassWord();
-        $this->set(compact('device', 'device_id', 'user_id', 'apt'));
+        $this->set(compact('logo', 'back_group','device', 'device_id', 'user_id', 'apt'));
     }
 
     public function checkPassword()
@@ -1690,19 +1763,83 @@ class DevicesController extends AppController
         return $flag_check_isexit_partner;
     }
 
-    public function find_closest($array, $date)
+    public function updateLogoDevice()
     {
-        pr($array);
-        pr($date);
-        //$count = 0;
-        foreach($array as $day)
-        {
-            $interval[] = abs(strtotime($date) - strtotime($day));
+        $this->autoRender = false;
+        $data = $this->Devices->find()->select(['id' ,'path_logo', 'image_logo'])->hydrate(false)->where(['delete_flag !=' => 1])->toArray();
+        foreach ($data as $datum) {
+            $name = explode(',',$datum['image_logo']);
+            foreach (explode(',',$datum['path_logo']) as $k => $item) {
+                $new_file[] = array(
+                    'device_id' => $datum['id'],
+                    'path' => $item,
+                    'name' => $name[$k],
+                    'type' => 2
+                );
+            }
         }
-        pr($interval);
-        asort($interval);
-        $closest = key($interval);
-        pr($closest); die;
-//        return $array[$closest];
+
+        foreach ($new_file as $item) {
+            $new_back_group = $this->DeviceFiles->newEntity();
+            $new_back_group = $this->DeviceFiles->patchEntity($new_back_group, $item);
+
+            if (!$this->DeviceFiles->save($new_back_group)) {
+                return true;
+            }
+        }
+    }
+
+    public function updateBakDevice()
+    {
+        $this->autoRender = false;
+        $data = $this->Devices->find()->select(['id' ,'path', 'image_backgroup'])->hydrate(false)->where(['delete_flag !=' => 1])->toArray();
+        foreach ($data as $datum) {
+            $name = explode(',',$datum['image_backgroup']);
+            foreach (explode(',',$datum['path']) as $k => $item) {
+                $new_file[] = array(
+                    'device_id' => $datum['id'],
+                    'path' => $item,
+                    'name' => $name[$k],
+                    'type' => 1
+                );
+            }
+        }
+        $connection = ConnectionManager::get('default');
+        $connection->execute('TRUNCATE TABLE device_files');
+        foreach ($new_file as $item) {
+            $new_back_group = $this->DeviceFiles->newEntity();
+            $new_back_group = $this->DeviceFiles->patchEntity($new_back_group, $item);
+            if (!$this->DeviceFiles->save($new_back_group)) {
+                return true;
+            }
+        }
+    }
+
+    public function deleteBackgroud()
+    {
+        $this->autoRender = false;
+        if ($this->request->data) {
+           $id_file =  $this->request->data['id'];
+           if (isset($id_file)) {
+               $backgroud = $this->DeviceFiles->get($id_file);
+               if (!empty($backgroud)) {
+                   $backgroud->active_flag = 1;
+                   if ($this->DeviceFiles->save($backgroud)) {
+                       die(json_encode(true));
+                   } else {
+                       die(json_encode(false));
+                   }
+               } else {
+                   die(json_encode(false));
+               }
+           } else {
+               die(json_encode(false));
+           }
+        }
+    }
+    public function upload()
+    {
+        die(json_encode(true));
     }
 }
+
