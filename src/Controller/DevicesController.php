@@ -64,15 +64,16 @@ class DevicesController extends AppController
                 'contain' => ['Users' => function ($q) {
                     return $q
                         ->select(['Users.id', 'Users.username'])
-                        ->where(['Users.delete_flag !=' => 1])
+                        ->where([])
                         ->hydrate(false);
                 },
-                    'Partners' => function ($q) {
-                        return $q
-                            ->select([
-                                'Partners.id', 'Partners.name', 'Partners.device_id'
-                            ]);
-                    }],
+//                    'Partners' => function ($q) {
+//                        return $q
+//                            ->select([
+//                                'Partners.id', 'Partners.name', 'Partners.device_id'
+//                            ]);
+//                    }
+                    ],
                 'conditions' => [
                     'Devices.delete_flag !=' => DELETED
                 ],
@@ -82,16 +83,15 @@ class DevicesController extends AppController
             $devices = $this->Devices->find('all', [
                 'contain' => ['Users' => function ($q) {
                     return $q
-                        ->where([
-                            'Devices.delete_flag !=' => 1,
-                        ]);
+                        ->where([]);
                 },
-                    'Partners' => function ($q) {
-                        return $q
-                            ->select([
-                                'Partners.id', 'Partners.device_id',
-                            ]);
-                    }],
+//                    'Partners' => function ($q) {
+//                        return $q
+//                            ->select([
+//                                'Partners.id', 'Partners.device_id',
+//                            ]);
+//                    }
+                    ],
                 'conditions' => [
                     'Devices.user_id ' => $login['id'],
                     'Devices.delete_flag !=' => DELETED
