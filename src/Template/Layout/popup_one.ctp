@@ -53,7 +53,12 @@ $title_connect = isset($infor_devices->title_connect) ? $infor_devices->title_co
 $title_connect_normal = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Đăng ký nhận voucher';
 $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_isexit_partner : '2';
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
-$list_path = explode(',', $infor_devices->path);
+$list_path_old = explode(',', $infor_devices->path);
+foreach ($list_path_old as $k =>  $item) {
+    if ($item != '') {
+        $list_path[] = $item;
+    }
+}
 $auth_target = isset($infor_devices->auth_target) ? $infor_devices->auth_target :'';
 $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->apt_device_number :'';
 ?>

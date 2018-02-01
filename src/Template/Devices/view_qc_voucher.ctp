@@ -16,7 +16,14 @@ $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->lang
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
 $tile_congratulations = isset($infor_devices->tile_congratulations) ? $infor_devices->tile_congratulations : 'Chúc mừng bạn đã nhận được voucher Bạn hãy đem hình ảnh này đến quầy thu ngân để được nhận khuyến mại.!';
 echo $this->Html->css('back_end/page2');
-$list_path = explode(',', $infor_devices->path);?>
+$list_path_old = explode(',', $infor_devices->path);
+foreach ($list_path_old as $k =>  $item) {
+    if ($item != '') {
+        $list_path[] = $item;
+    }
+}
+?>
+
 <div class="carousel slide carousel-fade" data-ride="carousel">
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
