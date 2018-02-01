@@ -34,7 +34,7 @@ $this->assign('title', 'Quản lý thiết bị');
                     <div class="body">
                         <?php if ($userData['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
                             <div class="button-demo">
-                                <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'add']) ?>"
+                                <a href="javascript:void(0);"
                                    class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
                             </div>
                         <?php } else { ?>
@@ -118,6 +118,72 @@ $this->assign('title', 'Quản lý thiết bị');
         </div>
     </div>
     </div>
+    <div class="modal fade" id="modal-03" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header bg-light-blue">
+                            <h2>XÁC NHẬN</h2>
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                       role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <?php echo $this->Form->create('Devices', array(
+                                'id' => 'form_validation',
+                                'type' => 'post',
+                                'url' => array('controller' => 'Devices', 'action' => 'delete'),
+                                'inputDefaults' => array(
+                                    'label' => false,
+                                    'div' => false
+                                ),
+                                'onsubmit' => "event.returnValue = false; return false;",
+                            ));
+                            ?>
+                            <p>Bạn có chắc chắn muốn xóa thiết bị này không? </p>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary waves-effect" id="submit_delete" type="submit">XÓA THIẾT BỊ
+                                </button>
+                                <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
+                            </div>
+                            <?php echo $this->Form->end(); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="application/javascript">
+        var id;
+        $('.delete_advertise').click(function () {
+            id = $(this).attr('value');
+            $('#submit_delete').click(function () {
+                var url = "<?php echo URL_DELETE_APT; ?>";
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {id: id},
+                    success: function (response) {
+                        if (response) {
+                            window.location.reload();
+                        } else {
+                            alert_message('Đã có lỗi xảy ra.vui lòng thử lại');
+                            return false;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
     <div class="modal" id="defaultModal" tabindex="-1" role="dialog">
         <?php echo $this->element('device_groups/modal-02'); ?>
     </div>

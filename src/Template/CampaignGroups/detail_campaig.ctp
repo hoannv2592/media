@@ -245,6 +245,20 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                         <div class="form-group">
                             <div class="form-line">
                                 <?php
+                                $title_campaign = isset($campaign_group->title_campaign) ? ($campaign_group->title_campaign):'' ?>
+                                <?php echo $this->Form->control('title_campaign', array(
+                                    'label' => 'Title campaign ',
+                                    'class' => 'form-control',
+                                    'value' => $title_campaign,
+                                    'placeholder' => 'title_campaign..'
+                                ));
+                                ?>
+                                <div class="help-info">Title_campaign</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
                                 $hidden_connect = isset($campaign_group->hidden_connect) ? $campaign_group->hidden_connect: '1';
                                 echo  $this->Form->input('hidden_connect', array(
                                     'type' => 'select',

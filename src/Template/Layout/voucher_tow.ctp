@@ -63,6 +63,7 @@ foreach ($list_path_old as $k =>  $item) {
 }
 $auth_target = isset($infor_devices->auth_target) ? $infor_devices->auth_target :'';
 $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->apt_device_number :'';
+$title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_campaign: 'Vui lòng điền thông tin khảo sát';
 ?>
 <body>
 <!-- Inspired by https://codepen.io/transportedman/pen/NPWRGq -->
@@ -167,13 +168,13 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             &times;
                         </button>
-                        <h4 class="modal-title">Vui lòng điền thông tin khảo sát</h4>
+                        <h4 class="modal-title"><?php echo $title_campaign; ?></h4>
                     </div>
                     <div class="modal-body">
                         <div class="c-spacer--x-large c-spacer"></div>
                         <form action="#" name="register_form" class="register_form" id="register_form" method="post">
                             <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
-                            <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign : ''; ?>"/>
+                            <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($campaign_id) ? $campaign_id : ''; ?>"/>
                             <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
                             <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
                             <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
@@ -192,7 +193,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Vui lòng điền thông tin khảo sát</h4>
+                            <h4 class="modal-title"><?php echo  $title_campaign; ?></h4>
                         </div>
                         <div class="modal-body">
                             <div class="c-spacer--x-large c-spacer"></div>

@@ -603,6 +603,7 @@ class AdgroupsController extends AppController
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
                 'address' => $this->request->getData()['address'],
                 'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
+                'title_campaign' => isset($this->request->data['title_campaign']) ? $this->request->data['title_campaign']:'',
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
             );
@@ -664,6 +665,7 @@ class AdgroupsController extends AppController
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'path_logo' => isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'',
                 'image_logo' => isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:'',
+                'title_campaign' => isset($this->request->data['title_campaign']) ? $this->request->data['title_campaign']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
             );
             if ($user['role'] == User::ROLE_ONE) {

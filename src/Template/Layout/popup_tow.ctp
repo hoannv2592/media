@@ -61,6 +61,7 @@ foreach ($list_path_old as $k =>  $item) {
 }
 $auth_target = isset($infor_devices->auth_target) ? $infor_devices->auth_target :'';
 $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->apt_device_number :'';
+$title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_campaign: 'Vui lòng điền thông tin khảo sát';
 ?>
 <body>
 <!-- Inspired by https://codepen.io/transportedman/pen/NPWRGq -->
@@ -156,7 +157,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Nhận đăng ký giảm giá</h4>
+                            <h4 class="modal-title"><?php echo $title_campaign; ?></h4>
                         </div>
                         <div class="modal-body">
                             <div class="c-spacer--x-large c-spacer"></div>

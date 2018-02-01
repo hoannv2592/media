@@ -119,7 +119,59 @@ class DevicesController extends AppController
         $conn->begin();
         $this->request->allowMethod(['post', 'delete']);
         if ($this->request->getData()) {
-            $device = $this->Devices->get($this->request->getData('id'));
+            $device_id = $this->request->getData('id');
+            $device = $this->Devices->get($device_id);
+            $CampaignGroups = $this->CampaignGroups->find()->select([])->where(['delete_flag != '=> 1])->toArray();
+            if (!empty($CampaignGroups)) {
+                $new_list_device = array();
+                $new_list_device_name = array();
+                foreach ($CampaignGroups as $k => $vl) {
+                    $vl['device_id'] = json_decode($vl['device_id']);
+                    foreach ($vl['device_id'] as $key => $item) {
+                        if ($item != $device_id) {
+                            $new_list_device[] = $item;
+                        }
+                    }
+                    $vl['device_name'] = json_decode($vl['device_name']);
+                    foreach ($vl['device_name'] as $key => $item) {
+                        if ($key != $device_id) {
+                            $new_list_device_name[$key] = $item;
+                        }
+                    }
+                    $vl['device_name'] = json_encode($new_list_device_name);
+                    $vl['device_id'] = json_encode($new_list_device);
+                    if (!$this->CampaignGroups->save($vl)) {
+                        $conn->rollback();
+                    }
+
+                }
+            }
+            $Adgroups = $this->Adgroups->find()->select([])->where(['delete_flag != '=> 1])->toArray();
+
+            if (!empty($Adgroups)) {
+                $new_list_device = array();
+                $new_list_device_name = array();
+                foreach ($Adgroups as $k => $vl) {
+                    $vl['device_id'] = json_decode($vl['device_id']);
+                    foreach ($vl['device_id'] as $key => $item) {
+                        if ($item != $device_id) {
+                            $new_list_device[] = $item;
+                        }
+                    }
+                    $vl['device_name'] = json_decode($vl['device_name']);
+                    foreach ($vl['device_name'] as $key => $item) {
+                        if ($key != $device_id) {
+                            $new_list_device_name[$key] = $item;
+                        }
+                    }
+                    $vl['device_name'] = json_encode($new_list_device_name);
+                    $vl['device_id'] = json_encode($new_list_device);
+                    if (!$this->Adgroups->save($vl)) {
+                        $conn->rollback();
+                    }
+
+                }
+            }
             $device->delete_flag = true;
             $device->langdingpage_id = '';
             if ($this->Devices->save($device)) {
@@ -444,6 +496,7 @@ class DevicesController extends AppController
                         $infor_devices->title_connect = $device_campaign->title_connect;
                         $infor_devices->hidden_connect = $device_campaign->hidden_connect;
                         $infor_devices->path_logo = $device_campaign->path_logo;
+                        $infor_devices->title_campaign = $device_campaign->title_campaign;
                         $infor_devices->tile_congratulations_return = $device_campaign->tile_congratulations_return;
                     }
                 } elseif (isset($infor_devices->adgroup_id) && $infor_devices->adgroup_id != '') {
@@ -460,6 +513,7 @@ class DevicesController extends AppController
                         $infor_devices->title_connect = $device_group->title_connect;
                         $infor_devices->hidden_connect = $device_group->hidden_connect;
                         $infor_devices->path_logo = $device_group->path_logo;
+                        $infor_devices->title_campaign = $device_group->title_campaign;
                         $infor_devices->tile_congratulations_return = $device_group->tile_congratulations_return;
                     }
                 }
