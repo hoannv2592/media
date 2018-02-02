@@ -189,7 +189,7 @@ $title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                 &times;
                             </button>
-                            <h4 class="modal-title">Nhận đăng ký giảm giá</h4>
+                            <h4 class="modal-title"><?php echo $title_campaign ;?></h4>
                         </div>
                         <div class="modal-body">
                             <div class="c-spacer--x-large c-spacer"></div>
