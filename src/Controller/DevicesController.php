@@ -67,12 +67,12 @@ class DevicesController extends AppController
                         ->where([])
                         ->hydrate(false);
                 },
-//                    'Partners' => function ($q) {
-//                        return $q
-//                            ->select([
-//                                'Partners.id', 'Partners.name', 'Partners.device_id'
-//                            ]);
-//                    }
+                    'DeviceFiles' => function ($q) {
+                        return $q
+                            ->select([
+                                'DeviceFiles.id', 'DeviceFiles.path', 'DeviceFiles.device_id'
+                            ]);
+                    }
                     ],
                 'conditions' => [
                     'Devices.delete_flag !=' => DELETED
@@ -85,12 +85,12 @@ class DevicesController extends AppController
                     return $q
                         ->where([]);
                 },
-//                    'Partners' => function ($q) {
-//                        return $q
-//                            ->select([
-//                                'Partners.id', 'Partners.device_id',
-//                            ]);
-//                    }
+                    'DeviceFiles' => function ($q) {
+                        return $q
+                            ->select([
+                                'DeviceFiles.id', 'DeviceFiles.device_id',
+                            ]);
+                    }
                     ],
                 'conditions' => [
                     'Devices.user_id ' => $login['id'],

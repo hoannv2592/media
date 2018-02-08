@@ -47,6 +47,10 @@ class DevicesTable extends Table
         $this->hasMany('Partners', [
             'foreignKey' => 'device_id'
         ]);
+
+        $this->hasMany('DeviceFiles', [
+            'foreignKey' => 'device_id'
+        ]);
     }
 
     /**
