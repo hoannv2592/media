@@ -27,6 +27,7 @@ use Cake\Utility\Hash;
  * @property  \App\Controller\Component\UploadImageComponent $UploadImage
  * @property \App\Model\Table\PartnersTable $Partners
  * @property \App\Model\Table\DeviceFilesTable $DeviceFiles
+ * @property \App\Model\Table\MessagesTable $Messages
  */
 class DevicesController extends AppController
 {
@@ -45,6 +46,7 @@ class DevicesController extends AppController
         $this->loadModel('Adgroup');
         $this->loadModel('Partners');
         $this->loadModel('LogAuths');
+        $this->loadModel('Messages');
         $this->loadModel('DeviceGroups');
         $this->loadModel('PartnerVouchers');
         $this->loadModel('PartnerVoucherLogs');
@@ -549,70 +551,203 @@ class DevicesController extends AppController
                 $chap_id = isset($this->request->data['chap_id']) ? $this->request->data['chap_id']:'';
                 $auth_target = isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '';
                 $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
-                if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
-                    $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
-                    $conn = ConnectionManager::get('default');
-                    $conn->begin();
-                    $chk = false;
-                    $partner_id = '';
-                    if (!empty($vouchers)) {
-                        $list_device_id_voucher = array();
-                        foreach ($vouchers as $k => $voucher) {
-                            $list_device_id_voucher[$k] = json_decode($voucher);
-                        }
-                        $id_campaign = array();
-                        foreach ($list_device_id_voucher as $k => $vl) {
-                            foreach ($vl as $key => $item) {
-                                if ($id_device == $item) {
-                                    $id_campaign[$k] = $k;
+                // check get money
+                $message = $this->Messages->find()->where(['client_mac' => $client_mac, 'confirm' => 1])->first();
+                if (empty($message)) {
+                    return $this->redirect(['controller' => 'Messages', 'action' => 'setMessage']);
+                } else {
+                    if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
+                        $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
+                        $conn = ConnectionManager::get('default');
+                        $conn->begin();
+                        $chk = false;
+                        $partner_id = '';
+                        if (!empty($vouchers)) {
+                            $list_device_id_voucher = array();
+                            foreach ($vouchers as $k => $voucher) {
+                                $list_device_id_voucher[$k] = json_decode($voucher);
+                            }
+                            $id_campaign = array();
+                            foreach ($list_device_id_voucher as $k => $vl) {
+                                foreach ($vl as $key => $item) {
+                                    if ($id_device == $item) {
+                                        $id_campaign[$k] = $k;
+                                    }
                                 }
                             }
-                        }
-                        if (!empty($id_campaign)) {
-                            $device_campaign = $this->CampaignGroups->find()
-                                ->where(['id IN' => $id_campaign])->combine('id', 'time')
-                                ->toArray();
-                            $current_date = date('Y-m-d');
-                            $campaing_id = array();
-                            foreach ($device_campaign as $k => $vl) {
-                                $vl = explode('-', $vl);
-                                $my_date = date('Y-m-d', strtotime($vl[1]));
-                                if ($my_date >= $current_date) {
-                                    $campaing_id[$k] = $vl[1];
-                                }
-                            }
-                            $interval = array();
-                            foreach ($campaing_id as $k => $vl) {
-                                $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
-                            }
-                            $device_campaign = array();
-                            if (!empty($interval)) {
-                                asort($interval);
-                                $campaign_id_only = key($interval);
+                            if (!empty($id_campaign)) {
                                 $device_campaign = $this->CampaignGroups->find()
-                                    ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
-                                    ->first();
-                            }
-                            if (!empty($device_campaign)) {
-                                $campaign_id = false;
-                                // todo kiem tra partner da ton tai trong partner_voucher.
-                                $pa_voucher = $this->PartnerVouchers->find()->where(
-                                    array(
-                                        'device_id' => $id_device,
-                                        'client_mac' => $client_mac,
-                                        'campaign_group_id' => $campaign_id_only,
-                                    ))->first();
-                                // todo dem so luong voucher phat ra.
+                                    ->where(['id IN' => $id_campaign])->combine('id', 'time')
+                                    ->toArray();
+                                $current_date = date('Y-m-d');
+                                $campaing_id = array();
+                                foreach ($device_campaign as $k => $vl) {
+                                    $vl = explode('-', $vl);
+                                    $my_date = date('Y-m-d', strtotime($vl[1]));
+                                    if ($my_date >= $current_date) {
+                                        $campaing_id[$k] = $vl[1];
+                                    }
+                                }
+                                $interval = array();
+                                foreach ($campaing_id as $k => $vl) {
+                                    $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
+                                }
+                                $device_campaign = array();
+                                if (!empty($interval)) {
+                                    asort($interval);
+                                    $campaign_id_only = key($interval);
+                                    $device_campaign = $this->CampaignGroups->find()
+                                        ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
+                                        ->first();
+                                }
+                                if (!empty($device_campaign)) {
+                                    $campaign_id = false;
+                                    // todo kiem tra partner da ton tai trong partner_voucher.
+                                    $pa_voucher = $this->PartnerVouchers->find()->where(
+                                        array(
+                                            'device_id' => $id_device,
+                                            'client_mac' => $client_mac,
+                                            'campaign_group_id' => $campaign_id_only,
+                                        ))->first();
+                                    // todo dem so luong voucher phat ra.
 //                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
-                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['campaign_group_id' => $campaign_id_only])->count();
-                                // test
-                                if (!empty($pa_voucher)) {
-                                    if ($pa_voucher->confirm == 1) {
-                                        $flag_normal = false;
-                                        $flag_return = Device::HAS_RETURN;
-                                        $pa_confirm = $this->Partners->find()->where(['device_id' => $id_device, 'client_mac' => $client_mac])->first();
-                                        if (empty($pa_confirm)) {
+                                    $number_voucher_userd = $this->PartnerVouchers->find()->where(['campaign_group_id' => $campaign_id_only])->count();
+                                    // test
+                                    if (!empty($pa_voucher)) {
+                                        if ($pa_voucher->confirm == 1) {
+                                            $flag_normal = false;
+                                            $flag_return = Device::HAS_RETURN;
+                                            $pa_confirm = $this->Partners->find()->where(['device_id' => $id_device, 'client_mac' => $client_mac])->first();
+                                            if (empty($pa_confirm)) {
+                                                $flag_check_isexit_partner = false;
+                                                $save_new_pa_vou = array(
+                                                    'device_id' => $apt_key_check->id,
+                                                    'client_mac' => $client_mac,
+                                                    'num_clients_connect' => 1,
+                                                    'name' => 'user_online',
+                                                    'campaign_group_id' => $id_campaign,
+                                                    'link_login_only' => $link_login_only,
+                                                    'link_orig' => $link_orig,
+                                                    'chap_id' => $chap_id,
+                                                );
+                                                $new_partner = $this->Partners->newEntity();
+                                                $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
+                                                if (empty($new_partner->errors())) {
+                                                    $pa_save_new = $this->Partners->save($new_partner);
+                                                    if ($pa_save_new) {
+                                                        $partner_id = $pa_save_new->id;
+                                                    }
+                                                }
+                                            } else {
+                                                $flag_check_isexit_partner = true;
+                                                $pa_voucher_v = $this->PartnerVouchers->find()->where(
+                                                    array(
+                                                        'device_id' => $id_device,
+                                                        'client_mac' => $client_mac,
+                                                    ))
+                                                    ->first();
+                                                $partner_id = $pa_voucher_v['partner_id'];
+                                                $data_update = array(
+                                                    'num_clients_connect' => $pa_voucher_v->num_clients_connect + 1,
+                                                    'campaign_group_id' => $id_campaign,
+                                                    'link_login_only' => $link_login_only,
+                                                    'link_orig' => $link_orig,
+                                                    'chap_id' => $chap_id,
+                                                );
+                                                $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher_v, $data_update);
+                                                if (empty($partner_v->errors())) {
+                                                    if (!$this->PartnerVouchers->save($partner_v)) {
+                                                        $chk = true;
+                                                    }
+                                                }
+                                                $data_update_pa = array(
+                                                    'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
+                                                    'campaign_group_id' => $id_campaign,
+                                                    'link_login_only' => $link_login_only,
+                                                    'link_orig' => $link_orig,
+                                                    'chap_id' => $chap_id,
+                                                );
+                                                $partner = $this->Partners->patchEntity($pa_confirm, $data_update_pa);
+                                                if (empty($partner->errors())) {
+                                                    if (!$this->Partners->save($partner)) {
+                                                        $chk = true;
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            $flag_return = Device::NO_RETURN;
+                                            $flag_normal = true;
+                                            $flag_check_isexit_partner = true;
+                                            $pa_confirm = $this->Partners->find()->where(
+                                                array(
+                                                    'device_id' => $id_device,
+                                                    'client_mac' => $client_mac,
+                                                ))
+                                                ->first();
+                                            $partner_id = $pa_confirm['id'];
+                                            $data_update = array(
+                                                'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
+                                                'campaign_group_id' => $id_campaign,
+                                                'link_login_only' => $link_login_only,
+                                                'link_orig' => $link_orig,
+                                                'chap_id' => $chap_id,
+                                            );
+                                            $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
+                                            if (empty($partner_v->errors())) {
+                                                if (!$this->PartnerVouchers->save($partner_v)) {
+                                                    $chk = true;
+                                                }
+                                            }
+                                            $partner_p = $this->Partners->patchEntity($pa_confirm, $data_update);
+                                            if (empty($partner_p->errors())) {
+                                                if (!$this->Partners->save($partner_p)) {
+                                                    $chk = true;
+                                                }
+                                            }
+                                        }
+                                    } else {
+                                        $flag_return = Device::NO_RETURN;
+                                        if ($number_voucher_userd <= $device_campaign->number_voucher) {
+                                            if ($device_campaign->random == 2) {
+                                                $flag_normal = true;
+                                            } else {
+                                                $flag_get_voucher = $this->getVoucher($client_mac);
+                                                if ($flag_get_voucher) {
+                                                    $flag_normal = true;
+                                                } else {
+                                                    $flag_normal = false;
+                                                }
+                                            }
                                             $flag_check_isexit_partner = false;
+                                            $save_new_pa_vou = array(
+                                                'device_id' => $apt_key_check->id,
+                                                'client_mac' => $client_mac,
+                                                'num_clients_connect' => 1,
+                                                'name' => 'user_online',
+                                                'campaign_group_id' => $id_campaign,
+                                                'link_login_only' => $link_login_only,
+                                                'link_orig' => $link_orig,
+                                                'chap_id' => $chap_id,
+                                            );
+                                            $new_partner_v = $this->PartnerVouchers->newEntity();
+                                            $new_partner_v = $this->PartnerVouchers->patchEntity($new_partner_v, $save_new_pa_vou);
+                                            $new_partner = $this->Partners->newEntity();
+                                            $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
+                                            if (empty($new_partner->errors())) {
+                                                $save_partner = $this->Partners->save($new_partner);
+                                                if ($save_partner) {
+                                                    $new_partner_v->partner_id = $save_partner->id;
+                                                    $partner_id = $save_partner->id;
+                                                    if (empty($new_partner_v->errors())) {
+                                                        if (!$this->PartnerVouchers->save($new_partner_v)) {
+                                                            $chk = true;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            $flag_check_isexit_partner = false;
+                                            $flag_normal = false;
                                             $save_new_pa_vou = array(
                                                 'device_id' => $apt_key_check->id,
                                                 'client_mac' => $client_mac,
@@ -626,145 +761,62 @@ class DevicesController extends AppController
                                             $new_partner = $this->Partners->newEntity();
                                             $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
                                             if (empty($new_partner->errors())) {
-                                                $pa_save_new = $this->Partners->save($new_partner);
-                                                if ($pa_save_new) {
-                                                    $partner_id = $pa_save_new->id;
+                                                $pa_save = $this->Partners->save($new_partner);
+                                                if ($pa_save) {
+                                                    $partner_id = $pa_save->id;
                                                 }
-                                            }
-                                        } else {
-                                            $flag_check_isexit_partner = true;
-                                            $pa_voucher_v = $this->PartnerVouchers->find()->where(
-                                                array(
-                                                    'device_id' => $id_device,
-                                                    'client_mac' => $client_mac,
-                                                ))
-                                                ->first();
-                                            $partner_id = $pa_voucher_v['partner_id'];
-                                            $data_update = array(
-                                                'num_clients_connect' => $pa_voucher_v->num_clients_connect + 1,
-                                                'campaign_group_id' => $id_campaign,
-                                                'link_login_only' => $link_login_only,
-                                                'link_orig' => $link_orig,
-                                                'chap_id' => $chap_id,
-                                            );
-                                            $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher_v, $data_update);
-                                            if (empty($partner_v->errors())) {
-                                                if (!$this->PartnerVouchers->save($partner_v)) {
-                                                    $chk = true;
-                                                }
-                                            }
-                                            $data_update_pa = array(
-                                                'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
-                                                'campaign_group_id' => $id_campaign,
-                                                'link_login_only' => $link_login_only,
-                                                'link_orig' => $link_orig,
-                                                'chap_id' => $chap_id,
-                                            );
-                                            $partner = $this->Partners->patchEntity($pa_confirm, $data_update_pa);
-                                            if (empty($partner->errors())) {
-                                                if (!$this->Partners->save($partner)) {
-                                                    $chk = true;
-                                                }
-                                            }
-                                        }
-                                    } else {
-                                        $flag_return = Device::NO_RETURN;
-                                        $flag_normal = true;
-                                        $flag_check_isexit_partner = true;
-                                        $pa_confirm = $this->Partners->find()->where(
-                                            array(
-                                                'device_id' => $id_device,
-                                                'client_mac' => $client_mac,
-                                            ))
-                                            ->first();
-                                        $partner_id = $pa_confirm['id'];
-                                        $data_update = array(
-                                            'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
-                                            'campaign_group_id' => $id_campaign,
-                                            'link_login_only' => $link_login_only,
-                                            'link_orig' => $link_orig,
-                                            'chap_id' => $chap_id,
-                                        );
-                                        $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
-                                        if (empty($partner_v->errors())) {
-                                            if (!$this->PartnerVouchers->save($partner_v)) {
-                                                $chk = true;
-                                            }
-                                        }
-                                        $partner_p = $this->Partners->patchEntity($pa_confirm, $data_update);
-                                        if (empty($partner_p->errors())) {
-                                            if (!$this->Partners->save($partner_p)) {
-                                                $chk = true;
                                             }
                                         }
                                     }
                                 } else {
+                                    $campaign_id = true;
+                                    $flag_normal = false;
                                     $flag_return = Device::NO_RETURN;
-                                    if ($number_voucher_userd <= $device_campaign->number_voucher) {
-                                        if ($device_campaign->random == 2) {
-                                            $flag_normal = true;
-                                        } else {
-                                            $flag_get_voucher = $this->getVoucher($client_mac);
-                                            if ($flag_get_voucher) {
-                                                $flag_normal = true;
-                                            } else {
-                                                $flag_normal = false;
-                                            }
-                                        }
+                                    $partner = $this->Partners->find()->where(
+                                        array(
+                                            'device_id' => $apt_key_check->id,
+                                            'client_mac' => $client_mac,
+                                        ))
+                                        ->first();
+                                    if (empty($partner)) {
                                         $flag_check_isexit_partner = false;
-                                        $save_new_pa_vou = array(
+                                        $save_new_pa = array(
                                             'device_id' => $apt_key_check->id,
                                             'client_mac' => $client_mac,
                                             'num_clients_connect' => 1,
                                             'name' => 'user_online',
-                                            'campaign_group_id' => $id_campaign,
                                             'link_login_only' => $link_login_only,
                                             'link_orig' => $link_orig,
                                             'chap_id' => $chap_id,
                                         );
-                                        $new_partner_v = $this->PartnerVouchers->newEntity();
-                                        $new_partner_v = $this->PartnerVouchers->patchEntity($new_partner_v, $save_new_pa_vou);
                                         $new_partner = $this->Partners->newEntity();
-                                        $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
+                                        $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa);
                                         if (empty($new_partner->errors())) {
-                                            $save_partner = $this->Partners->save($new_partner);
-                                            if ($save_partner) {
-                                                $new_partner_v->partner_id = $save_partner->id;
-                                                $partner_id = $save_partner->id;
-                                                if (empty($new_partner_v->errors())) {
-                                                    if (!$this->PartnerVouchers->save($new_partner_v)) {
-                                                        $chk = true;
-                                                    }
-                                                }
+                                            $partner_s = $this->Partners->save($new_partner);
+                                            if ($partner_s) {
+                                                $partner_id = $partner_s->id;
                                             }
                                         }
                                     } else {
-                                        $flag_check_isexit_partner = false;
-                                        $flag_normal = false;
-                                        $save_new_pa_vou = array(
-                                            'device_id' => $apt_key_check->id,
-                                            'client_mac' => $client_mac,
-                                            'num_clients_connect' => 1,
-                                            'name' => 'user_online',
-                                            'campaign_group_id' => $id_campaign,
+                                        $flag_check_isexit_partner = true;
+                                        $partner_id = $partner['id'];
+                                        $data_update = array(
+                                            'num_clients_connect' => $partner['num_clients_connect'] + 1,
                                             'link_login_only' => $link_login_only,
                                             'link_orig' => $link_orig,
                                             'chap_id' => $chap_id,
                                         );
-                                        $new_partner = $this->Partners->newEntity();
-                                        $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
-                                        if (empty($new_partner->errors())) {
-                                            $pa_save = $this->Partners->save($new_partner);
-                                            if ($pa_save) {
-                                                $partner_id = $pa_save->id;
+                                        $partner = $this->Partners->patchEntity($partner, $data_update);
+                                        if (empty($partner->errors())) {
+                                            if (!$this->Partners->save($partner)) {
+                                                $chk = true;
                                             }
                                         }
                                     }
                                 }
                             } else {
-                                $campaign_id = true;
-                                $flag_normal = false;
                                 $flag_return = Device::NO_RETURN;
+                                $flag_normal = false;
                                 $partner = $this->Partners->find()->where(
                                     array(
                                         'device_id' => $apt_key_check->id,
@@ -836,7 +888,12 @@ class DevicesController extends AppController
                                     }
                                 }
                             } else {
-                                $flag_check_isexit_partner = true;
+                                $flag_adgroup = $this->getFlagInAdgroup($apt_key_check['langdingpage_id'], $id_device);
+                                if ($flag_adgroup == 1) {
+                                    $flag_check_isexit_partner = true;
+                                } else {
+                                    $flag_check_isexit_partner = false;
+                                }
                                 $partner_id = $partner['id'];
                                 $data_update = array(
                                     'num_clients_connect' => $partner['num_clients_connect'] + 1,
@@ -852,296 +909,288 @@ class DevicesController extends AppController
                                 }
                             }
                         }
-                    } else {
-                        $flag_return = Device::NO_RETURN;
-                        $flag_normal = false;
-                        $partner = $this->Partners->find()->where(
-                            array(
-                                'device_id' => $apt_key_check->id,
-                                'client_mac' => $client_mac,
-                            ))
-                            ->first();
-                        if (empty($partner)) {
-                            $flag_check_isexit_partner = false;
-                            $save_new_pa = array(
-                                'device_id' => $apt_key_check->id,
-                                'client_mac' => $client_mac,
-                                'num_clients_connect' => 1,
-                                'name' => 'user_online',
-                                'link_login_only' => $link_login_only,
-                                'link_orig' => $link_orig,
-                                'chap_id' => $chap_id,
-                            );
-                            $new_partner = $this->Partners->newEntity();
-                            $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa);
-                            if (empty($new_partner->errors())) {
-                                $partner_s = $this->Partners->save($new_partner);
-                                if ($partner_s) {
-                                    $partner_id = $partner_s->id;
-                                }
+                        $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
+                        $device->type = Device::TB_MIRKOTIC;
+                        if (isset($campaign_id) && $campaign_id == 1) {
+                            $device->campaign_group_id = '';
+                        }
+                        if (empty($device->errors())) {
+                            if (!$this->Devices->save($device)) {
+                                $chk = true;
                             }
+                        }
+                        if ($flag_check_isexit_partner) {
+                            $flag_check_isexit_partner = 1;
                         } else {
-                            $flag_adgroup = $this->getFlagInAdgroup($apt_key_check['langdingpage_id'], $id_device);
-                            if ($flag_adgroup == 1) {
-                                $flag_check_isexit_partner = true;
+                            $flag_check_isexit_partner = 2;
+                        }
+                        if (!$chk) {
+                            $conn->commit();
+                            if ($flag_normal) {
+                                $this->redirect([
+                                    'plugin' => null,
+                                    'controller' => 'Devices',
+                                    'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner). '/'.$flag_return
+                                ]);
                             } else {
-                                $flag_check_isexit_partner = false;
+                                $this->redirect([
+                                    'plugin' => null,
+                                    'controller' => 'Devices',
+                                    'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner). '/'.$flag_return
+                                ]);
                             }
-                            $partner_id = $partner['id'];
-                            $data_update = array(
-                                'num_clients_connect' => $partner['num_clients_connect'] + 1,
-                                'link_login_only' => $link_login_only,
-                                'link_orig' => $link_orig,
-                                'chap_id' => $chap_id,
-                            );
-                            $partner = $this->Partners->patchEntity($partner, $data_update);
-                            if (empty($partner->errors())) {
-                                if (!$this->Partners->save($partner)) {
-                                    $chk = true;
-                                }
-                            }
-                        }
-                    }
-                    $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
-                    $device->type = Device::TB_MIRKOTIC;
-                    if (isset($campaign_id) && $campaign_id == 1) {
-                        $device->campaign_group_id = '';
-                    }
-                    if (empty($device->errors())) {
-                        if (!$this->Devices->save($device)) {
-                            $chk = true;
-                        }
-                    }
-                    if ($flag_check_isexit_partner) {
-                        $flag_check_isexit_partner = 1;
-                    } else {
-                        $flag_check_isexit_partner = 2;
-                    }
-                    if (!$chk) {
-                        $conn->commit();
-                        if ($flag_normal) {
-                            $this->redirect([
-                                'plugin' => null,
-                                'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner). '/'.$flag_return
-                            ]);
                         } else {
-                            $this->redirect([
-                                'plugin' => null,
-                                'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner). '/'.$flag_return
-                            ]);
+                            $conn->rollback();
                         }
                     } else {
-                        $conn->rollback();
-                    }
-                } else {
-                    $conn = ConnectionManager::get('default');
-                    $conn->begin();
-                    $chk = false;
-                    $partner_id = '';
-                    if (!empty($vouchers)) {
-                        $list_device_id_voucher = array();
-                        foreach ($vouchers as $k => $voucher) {
-                            $list_device_id_voucher[$k] = json_decode($voucher);
-                        }
-                        $id_campaign = array();
-                        foreach ($list_device_id_voucher as $k => $vl) {
-                            foreach ($vl as $key => $item) {
-                                if ($id_device == $item) {
-                                    $id_campaign[$k] = $k;
+                        $conn = ConnectionManager::get('default');
+                        $conn->begin();
+                        $chk = false;
+                        $partner_id = '';
+                        if (!empty($vouchers)) {
+                            $list_device_id_voucher = array();
+                            foreach ($vouchers as $k => $voucher) {
+                                $list_device_id_voucher[$k] = json_decode($voucher);
+                            }
+                            $id_campaign = array();
+                            foreach ($list_device_id_voucher as $k => $vl) {
+                                foreach ($vl as $key => $item) {
+                                    if ($id_device == $item) {
+                                        $id_campaign[$k] = $k;
+                                    }
                                 }
                             }
-                        }
-                        if (!empty($id_campaign)) {
-                            $device_campaign = $this->CampaignGroups->find()
-                                ->where(['id IN' => $id_campaign])->combine('id', 'time')
-                                ->toArray();
-                            $current_date = date('Y-m-d');
-                            $campaing_id = array();
-                            foreach ($device_campaign as $k => $vl) {
-                                $vl = explode('-', $vl);
-                                $my_date = date('Y-m-d', strtotime($vl[1]));
-                                if ($my_date >= $current_date) {
-                                    $campaing_id[$k] = $vl[1];
-                                }
-                            }
-                            $interval = array();
-                            foreach ($campaing_id as $k => $vl) {
-                                $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
-                            }
-                            $device_campaign = array();
-                            if (!empty($interval)) {
-                                asort($interval);
-                                $campaign_id_only = key($interval);
+                            if (!empty($id_campaign)) {
                                 $device_campaign = $this->CampaignGroups->find()
-                                    ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
-                                    ->first();
-                            }
-                            if (!empty($device_campaign)) {
-                                // todo kiem tra partner da ton tai trong partner_voucher.
-                                $pa_voucher = $this->PartnerVouchers->find()->where(array(
+                                    ->where(['id IN' => $id_campaign])->combine('id', 'time')
+                                    ->toArray();
+                                $current_date = date('Y-m-d');
+                                $campaing_id = array();
+                                foreach ($device_campaign as $k => $vl) {
+                                    $vl = explode('-', $vl);
+                                    $my_date = date('Y-m-d', strtotime($vl[1]));
+                                    if ($my_date >= $current_date) {
+                                        $campaing_id[$k] = $vl[1];
+                                    }
+                                }
+                                $interval = array();
+                                foreach ($campaing_id as $k => $vl) {
+                                    $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
+                                }
+                                $device_campaign = array();
+                                if (!empty($interval)) {
+                                    asort($interval);
+                                    $campaign_id_only = key($interval);
+                                    $device_campaign = $this->CampaignGroups->find()
+                                        ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
+                                        ->first();
+                                }
+                                if (!empty($device_campaign)) {
+                                    // todo kiem tra partner da ton tai trong partner_voucher.
+                                    $pa_voucher = $this->PartnerVouchers->find()->where(array(
                                         'device_id' => $id_device,
                                         'client_mac' => $client_mac,
                                         'campaign_group_id' => $campaign_id_only,
                                     ))->first()
-                                ;
-                                // todo dem so luong voucher phat ra.
+                                    ;
+                                    // todo dem so luong voucher phat ra.
 //                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
-                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['campaign_group_id' => $campaign_id_only])->count();
-                                $campaign_id = false;
-                                if (!empty($pa_voucher)) {
-                                    if ($pa_voucher->confirm == 1) {
-                                        $flag_return = Device::HAS_RETURN;
-                                        $flag_normal = false;
-                                        $pa_confirm = $this->Partners->find()->where(
-                                            array(
-                                                'device_id' => $id_device,
-                                                'client_mac' => $client_mac,
-                                            ))
-                                            ->first();
-                                        if (empty($pa_confirm)) {
-                                            $flag_check_isexit_partner = false;
-                                            $save_new_pa_vou = array(
-                                                'device_id' => $apt_key_check->id,
-                                                'client_mac' => $client_mac,
-                                                'num_clients_connect' => 1,
-                                                'name' => 'user_online',
-                                                'campaign_group_id' => $id_campaign,
-                                                'auth_target' => $auth_target
-                                            );
-                                            $new_partner = $this->Partners->newEntity();
-                                            $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
-                                            if (empty($new_partner->errors())) {
-                                                $pa_save_new = $this->Partners->save($new_partner);
-                                                if ($pa_save_new) {
-                                                    $partner_id = $pa_save_new->id;
-                                                }
-                                            }
-                                        } else {
-                                            $flag_check_isexit_partner = true;
-                                            $pa_voucher = $this->PartnerVouchers->find()->where(
+                                    $number_voucher_userd = $this->PartnerVouchers->find()->where(['campaign_group_id' => $campaign_id_only])->count();
+                                    $campaign_id = false;
+                                    if (!empty($pa_voucher)) {
+                                        if ($pa_voucher->confirm == 1) {
+                                            $flag_return = Device::HAS_RETURN;
+                                            $flag_normal = false;
+                                            $pa_confirm = $this->Partners->find()->where(
                                                 array(
                                                     'device_id' => $id_device,
                                                     'client_mac' => $client_mac,
                                                 ))
                                                 ->first();
-                                            $partner_id = $pa_voucher['partner_id'];
+                                            if (empty($pa_confirm)) {
+                                                $flag_check_isexit_partner = false;
+                                                $save_new_pa_vou = array(
+                                                    'device_id' => $apt_key_check->id,
+                                                    'client_mac' => $client_mac,
+                                                    'num_clients_connect' => 1,
+                                                    'name' => 'user_online',
+                                                    'campaign_group_id' => $id_campaign,
+                                                    'auth_target' => $auth_target
+                                                );
+                                                $new_partner = $this->Partners->newEntity();
+                                                $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou);
+                                                if (empty($new_partner->errors())) {
+                                                    $pa_save_new = $this->Partners->save($new_partner);
+                                                    if ($pa_save_new) {
+                                                        $partner_id = $pa_save_new->id;
+                                                    }
+                                                }
+                                            } else {
+                                                $flag_check_isexit_partner = true;
+                                                $pa_voucher = $this->PartnerVouchers->find()->where(
+                                                    array(
+                                                        'device_id' => $id_device,
+                                                        'client_mac' => $client_mac,
+                                                    ))
+                                                    ->first();
+                                                $partner_id = $pa_voucher['partner_id'];
+                                                $data_update = array(
+                                                    'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
+                                                    'auth_target' => $auth_target,
+                                                    'campaign_group_id' => $id_campaign,
+                                                );
+                                                $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
+                                                if (empty($partner_v->errors())) {
+                                                    if (!$this->PartnerVouchers->save($partner_v)) {
+                                                        $chk = true;
+                                                    }
+                                                }
+                                                $data_update_pa = array(
+                                                    'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
+                                                    'auth_target' => $auth_target,
+                                                    'campaign_group_id' => $id_campaign,
+                                                );
+                                                $partner = $this->Partners->patchEntity($pa_confirm, $data_update_pa);
+                                                if (empty($partner->errors())) {
+                                                    if (!$this->Partners->save($partner)) {
+                                                        $chk = true;
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            $flag_return = Device::NO_RETURN;
+                                            $flag_normal = true;
+                                            $flag_check_isexit_partner = true;
+                                            $pa_confirm = $this->Partners->find()->where(
+                                                array(
+                                                    'device_id' => $id_device,
+                                                    'client_mac' => $client_mac,
+                                                ))->first();
+                                            $partner_id = $pa_confirm['id'];
                                             $data_update = array(
-                                                'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
+                                                'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
                                                 'auth_target' => $auth_target,
                                                 'campaign_group_id' => $id_campaign,
                                             );
-                                            $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
+                                            $partner_v = $this->PartnerVouchers->patchEntity($pa_confirm, $data_update);
                                             if (empty($partner_v->errors())) {
                                                 if (!$this->PartnerVouchers->save($partner_v)) {
                                                     $chk = true;
                                                 }
                                             }
-                                            $data_update_pa = array(
-                                                'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
-                                                'auth_target' => $auth_target,
-                                                'campaign_group_id' => $id_campaign,
-                                            );
-                                            $partner = $this->Partners->patchEntity($pa_confirm, $data_update_pa);
-                                            if (empty($partner->errors())) {
-                                                if (!$this->Partners->save($partner)) {
+                                            $partner_p = $this->Partners->patchEntity($pa_confirm, $data_update);
+                                            if (empty($partner_p->errors())) {
+                                                if (!$this->Partners->save($partner_p)) {
                                                     $chk = true;
                                                 }
                                             }
                                         }
                                     } else {
                                         $flag_return = Device::NO_RETURN;
-                                        $flag_normal = true;
-                                        $flag_check_isexit_partner = true;
-                                        $pa_confirm = $this->Partners->find()->where(
-                                            array(
-                                                'device_id' => $id_device,
-                                                'client_mac' => $client_mac,
-                                            ))->first();
-                                        $partner_id = $pa_confirm['id'];
-                                        $data_update = array(
-                                            'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
-                                            'auth_target' => $auth_target,
-                                            'campaign_group_id' => $id_campaign,
-                                        );
-                                        $partner_v = $this->PartnerVouchers->patchEntity($pa_confirm, $data_update);
-                                        if (empty($partner_v->errors())) {
-                                            if (!$this->PartnerVouchers->save($partner_v)) {
-                                                $chk = true;
+                                        if ($number_voucher_userd <= $device_campaign->number_voucher) {
+                                            if ($device_campaign->random == 2) {
+                                                $flag_normal = true;
+                                            } else {
+                                                $flag_get_voucher = $this->getVoucher($client_mac);
+                                                if ($flag_get_voucher) {
+                                                    $flag_normal = true;
+                                                } else {
+                                                    $flag_normal = false;
+                                                }
                                             }
-                                        }
-                                        $partner_p = $this->Partners->patchEntity($pa_confirm, $data_update);
-                                        if (empty($partner_p->errors())) {
-                                            if (!$this->Partners->save($partner_p)) {
-                                                $chk = true;
+                                            $flag_check_isexit_partner = false;
+                                            $save_new_pa_vou_v = array(
+                                                'device_id' => $apt_key_check->id,
+                                                'client_mac' => $client_mac,
+                                                'auth_target' => $auth_target,
+                                                'num_clients_connect' => 1,
+                                                'name' => 'user_online',
+                                                'apt_device_pass' => $this->radompassWord(),
+                                                'campaign_group_id' => $id_campaign,
+                                            );
+                                            $new_partner_v = $this->PartnerVouchers->newEntity();
+                                            $new_partner_v = $this->PartnerVouchers->patchEntity($new_partner_v, $save_new_pa_vou_v);
+                                            //todo save partner
+                                            $new_partner_type_one = $this->Partners->newEntity();
+                                            $new_partner_type_one = $this->Partners->patchEntity($new_partner_type_one, $save_new_pa_vou_v);
+                                            if (empty($new_partner_type_one->errors())) {
+                                                $save_pa = $this->Partners->save($new_partner_type_one);
+                                                if ($save_pa) {
+                                                    $new_partner_v->partner_id = $save_pa->id;
+                                                    $partner_id = $save_pa->id;
+                                                    if (empty($new_partner_v->errors())) {
+                                                        if (!$this->PartnerVouchers->save($new_partner_v)) {
+                                                            $chk = true;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } else {
+                                            $flag_normal = false;
+                                            $flag_check_isexit_partner = false;
+                                            $save_new_pa_vou_v = array(
+                                                'device_id' => $apt_key_check->id,
+                                                'client_mac' => $client_mac,
+                                                'auth_target' => $auth_target,
+                                                'num_clients_connect' => 1,
+                                                'name' => 'user_online',
+                                                'apt_device_pass' => $this->radompassWord(),
+                                                'campaign_group_id' => $id_campaign,
+                                            );
+                                            $new_partner = $this->Partners->newEntity();
+                                            $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou_v);
+                                            if (empty($new_partner->errors())) {
+                                                $pa_save = $this->Partners->save($new_partner);
+                                                if ($pa_save) {
+                                                    $partner_id = $pa_save->id;
+                                                }
                                             }
                                         }
                                     }
                                 } else {
+                                    $campaign_id = true;
+                                    $flag_normal = false;
                                     $flag_return = Device::NO_RETURN;
-                                    if ($number_voucher_userd <= $device_campaign->number_voucher) {
-                                        if ($device_campaign->random == 2) {
-                                            $flag_normal = true;
-                                        } else {
-                                            $flag_get_voucher = $this->getVoucher($client_mac);
-                                            if ($flag_get_voucher) {
-                                                $flag_normal = true;
-                                            } else {
-                                                $flag_normal = false;
-                                            }
-                                        }
+                                    $partner = $this->Partners->find()->where(
+                                        array(
+                                            'device_id' => $apt_key_check->id,
+                                            'client_mac' => $client_mac
+                                        ))->first();
+                                    if (empty($partner)) {
                                         $flag_check_isexit_partner = false;
-                                        $save_new_pa_vou_v = array(
+                                        $save_new_pa = array(
                                             'device_id' => $apt_key_check->id,
                                             'client_mac' => $client_mac,
                                             'auth_target' => $auth_target,
                                             'num_clients_connect' => 1,
                                             'name' => 'user_online',
-                                            'apt_device_pass' => $this->radompassWord(),
-                                            'campaign_group_id' => $id_campaign,
+                                            'apt_device_pass' => $this->radompassWord()
                                         );
-                                        $new_partner_v = $this->PartnerVouchers->newEntity();
-                                        $new_partner_v = $this->PartnerVouchers->patchEntity($new_partner_v, $save_new_pa_vou_v);
-                                        //todo save partner
-                                        $new_partner_type_one = $this->Partners->newEntity();
-                                        $new_partner_type_one = $this->Partners->patchEntity($new_partner_type_one, $save_new_pa_vou_v);
-                                        if (empty($new_partner_type_one->errors())) {
-                                            $save_pa = $this->Partners->save($new_partner_type_one);
-                                            if ($save_pa) {
-                                                $new_partner_v->partner_id = $save_pa->id;
-                                                $partner_id = $save_pa->id;
-                                                if (empty($new_partner_v->errors())) {
-                                                    if (!$this->PartnerVouchers->save($new_partner_v)) {
-                                                        $chk = true;
-                                                    }
-                                                }
+                                        $new_partner = $this->Partners->newEntity();
+                                        $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa);
+                                        if (empty($new_partner->errors())) {
+                                            $partner_s = $this->Partners->save($new_partner);
+                                            if ($partner_s) {
+                                                $partner_id = $partner_s->id;
                                             }
                                         }
                                     } else {
-                                        $flag_normal = false;
-                                        $flag_check_isexit_partner = false;
-                                        $save_new_pa_vou_v = array(
-                                            'device_id' => $apt_key_check->id,
-                                            'client_mac' => $client_mac,
+                                        $flag_check_isexit_partner = true;
+                                        $partner_id = $partner['id'];
+                                        $data_update = array(
+                                            'num_clients_connect' => $partner['num_clients_connect'] + 1,
                                             'auth_target' => $auth_target,
-                                            'num_clients_connect' => 1,
-                                            'name' => 'user_online',
-                                            'apt_device_pass' => $this->radompassWord(),
                                             'campaign_group_id' => $id_campaign,
                                         );
-                                        $new_partner = $this->Partners->newEntity();
-                                        $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou_v);
-                                        if (empty($new_partner->errors())) {
-                                            $pa_save = $this->Partners->save($new_partner);
-                                            if ($pa_save) {
-                                                $partner_id = $pa_save->id;
+                                        $partner = $this->Partners->patchEntity($partner, $data_update);
+                                        if (empty($partner->errors())) {
+                                            if (!$this->Partners->save($partner)) {
+                                                $chk = true;
                                             }
                                         }
                                     }
                                 }
                             } else {
-                                $campaign_id = true;
                                 $flag_normal = false;
                                 $flag_return = Device::NO_RETURN;
                                 $partner = $this->Partners->find()->where(
@@ -1168,12 +1217,16 @@ class DevicesController extends AppController
                                         }
                                     }
                                 } else {
-                                    $flag_check_isexit_partner = true;
+                                    $flag_adgroup = $this->getFlagInAdgroup($apt_key_check['langdingpage_id'], $id_device);
+                                    if ($flag_adgroup == 1) {
+                                        $flag_check_isexit_partner = true;
+                                    } else {
+                                        $flag_check_isexit_partner = false;
+                                    }
                                     $partner_id = $partner['id'];
                                     $data_update = array(
                                         'num_clients_connect' => $partner['num_clients_connect'] + 1,
                                         'auth_target' => $auth_target,
-                                        'campaign_group_id' => $id_campaign,
                                     );
                                     $partner = $this->Partners->patchEntity($partner, $data_update);
                                     if (empty($partner->errors())) {
@@ -1184,8 +1237,8 @@ class DevicesController extends AppController
                                 }
                             }
                         } else {
-                            $flag_normal = false;
                             $flag_return = Device::NO_RETURN;
+                            $flag_normal = false;
                             $partner = $this->Partners->find()->where(
                                 array(
                                     'device_id' => $apt_key_check->id,
@@ -1229,84 +1282,39 @@ class DevicesController extends AppController
                                 }
                             }
                         }
-                    } else {
-                        $flag_return = Device::NO_RETURN;
-                        $flag_normal = false;
-                        $partner = $this->Partners->find()->where(
-                            array(
-                                'device_id' => $apt_key_check->id,
-                                'client_mac' => $client_mac
-                            ))->first();
-                        if (empty($partner)) {
-                            $flag_check_isexit_partner = false;
-                            $save_new_pa = array(
-                                'device_id' => $apt_key_check->id,
-                                'client_mac' => $client_mac,
-                                'auth_target' => $auth_target,
-                                'num_clients_connect' => 1,
-                                'name' => 'user_online',
-                                'apt_device_pass' => $this->radompassWord()
-                            );
-                            $new_partner = $this->Partners->newEntity();
-                            $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa);
-                            if (empty($new_partner->errors())) {
-                                $partner_s = $this->Partners->save($new_partner);
-                                if ($partner_s) {
-                                    $partner_id = $partner_s->id;
-                                }
+                        $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
+                        $device->type = Device::TB_NORMAR;
+                        if (isset($campaign_id) && $campaign_id == 1) {
+                            $device->campaign_group_id = '';
+                        }
+                        if (empty($device->errors())) {
+                            if (!$this->Devices->save($device)) {
+                                $chk = true;
                             }
+                        }
+                        if ($flag_check_isexit_partner) {
+                            $flag_check_isexit_partner = 1;
                         } else {
-                            $flag_adgroup = $this->getFlagInAdgroup($apt_key_check['langdingpage_id'], $id_device);
-                            if ($flag_adgroup == 1) {
-                                $flag_check_isexit_partner = true;
+                            $flag_check_isexit_partner = 2;
+                        }
+                        if (!$chk) {
+                            $conn->commit();
+                            if ($flag_normal) {
+                                $this->redirect([
+                                    'plugin' => null,
+                                    'controller' => 'Devices',
+                                    'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner).'/'.$flag_return
+                                ]);
                             } else {
-                                $flag_check_isexit_partner = false;
+                                $this->redirect([
+                                    'plugin' => null,
+                                    'controller' => 'Devices',
+                                    'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner).'/'.$flag_return
+                                ]);
                             }
-                            $partner_id = $partner['id'];
-                            $data_update = array(
-                                'num_clients_connect' => $partner['num_clients_connect'] + 1,
-                                'auth_target' => $auth_target,
-                            );
-                            $partner = $this->Partners->patchEntity($partner, $data_update);
-                            if (empty($partner->errors())) {
-                                if (!$this->Partners->save($partner)) {
-                                    $chk = true;
-                                }
-                            }
-                        }
-                    }
-                    $device = $this->Devices->patchEntity($apt_key_check, $this->request->data);
-                    $device->type = Device::TB_NORMAR;
-                    if (isset($campaign_id) && $campaign_id == 1) {
-                        $device->campaign_group_id = '';
-                    }
-                    if (empty($device->errors())) {
-                        if (!$this->Devices->save($device)) {
-                            $chk = true;
-                        }
-                    }
-                    if ($flag_check_isexit_partner) {
-                        $flag_check_isexit_partner = 1;
-                    } else {
-                        $flag_check_isexit_partner = 2;
-                    }
-                    if (!$chk) {
-                        $conn->commit();
-                        if ($flag_normal) {
-                            $this->redirect([
-                                'plugin' => null,
-                                'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner).'/'.$flag_return
-                            ]);
                         } else {
-                            $this->redirect([
-                                'plugin' => null,
-                                'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner).'/'.$flag_return
-                            ]);
+                            $conn->rollback();
                         }
-                    } else {
-                        $conn->rollback();
                     }
                 }
             } else {

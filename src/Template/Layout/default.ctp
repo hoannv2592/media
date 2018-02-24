@@ -214,6 +214,16 @@ $cakeDescription = 'Media ';
                         <span>Danh sách khách hàng</span>
                     </a>
                 </li>
+                <?php if ($controller == 'messages') { ?>
+            <li class="left_menu active ">
+            <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "messages", "action" => "index"]); ?>">
+                        <i class="material-icons">history</i>
+                        <span>Quản lý SMS</span>
+                    </a>
+                </li>
                 <?php if ($controller == 'ServiceGroups') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
@@ -224,16 +234,6 @@ $cakeDescription = 'Media ';
                         <span>Chăm sóc khách hàng</span>
                     </a>
                 </li>
-<!--                --><?php //if ($controller == 'AdgroupChangeHistories') { ?>
-<!--            <li class="left_menu active ">-->
-<!--            --><?php //} else { ?>
-<!--                <li class="left_menu">-->
-<!--                    --><?php //} ?>
-<!--                    <a href="--><?php //echo $this->Url->build(["controller" => "AdgroupChangeHistories", "action" => "index"]); ?><!--">-->
-<!--                        <i class="material-icons">history</i>-->
-<!--                        <span>History nhóm thiết bị</span>-->
-<!--                    </a>-->
-<!--                </li>-->
                 <?php if ($controller == 'Landingpages') { ?>
             <li class="left_menu active ">
             <?php } else { ?>

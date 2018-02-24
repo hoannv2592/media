@@ -90,7 +90,6 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     -o-background-size: cover;
                     background-size: cover;
                     ">
-
                 </div>
             <?php }
         }?>
