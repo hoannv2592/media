@@ -4,18 +4,17 @@ namespace App\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Message Entity
+ * AdMessage Entity
  *
  * @property int $id
- * @property string $client_mac
- * @property string $phone
- * @property int $options
- * @property int $delete_flag
- * @property int $confirm
+ * @property string $button_backgroud
+ * @property string $button_popup
+ * @property string $backgroud
+ * @property string $options
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
  */
-class Message extends Entity
+class AdMessage extends Entity
 {
 
     /**
@@ -31,14 +30,4 @@ class Message extends Entity
         '*' => true,
         'id' => false
     ];
-
-    const ROLE_ONE = 1;
-    const ROLE_TOW = 2;
-    const ROLE_THREE = 3;
-
-    public static $opption = array(
-        Message::ROLE_ONE => '1 Lựa chọn',
-        Message::ROLE_TOW => '2 Lựa chọn',
-        Message::ROLE_THREE => '3 Lựa chọn'
-    );
 }

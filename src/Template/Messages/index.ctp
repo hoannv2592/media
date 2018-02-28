@@ -25,7 +25,14 @@
                             </li>
                         </ul>
                     </div>
-                    <div class="body">
+                    <div class="body"><div class="button-demo m-b-10">
+                            <?php
+                            if (isset($id_message) && $id_message != '') { ?>
+                                <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Messages', 'action' => 'detail_message/'.$id_message]) ?>">Xem cài đặt màn hình sms</a>
+                            <?php } else {?>
+                                <a class="btn btn-primary waves-effect" href="<?php echo $this->Url->build(['controller' => 'Messages', 'action' => 'add_message']) ?>">Cài đặt màn hình sms</a>
+                            <?php } ?>
+                        </div>
                         <div class="table-responsive">
                             <table cellpadding="0" cellspacing="0" class="table table-bordered table-striped table-hover">
                                 <thead>
@@ -33,7 +40,6 @@
                                     <th scope="col" style="text-align: center"><?= $this->Paginator->sort('id') ?></th>
                                     <th scope="col"><?= $this->Paginator->sort('client_mac') ?></th>
                                     <th scope="col"><?= $this->Paginator->sort('phone') ?></th>
-                                    <th scope="col"><?= $this->Paginator->sort('options') ?></th>
                                     <th scope="col"><?= $this->Paginator->sort('confirm') ?></th>
                                     <th scope="col"><?= $this->Paginator->sort('created') ?></th>
                                 </tr>
@@ -44,7 +50,6 @@
                                         <td style="text-align: center"><?= ($message->id) ?></td>
                                         <td><?= h($message->client_mac) ?></td>
                                         <td><?= h($message->phone) ?></td>
-                                        <td><?= $this->Number->format($message->options) ?></td>
                                         <td><?= $this->Number->format($message->confirm) ?></td>
                                         <td><?php echo date('d/m/Y', strtotime($message->created)); ?></td>
                                     </tr>

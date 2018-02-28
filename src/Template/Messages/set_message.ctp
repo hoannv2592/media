@@ -76,7 +76,13 @@ $this->layout = 'message';
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
                     <div class="top-big-link">
-                        <a class="btn btn-link-1 launch-modal" href="#" data-modal-id="modal-register">Chọn dịch vụ</a>
+                        <a class="btn btn-link-1 launch-modal" href="#" data-modal-id="modal-register"><?php
+                            if (isset($ad_message['button_backgroud']) && $ad_message['button_backgroud'] != '') {
+                                echo $ad_message['button_backgroud'];
+                            } else {
+                                echo 'Lựa chọn dịch vụ';
+                            }?>
+                        </a>
                     </div>
                 </div>
             </div>
@@ -93,7 +99,14 @@ $this->layout = 'message';
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <h3 class="modal-title" id="modal-register-label">Lựa chọn phương thức thanh toán</h3>
+                <h3 class="modal-title" id="modal-register-label">
+                    <?php
+                    if (isset($ad_message['title_popup']) && $ad_message['title_popup'] != '') {
+                        echo $ad_message['title_popup'];
+                    } else {
+                        echo 'Lựa chọn phương thức thanh toán';
+                    }?>
+                    </h3>
             </div>
             <div class="modal-body">
                 <div class="example">
@@ -102,17 +115,38 @@ $this->layout = 'message';
                         'url' => ['controller' => 'Messages', 'action' => 'setMessage'],
                         'id' => 'uploadForm'
                     ]); ?>
-                    <div>
-                        <input id="radio1" type="radio" name="option" value="1" checked="checked"><label for="radio1"><span><span></span></span>Option 1</label>
-                    </div>
-                    <div>
-                        <input id="radio2" type="radio" name="option" value="2"><label for="radio2"><span><span></span></span>Option 2</label>
-                    </div>
-                    <div>
-                        <input id="radio3" type="radio" name="option" value="3"><label for="radio3"><span><span></span></span>Option 3</label>
-                    </div>
+                    <?php
+                        if ($ad_message['options'] == 1) { ?>
+                            <div>
+                                <input id="radio1" type="radio" name="options" value="1" checked="checked"><label for="radio1"><span><span></span></span>Option 1</label>
+                            </div>
+                        <?php } elseif ($ad_message['options'] == 2) { ?>
+                            <div>
+                                <input id="radio1" type="radio" name="options" value="1" checked="checked"><label for="radio1"><span><span></span></span>Option 1</label>
+                            </div>
+                            <div>
+                                <input id="radio2" type="radio" name="options" value="2"><label for="radio2"><span><span></span></span>Option 2</label>
+                            </div>
+                        <?php } else { ?>
+                            <div>
+                                <input id="radio1" type="radio" name="options" value="1" checked="checked"><label for="radio1"><span><span></span></span>Option 1</label>
+                            </div>
+                            <div>
+                                <input id="radio2" type="radio" name="options" value="2"><label for="radio2"><span><span></span></span>Option 2</label>
+                            </div>
+                            <div>
+                                <input id="radio3" type="radio" name="options" value="3"><label for="radio3"><span><span></span></span>Option 3</label>
+                            </div>
+                        <?php }
+                    ?>
                 </div>
-                <button type="submit" class="btn btn-success" style= "cursor:pointer">Submit</button>
+                <button type="submit" class="btn btn-success" style= "cursor:pointer"><?php
+                    if (isset($ad_message['button_popup']) && $ad_message['button_popup'] != '') {
+                        echo $ad_message['button_popup'];
+                    } else {
+                        echo 'Submit';
+                    }?>
+                    </button>
                 <?php echo $this->Form->end(); ?>
             </div>
 
