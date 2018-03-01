@@ -44,6 +44,9 @@ class DeviceFilesTable extends Table
             'foreignKey' => 'device_id',
             'joinType' => 'INNER'
         ]);
+        $this->belongsTo('Devices', [
+            'foreignKey' => 'device_id'
+        ]);
     }
 
     /**

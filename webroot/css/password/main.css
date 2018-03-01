@@ -763,8 +763,8 @@
 		transition: border-color 0.2s ease, background-color 0.2s ease;
 		background-color: transparent;
 		border-radius: 6px;
-		border: none;
-		border: solid 2px rgba(255, 255, 255, 0.35);
+		/*border: none;*/
+		border: 1px solid #1cb495;
 		color: inherit;
 		display: block;
 		outline: 0;
