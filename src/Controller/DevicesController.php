@@ -371,8 +371,6 @@ class DevicesController extends AppController
 
                 unset($this->request->data['file_upload']);
                 unset($this->request->data['device_id']);
-//                $device->path = implode(',', $path);
-//                $device->image_backgroup = implode(',', $image_up_load);
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 $device_id = $this->request->getData('device_id');
                 if (empty($device->errors())) {
@@ -553,9 +551,11 @@ class DevicesController extends AppController
                 $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
                 // check get money
                 $message = $this->Messages->find()->where(['client_mac' => $client_mac, 'confirm' => 1])->first();
+
                 if (empty($message)) {
                     return $this->redirect(['controller' => 'Messages', 'action' => 'setMessage']);
                 } else {
+
                     if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
                         $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
                         $conn = ConnectionManager::get('default');
