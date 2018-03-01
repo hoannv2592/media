@@ -140,14 +140,13 @@ $this->layout = 'message';
                         <?php }
                     ?>
                 </div>
-                <button type="submit" class="btn btn-success" style= "cursor:pointer"><?php
-                    if (isset($ad_message['button_popup']) && $ad_message['button_popup'] != '') {
-                        echo $ad_message['button_popup'];
-                    } else {
-                        echo 'Submit';
-                    }?>
-                    </button>
-                <?php echo $this->Form->end(); ?>
+                <?php echo $this->Form->end();
+                if (isset($ad_message['button_popup']) && $ad_message['button_popup'] != '') {
+                    $button = $ad_message['button_popup'];
+                } else {
+                    $button = 'Submit';
+                }?>
+                <button type="submit" class="btn btn-success" id="submit_data" style= "cursor:pointer" onclick="window.location = 'sms:9029;?&body=VNM';"><?php echo $button;?></button>
             </div>
 
         </div>
@@ -167,6 +166,9 @@ $this->layout = 'message';
 
 </html>
 <script>
+    $('#submit_data').click(function () {
+
+    });
     $('.carousel').carousel();
     $(window).on('load',function(){
         $('#modal-register').modal('show');

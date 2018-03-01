@@ -77,6 +77,14 @@ Router::scope('/', function (RouteBuilder $routes) {
         )
     );
 
+    $routes->connect('/get_product/:phone', array('controller' => 'Messages', 'action' => 'getDataswitchboard'),
+        array(
+//            'pass' => array('id', 'flag_id'),
+//            'id' => '[0-9a-z:A-Z%]+',
+//            'flag_id' => '[0-9]+'
+        )
+    );
+
     $routes->connect('/back_end_check/:id/:flag_id', array('controller' => 'Reports', 'action' => 'checkAddNewDevice'),
         array(
 //            'pass' => array('id', 'flag_id'),

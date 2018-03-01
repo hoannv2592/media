@@ -12,6 +12,7 @@ use Cake\Utility\Hash;
  * @property \App\Model\Table\MessagesTable $Messages
  * @property \App\Model\Table\PartnersTable $Partners
  * @property \App\Model\Table\AdMessagesTable $AdMessages
+ * @property \App\Model\Table\DeviceFilesTable $DeviceFiles
  * @property \App\Model\Table\MessageFilesTable $MessageFiles
  * @property  \App\Controller\Component\UploadImageComponent $UploadImage
  */
@@ -28,15 +29,17 @@ class MessagesController extends AppController
         $this->loadComponent('UploadImage');
         $this->loadModel('AdMessages');
         $this->loadModel('MessageFiles');
+        $this->loadModel('DeviceFiles');
+        $this->loadModel('Devices');
     }
 
-    public function setMessage()
+    /**
+     * @param null $client_mac
+     */
+    public function setMessage($client_mac = null)
     {
         $ad_message = $this->AdMessages->find()->first();
         $this->set(compact('ad_message'));
-        if ($this->request->is('post')) {
-            pr($this->request->data); die;
-        }
     }
 
     /**
@@ -285,6 +288,102 @@ class MessagesController extends AppController
             } else {
                 die(json_encode(false));
             }
+        }
+    }
+
+    /**
+     * getDataswitchboard method
+     *
+     * @return \Cake\Http\Response json
+     */
+    public function getDataswitchboard($phone_number = null)
+    {
+        $this->autoRender = false;
+        $phone_number = $this->slug($url->params['phone']);
+        $this->request->allowMethod(['post', 'get', 'put', 'ajax', 'delete']);
+        $current_date = date('d-m-Y');
+        $month = strtotime(date("d-m-Y", strtotime($current_date)) . "+ 15 days");
+        $expired_date = strftime("%d-%m-%Y", $month);
+        $code = $this->radomCode();
+        if ($phone_number) {
+            $save_message = array(
+                'expired_date' => $expired_date,
+                'phone' => $phone_number,
+                'code' => $code,
+                'confirm' => 1
+            );
+            $message = $this->Messages->newEntity();
+            $message = $this->Messages->patchEntity($message, $save_message);
+            if ($this->Messages->save($message)) {
+                $json = array(
+                    'status' => 1,
+                    'sms' => 'Ma code dang nhap cua ban la : '. $code,
+                    'type' => '1'
+                );
+            } else {
+                $json = array(
+                    'status' => 0,
+                    'sms' => '',
+                    'type' => 0
+                );
+            }
+        } else {
+            $json = array(
+                'status' => 0,
+                'sms' => '',
+                'type' => 0
+            );
+        }
+
+        return json_encode($json);
+    }
+
+    /**
+     * radomCode method
+     *
+     * @return string
+     */
+    public function radomCode()
+    {
+        $length = 5;
+        $strRandom = "";
+        $sum = 0;
+        $chars = "0123456789";
+        $size = strlen($chars);
+        for ($j = 0; $j < $length; $j++) {
+            $rdcheck = $chars[rand(0, $size - 1)];
+            $strRandom .= $rdcheck;
+            $sum += $rdcheck;
+        }
+        $number_add = substr($sum, -1, 1);
+        if($number_add == 0){
+            $strRandom = $strRandom.$number_add;
+        }else{
+            $number_add = 10 - substr($sum, -1, 1);
+            $strRandom = $strRandom.$number_add;
+        }
+        return $strRandom;
+    }
+
+    public function messageAdv($device_id = null)
+    {
+        if ($device_id) {
+            $infor_devices = $this->Devices->get($device_id);
+            $logo = $this->DeviceFiles->find()
+                ->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])
+                ->select([ 'id','device_id','path'])
+                ->combine('id', 'path')->toArray();
+            $back_group = $this->DeviceFiles->find()
+                ->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])
+                ->select([ 'id','device_id', 'path'])
+                ->combine('id', 'path')->toArray();
+            $back_group = implode(',', $back_group);
+            $logo = implode(',', $logo);
+            $infor_devices->path = $back_group;
+            $infor_devices->path_logo = $logo;
+            $this->set(compact('infor_devices'));
+        } else {
+            return $this->redirect(['controller' => 'Devices', 'action' => 'index']);
         }
     }
 }

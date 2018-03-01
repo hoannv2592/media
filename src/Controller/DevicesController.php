@@ -550,12 +550,15 @@ class DevicesController extends AppController
                 $auth_target = isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '';
                 $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
                 // check get money
-                $message = $this->Messages->find()->where(['client_mac' => $client_mac, 'confirm' => 1])->first();
+                if ($apt_key_check->type_device == 2) {
+                    $message = $this->Messages->find()->where(['confirm' => 1])->first();
+                    if (empty($message)) {
 
-                if (empty($message)) {
-                    return $this->redirect(['controller' => 'Messages', 'action' => 'setMessage']);
+                        return $this->redirect(['controller' => 'Messages', 'action' => 'setMessage/']);
+                    } else {
+                        return $this->redirect(['controller' => 'Messages', 'action' => 'messageAdv/'.$id_device]);
+                    }
                 } else {
-
                     if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
                         $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
                         $conn = ConnectionManager::get('default');
