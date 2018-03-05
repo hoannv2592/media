@@ -99,9 +99,9 @@ class DevicesController extends AppController
                 'order' => ['Devices.id' => 'DESC']
             ])->toArray();
         }
-        $devices = $this->Devices->find()->where(['auth_target !=' => ''])->combine('id', 'auth_target')->toArray();
-        $url_buil = URL_LOCAL.'Devices/adv';
-        $this->getAuth('http://172.16.99.1:2050/nodogsplash_auth/?redir=http%3A%2F%2Fgoogle.com.vn&tok=58535c26', $url_buil);
+//        $devices = $this->Devices->find()->where(['auth_target !=' => ''])->combine('id', 'auth_target')->toArray();
+//        $url_buil = URL_LOCAL.'Devices/adv';
+//        $this->getAuth('http://172.16.99.1:2050/nodogsplash_auth/?redir=http%3A%2F%2Fgoogle.com.vn&tok=58535c26', $url_buil);
         $result = Hash::combine($devices, '{n}.id', '{n}.adgroup_id');
         $Adgroups = array();
         if (!empty($result)) {
@@ -338,6 +338,41 @@ class DevicesController extends AppController
             } else {
                 unset($this->request->data['logo_image']);
             }
+            if (!empty($this->request->data['image_adv'][0]['error'] != 4)) {
+                // upload the file to the server
+                $new_arr = array();
+                $list_file = $this->request->getData('image_adv');
+                foreach ($list_file as $k => $vl) {
+                    $new_arr[]['file'] = $vl;
+                }
+                $fileOK = array();
+                foreach ($new_arr as $k => $vl) {
+                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                }
+                $result = Hash::extract($fileOK, '{n}.urls');
+                $path = call_user_func_array('array_merge', $result);
+                $image_up_load = Hash::extract($list_file, '{n}.name');
+
+                foreach ($image_up_load as $k => $vl) {
+                    $data_file[] = array(
+                        'device_id' => $device_id,
+                        'path' => $path[$k],
+                        'name' => $vl,
+                        'active_flag' => 0,
+                        'type' => 3
+                    );
+                }
+                foreach ($data_file as $k => $item) {
+                    $new_back_group = $this->DeviceFiles->newEntity();
+                    $new_back_group = $this->DeviceFiles->patchEntity($new_back_group, $item);
+                    if (!$this->DeviceFiles->save($new_back_group)) {
+                        $conn->rollback();
+                    }
+                }
+                unset($this->request->data['image_adv']);
+            } else {
+                unset($this->request->data['image_adv']);
+            }
             if (!empty($this->request->data['file_upload'][0]['error'] != 4)) {
                 // upload the file to the server
                 $new_arr = array();
@@ -372,8 +407,6 @@ class DevicesController extends AppController
 
                 unset($this->request->data['file_upload']);
                 unset($this->request->data['device_id']);
-//                $device->path = implode(',', $path);
-//                $device->image_backgroup = implode(',', $image_up_load);
                 $device = $this->Devices->patchEntity($device, $this->request->data);
                 $device_id = $this->request->getData('device_id');
                 if (empty($device->errors())) {
@@ -412,7 +445,8 @@ class DevicesController extends AppController
         $apt = $this->radompassWord();
         $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select([ 'id','device_id', 'path'])->combine('id', 'path')->toArray();
         $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select([ 'id','device_id','path'])->combine('id', 'path')->toArray();
-        $this->set(compact('logo','back_group','device', 'device_id', 'user_id', 'apt'));
+        $adv = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 3, 'active_flag !=' => 1])->select([ 'id','device_id','path'])->combine('id', 'path')->toArray();
+        $this->set(compact('logo','back_group','device', 'device_id', 'user_id', 'apt', 'adv'));
     }
 
     /**
@@ -445,6 +479,14 @@ class DevicesController extends AppController
             $infor_devices->path = $back_group;
             $infor_devices->path_logo = $logo;
             if (!empty($infor_devices)) {
+                $apt = $infor_devices->apt_key;
+                $url_buil = URL.'Devices/adv/'.$apt;
+                if ($infor_devices->type_device == 1) {
+                    $auth = $infor_devices->auth_target;
+                    $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
+                } else {
+                    $infor_devices->link_orig = $url_buil;
+                }
                 $vouchers = $this->CampaignGroups->find()
                     ->where(['delete_flag !=' => DELETED])->combine('id', 'device_id')
                     ->toArray();
@@ -1437,6 +1479,41 @@ class DevicesController extends AppController
             } else {
                 unset($this->request->data['logo_image']);
             }
+            if (!empty($this->request->data['image_adv'][0]['error'] != 4)) {
+                // upload the file to the server
+                $new_arr = array();
+                $list_file = $this->request->getData('image_adv');
+                foreach ($list_file as $k => $vl) {
+                    $new_arr[]['file'] = $vl;
+                }
+                $fileOK = array();
+                foreach ($new_arr as $k => $vl) {
+                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                }
+                $result = Hash::extract($fileOK, '{n}.urls');
+                $path = call_user_func_array('array_merge', $result);
+                $image_up_load = Hash::extract($list_file, '{n}.name');
+
+                foreach ($image_up_load as $k => $vl) {
+                    $data_file[] = array(
+                        'device_id' => $device_id,
+                        'path' => $path[$k],
+                        'name' => $vl,
+                        'active_flag' => 0,
+                        'type' => 3
+                    );
+                }
+                foreach ($data_file as $k => $item) {
+                    $new_back_group = $this->DeviceFiles->newEntity();
+                    $new_back_group = $this->DeviceFiles->patchEntity($new_back_group, $item);
+                    if (!$this->DeviceFiles->save($new_back_group)) {
+                        $conn->rollback();
+                    }
+                }
+                unset($this->request->data['image_adv']);
+            } else {
+                unset($this->request->data['image_adv']);
+            }
             if (!empty($this->request->data['file_upload'][0]['error'] != 4)) {
                 // upload the file to the server
                 $new_arr = array();
@@ -1504,11 +1581,12 @@ class DevicesController extends AppController
         $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
         $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select([ 'id','device_id', 'path'])->combine('id', 'path')->toArray();
         $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select([ 'id','device_id','path'])->combine('id', 'path')->toArray();
+        $adv = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 3, 'active_flag !=' => 1])->select([ 'id','device_id','path'])->combine('id', 'path')->toArray();
         $filesRowNum = $files->count();
         $this->set('files', $files);
         $this->set('filesRowNum', $filesRowNum);
         $apt = $this->radompassWord();
-        $this->set(compact('logo', 'back_group','device', 'device_id', 'user_id', 'apt'));
+        $this->set(compact('logo', 'back_group','device', 'device_id', 'user_id', 'apt', 'adv'));
     }
 
     public function checkPassword()
@@ -1901,7 +1979,11 @@ class DevicesController extends AppController
 
     public function adv($id = null)
     {
-
+        $apt = explode('&tok=', $id);
+        $device = $this->Devices->find()->where(['apt_key' => $apt[0], 'delete_flag !=' => 1])->first()->toArray();
+        $device_id = $device['id'];
+        $adv = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 3, 'active_flag !=' => 1])->select([ 'id','device_id','path'])->combine('idx', 'path')->toArray();
+        $this->set(compact('device', 'adv'));
     }
 }
 

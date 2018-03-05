@@ -125,6 +125,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 </form>
                 <form id="signup_form_mirkotic" method="post" action="<?php echo $infor_devices->link_login_only; ?>">
                     <div class="form-group">
+                        <?php //pr($infor_devices);?>
                         <div class="form-line">
                             <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                             <input type="hidden" name="popup" value="true"/>

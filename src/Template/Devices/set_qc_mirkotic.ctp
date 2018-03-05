@@ -91,7 +91,33 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     ?>
                                 </div>
                             </div>
-
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped dataTable table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th width="20%">Ảnh quảng cáo</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php if (!empty($adv)) {
+                                        foreach ($adv as $k => $vl) { if ($vl != '') { ?>
+                                            <tr id="<?= $k;?>">
+                                                <td class="image"><embed src="<?= '/'.$vl ?>" width="330" height="180"><input type="hidden" name="file_backup[]" value="<?= '/'.$vl; ?>"></td>
+                                                <td><a href="javascript:void(0);"  id="delete_bak" onclick="delete_bak(<?php echo $k; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
+                                            </tr>
+                                        <?php }}?>
+                                    <?php } else { ?>
+                                        <tr><td colspan="4" class="image">No file(s) found......</td></tr>
+                                    <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <label class=""> Chọn ảnh quảng cáo</label>
+                            <div class="form-group">
+                                <div class="file-loading">
+                                    <input id="file-2" type="file" multiple class="file" name="image_adv[]" data-overwrite-initial="false" data-min-file-count="2">
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label> Ảnh logo </label>
                                 <div class="form-line">
@@ -295,6 +321,18 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             //     return filename.replace('(', '_').replace(']', '_');
             // }
         });
+
+    $("#file-2").fileinput({
+        theme: 'fa',
+        uploadUrl: '/Devices/upload', // you must set a valid URL here else you will get an error
+        allowedFileExtensions: ['jpg', 'png', 'gif'],
+        overwriteInitial: false,
+        maxFileSize: 10000,
+        maxFilesNum: 5,
+        maxFileCount: 2,
+        dropZoneEnabled : false,
+        showUpload : false
+    });
 </script>
 <script type="application/javascript">
 
@@ -339,19 +377,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             'apt_device_number': { required: 'Hãy nhập' }
         }
     });
-//    function filePreview(input) {
-//        if (input.files && input.files[0]) {
-//            var reader = new FileReader();
-//            reader.onload = function (e) {
-//                $('.image').html('');
-//                $('.image').append('<div class="text-center"><img src="'+e.target.result+'" width="450" height="300"/></div>');
-//            };
-//            reader.readAsDataURL(input.files[0]);
-//        }
-//    }
-//    $("#file").change(function () {
-//        filePreview(this);
-//    });
 
     $('.radio-col-grey').change(function () {
         if ($(this).is(':checked')){
