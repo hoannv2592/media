@@ -334,4 +334,14 @@ class AppController extends Controller
 
         return $flag_voucher;
     }
+
+    public function getAuth($auth_taget = null, $link = null)
+    {
+        $split = explode('?redir=', $auth_taget);
+        $all_info = $split[1];
+        $link_split = explode('&tok=', $all_info);
+        $link_split[0] = $link;
+        $url_buil = implode('&tok=', $link_split);
+        return $split[0].$url_buil;
+    }
 }

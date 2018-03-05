@@ -99,6 +99,9 @@ class DevicesController extends AppController
                 'order' => ['Devices.id' => 'DESC']
             ])->toArray();
         }
+        $devices = $this->Devices->find()->where(['auth_target !=' => ''])->combine('id', 'auth_target')->toArray();
+        $url_buil = URL_LOCAL.'Devices/adv';
+        $this->getAuth('http://172.16.99.1:2050/nodogsplash_auth/?redir=http%3A%2F%2Fgoogle.com.vn&tok=58535c26', $url_buil);
         $result = Hash::combine($devices, '{n}.id', '{n}.adgroup_id');
         $Adgroups = array();
         if (!empty($result)) {
@@ -1894,6 +1897,11 @@ class DevicesController extends AppController
     public function upload()
     {
         die(json_encode(true));
+    }
+
+    public function adv($id = null)
+    {
+
     }
 }
 

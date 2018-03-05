@@ -73,7 +73,20 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                         'class' => 'form-control',
                                         'id' => 'tile_name',
                                         'value' => $address,
-                                        'placeholder' => 'Điền địa chỉ nhóm thiết bị..'
+                                        'placeholder' => 'Điền địa chỉ đặt thiết bị..'
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php $link_adv = isset($device['link_adv']) ? $device['link_adv']:'' ?>
+                                    <?php echo $this->Form->control('link_adv', array(
+                                        'label' => 'Link quảng cáo',
+                                        'class' => 'form-control',
+                                        'id' => 'link_adv',
+                                        'value' => $link_adv,
+                                        'placeholder' => 'Link quảng cáo...'
                                     ));
                                     ?>
                                 </div>
