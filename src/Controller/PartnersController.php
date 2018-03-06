@@ -15,6 +15,23 @@ use Cake\Datasource\ConnectionManager;
 class PartnersController extends AppController
 {
 
+    public $paginate = [
+        'sortWhitelist' => [
+            'Partners.id',
+            'Partners.name',
+            'Partners.client_mac',
+            'Partners.phone',
+            'Partners.birthday',
+            'Partners.address',
+            'Partners.modified',
+            'Partners.num_clients_connect',
+            'Devices.name'
+        ],
+        'order' => [
+            'Partners.created' => 'desc',
+        ]
+    ];
+
     /**
      * Index method
      *
@@ -22,36 +39,19 @@ class PartnersController extends AppController
      */
     public function index()
     {
+        $limit_value = 10;
         $user = $this->Auth->user();
         if ($user['role'] == User::ROLE_ONE) {
-            $partners = $this->Partners->find('all', [
-                'contain' => [
-                    'Devices' => function ($q) {
-                        return $q
-                            ->select(['Devices.name'])
-                            ->where(['Devices.delete_flag !=' => 1])
-                            ->hydrate(false);
-                    }
-                ],
-                'order' => ['Partners.id' => 'DESC']
-            ])->toArray();
+            $conditions = array('Devices.delete_flag !=' => 1);
+            $query = $this->Partners->getOders($conditions);
         } else {
             $device = $this->Devices->find()->where(['user_id' => $user['id']])->select(['id'])->combine('id', 'id')->toArray();
-            $partners = array();
             if (!empty($device)) {
-                $partners = $this->Partners->find('all', [
-                    'contain' => [
-                        'Devices' => function ($q) {
-                            return $q
-                                ->select(['Devices.name'])
-                                ->where(['Devices.delete_flag !=' => 1])
-                                ->hydrate(false);
-                        }
-                    ],
-                    'conditions' => array('device_id IN' => $device)
-                ])->toArray();
+                $conditions = array('device_id IN' => $device, 'Devices.delete_flag !=' => 1);
+                $query = $this->Partners->getOders($conditions);
             }
         }
+        $partners = $this->paginate($query, ['limit' => $limit_value]);
         $this->set(compact('partners'));
         $this->set('_serialize', ['partners']);
     }
