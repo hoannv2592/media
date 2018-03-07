@@ -26,4 +26,5 @@ define('URL_DELETE_SERVICE', '/ServiceGroups/delete');
 define('URL_DIRECTORY', APP . 'data/download' . DS);
 define('UPLOADS_FILE_PATH', APP . 'data' . DS);
 define('URL', 'http://crm.wifimedia.vn/');
+define('URL_TEST', 'http://wifimarketing.wifimedia.vn/');
 define('URL_LOCAL', 'http://local.media/');
