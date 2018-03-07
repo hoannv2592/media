@@ -190,7 +190,7 @@ class AppController extends Controller
                     'viewQcVoucher',
                     'detailCampaig',
                     'addLogVoucher',
-                    'addLogPartner'
+                    'adv'
                 ]);
                 break;
         }
