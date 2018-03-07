@@ -344,4 +344,14 @@ class AppController extends Controller
         $url_buil = implode('&tok=', $link_split);
         return $split[0].'?'.$url_buil;
     }
+
+    public function array_random_assoc($arr, $num = 1) {
+        $keys = array_keys($arr);
+        shuffle($keys);
+        $r = array();
+        for ($i = 0; $i < $num; $i++) {
+            $r[$keys[$i]] = $arr[$keys[$i]];
+        }
+        return $r;
+    }
 }

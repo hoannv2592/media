@@ -41,12 +41,11 @@ $this->layout = 'landing';
     <link rel="apple-touch-icon-precomposed" href="/assets/ico/apple-touch-icon-57-precomposed.png">
 </head>
 
-    <?php if (count($adv) > 1) {
-        foreach ($adv as $item) { ?>
-            <body background="<?php echo '/'.$item ?>">
-        <?php }
-    } else { ?>
-        <body >
+    <?php if (count($paths) > 1) {
+        $value = reset($paths); ?>
+            <body background="<?php echo '/'.$value ?>">
+    <?php } else { ?>
+        <body background="/img/1.jpg">
     <?php } ?>
 <!-- Content -->
 <div class="top-content">
@@ -55,7 +54,6 @@ $this->layout = 'landing';
         <div class="container">
             <div class="row">
                 <div class="col-sm-8 col-sm-offset-2 text">
-<!--                    <a class="logo" href="javascript:void (0);"></a>-->
                     <h1>Welcome to the Wi‑Fi network!</h1>
                     <div class="description">
                         <p>
@@ -74,27 +72,53 @@ $this->layout = 'landing';
 <!-- MODAL -->
 <div class="modal fade" id="modal-register" tabindex="-1" role="dialog" aria-labelledby="modal-register-label"
      aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
         <div class="modal-content">
-
-<!--            <div class="modal-header">-->
-<!--                <button type="button" class="close" data-dismiss="modal">-->
-<!--                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>-->
-<!--                </button>-->
-<!--                <h3 class="modal-title" id="modal-register-label">Sign up now</h3>-->
-<!--            </div>-->
-
             <div class="modal-body">
+                <div class="row">
                 <button type="button" class="close" data-dismiss="modal">
                     <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
                 </button>
-                <div class="example"><?php if (count($adv) > 1) { ?>
-                    <img src="<?php echo '/'. $adv[1]?>">
-                    <?php } else { ?>
-                        <img src="<?php echo '/'.$adv[0]?>">
-                    <?php } ?>
                 </div>
-                <a href="<?php echo $device['link_adv']?>" id="submit_adv" class="btn btn-success" >Click here to close</a>
+                    <div class="row">
+                <div class="example">
+                    <?php
+                    $value = reset($paths);
+                    $count = count($paths);
+                    if ($count >= 4) {
+                        foreach ($paths as $k => $path) {
+                            if ($path != $value) {?>
+                                <div class="col-md-4">
+                                    <a href="<?php echo $urls[$k];?>"><img src="<?php echo '/'.$path?>"></a>
+                                </div>
+                            <?php }
+                        }
+                    } else if ($count == 3 ) {
+                        foreach ($paths as $k => $path) {
+                            if ($path != $value) {?>
+                                <div class="col-md-6">
+                                    <a href="<?php echo $urls[$k];?>"><img src="<?php echo '/'.$path?>"></a>
+                                </div>
+                            <?php }
+                        }
+                    } else if ($count == 2) {
+                        foreach ($paths as $k => $path) {
+                            if ($path != $value) {?>
+                                <div class="col-md-12">
+                                    <a href="<?php echo $urls[$k];?>"><img src="<?php echo '/'.$path?>"></a>
+                                </div>
+                            <?php }
+                        } ?>
+                    <?php } else {
+                    foreach ($paths as $k => $path) { ?>
+                            <div class="col-md-12">
+                                <a href="<?php echo $urls[$k];?>"><img src="<?php echo '/'.$path?>"></a>
+                            </div>
+                        <?php }
+                    }  ?>
+                    </div>
+                </div>
+<!--                <a href="--><?php //echo $device['link_adv']?><!--" id="submit_adv" class="btn btn-success" >Click here to close</a>-->
             </div>
 
         </div>
@@ -121,3 +145,11 @@ $this->layout = 'landing';
     });
 
 </script>
+<style>
+    .example [class^="col-"] {
+        padding: 10px 15px;
+        margin-bottom: 10px;
+         background-color: transparent !important;
+         border-right: none !important;
+    }
+</style>
