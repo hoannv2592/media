@@ -342,7 +342,7 @@ class AppController extends Controller
         $link_split = explode('&tok=', $all_info);
         $link_split[0] = $link;
         $url_buil = implode('&tok=', $link_split);
-        return $split[0].'?'.$url_buil;
+        return $split[0].'?redir='.$url_buil;
     }
 
     public function array_random_assoc($arr, $num = 1) {

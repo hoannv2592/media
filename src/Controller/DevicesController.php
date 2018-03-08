@@ -1688,7 +1688,16 @@ class DevicesController extends AppController
                 return $this->redirect(['action' => 'index']);
             }
             $infor_devices = $this->Devices->get($device_id);
+
             if (!empty($infor_devices)) {
+                $apt = $infor_devices->apt_key;
+                $url_buil = URL_TEST.'Devices/adv/'.$apt;
+                if ($infor_devices->type_device == 1) {
+                    $auth = $infor_devices->auth_target;
+                    $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
+                } else {
+                    $infor_devices->link_orig = $url_buil;
+                }
                 if (isset($infor_devices->campaign_group_id) && $infor_devices->campaign_group_id != '') {
                     $device_campaign = $this->CampaignGroups->find()
                         ->where(['id' => $infor_devices->campaign_group_id, 'delete_flag !=' => DELETED])

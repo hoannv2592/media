@@ -297,7 +297,7 @@ $title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_
     }
     $('.carousel').carousel();
 
-    var url = "<?php echo $infor_devices->auth_target?>";
+    var url = "<?php echo $infor_devices->auth_target;?>";
     $('#register_form').validate({
         rules: {
             'name': {
