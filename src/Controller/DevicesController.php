@@ -492,7 +492,7 @@ class DevicesController extends AppController
             if (!empty($infor_devices)) {
                 $apt = $infor_devices->apt_key;
                 $url_buil = URL_TEST.'Devices/adv/'.$apt;
-                if ($infor_devices->type_device == 1) {
+                if ($infor_devices->type == 1) {
                     $auth = $infor_devices->auth_target;
                     $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
                 } else {
@@ -1692,7 +1692,7 @@ class DevicesController extends AppController
             if (!empty($infor_devices)) {
                 $apt = $infor_devices->apt_key;
                 $url_buil = URL_TEST.'Devices/adv/'.$apt;
-                if ($infor_devices->type_device == 1) {
+                if ($infor_devices->type == 1) {
                     $auth = $infor_devices->auth_target;
                     $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
                 } else {
