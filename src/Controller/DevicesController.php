@@ -27,7 +27,11 @@ use Cake\Utility\Hash;
  * @property  \App\Controller\Component\UploadImageComponent $UploadImage
  * @property \App\Model\Table\PartnersTable $Partners
  * @property \App\Model\Table\DeviceFilesTable $DeviceFiles
+<<<<<<< HEAD
  * @property \App\Model\Table\MessagesTable $Messages
+=======
+ * @property \App\Model\Table\AdvsTable $Advs
+>>>>>>> free_advance
  */
 class DevicesController extends AppController
 {
@@ -41,16 +45,17 @@ class DevicesController extends AppController
         parent::initialize();
         // Include the FlashComponent
         $this->loadComponent('Flash');
-        $this->loadComponent('UploadImage');
+        $this->loadModel('Advs');
         $this->loadModel('Logs');
         $this->loadModel('Adgroup');
         $this->loadModel('Partners');
         $this->loadModel('LogAuths');
         $this->loadModel('Messages');
+        $this->loadComponent('UploadImage');
+        $this->loadModel('DeviceFiles');
         $this->loadModel('DeviceGroups');
         $this->loadModel('PartnerVouchers');
         $this->loadModel('PartnerVoucherLogs');
-        $this->loadModel('DeviceFiles');
     }
 
     /**
@@ -101,6 +106,9 @@ class DevicesController extends AppController
                 'order' => ['Devices.id' => 'DESC']
             ])->toArray();
         }
+//        $devices = $this->Devices->find()->where(['auth_target !=' => ''])->combine('id', 'auth_target')->toArray();
+//        $url_buil = URL_LOCAL.'Devices/adv';
+//        $this->getAuth('http://172.16.99.1:2050/nodogsplash_auth/?redir=http%3A%2F%2Fgoogle.com.vn&tok=58535c26', $url_buil);
         $result = Hash::combine($devices, '{n}.id', '{n}.adgroup_id');
         $Adgroups = array();
         if (!empty($result)) {
@@ -337,6 +345,50 @@ class DevicesController extends AppController
             } else {
                 unset($this->request->data['logo_image']);
             }
+            $image_adv = $this->request->getData('image_adv');
+            $list_file = array();
+            foreach ($image_adv as $k => $vl) {
+                if ($vl['error'] != 4) {
+                    $list_file[$k] = $vl;
+                }
+            }
+            $list_link = $this->request->getData('link_adv');
+            if (!empty($list_file)) {
+                // upload the file to the server
+                $new_arr = array();
+                //$list_file = $this->request->getData('image_adv');
+                foreach ($list_file as $k => $vl) {
+                    $new_arr[]['file'] = $vl;
+                }
+                $fileOK = array();
+                foreach ($new_arr as $k => $vl) {
+                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                }
+                $result = Hash::extract($fileOK, '{n}.urls');
+                $path = call_user_func_array('array_merge', $result);
+                $image_up_load = Hash::extract($list_file, '{n}.name');
+
+                foreach ($image_up_load as $k => $vl) {
+                    $data_file[] = array(
+                        'device_id' => $device_id,
+                        'path' => $path[$k],
+                        'name' => $vl,
+                        'url_link' => isset($list_link[$k]) ? $list_link[$k]:'',
+                        'active_flag' => 0
+                    );
+                }
+                foreach ($data_file as $k => $item) {
+                    $new_back_group = $this->Advs->newEntity();
+                    $new_back_group = $this->Advs->patchEntity($new_back_group, $item);
+                    if (!$this->Advs->save($new_back_group)) {
+                        $conn->rollback();
+                    }
+                }
+                unset($this->request->data['image_adv']);
+            } else {
+                unset($this->request->data['image_adv']);
+            }
+
             if (!empty($this->request->data['file_upload'][0]['error'] != 4)) {
                 // upload the file to the server
                 $new_arr = array();
@@ -409,7 +461,8 @@ class DevicesController extends AppController
         $apt = $this->radompassWord();
         $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select([ 'id','device_id', 'path'])->combine('id', 'path')->toArray();
         $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select([ 'id','device_id','path'])->combine('id', 'path')->toArray();
-        $this->set(compact('logo','back_group','device', 'device_id', 'user_id', 'apt'));
+        $adv = $this->Advs->find()->where(['device_id' => $device_id, 'active_flag !=' => 1])->select([ 'id','device_id','path', 'url_link'])->toArray();
+        $this->set(compact('logo','back_group','device', 'device_id', 'user_id', 'apt', 'adv'));
     }
 
     /**
@@ -442,6 +495,14 @@ class DevicesController extends AppController
             $infor_devices->path = $back_group;
             $infor_devices->path_logo = $logo;
             if (!empty($infor_devices)) {
+                $apt = $infor_devices->apt_key;
+                $url_buil = URL_TEST.'Devices/adv/'.$apt;
+                if ($infor_devices->type == 1) {
+                    $auth = $infor_devices->auth_target;
+                    $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
+                } else {
+                    $infor_devices->link_orig = $url_buil;
+                }
                 $vouchers = $this->CampaignGroups->find()
                     ->where(['delete_flag !=' => DELETED])->combine('id', 'device_id')
                     ->toArray();
@@ -553,7 +614,7 @@ class DevicesController extends AppController
                 // check get money
                 if ($apt_key_check->type_device == 2) {
                     $message = $this->Messages->find()->where(['device_id' => $id_device, 'confirm' => 1])->first();
-                    if (empty($message)) {
+                    if (!empty($message)) {
                         return $this->redirect(['controller' => 'Messages', 'action' => 'setMessage/'.$id_device.'/'.$client_mac]);
                     } else {
                         $code = isset($message['code'])? $message['code']:'';
@@ -1446,6 +1507,49 @@ class DevicesController extends AppController
             } else {
                 unset($this->request->data['logo_image']);
             }
+            $image_adv = $this->request->getData('image_adv');
+            $list_file = array();
+            foreach ($image_adv as $k => $vl) {
+                if ($vl['error'] != 4) {
+                    $list_file[$k] = $vl;
+                }
+            }
+            $list_link = $this->request->getData('link_adv');
+            if (!empty($list_file)) {
+                // upload the file to the server
+                $new_arr = array();
+                //$list_file = $this->request->getData('image_adv');
+                foreach ($list_file as $k => $vl) {
+                    $new_arr[]['file'] = $vl;
+                }
+                $fileOK = array();
+                foreach ($new_arr as $k => $vl) {
+                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                }
+                $result = Hash::extract($fileOK, '{n}.urls');
+                $path = call_user_func_array('array_merge', $result);
+                $image_up_load = Hash::extract($list_file, '{n}.name');
+
+                foreach ($image_up_load as $k => $vl) {
+                    $data_file[] = array(
+                        'device_id' => $device_id,
+                        'path' => $path[$k],
+                        'name' => $vl,
+                        'url_link' => isset($list_link[$k]) ? $list_link[$k]:'',
+                        'active_flag' => 0
+                    );
+                }
+                foreach ($data_file as $k => $item) {
+                    $new_back_group = $this->Advs->newEntity();
+                    $new_back_group = $this->Advs->patchEntity($new_back_group, $item);
+                    if (!$this->Advs->save($new_back_group)) {
+                        $conn->rollback();
+                    }
+                }
+                unset($this->request->data['image_adv']);
+            } else {
+                unset($this->request->data['image_adv']);
+            }
             if (!empty($this->request->data['file_upload'][0]['error'] != 4)) {
                 // upload the file to the server
                 $new_arr = array();
@@ -1513,11 +1617,12 @@ class DevicesController extends AppController
         $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
         $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select([ 'id','device_id', 'path'])->combine('id', 'path')->toArray();
         $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select([ 'id','device_id','path'])->combine('id', 'path')->toArray();
+        $adv = $this->Advs->find()->where(['device_id' => $device_id, 'active_flag !=' => 1])->select([ 'id','device_id','path', 'url_link'])->toArray();
         $filesRowNum = $files->count();
         $this->set('files', $files);
         $this->set('filesRowNum', $filesRowNum);
         $apt = $this->radompassWord();
-        $this->set(compact('logo', 'back_group','device', 'device_id', 'user_id', 'apt'));
+        $this->set(compact('logo', 'back_group','device', 'device_id', 'user_id', 'apt', 'adv'));
     }
 
     public function checkPassword()
@@ -1600,7 +1705,16 @@ class DevicesController extends AppController
                 return $this->redirect(['action' => 'index']);
             }
             $infor_devices = $this->Devices->get($device_id);
+
             if (!empty($infor_devices)) {
+                $apt = $infor_devices->apt_key;
+                $url_buil = URL_TEST.'Devices/adv/'.$apt;
+                if ($infor_devices->type == 1) {
+                    $auth = $infor_devices->auth_target;
+                    $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
+                } else {
+                    $infor_devices->link_orig = $url_buil;
+                }
                 if (isset($infor_devices->campaign_group_id) && $infor_devices->campaign_group_id != '') {
                     $device_campaign = $this->CampaignGroups->find()
                         ->where(['id' => $infor_devices->campaign_group_id, 'delete_flag !=' => DELETED])
@@ -1906,6 +2020,60 @@ class DevicesController extends AppController
     public function upload()
     {
         die(json_encode(true));
+    }
+
+    public function adv($id = null)
+    {
+        $apt = explode('&tok=', $id);
+        $device = $this->Devices->find()->where(['apt_key' => $apt[0], 'delete_flag !=' => 1])->first()->toArray();
+        $device_id = $device['id'];
+        $adv = $this->Advs->find()->where(['device_id' => $device_id, 'active_flag !=' => 1])->select([ 'id','device_id','path', 'url_link'])->toArray();
+        $paths = Hash::combine($adv, '{n}.id', '{n}.path');
+        $urls = Hash::combine($adv, '{n}.id', '{n}.url_link');
+        foreach ($paths as $k => $vl) {
+            $paths[$k] = $vl.'|___|'.$urls[$k];
+        }
+        $random = array();
+        if (count($paths) > 3) {
+            $random = $this->array_random_assoc($paths, 4);
+        }
+
+        if (!empty($random)) {
+            $paths = array();
+            $urls = array();
+            foreach ($random as $k => $vl) {
+                $vl = explode('|___|', $vl);
+                $urls[$k] = $vl[1];
+                $paths[$k] = $vl[0];
+            }
+        } else {
+            $paths = Hash::combine($adv, '{n}.id', '{n}.path');
+            $urls = Hash::combine($adv, '{n}.id', '{n}.url_link');
+        }
+        $this->set(compact('device', 'adv', 'urls', 'paths'));
+    }
+
+    public function deleteAdv()
+    {
+        $this->autoRender = false;
+        if ($this->request->data) {
+            $id_file =  $this->request->data['id'];
+            if (isset($id_file)) {
+                $backgroud = $this->Advs->get($id_file);
+                if (!empty($backgroud)) {
+                    $backgroud->active_flag = 1;
+                    if ($this->Advs->save($backgroud)) {
+                        die(json_encode(true));
+                    } else {
+                        die(json_encode(false));
+                    }
+                } else {
+                    die(json_encode(false));
+                }
+            } else {
+                die(json_encode(false));
+            }
+        }
     }
 }
 

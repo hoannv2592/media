@@ -166,6 +166,39 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     <div class="help-info">Title_campaign</div>
                                 </div>
                             </div>
+
+
+                            <div class="form-group">
+                                <label> Ảnh logo </label>
+                                <div class="form-line">
+                                    <input type="file" name="logo_image" id="file" value="" class="form-control"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped dataTable table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th width="20%">Ảnh logo</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php if (!empty($logo)) {
+                                            foreach ($logo as $k => $vl) { if ($vl != '') { ?>
+                                                <tr>
+                                                    <td class="image"><embed src="<?= '/'.$vl ?>" width="330" height="180"></td>
+                                                </tr>
+                                            <?php } }
+                                            ?>
+                                        <?php } else { ?>
+                                        <tr><td colspan="4" class="image">No file(s) found......</td>
+                                            <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
                             <div class="form-group">
                                 <div class="form-line">
                                     <?php
@@ -234,6 +267,57 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     <input id="file-1" type="file" multiple class="file" name="file_upload[]" data-overwrite-initial="false" data-min-file-count="2">
                                 </div>
                             </div>
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-striped dataTable table-hover">
+                                    <thead>
+                                    <tr>
+                                        <th width="20%">Ảnh quảng cáo</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <?php if (!empty($adv)) {
+                                        foreach ($adv as $k => $vl) {
+                                            if ($vl['path'] != '') { ?>
+                                                <tr id="<?= $vl['id'];?>">
+                                                    <td class="image"><embed src="<?= '/'.$vl['path'] ?>" width="330" height="180">
+                                                        <strong><?php echo $vl['url_link']?></strong>
+                                                        <input type="hidden" name="file_backup[]" value="<?= '/'.$vl['path']; ?>">
+                                                    </td>
+                                                    <td><a href="javascript:void(0);"  id="delete_bak" onclick="delete_adv(<?php echo $vl['id']; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
+                                                </tr>
+                                            <?php }}?>
+                                    <?php } else { ?>
+                                        <tr><td colspan="4" class="image">No file(s) found......</td></tr>
+                                    <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="border">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <?php echo $this->Form->control('link_adv[]', array(
+                                            'label' => 'Link quảng cáo',
+                                            'class' => 'form-control',
+                                            'id' => 'tile_name',
+                                            'placeholder' => 'Link...'
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <?php echo $this->Form->control('image_adv[]', array(
+                                            'type' => 'file',
+                                            'label' => ' Ảnh quảng cáo',
+                                            'class' => 'form-control',
+                                            'id' => 'file',
+                                        ));
+                                        ?>
+                                    </div>
+                                    <a href="javascript:void(0);"  id="delete_bak" class="btn btn-danger waves-effect plus-file" style="margin-top: 10px">Thêm mới</a>
+                                </div>
+                            </div>
+                            <div class="file-add"></div>
                         </div>
                         <?php echo $this->Form->input('device_id', [
                             'type' => 'hidden',
@@ -260,6 +344,51 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
     </div>
 </section>
 <script type="application/javascript">
+    var max_fields = 10; //maximum input boxes allowed
+    var wrapper_file = $("div.file-add"); //Fields wrapper
+    var add_button_file = $(".plus-file"); //Add button class
+    var y = 1; //initlal text box count
+    $(add_button_file).click(function (e) { //on add file button click
+        e.preventDefault();
+        if (y < max_fields) { //max input file allowed
+            $(wrapper_file).append('<div class="border_add">'+
+                '<div class="form-group">\n' +
+                '<div class="form-line">\n' +
+                '<div class="input text"><label for="tile_name">Link quảng cáo</label><input type="text" name="link_adv[]" class="form-control" id="tile_name" placeholder="Link..."></div></div></div>\n' +
+                '<div class="form-group " style="margin-bottom: 10px">\n' +
+                '<div class="form-line">\n' +
+                '<div class="input file">\n' +
+                '<label for="file"> Ảnh quảng cáo</label>\n' +
+                '<input type="file" name="image_adv[]" class="form-control" id="file"></div></div>\n' +
+                '</div>'+
+                '<a href="javascript:void(0);" id="delete_bak" class="btn btn-danger waves-effect remove_field_file" style="margin-top: 0;margin-bottom: 10px">Xóa link</a>\n' +
+                '</div>'
+            );
+            y++; //input file increment
+        }
+    }); //add input box
+    $(wrapper_file).on("click", ".remove_field_file", function (e) { //user click on remove
+        e.preventDefault();
+        $(this).parent('div').remove();
+        $(this).parent('div').remove();
+        y--;
+    });
+    function delete_adv(id) {
+        $.ajax({
+            type: 'POST',
+            url: '/Devices/delete_adv',
+            async: true,
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function (rp) {
+                if (rp == true) {
+                    $('tr#'+id).remove()
+                }
+            }
+        });
+    }
     function delete_bak(id) {
         $.ajax({
             type: 'POST',
@@ -291,6 +420,23 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         //     return filename.replace('(', '_').replace(']', '_');
         // }
     });
+
+    $("#file-2").fileinput({
+        theme: 'fa',
+        uploadUrl: '/Devices/upload', // you must set a valid URL here else you will get an error
+        allowedFileExtensions: ['jpg', 'png', 'gif'],
+        overwriteInitial: false,
+        maxFileSize: 10000,
+        maxFilesNum: 5,
+        maxFileCount: 10,
+        dropZoneEnabled : false,
+        showUpload : false,
+        //allowedFileTypes: ['image', 'video', 'flash'],
+        // slugCallback: function (filename) {
+        //     return filename.replace('(', '_').replace(']', '_');
+        // }
+    });
+
         function checkuploadfile() {
             var $fileUpload = $("input[type='file']");
             if (parseInt($fileUpload.get(0).files.length) > 5){
@@ -325,12 +471,16 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         rules: {
             'tile_name': { required: true },
             'langdingpage_id': { required: true },
-            'apt_device_number': { required: true }
+            'apt_device_number': { required: true },
+            'link_adv[]': { required: true },
+            'image_adv[]': { required: true },
         },
         messages:{
             'tile_name': { required: 'Hãy nhập' },
             'langdingpage_id': { required: 'Hãy nhập' },
-            'apt_device_number': { required: 'Hãy nhập' }
+            'apt_device_number': { required: 'Hãy nhập' },
+            'link_adv[]': { required: 'Hãy nhập' },
+            'image_adv[]': { required: 'Hãy nhập' }
         }
     });
 //    function filePreview(input) {

@@ -237,14 +237,14 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     <?php if (!empty($adv)) {
                                         foreach ($adv as $k => $vl) {
                                             if ($vl['path'] != '') { ?>
-                                                <tr id="<?= $vl['id'];?>">
-                                                    <td class="image"><embed src="<?= '/'.$vl['path'] ?>" width="330" height="180">
-                                                        <strong><?php echo $vl['url_link']?></strong>
-                                                        <input type="hidden" name="file_backup[]" value="<?= '/'.$vl['path']; ?>">
-                                                    </td>
-                                                    <td><a href="javascript:void(0);"  id="delete_bak" onclick="delete_adv(<?php echo $vl['id']; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
-                                                </tr>
-                                            <?php }}?>
+                                            <tr id="<?= $vl['id'];?>">
+                                                <td class="image"><embed src="<?= '/'.$vl['path'] ?>" width="330" height="180">
+                                                    <strong><?php echo $vl['url_link']?></strong>
+                                                    <input type="hidden" name="file_backup[]" value="<?= '/'.$vl['path']; ?>">
+                                                </td>
+                                                <td><a href="javascript:void(0);"  id="delete_bak" onclick="delete_adv(<?php echo $vl['id']; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
+                                            </tr>
+                                        <?php }}?>
                                     <?php } else { ?>
                                         <tr><td colspan="4" class="image">No file(s) found......</td></tr>
                                     <?php } ?>

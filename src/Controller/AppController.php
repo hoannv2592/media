@@ -190,7 +190,7 @@ class AppController extends Controller
                     'viewQcVoucher',
                     'detailCampaig',
                     'addLogVoucher',
-                    'addLogPartner'
+                    'adv'
                 ]);
                 break;
         }
@@ -333,5 +333,25 @@ class AppController extends Controller
         }
 
         return $flag_voucher;
+    }
+
+    public function getAuth($auth_taget = null, $link = null)
+    {
+        $split = explode('?redir=', $auth_taget);
+        $all_info = $split[1];
+        $link_split = explode('&tok=', $all_info);
+        $link_split[0] = $link;
+        $url_buil = implode('&tok=', $link_split);
+        return $split[0].'?redir='.$url_buil;
+    }
+
+    public function array_random_assoc($arr, $num = 1) {
+        $keys = array_keys($arr);
+        shuffle($keys);
+        $r = array();
+        for ($i = 0; $i < $num; $i++) {
+            $r[$keys[$i]] = $arr[$keys[$i]];
+        }
+        return $r;
     }
 }

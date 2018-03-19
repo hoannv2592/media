@@ -37,7 +37,7 @@ $cakeDescription = 'Media ';
 <?php
 $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
 $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
-$path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
+$path = isset($infor_devices->path) ? $infor_devices->path : '/images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
 $title_connect = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Nhận voucher';
@@ -125,6 +125,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 </form>
                 <form id="signup_form_mirkotic" method="post" action="<?php echo $infor_devices->link_login_only; ?>">
                     <div class="form-group">
+                        <?php //pr($infor_devices);?>
                         <div class="form-line">
                             <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                             <input type="hidden" name="popup" value="true"/>

@@ -36,10 +36,11 @@ class MessagesController extends AppController
     /**
      * @param null $client_mac
      */
-    public function setMessage($client_mac = null)
+    public function setMessage($id_device = null, $client_mac = null)
     {
         $ad_message = $this->AdMessages->find()->first();
-        $this->set(compact('ad_message'));
+        $code = '('.$client_mac.'/'.$id_device.')';
+        $this->set(compact('ad_message', 'client_mac', 'code'));
     }
 
     /**
@@ -383,6 +384,14 @@ class MessagesController extends AppController
             $logo = implode(',', $logo);
             $infor_devices->path = $back_group;
             $infor_devices->path_logo = $logo;
+            $apt = $infor_devices->apt_key;
+            $url_buil = URL_TEST.'Devices/adv/'.$apt;
+            if ($infor_devices->type == 1) {
+                $auth = $infor_devices->auth_target;
+                $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
+            } else {
+                $infor_devices->link_orig = $url_buil;
+            }
             $this->set(compact('infor_devices','code'));
         } else {
             return $this->redirect(['controller' => 'Devices', 'action' => 'index']);

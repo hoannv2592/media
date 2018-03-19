@@ -146,7 +146,7 @@ $this->layout = 'message';
                 } else {
                     $button = 'Submit';
                 }?>
-                <button type="submit" class="btn btn-success" id="submit_data" style= "cursor:pointer" onclick="window.location = 'sms:9029;?&body=VNM';"><?php echo $button;?></button>
+                <button type="submit" class="btn btn-success" id="submit_data" style= "cursor:pointer" onclick="window.location = 'sms:9029;?&body=VNM__<?= $code?>';"><?php echo $button;?></button>
             </div>
 
         </div>

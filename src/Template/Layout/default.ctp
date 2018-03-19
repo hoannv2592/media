@@ -126,14 +126,15 @@ $cakeDescription = 'Media ';
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"
                        aria-haspopup="true" aria-expanded="false">
-                        <?php echo $userData['email']; ?>
+                        <?php echo isset($userData['email']) ? $userData['email']: 'Demo'; ?>
                     </a>
+                    <?php $id = isset($userData['id']) ? $userData['id'] :'1'?>
                     <ul class="dropdown-menu pull-right">
                         <li>
-                            <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "change_password" . "/" . UrlUtil::_encodeUrl($userData['id'])]); ?>">Đổi
+                            <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "change_password" . "/" . UrlUtil::_encodeUrl($id)]); ?>">Đổi
                                 mật khẩu</a></li>
                         <li>
-                            <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user" . "/" . UrlUtil::_encodeUrl($userData['id'])]); ?>">Thông
+                            <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user" . "/" . UrlUtil::_encodeUrl($id)]); ?>">Thông
                                 tin acount</a></li>
                     </ul>
                 </li>

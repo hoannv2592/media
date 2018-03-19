@@ -39,8 +39,7 @@ input[type="text"]:-ms-input-placeholder, textarea:-ms-input-placeholder, textar
 input[type="text"]::-webkit-input-placeholder, textarea::-webkit-input-placeholder, textarea.form-control::-webkit-input-placeholder { color: #888; }
 
 
-
-button.btn {
+a#submit_adv,button.btn {
 	width: 100%;
 	height: 50px;
     margin: 0;
@@ -59,10 +58,11 @@ button.btn {
     -o-transition: all .3s; -moz-transition: all .3s; -webkit-transition: all .3s; -ms-transition: all .3s; transition: all .3s;
 }
 
-button.btn:hover { opacity: 0.6; color: #fff; }
+button.btn:hover,a#submit_adv:hover { opacity: 0.6; color: #fff; }
 
-button.btn:active { outline: 0; opacity: 0.6; color: #fff; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+button.btn:active,a#submit_adv:active { outline: 0; opacity: 0.6; color: #fff; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
 
-button.btn:focus { outline: 0; opacity: 0.6; background: #fd625e; color: #fff; }
+button.btn:focus, a#submit_adv:focus { outline: 0; opacity: 0.6; background: #fd625e; color: #fff; }
 
-button.btn:active:focus, button.btn.active:focus { outline: 0; opacity: 0.6; background: #fd625e; color: #fff; }
+button.btn:active:focus, button.btn.active:focus, a#submit_adv:active:focus { outline: 0; opacity: 0.6; background: #fd625e; color: #fff; }
+
