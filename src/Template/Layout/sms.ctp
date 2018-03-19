@@ -104,8 +104,8 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 <form id="signup_form_tplink" method="post" action="#">
                     <div class="form-group">
                         <div class="form-line">
-                            <input type="password" name="password" id="password" placeholder="Nhập mật khẩu" />
-                            <input type="hidden" name="password_check" id="password_check" value="<?php echo $apt_device_number;?>" />
+                            <input type="password" name="password" id="password" placeholder="Nhập mã code" />
+                            <input type="hidden" name="password_check" id="password_check" value="<?php echo $code;?>" />
                         </div>
                     </div><div class="form-group">
                         <div class="form-line">
@@ -126,10 +126,10 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <div class="form-line">
                             <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                             <input type="hidden" name="popup" value="true"/>
-                            <input type="password" name="password" id="password" placeholder="Nhập mật khẩu" />
+                            <input type="password" name="password" id="password" placeholder="Nhập mã code" />
                             <input style="display: none;" name="username" type="text" value="wifimedia"/>
                             <input style="display: none;" name="password" type="password" value="wifimedia"/>
-                            <input type="hidden" name="password_check" id="password_check" value="<?php echo $apt_device_number;?>" />
+                            <input type="hidden" name="password_check" id="password_check" value="<?php echo $code;?>" />
                         </div>
                     </div>
                     <div class="form-group">

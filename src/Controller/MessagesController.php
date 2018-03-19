@@ -296,7 +296,7 @@ class MessagesController extends AppController
      *
      * @return \Cake\Http\Response json
      */
-    public function getDataswitchboard($phone_number = null)
+    public function getDataswitchboard($phone_number = null, $device_id = null, $client_mac = null)
     {
         $this->autoRender = false;
         $phone_number = $this->slug($url->params['phone']);
@@ -307,10 +307,12 @@ class MessagesController extends AppController
         $code = $this->radomCode();
         if ($phone_number) {
             $save_message = array(
-                'expired_date' => $expired_date,
-                'phone' => $phone_number,
+                'confirm' => 1,
                 'code' => $code,
-                'confirm' => 1
+                'phone' => $phone_number,
+                'device_id' => $device_id,
+                'client_mac' => $client_mac,
+                'expired_date' => $expired_date,
             );
             $message = $this->Messages->newEntity();
             $message = $this->Messages->patchEntity($message, $save_message);
@@ -318,20 +320,20 @@ class MessagesController extends AppController
                 $json = array(
                     'status' => 1,
                     'sms' => 'Ma code dang nhap cua ban la : '. $code,
-                    'type' => '1'
+                    'confirm' => '1'
                 );
             } else {
                 $json = array(
                     'status' => 0,
                     'sms' => '',
-                    'type' => 0
+                    'confirm' => 0
                 );
             }
         } else {
             $json = array(
                 'status' => 0,
                 'sms' => '',
-                'type' => 0
+                'confirm' => 0
             );
         }
 
@@ -365,7 +367,7 @@ class MessagesController extends AppController
         return $strRandom;
     }
 
-    public function messageAdv($device_id = null)
+    public function messageAdv($device_id = null, $code = null)
     {
         if ($device_id) {
             $infor_devices = $this->Devices->get($device_id);
@@ -381,7 +383,7 @@ class MessagesController extends AppController
             $logo = implode(',', $logo);
             $infor_devices->path = $back_group;
             $infor_devices->path_logo = $logo;
-            $this->set(compact('infor_devices'));
+            $this->set(compact('infor_devices','code'));
         } else {
             return $this->redirect(['controller' => 'Devices', 'action' => 'index']);
         }

@@ -549,14 +549,15 @@ class DevicesController extends AppController
                 $chap_id = isset($this->request->data['chap_id']) ? $this->request->data['chap_id']:'';
                 $auth_target = isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '';
                 $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
+                $client_mac = '74:1b:b2:61:d9:16';
                 // check get money
                 if ($apt_key_check->type_device == 2) {
-                    $message = $this->Messages->find()->where(['confirm' => 1])->first();
+                    $message = $this->Messages->find()->where(['device_id' => $id_device, 'confirm' => 1])->first();
                     if (empty($message)) {
-
-                        return $this->redirect(['controller' => 'Messages', 'action' => 'setMessage/']);
+                        return $this->redirect(['controller' => 'Messages', 'action' => 'setMessage/'.$id_device.'/'.$client_mac]);
                     } else {
-                        return $this->redirect(['controller' => 'Messages', 'action' => 'messageAdv/'.$id_device]);
+                        $code = isset($message['code'])? $message['code']:'';
+                        return $this->redirect(['controller' => 'Messages', 'action' => 'messageAdv/'.$id_device.'/'. $code]);
                     }
                 } else {
                     if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
