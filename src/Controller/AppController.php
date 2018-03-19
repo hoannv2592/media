@@ -190,7 +190,8 @@ class AppController extends Controller
                     'viewQcVoucher',
                     'detailCampaig',
                     'addLogVoucher',
-                    'adv'
+                    'adv',
+                    'getDataswitchboard'
                 ]);
                 break;
         }

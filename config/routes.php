@@ -92,6 +92,14 @@ Router::scope('/', function (RouteBuilder $routes) {
 //            'flag_id' => '[0-9]+'
         )
     );
+
+    $routes->connect('/data_sms/:phone/:device_id/:client_mac', array('controller' => 'Messages', 'action' => 'getDataswitchboard'),
+        array(
+//            'pass' => array('id', 'flag_id'),
+//            'id' => '[0-9a-z:A-Z%]+',
+//            'flag_id' => '[0-9]+'
+        )
+    );
     $routes->connect('/random', array('controller' => 'Devices', 'action' => 'radom', 'plugin' => 'Api'));
 
     /**

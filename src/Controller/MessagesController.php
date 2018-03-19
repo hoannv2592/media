@@ -300,6 +300,7 @@ class MessagesController extends AppController
     public function getDataswitchboard($phone_number = null, $device_id = null, $client_mac = null)
     {
         $this->autoRender = false;
+        $url = $this->request->params;
         $phone_number = $this->slug($url->params['phone']);
         $this->request->allowMethod(['post', 'get', 'put', 'ajax', 'delete']);
         $current_date = date('d-m-Y');
