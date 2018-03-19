@@ -41,6 +41,7 @@
                                     <th scope="col"><?= $this->Paginator->sort('client_mac') ?></th>
                                     <th scope="col"><?= $this->Paginator->sort('phone') ?></th>
                                     <th scope="col"><?= $this->Paginator->sort('confirm') ?></th>
+                                    <th scope="col"><?= $this->Paginator->sort('expired_date') ?></th>
                                     <th scope="col"><?= $this->Paginator->sort('created') ?></th>
                                 </tr>
                                 </thead>
@@ -48,9 +49,10 @@
                                 <?php foreach ($messages as $message): ?>
                                     <tr>
                                         <td style="text-align: center"><?= ($message->id) ?></td>
-                                        <td><?= h($message->client_mac) ?></td>
-                                        <td><?= h($message->phone) ?></td>
+                                        <td><?= isset($message->client_mac)? h($message->client_mac):'' ?></td>
+                                        <td><?= isset($message->phone)? h($message->phone):'' ?></td>
                                         <td><?= $this->Number->format($message->confirm) ?></td>
+                                        <td><?php echo date('d/m/Y', strtotime($message->expired_date)); ?></td>
                                         <td><?php echo date('d/m/Y', strtotime($message->created)); ?></td>
                                     </tr>
                                 <?php endforeach; ?>

@@ -56,7 +56,7 @@ class MessagesController extends AppController
             $id_message = $admessage['id'];
         }
         $this->set(compact('id_message'));
-        $messages = $this->paginate($this->Partners,['limit' => 15, 'order' => ['id'=>'DESC']]);
+        $messages = $this->paginate($this->Messages,['limit' => 15, 'order' => ['id'=>'DESC']]);
 
         $this->set(compact('messages'));
         $this->set('_serialize', ['messages']);
