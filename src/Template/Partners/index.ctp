@@ -26,6 +26,91 @@
                         </ul>
                     </div>
                     <div class="body">
+                        <div class="demo-masked-input">
+                            <div class="row clearfix">
+                                <div class="col-md-6" style="margin-bottom: 0 !important;">
+                                    <div class="col-md-12">
+                                        <b>Tên khách hàng</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">account_circle</i>
+                                            </span>
+                                            <?php
+                                            echo $this->Form->create('Partners', array(
+                                                'id' => 'form_advanced_validation_x',
+                                                'type' => 'post',
+                                                'url' => array('controller' => 'Partners', 'action' => 'index'),
+                                                'inputDefaults' => array(
+                                                    'label' => false,
+                                                    'div' => false,
+                                                ),
+                                                'autocomplete' => "off"
+                                            ));
+                                            ?>
+                                            <div class="form-line">
+                                                <?php
+                                                $name = isset($conditions['name']) ? ($conditions['name']):'';
+                                                echo $this->Form->control('name', array(
+                                                    'label' => false,
+                                                    'class' => 'form-control',
+                                                    'value' => $name,
+                                                    'required' => false,
+                                                    'id' => 'name'
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <b>Số điện thoại di động</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">phone_iphone</i>
+                                            </span>
+                                            <div class="form-line">
+                                                <?php
+                                                $phone = isset($conditions['phone']) ? ($conditions['phone']):'';
+                                                echo $this->Form->control('phone', array(
+                                                    'label' => false,
+                                                    'class' => 'form-control mobile-phone-number',
+                                                    'value' => $phone,
+                                                    'required' => false,
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <b>Khoảng thời gian</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">date_range</i>
+                                            </span>
+                                            <div class="form-line">
+                                                <?php
+                                                $birthday = isset($conditions['date']) ? ($conditions['date']):'';
+                                                echo $this->Form->control('date', array(
+                                                    'label' => false,
+                                                    'class' => 'form-control datetime',
+                                                    'value' => $birthday,
+                                                    'required' => false,
+                                                    'id' => 'config-demo',
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class=""><button class="btn btn-primary waves-effect" id="submit" type="submit">Tìm kiếm</button> </div>
+                                    </div>
+                                    <?php echo $this->Form->end(); ?>
+                                </div>
+                            </div>
+                            <div class="col-md-6" style="margin-bottom: 0 !important;">
+
+                            </div>
+                            <div class="row"></div>
+                        </div>
                         <?php if (!empty($partners)) { ?>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable">
@@ -119,4 +204,24 @@
         background-color: #fff !important;
         border-color: #ddd;
     }
+    .desc {
+        float: right;
+    }
+    th>a {
+        float: right;
+    }
 </style>
+<script type="application/javascript">
+    $('#config-demo').dateRangePicker({
+        language:'vi',
+        showShortcuts: true,
+        shortcuts :
+            {
+                'next-days': [3,5,7],
+                'next': ['week','month','year']
+            },
+
+        format: 'DD/MM/YYYY',
+        separator: ' - '
+    });
+</script>

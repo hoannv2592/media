@@ -4,6 +4,8 @@ namespace App\Controller;
 use App\Controller\AppController;
 use App\Model\Entity\User;
 use Cake\Datasource\ConnectionManager;
+use Cake\Core\App;
+use DateTime;
 
 
 /**
@@ -40,6 +42,18 @@ class PartnersController extends AppController
     public function index()
     {
         $limit_value = 10;
+        if ($this->request->is('post')) {
+            $data_post = $this->request->getData();
+            $conditions = array();
+            if (isset($data_post['date']) && $data_post['date'] != '') {
+                $date = explode('-', $data_post['date']);
+//                $date_form = DateTime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
+//                $date_to = DateTime::createFromFormat('d/m/Y', $date[1])->format('Y-m-d');
+//                $date_form = DateTime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
+                $date_form = date('Y-m-d', strtotime($date[0]));
+            pr($date[0]); die;
+            }
+        }
         $user = $this->Auth->user();
         if ($user['role'] == User::ROLE_ONE) {
             $conditions = array('Devices.delete_flag !=' => 1);
