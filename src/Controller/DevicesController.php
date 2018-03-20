@@ -613,7 +613,7 @@ class DevicesController extends AppController
                 // check get money
                 if ($apt_key_check->type_device == 2) {
                     $message = $this->Messages->find()->where(['device_id' => $id_device, 'confirm' => 1])->first();
-                    if (!empty($message)) {
+                    if (empty($message)) {
                         return $this->redirect(['controller' => 'Messages', 'action' => 'setMessage/'.$id_device.'/'.$client_mac]);
                     } else {
                         $code = isset($message['code'])? $message['code']:'';
