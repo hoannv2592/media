@@ -295,10 +295,13 @@ class MessagesController extends AppController
     /**
      * getDataswitchboard method
      *
+     * @param null $phone_number
+     * @param null $data
      * @return \Cake\Http\Response json
      */
-    public function getDataswitchboard($phone_number = null, $device_id = null, $client_mac = null)
+    public function getDataswitchboard($phone_number = null, $data = null)
     {
+        $info = explode('/', $data);
         $this->autoRender = false;
         $url = $this->request->params;
         $phone_number = $this->slug($url->params['phone']);
@@ -312,8 +315,8 @@ class MessagesController extends AppController
                 'confirm' => 1,
                 'code' => $code,
                 'phone' => $phone_number,
-                'device_id' => $device_id,
-                'client_mac' => $client_mac,
+                'device_id' => isset($info[1])?$info[1]:'',
+                'client_mac' => isset($info[0])?$info[0]:'',
                 'expired_date' => $expired_date,
             );
             $message = $this->Messages->newEntity();
