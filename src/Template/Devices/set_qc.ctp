@@ -167,35 +167,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             </div>
 
 
-                            <div class="form-group">
-                                <label> Ảnh logo </label>
-                                <div class="form-line">
-                                    <input type="file" name="logo_image" id="file" value="" class="form-control"/>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped dataTable table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th width="20%">Ảnh logo</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php if (!empty($logo)) {
-                                            foreach ($logo as $k => $vl) { if ($vl != '') { ?>
-                                                <tr>
-                                                    <td class="image"><embed src="<?= '/'.$vl ?>" width="330" height="180"></td>
-                                                </tr>
-                                            <?php } }
-                                            ?>
-                                        <?php } else { ?>
-                                        <tr><td colspan="4" class="image">No file(s) found......</td>
-                                            <?php } ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -471,15 +442,15 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             'tile_name': { required: true },
             'langdingpage_id': { required: true },
             'apt_device_number': { required: true },
-            'link_adv[]': { required: true },
-            'image_adv[]': { required: true },
+            // 'link_adv[]': { required: true },
+            // 'image_adv[]': { required: true },
         },
         messages:{
-            'tile_name': { required: 'Hãy nhập' },
+            // 'tile_name': { required: 'Hãy nhập' },
             'langdingpage_id': { required: 'Hãy nhập' },
             'apt_device_number': { required: 'Hãy nhập' },
-            'link_adv[]': { required: 'Hãy nhập' },
-            'image_adv[]': { required: 'Hãy nhập' }
+            // 'link_adv[]': { required: 'Hãy nhập' },
+            // 'image_adv[]': { required: 'Hãy nhập' }
         }
     });
 //    function filePreview(input) {

@@ -444,15 +444,15 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             'tile_name': { required: true },
             'langdingpage_id': { required: true },
             'apt_device_number': { required: true },
-            'link_adv[]': { required: true },
-            'image_adv[]': { required: true },
+            // 'link_adv[]': { required: true },
+            // 'image_adv[]': { required: true },
         },
         messages:{
             'tile_name': { required: 'Hãy nhập' },
             'langdingpage_id': { required: 'Hãy nhập' },
             'apt_device_number': { required: 'Hãy nhập' },
-            'link_adv[]': { required: 'Hãy nhập' },
-            'image_adv[]': { required: 'Hãy nhập' }
+            // 'link_adv[]': { required: 'Hãy nhập' },
+            // 'image_adv[]': { required: 'Hãy nhập' }
         }
     });
 
