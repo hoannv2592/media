@@ -98,25 +98,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                 </div>
                             </div>
                             <div class="form-group">
-                                <div class="form-line">
-                                    <?php
-                                    $type_device = isset($device->type_device) ? $device->type_device: '1';
-                                    echo  $this->Form->input('type_device', array(
-                                        'type' => 'select',
-                                        'options' => [
-                                            '1' => 'Free-connect',
-                                            '2' => 'SMS'
-                                        ],
-                                        'label'=> 'Lựa chọn dịch vụ',
-                                        'value' => $type_device,
-                                        'escape' => false,
-                                        'error' => false,
-                                        'class' => 'form-control required input_select_medium'
-                                    ));
-                                    ?>
-                                </div>
-                            </div>
-                            <div class="form-group">
                                 <label> Ảnh logo </label>
                                 <div class="form-line">
                                     <input type="file" name="logo_image" id="file" value="" class="form-control"/>
