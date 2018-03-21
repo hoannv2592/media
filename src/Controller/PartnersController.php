@@ -46,17 +46,33 @@ class PartnersController extends AppController
             $data_post = $this->request->getData();
             $conditions = array();
             if (isset($data_post['date']) && $data_post['date'] != '') {
-                $date = explode('-', $data_post['date']);
-//                $date_form = DateTime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
-//                $date_to = DateTime::createFromFormat('d/m/Y', $date[1])->format('Y-m-d');
-//                $date_form = DateTime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
-                $date_form = date('Y-m-d', strtotime($date[0]));
-            pr($date[0]); die;
+                $date = explode(' to ', $data_post['date']);
+                $date_form = $date[0];
+                $date_to = $date[1];
+                $date_to = Datetime::createFromFormat('d-m-Y', $date_to)->format('Y-m-d');
+                $date_form = Datetime::createFromFormat('d-m-Y', $date_form)->format('Y-m-d');
+                $conditions['Partners.modified >='] = $date_form;
+                $conditions['Partners.modified <='] = $date_to;
             }
+            if (isset($data_post['name']) && $data_post['name'] != '') {
+                $conditions['Partners.name LIKE'] = "%".trim($data_post['name'])."%";
+            }
+            if (isset($data_post['phone']) && $data_post['phone'] != '') {
+                $conditions['Partners.phone'] = trim($data_post['phone']);
+            }
+            if (isset($data_post['device_name']) && $data_post['device_name'] != '') {
+                $conditions['Devices.name LIKE'] = "%".trim($data_post['device_name'])."%";
+            }
+            if (isset($data_post['client_mac']) && $data_post['client_mac'] != '') {
+                $conditions['Partners.client_mac LIKE'] = "%".trim($data_post['client_mac'])."%";
+            }
+            $this->request->session()->write('conditions', $data_post);
+            $this->request->session()->write('data_search', $conditions);
         }
         $user = $this->Auth->user();
+        $conditions = $this->request->session()->read('data_search');
         if ($user['role'] == User::ROLE_ONE) {
-            $conditions = array('Devices.delete_flag !=' => 1);
+            $conditions['Devices.delete_flag !='] = DELETED;
             $query = $this->Partners->getOders($conditions);
         } else {
             $device = $this->Devices->find()->where(['user_id' => $user['id']])->select(['id'])->combine('id', 'id')->toArray();
@@ -65,8 +81,9 @@ class PartnersController extends AppController
                 $query = $this->Partners->getOders($conditions);
             }
         }
+        $conditions = $this->request->session()->read('conditions');
         $partners = $this->paginate($query, ['limit' => $limit_value]);
-        $this->set(compact('partners'));
+        $this->set(compact('partners', 'conditions'));
         $this->set('_serialize', ['partners']);
     }
 

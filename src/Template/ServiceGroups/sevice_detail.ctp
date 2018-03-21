@@ -29,7 +29,9 @@
                     <div class="body">
                         <span class="label label-warning font-14">Danh sách khách hàng truy cập dưới 3 lần.</span>
                         <div class="m-t-10">
+                            <?php if (!empty($list_id_devices)) { ?>
                             <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/3/'.$list_id_devices]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                            <?php } ?>
                         </div>
                         <div class="table-responsive m-b-15 m-t-5">
                             <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">
@@ -67,7 +69,9 @@
                         </div>
                         <span class="label label-warning font-14">Danh sách khách hàng truy cập <strong> Từ 3 -> 10 lần.</strong></span>
                         <div class="m-t-10">
-                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/4/'.$list_id_devices]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                            <?php if (!empty($list_id_devices)) { ?>
+                                <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/4/'. $list_id_devices]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                            <?php } ?>
                         </div>
                         <div class="table-responsive m-b-15 m-t-5">
                             <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">
@@ -105,7 +109,9 @@
                         </div>
                         <span class="label label-warning font-14">Danh sách khách hàng truy cập <strong> lớn hơn 10 lần.</strong></span>
                         <div class="m-t-10">
+                            <?php if (!empty($list_id_devices)) { ?>
                             <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/10/'.$list_id_devices]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                            <?php } ?>
                         </div>
                         <div class="table-responsive m-b-15 m-t-5">
                             <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">

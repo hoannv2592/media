@@ -80,6 +80,45 @@
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="col-md-12">
+                                        <b>Thiết bị quản lý </b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">devices</i>
+                                            </span>
+                                            <div class="form-line">
+                                                <?php
+                                                $device_name = isset($conditions['device_name']) ? ($conditions['device_name']):'';
+                                                echo $this->Form->control('device_name', array(
+                                                    'label' => false,
+                                                    'class' => 'form-control',
+                                                    'value' => $device_name,
+                                                    'required' => false,
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <b>Địa chỉ mac </b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">location_searching</i>
+                                            </span>
+                                            <div class="form-line">
+                                                <?php
+                                                $client_mac = isset($conditions['client_mac']) ? ($conditions['client_mac']):'';
+                                                echo $this->Form->control('client_mac', array(
+                                                    'label' => false,
+                                                    'class' => 'form-control',
+                                                    'value' => $client_mac,
+                                                    'required' => false,
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="col-md-12">
                                         <b>Khoảng thời gian</b>
                                         <div class="input-group">
@@ -221,7 +260,7 @@
                 'next': ['week','month','year']
             },
 
-        format: 'DD/MM/YYYY',
-        separator: ' - '
+        format: 'DD-MM-YYYY',
+        separator: ' to '
     });
 </script>

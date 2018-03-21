@@ -176,11 +176,13 @@ class AppController extends Controller
         if ($this->Auth->user()) {
             $this->set('userData', $this->Auth->user());
         }
+        if ($controller != 'Partners') {
+            $this->request->session()->delete('conditions');
+            $this->request->session()->delete('data_search');
+        }
         if (!$this->Auth->user()) {
             $this->Auth->config('authError', false);
         }
-
-
         switch ($this->name) {
             case 'Devices':
                 $this->Auth->allow([
