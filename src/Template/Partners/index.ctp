@@ -144,10 +144,57 @@
                                     </div>
                                     <?php echo $this->Form->end(); ?>
                                 </div>
+                                <div class="col-md-6" style="margin-bottom: 0 !important;">
+                                    <div class="card-box">
+<!--                                        <div class="text-center">-->
+<!--                                            <div class="row">-->
+<!--                                                <div class="col-xs-6">-->
+<!--                                                    <div class="m-t-20 m-b-20">-->
+<!--                                                        <p class="text-uppercase m-b-5 font-13 font-600">Khách kết nối nhiều nhất</p>-->
+<!--                                                        <h4 class="m-b-10">7584</h4>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                                <div class="col-xs-6">-->
+<!--                                                    <div class="m-t-20 m-b-20">-->
+<!--                                                        <p class="text-uppercase m-b-5 font-13 font-600">Tổng khách ghé thăm</p>-->
+<!--                                                        <h4 class="m-b-10">4521</h4>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div id="morris-area-example" style="height: 320px;"></div>-->
+                                        <div class="text-center">
+                                            <div class="row">
+                                                <div class="col-xs-4">
+                                                    <div class="m-t-20 m-b-20">
+                                                        <h4 class="m-b-10">5623</h4>
+                                                        <p class="text-uppercase m-b-5 font-13 font-600">Lifetime total sales</p>
+                                                        <p class="text-danger">18% <i class="mdi mdi-trending-down"></i></p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <div class="m-t-20 m-b-20">
+                                                        <h4 class="m-b-10">69695</h4>
+                                                        <p class="text-uppercase m-b-5 font-13 font-600">Income amounts</p>
+                                                        <p class="text-success">89% <i class="mdi mdi-trending-up"></i></p>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-4">
+                                                    <div class="m-t-20 m-b-20">
+                                                        <h4 class="m-b-10">2651</h4>
+                                                        <p class="text-uppercase m-b-5 font-13 font-600">Total visits</p>
+                                                        <p class="text-success">53% <i class="mdi mdi-trending-up"></i></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="m-t-10">
+                                            <div id="chart-with-area" class="ct-chart ct-golden-section"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-md-6" style="margin-bottom: 0 !important;">
 
-                            </div>
                             <div class="row"></div>
                         </div>
                         <?php if (!empty($partners)) { ?>

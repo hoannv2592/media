@@ -54,6 +54,9 @@ $cakeDescription = 'Media ';
         'daterangepicker.min',
         'font-awesome.min',
         'fileinput/fileinput',
+        'chartist/css/chartist.min',
+        'chartist/css/components',
+        'core.css',
     )) ?>
     <?= $this->Html->script(array(
         'jquery.min',
@@ -86,6 +89,7 @@ $cakeDescription = 'Media ';
         'fileinput/locales/es',
         'fileinput/themes/explorer-fa/theme',
         'fileinput/themes/fa/theme',
+
     )) ?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -275,3 +279,11 @@ $cakeDescription = 'Media ';
 <script src="/js/chosen.jquery.js"></script>
 <script src="/js/prism.js"></script>
 <script src="/js/init.js"></script>
+<?php
+echo $this->Html->script([
+    'chartist/js/chartist.min',
+    'chartist/js/chartist-plugin-tooltip.min',
+    'jquery.chartist.init',
+//    'raphael/raphael-min',
+])
+?>
