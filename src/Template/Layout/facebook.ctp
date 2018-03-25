@@ -117,7 +117,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
                             <div class="redirect">
-                                <a class="btn _face" href="<?php echo $infor_devices->auth_target; ?>"><i class="fa fa-facebook"></i>Login with Facebook</a>
+                                <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button>
                                 <div class="c-spacer"></div>
                                 <a class="btn _goog" href="<?php echo $infor_devices->auth_target; ?>"><i class="fa fa-google-plus"></i>Login with Google</a>
                                 <div class="c-spacer"></div>
@@ -137,7 +137,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                     <input type="hidden" name="popup" value="true"/>
                                     <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                     <input style="display: none;" name="password" type="password" value="wifimedia"/>
-                                    <button class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
+                                    <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
                                     <button class="btn btn-primary btn-success mb-10 br-2 _goog"><i class="fa fa-google-plus"></i>Login with Google </button>
                                     <div class="c-spacer"></div>
                                 </form>
@@ -158,10 +158,71 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
 </body>
 </html>
 <script type="text/javascript">
+    function handleLoginStatus(response){
+        if (response.status === 'connected') {
+            //display user data
+            getFbUserData();
+        }
+    }
+
+    function getFbUserData(){
+        FB.api('/me', {locale: 'en_US', fields: 'id,name,email,gender'}, function(response) {
+            var data = {partner_id: "<?= $partner_id ?>", name: response.name, email: response.email};
+            $.ajax({
+                url: "/Devices/add_log_partner",
+                type: "POST",
+                data: data,
+                cache: false,
+                success: function (data) {
+                    if (data == 'true') {
+                        processAuth();
+                        return true;
+                    } else {
+                        return false;
+                    }
+                }
+            });
+        })
+    }
+
+    window.fbAsyncInit = function() {
+        // FB JavaScript SDK configuration and setup
+        FB.init({
+            appId      : '1410831272490928', // FB App ID
+            cookie     : true,  // enable cookies to allow the server to access the session
+            xfbml      : true,  // parse social plugins on this page
+            version    : 'v2.8' // use graph api version 2.8
+        });
+        
+        // Check whether the user already logged in
+        FB.getLoginStatus(handleLoginStatus);
+    };
+    
+    // Load the JavaScript SDK asynchronously
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function FBLogin(){
+        FB.login(handleLoginStatus, {scope: 'public_profile,email'})
+    }
+
+    function processAuth(){
+        <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR): ?>
+        window.location.href = "<?= $infor_devices->auth_target ?>";
+        <?php else: ?>
+        doLogin();
+        <?php endif ?>
+    }
+
     function doLogin() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login.username.value;
-        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.password.value = hexMD5 ('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }
@@ -169,7 +230,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     function doLoginSlow() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login_slow.username.value;
-        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.password.value = hexMD5 ('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }
