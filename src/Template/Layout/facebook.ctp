@@ -167,7 +167,11 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
 
     function getFbUserData(){
         FB.api('/me', {locale: 'en_US', fields: 'id,name,email,gender'}, function(response) {
-            var data = {partner_id: "<?= $partner_id ?>", name: response.name, email: response.email};
+            var data = {
+                partner_id: "<?= $partner_id ?>",
+                device_id: "<?= $infor_devices->id ?>",
+                name: response.name,
+                email: response.email};
             $.ajax({
                 url: "/Devices/add_log_partner",
                 type: "POST",
