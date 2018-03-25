@@ -325,11 +325,16 @@ class ServiceGroupsController extends AppController
                     $condtions['Partners.num_clients_connect >='] = (int) 11;
                 }
             }
+            $order = array(
+                'created' => 'DESC'
+            );
+
             $data['limit'] = $limit;
             $data['page'] = $page;
             $currentPage = $page;
+            $offset = $limit*($page-1);
             $total = $this->Partners->find()->where($condtions)->count();
-            $partners = $this->Partners->find()->where($condtions)->page($page)->limit($limit)->toArray();
+            $partners = $this->Partners->find()->where($condtions)->page($page)->limit($limit)->order($order)->offset($offset)->toArray();
             $list_id_devices = json_encode($list_id_devices);
         } else {
             $partners = array();
