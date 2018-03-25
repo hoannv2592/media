@@ -3,10 +3,12 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use App\Model\Entity\User;
+use Cake\Chronos\Date;
 use Cake\Datasource\ConnectionManager;
 use Cake\Core\App;
+use Cake\Utility\Hash;
 use DateTime;
-
+use Cake\Collection\Collection;
 
 /**
  * Partners Controller
@@ -42,6 +44,24 @@ class PartnersController extends AppController
     public function index()
     {
         $limit_value = 10;
+        $user = $this->Auth->user();
+        $current_month = date('m');
+        $day_before_ten_day = date('d', strtotime('-10 days'));
+        $current = date('d');
+        $list_day = array();
+        for ($i = $day_before_ten_day; $i <= $current; $i++) {
+            $list_day[] = $i.'/'.$current_month;
+        }
+        $list_day = json_encode(array_values($list_day));
+        if ($this->request->is('get')) {
+            $date_full_current = date('Y-m-d');
+            $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
+            $conditions['Partners.created >='] = $date_full_before_ten_day;
+            $conditions['Partners.created <='] = $date_full_current;
+            $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('d-m-Y');
+            $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('d-m-Y');
+            $data_post['date'] = $date_form.' to '. $date_to;
+        }
         if ($this->request->is('post')) {
             $data_post = $this->request->getData();
             $conditions = array();
@@ -51,8 +71,9 @@ class PartnersController extends AppController
                 $date_to = $date[1];
                 $date_to = Datetime::createFromFormat('d-m-Y', $date_to)->format('Y-m-d');
                 $date_form = Datetime::createFromFormat('d-m-Y', $date_form)->format('Y-m-d');
-                $conditions['Partners.modified >='] = $date_form;
-                $conditions['Partners.modified <='] = $date_to;
+                $conditions['Partners.created >='] = $date_form;
+                $conditions['Partners.created <='] = $date_to;
+                $list_day = $this->get_label($date);
             }
             if (isset($data_post['name']) && $data_post['name'] != '') {
                 $conditions['Partners.name LIKE'] = "%".trim($data_post['name'])."%";
@@ -66,11 +87,10 @@ class PartnersController extends AppController
             if (isset($data_post['client_mac']) && $data_post['client_mac'] != '') {
                 $conditions['Partners.client_mac LIKE'] = "%".trim($data_post['client_mac'])."%";
             }
-            $this->request->session()->write('conditions', $data_post);
             $this->request->session()->write('data_search', $conditions);
+            $conditions = $this->request->session()->read('data_search');
         }
-        $user = $this->Auth->user();
-        $conditions = $this->request->session()->read('data_search');
+        $this->request->session()->write('conditions', $data_post);
         if ($user['role'] == User::ROLE_ONE) {
             $conditions['Devices.delete_flag !='] = DELETED;
             $query = $this->Partners->getOders($conditions);
@@ -81,12 +101,55 @@ class PartnersController extends AppController
                 $query = $this->Partners->getOders($conditions);
             }
         }
+        $data = array();
+        $total_partner = count($query->toArray());
+        foreach ($query->toArray() as $k => $vl) {
+            $vl['created'] = date('Y-m-d', strtotime($vl['created']));
+            $data[$k] = $vl;
+        }
+        $partners = Hash::combine($data, '{n}.id', '{n}.num_clients_connect', '{n}.created');
+        $count_old_partner = array();
+        $count_new_partner = array();
+        $chart_number_partner = array();
+        foreach ($partners as  $k => $partner) {
+            $chart_number_partner[] = count($partner);
+            $old_partner = array();
+            $new_partner = array();
+            foreach ($partner as $key => $val) {
+                if ($val > 1) {
+                    $old_partner[] = $val;
+                } else {
+                    $new_partner[] = $val;
+                }
+            }
+            $count_old_partner[] = count($old_partner);
+            $count_new_partner[] = count($new_partner);
+        }
+        $chart_number_partner = json_encode($chart_number_partner);
+        $count_old_partner = json_encode($count_old_partner);
+        $count_new_partner = json_encode($count_new_partner);
         $conditions = $this->request->session()->read('conditions');
-        $partners = $this->paginate($query, ['limit' => $limit_value]);
-        $this->set(compact('partners', 'conditions'));
+        $partners = $this->paginate($query, ['limit' => $limit_value])->toArray();
+        $this->set(compact(
+            'partners', 'conditions',
+            'list_day', 'chart_number_partner',
+            'count_old_partner', 'count_new_partner',
+            'total_partner'
+        ));
         $this->set('_serialize', ['partners']);
     }
 
+    public function get_label ($date = array())
+    {
+        $begin = Datetime::createFromFormat('d-m-Y', $date[0])->format('Y-m-d');
+        $end = Datetime::createFromFormat('d-m-Y', $date[1])->format('Y-m-d');
+        $begin = new DateTime( $begin );
+        $end   = new DateTime( $end );
+        for($i = $begin; $i <= $end; $i->modify('+1 day')){
+            $list_day[] = $i->format("d");
+        }
+        return json_encode($list_day);
+    }
     /**
      * View method
      *

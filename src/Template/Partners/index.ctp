@@ -39,7 +39,7 @@
                                             echo $this->Form->create('Partners', array(
                                                 'id' => 'form_advanced_validation_x',
                                                 'type' => 'post',
-                                                'url' => array('controller' => 'Partners', 'action' => 'index'),
+//                                                'url' => array('controller' => 'Partners', 'action' => 'index'),
                                                 'inputDefaults' => array(
                                                     'label' => false,
                                                     'div' => false,
@@ -146,50 +146,33 @@
                                 </div>
                                 <div class="col-md-6" style="margin-bottom: 0 !important;">
                                     <div class="card-box">
-<!--                                        <div class="text-center">-->
-<!--                                            <div class="row">-->
-<!--                                                <div class="col-xs-6">-->
-<!--                                                    <div class="m-t-20 m-b-20">-->
-<!--                                                        <p class="text-uppercase m-b-5 font-13 font-600">Khách kết nối nhiều nhất</p>-->
-<!--                                                        <h4 class="m-b-10">7584</h4>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                                <div class="col-xs-6">-->
-<!--                                                    <div class="m-t-20 m-b-20">-->
-<!--                                                        <p class="text-uppercase m-b-5 font-13 font-600">Tổng khách ghé thăm</p>-->
-<!--                                                        <h4 class="m-b-10">4521</h4>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                            </div>-->
-<!--                                        </div>-->
-<!--                                        <div id="morris-area-example" style="height: 320px;"></div>-->
                                         <div class="text-center">
                                             <div class="row">
                                                 <div class="col-xs-4">
                                                     <div class="m-t-20 m-b-20">
-                                                        <h4 class="m-b-10">5623</h4>
-                                                        <p class="text-uppercase m-b-5 font-13 font-600">Lifetime total sales</p>
-                                                        <p class="text-danger">18% <i class="mdi mdi-trending-down"></i></p>
+                                                        <p class="text-uppercase m-b-5 font-13 font-600">Tổng khách hàng</p>
+                                                        <h4 class="m-b-10"><?= isset($total_partner)? $total_partner:'';?></h4>
                                                     </div>
                                                 </div>
-                                                <div class="col-xs-4">
-                                                    <div class="m-t-20 m-b-20">
-                                                        <h4 class="m-b-10">69695</h4>
-                                                        <p class="text-uppercase m-b-5 font-13 font-600">Income amounts</p>
-                                                        <p class="text-success">89% <i class="mdi mdi-trending-up"></i></p>
-                                                    </div>
-                                                </div>
-                                                <div class="col-xs-4">
-                                                    <div class="m-t-20 m-b-20">
-                                                        <h4 class="m-b-10">2651</h4>
-                                                        <p class="text-uppercase m-b-5 font-13 font-600">Total visits</p>
-                                                        <p class="text-success">53% <i class="mdi mdi-trending-up"></i></p>
-                                                    </div>
-                                                </div>
+<!--                                                <div class="col-xs-4">-->
+<!--                                                    <div class="m-t-20 m-b-20">-->
+<!--                                                        <h4 class="m-b-10">3562</h4>-->
+<!--                                                        <p class="text-uppercase m-b-5 font-13 font-600">Income amounts</p>-->
+<!--                                                        <p class="text-success">89% <i class="mdi mdi-trending-up"></i></p>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
+<!--                                                <div class="col-xs-4">-->
+<!--                                                    <div class="m-t-20 m-b-20">-->
+<!--                                                        <h4 class="m-b-10">7584</h4>-->
+<!--                                                        <p class="text-uppercase m-b-5 font-13 font-600">Total visits</p>-->
+<!--                                                        <p class="text-success">53% <i class="mdi mdi-trending-up"></i></p>-->
+<!--                                                    </div>-->
+<!--                                                </div>-->
                                             </div>
                                         </div>
+
                                         <div class="m-t-10">
-                                            <div id="chart-with-area" class="ct-chart ct-golden-section"></div>
+                                            <div id="line-chart-tooltips" class="ct-chart ct-golden-section"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -297,17 +280,76 @@
         float: right;
     }
 </style>
+<?php
+echo $this->Html->script([
+    'chartist/js/chartist.min',
+    'chartist/js/chartist-plugin-tooltip.min'
+])
+?>
 <script type="application/javascript">
     $('#config-demo').dateRangePicker({
         language:'vi',
         showShortcuts: true,
         shortcuts :
             {
-                'next-days': [3,5,7],
+                'next-days': [3, 5, 7],
                 'next': ['week','month','year']
             },
-
         format: 'DD-MM-YYYY',
         separator: ' to '
     });
+    //Line chart with tooltips
+    var list_day = jQuery.parseJSON('<?= $list_day;?>');
+    var chart_number_partner = jQuery.parseJSON('<?= $chart_number_partner;?>');
+    var count_old_partner = jQuery.parseJSON('<?= $count_old_partner;?>');
+    var count_new_partner = jQuery.parseJSON('<?= $count_new_partner;?>');
+    new Chartist.Line('#line-chart-tooltips', {
+            labels: list_day,
+            series: [
+                {
+                    name: 'Khách hàng',
+                    data: chart_number_partner
+                },
+                {
+                    name: 'khách hàng mới',
+                    data: count_new_partner
+                },
+                {
+                    name: 'khách hàng quay lại',
+                    data: count_old_partner
+                }
+            ]
+        },
+        {
+            low: 0,
+            showArea: false,
+            plugins: [
+                Chartist.plugins.tooltip()
+            ]
+        }
+    );
+    var $chart = $('#line-chart-tooltips');
+    var $toolTip = $chart
+        .append('<div class="tooltip"></div>')
+        .find('.tooltip')
+        .hide();
+
+    $chart.on('mouseenter', '.ct-point', function() {
+        var $point = $(this),
+            value = $point.attr('ct:value'),
+            seriesName = $point.parent().attr('ct:series-name');
+        $toolTip.html(seriesName + '<br>' + value).show();
+    });
+
+    $chart.on('mouseleave', '.ct-point', function() {
+        $toolTip.hide();
+    });
+
+    $chart.on('mousemove', function(event) {
+        $toolTip.css({
+            left: (event.offsetX || event.originalEvent.layerX) - $toolTip.width() / 2 - 10,
+            top: (event.offsetY || event.originalEvent.layerY) - $toolTip.height() - 40
+        });
+    });
+
 </script>
