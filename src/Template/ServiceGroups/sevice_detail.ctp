@@ -27,11 +27,11 @@
                         </ul>
                     </div>
                     <div class="body">
-                        <span class="label label-warning font-14">Danh sách khách hàng truy cập dưới 3 lần.</span>
+<!--                        <span class="label label-warning font-14">Danh sách khách hàng truy cập dưới 3 lần.</span>-->
                         <div class="m-t-10">
-                            <?php if (!empty($list_id_devices)) { ?>
-                                <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/3/'.$list_id_devices]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
-                            <?php } ?>
+<!--                            --><?php //if (!empty($list_id_devices)) { ?>
+<!--                                <a href="--><?php //echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/3/'.$list_id_devices]);?><!--" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>-->
+<!--                            --><?php //} ?>
                         </div>
                         <div class="m-t-10">
                             <div class="col-sm-4" id="select">
