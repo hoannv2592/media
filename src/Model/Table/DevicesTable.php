@@ -53,6 +53,11 @@ class DevicesTable extends Table
         ]);
     }
 
+
+    public function getDataDevice($condition = array(), $data = array())
+    {
+
+    }
     /**
      * Default validation rules.
      *
@@ -86,4 +91,6 @@ class DevicesTable extends Table
 //
 //        return $rules;
 //    }
+
+
 }

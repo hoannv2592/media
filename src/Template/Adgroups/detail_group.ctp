@@ -114,6 +114,31 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 </div>
                             </div>
                         </div>
+                        <div class="hiddenccc">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php
+                                    $packages = isset($adgroup->packages) ? json_decode($adgroup->packages):'';
+                                    echo $this->Form->control('packages', [
+                                        'type' => 'select',
+                                        'multiple' => 'checkbox',
+                                        'label' => false,
+                                        'options' => [
+                                            ['value' => 1, 'text' => __('Họ và tên')],
+                                            ['value' => 2, 'text' => __('Số điện thoại')],
+                                            ['value' => 3, 'text' => __('Địa chỉ')]
+                                        ],
+                                        'templates' => [
+                                            'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                            'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                        ],
+                                        'value' => $packages
+                                    ]);
+                                    ?>
+                                    <div id="check_error"></div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
                                 <?php $tile_name = isset($adgroup->tile_name) ? ($adgroup->tile_name):'' ?>
@@ -372,20 +397,26 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         var langding = "<?php echo $adgroup->langdingpage_id; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
         if ($(this).is(':checked')){
             $(this).prop('checked', true).attr('checked', 'checked');
@@ -413,6 +444,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             'langdingpage_id': { required: true },
             'apt_device_number': { required: true },
             'device_id[]': { required: true },
+            'packages[]': { required: true }
         },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');

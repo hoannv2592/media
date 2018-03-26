@@ -45,12 +45,11 @@ $this->assign('title', 'Quản lý thiết bị');
                             <div role="tabpanel" class="tab-pane fade in active" id="home">
                                 <?php if (!empty($devices)) { ?>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable js-exportable_has">
+                                        <table class="table table-bordered table-striped table-hover ">
                                             <thead>
                                             <tr class="bg-blue-grey">
                                                 <th style="text-align: center">No</th>
                                                 <th>Name</th>
-<!--                                                <th>Name</th>-->
                                                 <th>Code</th>
                                                 <th>Type</th>
                                                 <th>Ad type</th>
@@ -66,11 +65,10 @@ $this->assign('title', 'Quản lý thiết bị');
                                                 <tr valign="middle">
                                                     <td style="text-align: center"><?php echo $count; ?></td>
                                                     <td class="advertise font-bold col-cyan"><a href="#" onclick="view_log_partner_histories(<?php echo $device->id; ?>)" data-toggle="modal" data-target="#defaultModal"><?php echo h($device->name); ?></a></td>
-<!--                                                    <td class="advertise font-bold col-cyan"><a href="--><?php //echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->id)]) ?><!--">--><?php //echo h($device->name); ?><!--</a></td>-->
                                                     <td><?php echo nl2br($device->apt_key); ?></td>
                                                     <td><?php echo isset($device->type) ? \App\Model\Entity\Device::$category[$device->type] : 'Thiết bị thường'; ?></td>
                                                     <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : 'Mặc định'; ?></td>
-                                                    <td><?php echo date('d/m/Y', strtotime($device->created)); ?></td>
+                                                    <td><?php echo date('d/m/Y', strtotime($device->modified)); ?></td>
                                                     <td class="delete_advertise" value="<?php echo h($device->id); ?>">
                                                         <div class="button-demo">
                                                             <?php
@@ -108,6 +106,16 @@ $this->assign('title', 'Quản lý thiết bị');
                                             <?php } ?>
                                             </tbody>
                                         </table>
+                                    </div>
+                                    <div class="paginator">
+                                        <ul class="pagination pull-right">
+                                            <?= $this->Paginator->first(__('First')) ?>
+                                            <?= $this->Paginator->prev(__('Previous')) ?>
+                                            <?= $this->Paginator->numbers() ?>
+                                            <?= $this->Paginator->next(__('Next')) ?>
+                                            <?= $this->Paginator->last(__('Last')) ?>
+                                        </ul>
+                                        <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
                                     </div>
                                 <?php } ?>
                             </div>
@@ -206,3 +214,17 @@ $this->assign('title', 'Quản lý thiết bị');
     };
 
 </script>
+<style>
+    .pagination > .disabled > a, .pagination > .disabled > a:focus, .pagination > .disabled > a:hover, .pagination > .disabled > span, .pagination > .disabled > span:focus, .pagination > .disabled > span:hover {
+        color: #777;
+        cursor: not-allowed;
+        background-color: #fff !important;
+        border-color: #ddd;
+    }
+    .desc {
+        float: right;
+    }
+    th>a {
+        float: right;
+    }
+</style>

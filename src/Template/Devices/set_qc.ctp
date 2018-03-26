@@ -54,7 +54,8 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="form-line">
-                                    <?php $tile_name = isset($device->tile_name) ? ($device->tile_name):'' ?>
+                                    <?php
+                                    $tile_name = isset($device->tile_name) ? ($device->tile_name):'' ?>
                                     <?php echo $this->Form->control('tile_name', array(
                                         'label' => 'Tên cơ sở dịch vụ',
                                         'class' => 'form-control',
@@ -167,6 +168,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     ?>
                                 </div>
                             </div>
+
                             <div class="form-group">
                                 <div class="form-line">
                                     <label class=""> Chọn loại quảng cáo </label>
@@ -177,6 +179,31 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                         <label style="font-weight: bold" for="radio_31">Facebook-Login</label>
                                         <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($device->langdingpage_id == 1 || $device->langdingpage_id == '') { echo 'checked'; } ?> />
                                         <label style="font-weight: bold" for="radio_30">Password</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="hiddenccc">
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <?php
+                                        $packages = isset($device->packages) ? json_decode($device->packages):'';
+                                        echo $this->Form->control('packages', [
+                                            'type' => 'select',
+                                            'multiple' => 'checkbox',
+                                            'label' => false,
+                                            'options' => [
+                                                ['value' => 1, 'text' => __('Họ và tên')],
+                                                ['value' => 2, 'text' => __('Số điện thoại')],
+                                                ['value' => 3, 'text' => __('Địa chỉ')]
+                                            ],
+                                            'templates' => [
+                                                'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                                'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                            ],
+                                            'value' => $packages
+                                        ]);
+                                        ?>
+                                        <div id="check_error"></div>
                                     </div>
                                 </div>
                             </div>
@@ -282,37 +309,53 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             }
         }
     $(document).ready(function () {
-
         var langding = "<?php echo $device->langdingpage_id; ?>";
         if (langding == 1 || langding == '') {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
     });
     $('#uploadForm').validate({
         rules: {
             'tile_name': { required: true },
             'langdingpage_id': { required: true },
-            'apt_device_number': { required: true }
+            'apt_device_number': { required: true },
+            'packages[]': { required: true }
         },
         messages:{
             'tile_name': { required: 'Hãy nhập' },
             'langdingpage_id': { required: 'Hãy nhập' },
-            'apt_device_number': { required: 'Hãy nhập' }
+            'apt_device_number': { required: 'Hãy nhập' },
+            'packages[]': { required: 'Hãy chọn các label' }
+        },
+        errorPlacement: function (error, element) {
+            if (element.attr("name") === "packages[]") {
+                error.insertAfter($("#check_error"));
+            } else {
+                // the default error placement for the rest
+                error.insertAfter(element);
+            }
         }
+
     });
 //    function filePreview(input) {
 //        if (input.files && input.files[0]) {

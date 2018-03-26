@@ -62,6 +62,7 @@ foreach ($list_path_old as $k =>  $item) {
 $auth_target = isset($infor_devices->auth_target) ? $infor_devices->auth_target :'';
 $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->apt_device_number :'';
 $title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_campaign: 'Vui lòng điền thông tin khảo sát';
+$packages = isset($infor_devices->packages) ? json_decode($infor_devices->packages): array();
 ?>
 <body>
 <!-- Inspired by https://codepen.io/transportedman/pen/NPWRGq -->
@@ -162,9 +163,21 @@ $title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_
                         <div class="modal-body">
                             <div class="c-spacer--x-large c-spacer"></div>
                             <form action="#" name="register_form" class="register_form" id="register_form" method="post">
-                                <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
-                                <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
-                                <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                <?php if (!empty($packages)) {
+                                    foreach ($packages as $k => $vl) {
+                                        if ($vl == 1) { ?>
+                                            <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                        <?php } elseif ($vl == 2) { ?>
+                                            <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                        <?php } else { ?>
+                                            <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                        <?php }
+                                    }
+                                } else {?>
+                                    <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                    <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                    <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                <?php }?>
                                 <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                 <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
                                 <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>">
@@ -229,35 +242,70 @@ $title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_
                                 'label' => false,
                             ));
                             ?>
-                            <p>
-                            <?php  echo $this->Form->control('name', array(
-                                'type' => 'text',
-                                'class' => 'txt_input',
-                                'id' => '_reg_full_name',
-                                'label' => false,
-                                'placeholder' => 'Họ và tên',
-                                )); ?>
-                            </p>
-                            <p>
-                                <?php echo $this->Form->control('phone', array(
-                                'type' => 'text',
-                                'class' => 'txt_input',
-                                'id' => '_reg_telephone',
-                                'label' => false,
-                                'placeholder' => 'Số điện thoại',
-                            ));
-                            ?>
-                            </p>
-                            <p> <?php echo $this->Form->control('address', array(
-                                'type' => 'text',
-                                'class' => 'txt_input',
-                                'id' => '_reg_address',
-                                'label' => false,
-                                'placeholder' => 'Địa chỉ',
-                            )); ?>
-                            </p>
+                            <?php if (!empty($packages)) {
+                                foreach ($packages as $k => $vl) {
+                                    if ($vl == 1) { ?>
+                                        <p>
+                                            <?php  echo $this->Form->control('name', array(
+                                                'type' => 'text',
+                                                'class' => 'txt_input',
+                                                'id' => '_reg_full_name',
+                                                'label' => false,
+                                                'placeholder' => 'Họ và tên',
+                                            )); ?>
+                                        </p>
+                                    <?php } elseif ($vl == 2) { ?>
+                                        <p>
+                                            <?php echo $this->Form->control('phone', array(
+                                                'type' => 'text',
+                                                'class' => 'txt_input',
+                                                'id' => '_reg_telephone',
+                                                'label' => false,
+                                                'placeholder' => 'Số điện thoại',
+                                            ));
+                                            ?>
+                                        </p>
+                                    <?php } else { ?>
+                                        <p> <?php echo $this->Form->control('address', array(
+                                                'type' => 'text',
+                                                'class' => 'txt_input',
+                                                'id' => '_reg_address',
+                                                'label' => false,
+                                                'placeholder' => 'Địa chỉ',
+                                            )); ?>
+                                        </p>
+                                    <?php }
+                                }
+                            } else { ?>
+                                <p>
+                                    <?php  echo $this->Form->control('name', array(
+                                        'type' => 'text',
+                                        'class' => 'txt_input',
+                                        'id' => '_reg_full_name',
+                                        'label' => false,
+                                        'placeholder' => 'Họ và tên',
+                                    )); ?>
+                                </p>
+                                <p>
+                                    <?php echo $this->Form->control('phone', array(
+                                        'type' => 'text',
+                                        'class' => 'txt_input',
+                                        'id' => '_reg_telephone',
+                                        'label' => false,
+                                        'placeholder' => 'Số điện thoại',
+                                    ));
+                                    ?>
+                                </p>
+                                <p> <?php echo $this->Form->control('address', array(
+                                        'type' => 'text',
+                                        'class' => 'txt_input',
+                                        'id' => '_reg_address',
+                                        'label' => false,
+                                        'placeholder' => 'Địa chỉ',
+                                    )); ?>
+                                </p>
+                            <?php } ?>
                             <?php
-
                             $device_id = isset($infor_devices->id) ? $infor_devices->id : '';
                             echo $this->Form->control('device_id', array(
                                 'type' => 'hidden',

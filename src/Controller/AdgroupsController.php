@@ -178,6 +178,8 @@ class AdgroupsController extends AppController
         }
         $adgroup = $this->Adgroups->newEntity();
         if ($this->request->is('post')) {
+            $packages = array_values($this->request->data['packages']);
+            $this->request->data['packages'] = json_encode($packages);
             $listNameDevice = ($this->getNameDevice($this->request->getData()['device_id']));
             $devices = $this->Devices->find()
                 ->where(['id IN' => $this->request->getData()['device_id']])->select(['id'])
@@ -245,6 +247,7 @@ class AdgroupsController extends AppController
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
+                'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
             );
 
             $device_group = $this->DeviceGroups->newEntity();
@@ -266,6 +269,7 @@ class AdgroupsController extends AppController
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
+                'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
             );
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             $adgroup->delete_flag = UN_DELETED;
@@ -592,6 +596,8 @@ class AdgroupsController extends AppController
             ->select(['id'])->first()->toArray();
         $before_device = json_decode($adgroup->device_id);
         if ($this->request->is('post')) {
+            $packages = array_values($this->request->data['packages']);
+            $this->request->data['packages'] = json_encode($packages);
             $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
             $data_group = array(
                 'device_name' => $listUserid,
@@ -606,6 +612,7 @@ class AdgroupsController extends AppController
                 'title_campaign' => isset($this->request->data['title_campaign']) ? $this->request->data['title_campaign']:'',
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
+                'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
             );
 
             if (!empty($this->request->data['logo_image']['error'] != 4)) {
@@ -667,6 +674,7 @@ class AdgroupsController extends AppController
                 'image_logo' => isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:'',
                 'title_campaign' => isset($this->request->data['title_campaign']) ? $this->request->data['title_campaign']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
+                'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
             );
             if ($user['role'] == User::ROLE_ONE) {
                 $data_group['user_id_group'] = isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'';
