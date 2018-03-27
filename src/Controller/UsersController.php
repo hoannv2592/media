@@ -550,4 +550,55 @@ class UsersController extends AppController
             $this->redirect('partners/index');
         }
     }
+
+    public function downloadExcel($device_id = array())
+    {
+        $this->autoRender = false;
+        $device_id = json_decode($device_id);
+        $objPHPExcel = $this->PhpExcel->createWorksheet();
+        $objPHPExcel->setActiveSheet(0);
+        $partners = $this->Partners->find()->where(['id IN ' => $device_id])
+            ->hydrate(false)
+            ->select(['name', 'phone', 'address'])
+            ->toList();
+        if (!empty($partners)) {
+            $lable = array();
+            $k = 1;
+            $lable[0]['label'] = 'No';
+            foreach ($partners[0] as $key => $val) {
+                $lable[$k+1]['label'] = $key;
+                $k++;
+            }
+            $headerStyle = array(
+                'font' => array(
+                    'bold' => true
+                )
+            );
+            $data_label = array();
+            pr($lable);
+            foreach ($lable as $k => $vl) {
+                if ($k == 0) {
+                    $data_label[$k]['label'] = 'No';
+                } elseif ($k == 2) {
+                    $data_label[$k]['label'] = 'Họ và Tên';
+                } elseif ($k == 3) {
+                    $data_label[$k]['label'] = 'Số điện thoại';
+                } elseif ($k == 4) {
+                    $data_label[$k]['label'] = 'Địa chỉ';
+                } else {
+                    //unset($vl['label']);
+                }
+            }
+            $objPHPExcel->addTableHeader($data_label, array('bold' => true, 'headerStyle' => $headerStyle));
+            $objPHPExcel->addTableFooter();
+            foreach ($partners as $k => $row) {
+                $objPHPExcel->addTableRow($k, $row);
+            }
+            $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
+            $objPHPExcel->save($fileName, 'Excel2007');
+            $objPHPExcel->output($fileName, 'Excel2007');
+        } else {
+            $this->redirect('partners/index');
+        }
+    }
 }

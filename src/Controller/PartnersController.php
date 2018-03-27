@@ -107,6 +107,22 @@ class PartnersController extends AppController
             $vl['created'] = date('Y-m-d', strtotime($vl['created']));
             $data[$k] = $vl;
         }
+        $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
+        $count_phone_partner = array();
+        $list_id_partner = array();
+        foreach ($partner_phone as  $k => $partner) {
+            $phone_partner = array();
+            $id_partner = array();
+            foreach ($partner as $key => $val) {
+                if ($val != '') {
+                    $phone_partner[] = $val;
+                    $id_partner[] = $key;
+                }
+            }
+            $count_phone_partner[] = count($phone_partner);
+            $list_id_partner[] = $id_partner;
+        }
+        $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
         $partners = Hash::combine($data, '{n}.id', '{n}.num_clients_connect', '{n}.created');
         $count_old_partner = array();
         $count_new_partner = array();
@@ -125,16 +141,22 @@ class PartnersController extends AppController
             $count_old_partner[] = count($old_partner);
             $count_new_partner[] = count($new_partner);
         }
+        $sum_old_partner = array_sum($count_old_partner);
+        $sum_new_partner = array_sum($count_new_partner);
+        $sum_phone_partner = array_sum($count_phone_partner);
         $chart_number_partner = json_encode($chart_number_partner);
         $count_old_partner = json_encode($count_old_partner);
         $count_new_partner = json_encode($count_new_partner);
+        $count_phone_partner = json_encode($count_phone_partner);
+        $list_id_partner = json_encode($list_id_partner);
         $conditions = $this->request->session()->read('conditions');
         $partners = $this->paginate($query, ['limit' => $limit_value])->toArray();
         $this->set(compact(
             'partners', 'conditions',
             'list_day', 'chart_number_partner',
-            'count_old_partner', 'count_new_partner',
-            'total_partner'
+            'count_old_partner', 'sum_phone_partner',
+            'total_partner', 'count_new_partner',
+            'count_phone_partner', 'sum_old_partner', 'sum_new_partner', 'list_id_partner'
         ));
         $this->set('_serialize', ['partners']);
     }

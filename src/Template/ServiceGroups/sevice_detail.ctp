@@ -27,27 +27,166 @@
                         </ul>
                     </div>
                     <div class="body">
-<!--                        <span class="label label-warning font-14">Danh sách khách hàng truy cập dưới 3 lần.</span>-->
-                        <div class="m-t-10">
-<!--                            --><?php //if (!empty($list_id_devices)) { ?>
-<!--                                <a href="--><?php //echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/3/'.$list_id_devices]);?><!--" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>-->
-<!--                            --><?php //} ?>
-                        </div>
-                        <div class="m-t-10">
-                            <div class="col-sm-4" id="select">
-                                <?= $this->Form->select('num_clients_connect', [
-                                        '1' => 'khách hàng truy cập dưới 3 lần',
-                                        '2' => 'khách hàng truy cập Từ 3 -> 10 lần',
-                                        '3' => 'khách hàng truy cập lớn hơn 10 lần',
-                                ], [
-                                    'div' => false,
-                                    'label' => false,
-                                    'empty' => '----',
-                                    'class' => 'form-control',
-                                    'default' => $num_clients_connect
+                        <div class="demo-masked-input">
+                            <div class="row clearfix">
+                                <div class="col-md-6" style="margin-bottom: 0 !important;">
+                                <?php echo $this->Form->create('ServiceGroups', array(
+                                    'id' => 'form_advanced_validation_x',
+                                    'type' => 'post',
+//                                                'url' => array('controller' => 'Partners', 'action' => 'index'),
+                                    'inputDefaults' => array(
+                                        'label' => false,
+                                        'div' => false,
+                                    ),
+                                    'autocomplete' => "off"
+                                ));
+                                ?>
+                                    <div class="col-md-12">
+                                        <b>Tên khách hàng</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">account_circle</i>
+                                            </span>
+                                            <div class="form-line">
+                                                <?php
+                                                $name = isset($conditions['name']) ? ($conditions['name']):'';
+                                                echo $this->Form->control('name', array(
+                                                    'label' => false,
+                                                    'class' => 'form-control',
+                                                    'value' => $name,
+                                                    'required' => false,
+                                                    'id' => 'name'
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <b>Số điện thoại di động</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">phone_iphone</i>
+                                            </span>
+                                            <div class="form-line">
+                                                <?php
+                                                $phone = isset($conditions['phone']) ? ($conditions['phone']):'';
+                                                echo $this->Form->control('phone', array(
+                                                    'label' => false,
+                                                    'class' => 'form-control mobile-phone-number',
+                                                    'value' => $phone,
+                                                    'required' => false,
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
 
-                                ]) ?>
+                                    <div class="col-md-12">
+                                        <b>Thiết bị quản lý </b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">devices</i>
+                                            </span>
+                                            <div class="form-line">
+                                                <?php
+                                                $device_name = isset($conditions['device_name']) ? ($conditions['device_name']):'';
+                                                echo $this->Form->control('device_name', array(
+                                                    'label' => false,
+                                                    'class' => 'form-control',
+                                                    'value' => $device_name,
+                                                    'required' => false,
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <b>Địa chỉ mac </b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">location_searching</i>
+                                            </span>
+                                            <div class="form-line">
+                                                <?php
+                                                $client_mac = isset($conditions['client_mac']) ? ($conditions['client_mac']):'';
+                                                echo $this->Form->control('client_mac', array(
+                                                    'label' => false,
+                                                    'class' => 'form-control',
+                                                    'value' => $client_mac,
+                                                    'required' => false,
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <b>Khoảng thời gian</b>
+                                        <div class="input-group">
+                                            <span class="input-group-addon">
+                                                <i class="material-icons">date_range</i>
+                                            </span>
+                                            <div class="form-line">
+                                                <?php
+                                                $birthday = isset($conditions['date']) ? ($conditions['date']):'';
+                                                echo $this->Form->control('date', array(
+                                                    'label' => false,
+                                                    'class' => 'form-control datetime',
+                                                    'value' => $birthday,
+                                                    'required' => false,
+                                                    'id' => 'config-demo',
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class=""><button class="btn btn-primary waves-effect" id="submit" type="submit">Tìm kiếm</button> </div>
+                                    </div>
+                                    <?php echo $this->Form->end(); ?>
+                                </div>
+                                <div class="col-md-6" style="margin-bottom: 0 !important;">
+                                    <div class="card-box">
+                                        <div class="text-center">
+                                            <div class="row">
+                                                <div class="col-xs-3">
+                                                    <div class="m-t-20 m-b-20 storke_1">
+                                                        <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">Tổng khách hàng</p>
+                                                        <h4 class="m-b-10"><?= isset($total_partner)? $total_partner:'';?></h4>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <div class="m-t-20 m-b-20 storke_2">
+                                                        <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">Khách hàng mới</p>
+                                                        <h4 class="m-b-10"><?= isset($sum_new_partner) ? $sum_new_partner:'';?></h4>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <div class="m-t-20 m-b-20 storke_3">
+                                                        <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">Khách hàng quay lại</p>
+                                                        <h4 class="m-b-10"><?= isset($sum_old_partner) ? $sum_old_partner:'';?></h4>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <div class="m-t-20 m-b-20 storke_4">
+                                                        <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">Khách hàng có SDT</p>
+                                                        <h4 class="m-b-10"><?= isset($sum_phone_partner) ? $sum_phone_partner:'';?></h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="m-t-10">
+                                            <div id="line-chart-tooltips" class="ct-chart ct-golden-section"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 pull-right">
+                                        <div class="">
+                                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'download_excel/'.$list_id_partner]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có số điện thoại</a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
                             <div class="row"></div>
                         </div>
                         <div class="table-responsive m-b-15 m-t-5">
@@ -56,192 +195,48 @@
                                 <tr class="bg-blue-grey">
                                     <th>STT</th>
                                     <th>Tên khách hàng</th>
+                                    <th>Địa chỉ mac</th>
                                     <th>Số điện thoại</th>
                                     <th>Ngày sinh</th>
                                     <th>Địa chỉ</th>
-                                    <th>Number connect</th>
+                                    <th>Thời gian truy cập</th>
+                                    <th>Số lần ghé thăm</th>
+                                    <th>Thiết bị quản lý</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php
-                                $count = 0;
-                                if ($currentPage == 1 ) {
-                                    $count = 0;
-                                } else {
-                                    $count = 10 * ($currentPage - 1);
-                                }
-
-                                foreach ($partners as $key => $partner) { $count++;
+                                foreach ($partners as $key => $partner) {
                                      ?>
                                         <tr>
-                                            <td><?php echo $count;?></td>
+                                            <td><?php echo h($partner['id']); ?></td>
                                             <td class="advertise font-bold col-cyan">
-                                                <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($partner->id)]) ?>">
-                                                    <?php echo h($partner->name); ?>
+                                                <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($partner['id'])]) ?>">
+                                                    <?php echo h($partner['name']); ?>
                                                 </a>
                                             </td>
-                                            <td><?php echo nl2br($partner->phone); ?></td>
-                                            <td><?php echo nl2br($partner->birthday); ?></td>
-                                            <td><?php echo nl2br($partner->address); ?></td>
-                                            <td><?php echo nl2br($partner->num_clients_connect); ?></td>
+                                            <td><?php echo h($partner['client_mac']); ?></td>
+                                            <td><?php echo nl2br($partner['phone']); ?></td>
+                                            <td><?php echo nl2br($partner['birthday']); ?></td>
+                                            <td><?php echo nl2br($partner['address']); ?></td>
+                                            <td><?php echo date('d/m/Y', strtotime($partner['created'])); ?></td>
+                                            <td><?php echo nl2br($partner['num_clients_connect']); ?></td>
+                                            <td><?php echo isset($partner['Devices']['name']) ? $partner['Devices']['name'] : ''; ?></td>
                                         </tr>
                                     <?php } ?>
                                 </tbody>
                             </table>
+                            <div class="paginator">
+                                <ul class="pagination pull-right">
+                                    <?= $this->Paginator->first(__('First')) ?>
+                                    <?= $this->Paginator->prev(__('Previous')) ?>
+                                    <?= $this->Paginator->numbers() ?>
+                                    <?= $this->Paginator->next(__('Next')) ?>
+                                    <?= $this->Paginator->last(__('Last')) ?>
+                                </ul>
+                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+                            </div>
                         </div>
-                        <nav aria-label="Page navigation" style="display: block;">
-                           <ul class="pagination light-theme simple-pagination" id="paging"></ul>
-                        </nav>
-                        <script type="application/javascript">
-
-                            function pageChange(pageNumber) {
-                                var num_clients_connect = $('select[name="num_clients_connect"]').val();
-                                window.location.href = '/ServiceGroups/seviceDetail/<?= $detail_sevice ;?>/?page='+ pageNumber + '&num_clients_connect=' + num_clients_connect;
-                            }
-
-                            $('#paging').pagination({
-                                items: <?php echo isset($total) ? $total:'1'; ?>,
-                                currentPage: <?php echo isset($currentPage)?$currentPage:'1'; ?>,
-                                itemsOnPage: 10,
-                                prevText: 'Trước',
-                                nextText: 'Sau',
-                                onPageClick: function (pageNumber, event) {
-                                    pageChange(pageNumber);
-                                }
-                            });
-
-                            $('select[name="num_clients_connect"]').change(function () {
-                                var num_clients_connect = $(this).val();
-                                window.location.href = '/ServiceGroups/seviceDetail/<?= $detail_sevice ;?>/?page=1&num_clients_connect=' + num_clients_connect;
-                            });
-
-
-                        </script>
-
-
-
-
-<!--                        <span class="label label-warning font-14">Danh sách khách hàng truy cập dưới 3 lần.</span>-->
-<!--                        <div class="m-t-10">-->
-<!--                            --><?php //if (!empty($list_id_devices)) { ?>
-<!--                            <a href="--><?php //echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/3/'.$list_id_devices]);?><!--" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>-->
-<!--                            --><?php //} ?>
-<!--                        </div>-->
-<!--                        <div class="table-responsive m-b-15 m-t-5">-->
-<!--                            <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">-->
-<!--                                <thead>-->
-<!--                                <tr class="bg-blue-grey">-->
-<!--                                    <th>STT</th>-->
-<!--                                    <th>Tên khách hàng</th>-->
-<!--                                    <th>Số điện thoại</th>-->
-<!--                                    <th>Ngày sinh</th>-->
-<!--                                    <th>Địa chỉ</th>-->
-<!--                                    <th>Number connect</th>-->
-<!--                                </tr>-->
-<!--                                </thead>-->
-<!--                                <tbody>-->
-<!--                                --><?php
-//                                $count = 0;
-//                                foreach ($partners as $key => $partner) {
-//                                    if ($partner->num_clients_connect < 3) { $count++; ?>
-<!--                                        <tr>-->
-<!--                                            <td>--><?php //echo $count;?><!--</td>-->
-<!--                                            <td class="advertise font-bold col-cyan">-->
-<!--                                                <a href="--><?php //echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($partner->id)]) ?><!--">-->
-<!--                                                    --><?php //echo h($partner->name); ?>
-<!--                                                </a>-->
-<!--                                            </td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->phone); ?><!--</td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->birthday); ?><!--</td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->address); ?><!--</td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->num_clients_connect); ?><!--</td>-->
-<!--                                        </tr>-->
-<!--                                    --><?php //} ?>
-<!--                                --><?php //} ?>
-<!--                                </tbody>-->
-<!--                            </table>-->
-<!--                        </div>-->
-<!--                        <span class="label label-warning font-14">Danh sách khách hàng truy cập <strong> Từ 3 -> 10 lần.</strong></span>-->
-<!--                        <div class="m-t-10">-->
-<!--                            --><?php //if (!empty($list_id_devices)) { ?>
-<!--                                <a href="--><?php //echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/4/'. $list_id_devices]);?><!--" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>-->
-<!--                            --><?php //} ?>
-<!--                        </div>-->
-<!--                        <div class="table-responsive m-b-15 m-t-5">-->
-<!--                            <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">-->
-<!--                                <thead>-->
-<!--                                <tr class="bg-blue-grey">-->
-<!--                                    <th>STT</th>-->
-<!--                                    <th>Tên khách hàng</th>-->
-<!--                                    <th>Số điện thoại</th>-->
-<!--                                    <th>Ngày sinh</th>-->
-<!--                                    <th>Địa chỉ</th>-->
-<!--                                    <th>Number connect</th>-->
-<!--                                </tr>-->
-<!--                                </thead>-->
-<!--                                <tbody>-->
-<!--                                --><?php
-//                                $count = 0;
-//                                foreach ($partners as $key => $partner) {
-//                                    if ($partner->num_clients_connect >= 3 && $partner->num_clients_connect <= 10) { $count++ ;?>
-<!--                                        <tr>-->
-<!--                                            <td>--><?php //echo $count;?><!--</td>-->
-<!--                                            <td class="advertise font-bold col-cyan">-->
-<!--                                                <a href="--><?php //echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($partner->id)]) ?><!--">-->
-<!--                                                    --><?php //echo h($partner->name); ?>
-<!--                                                </a>-->
-<!--                                            </td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->phone); ?><!--</td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->birthday); ?><!--</td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->address); ?><!--</td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->num_clients_connect); ?><!--</td>-->
-<!--                                        </tr>-->
-<!--                                    --><?php //} ?>
-<!--                                --><?php //} ?>
-<!--                                </tbody>-->
-<!--                            </table>-->
-<!--                        </div>-->
-<!--                        <span class="label label-warning font-14">Danh sách khách hàng truy cập <strong> lớn hơn 10 lần.</strong></span>-->
-<!--                        <div class="m-t-10">-->
-<!--                            --><?php //if (!empty($list_id_devices)) { ?>
-<!--                            <a href="--><?php //echo $this->Url->build(['controller' => 'Users', 'action' => 'exportExcel/10/'.$list_id_devices]);?><!--" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>-->
-<!--                            --><?php //} ?>
-<!--                        </div>-->
-<!--                        <div class="table-responsive m-b-15 m-t-5">-->
-<!--                            <table class="table table-bordered table-striped table-hover js-basic-example_sevice dataTable">-->
-<!--                                <thead>-->
-<!--                                <tr class="bg-blue-grey">-->
-<!--                                    <th>STT</th>-->
-<!--                                    <th>Tên khách hàng</th>-->
-<!--                                    <th>Số điện thoại</th>-->
-<!--                                    <th>Ngày sinh</th>-->
-<!--                                    <th>Địa chỉ</th>-->
-<!--                                    <th>Number connect</th>-->
-<!--                                </tr>-->
-<!--                                </thead>-->
-<!--                                <tbody>-->
-<!--                                --><?php
-//                                $count = 0;
-//                                foreach ($partners as $key => $partner) {
-//                                    $count_number_connect = count($partner->num_clients_connect);
-//                                    if ($partner->num_clients_connect > 10) { $count++ ; ?>
-<!--                                        <tr>-->
-<!--                                            <td>--><?php //echo $count;?><!--</td>-->
-<!--                                            <td class="advertise font-bold col-cyan">-->
-<!--                                                <a href="--><?php //echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($partner->id)]) ?><!--">-->
-<!--                                                    --><?php //echo h($partner->name); ?>
-<!--                                                </a>-->
-<!--                                            </td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->phone); ?><!--</td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->birthday); ?><!--</td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->address); ?><!--</td>-->
-<!--                                            <td>--><?php //echo nl2br($partner->num_clients_connect); ?><!--</td>-->
-<!--                                        </tr>-->
-<!--                                    --><?php //} ?>
-<!--                                --><?php //} ?>
-<!--                                </tbody>-->
-<!--                            </table>-->
-<!--                        </div>-->
                     </div>
                 </div>
             </div>
@@ -249,6 +244,18 @@
     </div>
 </section>
 <style>
+    .pagination > .disabled > a, .pagination > .disabled > a:focus, .pagination > .disabled > a:hover, .pagination > .disabled > span, .pagination > .disabled > span:focus, .pagination > .disabled > span:hover {
+        color: #777;
+        cursor: not-allowed;
+        background-color: #fff !important;
+        border-color: #ddd;
+    }
+    .desc {
+        float: right;
+    }
+    th>a {
+        float: right;
+    }
     .label{
         font-weight: normal !important;
     }
@@ -256,4 +263,94 @@
         margin-bottom: 0px !important;
         margin-left: -10px !important;
     }
+    .storke_1{
+        border: 2px solid #4489e4;
+    }
+    .storke_2{
+        border: 2px solid #f96a74;
+    }
+    .storke_3 {
+        border: 2px solid #ffa91c;
+    }
+    .storke_4{
+        border: 2px solid #32c861;
+    }
 </style>
+<?php
+echo $this->Html->script([
+    'chartist/js/chartist.min',
+    'chartist/js/chartist-plugin-tooltip.min'
+])
+?>
+<script type="application/javascript">
+    $('#config-demo').dateRangePicker({
+        language:'vi',
+        showShortcuts: true,
+        shortcuts :
+            {
+                'next-days': [3, 5, 7],
+                'next': ['week','month','year']
+            },
+        format: 'DD-MM-YYYY',
+        separator: ' to '
+    });
+    //Line chart with tooltips
+    var list_day = jQuery.parseJSON('<?= isset($list_day) ? $list_day:"";?>');
+    var chart_number_partner = jQuery.parseJSON('<?= isset($chart_number_partner) ? $chart_number_partner:[];?>');
+    var count_old_partner = jQuery.parseJSON('<?= isset($count_old_partner)?$count_old_partner:[];?>');
+    var count_new_partner = jQuery.parseJSON('<?= isset($count_new_partner)?$count_new_partner:[];?>');
+    var count_phone_partner = jQuery.parseJSON('<?= isset($count_phone_partner)?$count_phone_partner:[];?>');
+    new Chartist.Line('#line-chart-tooltips', {
+            labels: list_day,
+            series: [
+                {
+                    name: 'Khách hàng',
+                    data: chart_number_partner
+                },
+                {
+                    name: 'khách hàng mới',
+                    data: count_new_partner
+                },
+                {
+                    name: 'khách hàng quay lại',
+                    data: count_old_partner
+                },
+                {
+                    name: 'khách hàng có SDT',
+                    data: count_phone_partner
+                }
+            ]
+        },
+        {
+            low: 0,
+            showArea: false,
+            plugins: [
+                Chartist.plugins.tooltip()
+            ]
+        }
+    );
+    var $chart = $('#line-chart-tooltips');
+    var $toolTip = $chart
+        .append('<div class="tooltip"></div>')
+        .find('.tooltip')
+        .hide();
+
+    $chart.on('mouseenter', '.ct-point', function() {
+        var $point = $(this),
+            value = $point.attr('ct:value'),
+            seriesName = $point.parent().attr('ct:series-name');
+        $toolTip.html(seriesName + '<br>' + value).show();
+    });
+
+    $chart.on('mouseleave', '.ct-point', function() {
+        $toolTip.hide();
+    });
+
+    $chart.on('mousemove', function(event) {
+        $toolTip.css({
+            left: (event.offsetX || event.originalEvent.layerX) - $toolTip.width() / 2 - 10,
+            top: (event.offsetY || event.originalEvent.layerY) - $toolTip.height() - 40
+        });
+    });
+
+</script>

@@ -148,31 +148,40 @@
                                     <div class="card-box">
                                         <div class="text-center">
                                             <div class="row">
-                                                <div class="col-xs-4">
-                                                    <div class="m-t-20 m-b-20">
-                                                        <p class="text-uppercase m-b-5 font-13 font-600">Tổng khách hàng</p>
+                                                <div class="col-xs-3">
+                                                    <div class="m-t-20 m-b-20 storke_1">
+                                                        <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">Tổng khách hàng</p>
                                                         <h4 class="m-b-10"><?= isset($total_partner)? $total_partner:'';?></h4>
                                                     </div>
                                                 </div>
-<!--                                                <div class="col-xs-4">-->
-<!--                                                    <div class="m-t-20 m-b-20">-->
-<!--                                                        <h4 class="m-b-10">3562</h4>-->
-<!--                                                        <p class="text-uppercase m-b-5 font-13 font-600">Income amounts</p>-->
-<!--                                                        <p class="text-success">89% <i class="mdi mdi-trending-up"></i></p>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
-<!--                                                <div class="col-xs-4">-->
-<!--                                                    <div class="m-t-20 m-b-20">-->
-<!--                                                        <h4 class="m-b-10">7584</h4>-->
-<!--                                                        <p class="text-uppercase m-b-5 font-13 font-600">Total visits</p>-->
-<!--                                                        <p class="text-success">53% <i class="mdi mdi-trending-up"></i></p>-->
-<!--                                                    </div>-->
-<!--                                                </div>-->
+                                                <div class="col-xs-3">
+                                                    <div class="m-t-20 m-b-20 storke_2">
+                                                        <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">Khách hàng mới</p>
+                                                        <h4 class="m-b-10"><?= isset($sum_new_partner) ? $sum_new_partner:'';?></h4>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <div class="m-t-20 m-b-20 storke_3">
+                                                        <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">Khách hàng quay lại</p>
+                                                        <h4 class="m-b-10"><?= isset($sum_old_partner) ? $sum_old_partner:'';?></h4>
+                                                    </div>
+                                                </div>
+                                                <div class="col-xs-3">
+                                                    <div class="m-t-20 m-b-20 storke_4">
+                                                        <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">Khách hàng có SDT</p>
+                                                        <h4 class="m-b-10"><?= isset($sum_phone_partner) ? $sum_phone_partner:'';?></h4>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
 
                                         <div class="m-t-10">
                                             <div id="line-chart-tooltips" class="ct-chart ct-golden-section"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 pull-right">
+                                        <div class="">
+                                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'download_excel/'.$list_id_partner]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có số điện thoại</a>
                                         </div>
                                     </div>
                                 </div>
@@ -190,7 +199,7 @@
                                             <?= $this->Paginator->sort('Partners.id', '▼', ['direction' => 'desc', 'escape' => false]) ?>
                                             <?= $this->Paginator->sort('Partners.id', '▲', ['direction' => 'asc', 'escape' => false]); ?>
                                         </th>
-                                        <th scope="col">Tên người dùng
+                                        <th scope="col">Tên khách hàng
                                             <?= $this->Paginator->sort('Partners.name', '▼', ['direction' => 'desc', 'escape' => false]) ?>
                                             <?= $this->Paginator->sort('Partners.name', '▲', ['direction' => 'asc', 'escape' => false]); ?>
                                         </th>
@@ -239,7 +248,7 @@
                                             <td><?php echo h($vl['phone']); ?></td>
                                             <td><?php echo h($vl['birthday']); ?></td>
                                             <td><?php echo h($vl['address']); ?></td>
-                                            <td><?php echo date('d/m/Y', strtotime($vl['modified'])); ?></td>
+                                            <td><?php echo date('d/m/Y', strtotime($vl['created'])); ?></td>
                                             <td><?php echo h($vl['num_clients_connect']); ?></td>
                                             <td><?php echo isset($vl['Devices']['name']) ? $vl['Devices']['name'] : ''; ?></td>
                                         </tr>
@@ -279,6 +288,18 @@
     th>a {
         float: right;
     }
+    .storke_1{
+        border: 2px solid #4489e4;
+    }
+    .storke_2{
+        border: 2px solid #f96a74;
+    }
+    .storke_3 {
+        border: 2px solid #ffa91c;
+    }
+    .storke_4{
+        border: 2px solid #32c861;
+    }
 </style>
 <?php
 echo $this->Html->script([
@@ -303,6 +324,7 @@ echo $this->Html->script([
     var chart_number_partner = jQuery.parseJSON('<?= $chart_number_partner;?>');
     var count_old_partner = jQuery.parseJSON('<?= $count_old_partner;?>');
     var count_new_partner = jQuery.parseJSON('<?= $count_new_partner;?>');
+    var count_phone_partner = jQuery.parseJSON('<?= $count_phone_partner;?>');
     new Chartist.Line('#line-chart-tooltips', {
             labels: list_day,
             series: [
@@ -317,6 +339,10 @@ echo $this->Html->script([
                 {
                     name: 'khách hàng quay lại',
                     data: count_old_partner
+                },
+                {
+                    name: 'khách hàng có SDT',
+                    data: count_phone_partner
                 }
             ]
         },
