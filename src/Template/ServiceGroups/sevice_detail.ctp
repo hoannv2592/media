@@ -8,23 +8,21 @@
     <div class="container-fluid">
         <div class="row clearfix">
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <ol class="breadcrumb breadcrumb-bg-blue-grey">
+                    <li>
+                        <a style="margin-left: 10px;" href="<?php echo $this->Url->build(['controller' => 'ServiceGroups', 'action' => 'index'])?>">
+                            <i class="material-icons">home</i> Trang chủ
+                        </a>
+                    </li>
+                    <li class="active">
+                        <a href="javascript:void(0)">Thông tin khách hàng</a>
+                    </li>
+                </ol>
                 <div class="card">
                     <div class="header bg-green">
                         <h2>
-                            Chăm sóc khách hàng <small>Description text here...</small>
+                            Chăm sóc khách hàng
                         </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
                     <div class="body">
                         <div class="demo-masked-input">
@@ -179,11 +177,14 @@
                                             <div id="line-chart-tooltips" class="ct-chart ct-golden-section"></div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12 pull-right">
-                                        <div class="">
-                                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'download_excel/'.$list_id_partner]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có số điện thoại</a>
+                                    <?php $list_id_partner = json_decode($list_id_partner);
+                                    if (!empty($list_id_partner)) { ?>
+                                        <div class="col-md-12 pull-right">
+                                            <div class="">
+                                                <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'download_excel/'.$list_id_partner]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có số điện thoại</a>
+                                            </div>
                                         </div>
-                                    </div>
+                                    <?php } ?>
                                 </div>
                             </div>
 

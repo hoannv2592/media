@@ -390,7 +390,7 @@ class UsersController extends AppController
         );
         $partners = $this->PartnerVouchers->find()->where($conditions)
             ->hydrate(false)
-            ->select(['name', 'birthday', 'phone', 'address', 'num_clients_connect'])
+            ->select(['name', 'phone', 'address'])
             ->toList();
 
         if (!empty($partners)) {
@@ -401,12 +401,27 @@ class UsersController extends AppController
                 $lable[$k+1]['label'] = $key;
                 $k++;
             }
+
             $headerStyle = array(
                 'font' => array(
                     'bold' => true
                 )
             );
-            $objPHPExcel->addTableHeader($lable, array('bold' => true, 'headerStyle' => $headerStyle));
+            $data_label = array();
+            foreach ($lable as $k => $vl) {
+                if ($k == 0) {
+                    $data_label[$k]['label'] = 'No';
+                } elseif ($k == 2) {
+                    $data_label[$k]['label'] = 'Họ và Tên';
+                } elseif ($k == 3) {
+                    $data_label[$k]['label'] = 'Số điện thoại';
+                } elseif ($k == 4) {
+                    $data_label[$k]['label'] = 'Địa chỉ';
+                } else {
+                    //unset($vl['label']);
+                }
+            }
+            $objPHPExcel->addTableHeader($data_label, array('bold' => true, 'headerStyle' => $headerStyle));
             $objPHPExcel->addTableFooter();
             foreach ($partners as $k => $row) {
                 $objPHPExcel->addTableRow($k, $row);
@@ -415,7 +430,7 @@ class UsersController extends AppController
             $objPHPExcel->save($fileName, 'Excel2007');
             $objPHPExcel->output($fileName, 'Excel2007');
         } else {
-            $this->redirect('partners/index');
+            $this->redirect('Reports/index');
         }
     }
 
@@ -575,7 +590,6 @@ class UsersController extends AppController
                 )
             );
             $data_label = array();
-            pr($lable);
             foreach ($lable as $k => $vl) {
                 if ($k == 0) {
                     $data_label[$k]['label'] = 'No';

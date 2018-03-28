@@ -279,11 +279,30 @@ class ServiceGroupsController extends AppController
         }
     }
 
+    /**
+     * @param null $user_id
+     *
+     *
+     */
     public function seviceDetail($user_id = null)
     {
-
+        $user_id = \UrlUtil::_decodeUrl($user_id);
+        $users = $this->Users->find('all',[
+            'contain'  => ['Devices' => function ($q) {
+                return $q
+                    ->where([
+                        'Devices.delete_flag !=' => 1
+                    ])
+                    ->select([
+                        'Devices.user_id', 'id', 'name'
+                    ]);
+            }],
+            'conditions' => [
+                'Users.delete_flag !=' => 1,
+                'id' => $user_id
+            ]
+        ])->first();
         $limit_value = 10;
-        $user = $this->Auth->user();
         $current_month = date('m');
         $day_before_ten_day = date('d', strtotime('-10 days'));
         $current = date('d');
@@ -293,13 +312,19 @@ class ServiceGroupsController extends AppController
         }
         $list_day = json_encode(array_values($list_day));
         if ($this->request->is('get')) {
-            $date_full_current = date('Y-m-d');
-            $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
-            $conditions['Partners.created >='] = $date_full_before_ten_day;
-            $conditions['Partners.created <='] = $date_full_current;
-            $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('d-m-Y');
-            $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('d-m-Y');
-            $data_post['date'] = $date_form.' to '. $date_to;
+            $conditions = $this->request->session()->check('data_search_service_group');
+            if (!$conditions) {
+                $date_full_current = date('Y-m-d');
+                $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
+                $conditions['Partners.created >='] = $date_full_before_ten_day;
+                $conditions['Partners.created <='] = $date_full_current;
+                $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('d-m-Y');
+                $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('d-m-Y');
+                $data_post['date'] = $date_form.' to '. $date_to;
+            } else {
+                $conditions = $this->request->session()->read('data_search_service_group');
+                $data_post = $this->request->session()->read('services');
+            }
         }
         if ($this->request->is('post')) {
             $data_post = $this->request->getData();
@@ -326,28 +351,10 @@ class ServiceGroupsController extends AppController
             if (isset($data_post['client_mac']) && $data_post['client_mac'] != '') {
                 $conditions['Partners.client_mac LIKE'] = "%".trim($data_post['client_mac'])."%";
             }
-            $this->request->session()->write('data_search', $conditions);
-            $conditions = $this->request->session()->read('data_search');
+            $this->request->session()->write('data_search_service_group', $conditions);
         }
-        $this->request->session()->write('conditions', $data_post);
-        $user_id = \UrlUtil::_decodeUrl($user_id);
-        $users = $this->Users->find('all',[
-            'contain'  => ['Devices' => function ($q) {
-                return $q
-                    ->where([
-                        'Devices.delete_flag !=' => 1
-                    ])
-                    ->select([
-                        'Devices.user_id', 'id', 'name'
-                    ]);
-            }],
-            'conditions' => [
-                'Users.delete_flag !=' => 1,
-                'id' => $user_id
-            ]
-        ])->first();
+        $this->request->session()->write('services', $data_post);
         $list_id_devices = Hash::extract($users['devices'], '{n}.id');
-        //$device = $this->Devices->find()->where(['user_id' => $user['id']])->select(['id'])->combine('id', 'id')->toArray();
         if (!empty($list_id_devices)) {
             $conditions['device_id IN'] = $list_id_devices;
             $query = $this->Partners->getOders($conditions);
@@ -373,7 +380,10 @@ class ServiceGroupsController extends AppController
             $count_phone_partner[] = count($phone_partner);
             $list_id_partner[] = $id_partner;
         }
-        $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
+        if (!empty($list_id_partner)) {
+            $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
+            $list_id_partner = json_encode($list_id_partner);
+        }
         $partners = Hash::combine($data, '{n}.id', '{n}.num_clients_connect', '{n}.created');
         $count_old_partner = array();
         $count_new_partner = array();
@@ -399,8 +409,8 @@ class ServiceGroupsController extends AppController
         $count_old_partner = json_encode($count_old_partner);
         $count_new_partner = json_encode($count_new_partner);
         $count_phone_partner = json_encode($count_phone_partner);
-        $list_id_partner = json_encode($list_id_partner);
-        $conditions = $this->request->session()->read('conditions');
+
+        $conditions = $this->request->session()->read('services');
         $partners = $this->paginate($query, ['limit' => $limit_value])->toArray();
         $this->set(compact(
             'partners', 'conditions',
@@ -410,178 +420,6 @@ class ServiceGroupsController extends AppController
             'count_phone_partner', 'sum_old_partner', 'sum_new_partner', 'list_id_partner'
         ));
         $this->set('_serialize', ['partners']);
-
-
-
-
-
-
-
-
-
-
-
-
-//        $current_month = date('m');
-//        $day_before_ten_day = date('d', strtotime('-10 days'));
-//        $current = date('d');
-//        $detail_sevice = $user_id;
-//        $user_id = \UrlUtil::_decodeUrl($user_id);
-//        $users = $this->Users->find('all',[
-//            'contain'  => ['Devices' => function ($q) {
-//                return $q
-//                    ->where([
-//                        'Devices.delete_flag !=' => 1
-//                    ])
-//                    ->select([
-//                        'Devices.user_id', 'id', 'name'
-//                    ]);
-//            }],
-//            'conditions' => [
-//                'Users.delete_flag !=' => 1,
-//                'id' => $user_id
-//            ]
-//        ])->first();
-//        $list_id_devices = Hash::extract($users['devices'], '{n}.id');
-//        $list_day = array();
-//        for ($i = $day_before_ten_day; $i <= $current; $i++) {
-//            $list_day[] = $i.'/'.$current_month;
-//        }
-//        $list_day = json_encode(array_values($list_day));
-//        if ($this->request->is('get')) {
-//            $date_full_current = date('Y-m-d');
-//            $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
-//            $conditions['Partners.created >='] = $date_full_before_ten_day;
-//            $conditions['Partners.created <='] = $date_full_current;
-//            $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('d-m-Y');
-//            $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('d-m-Y');
-//            $data_post['date'] = $date_form.' to '. $date_to;
-//        }
-//        if (!empty($list_id_devices)) {
-//            $data = $this->request->query;
-//            $limit = 10;
-//            $page = 1;
-//            if(!empty($data['limit'])){
-//                $limit = $data['limit'];
-//            }
-//            if(!empty($data['page'])){
-//                $page = $data['page'];
-//            }
-//            if ($this->request->is('post')) {
-//                $data_post = $this->request->getData();
-//                $conditions = array();
-//                if (isset($data_post['date']) && $data_post['date'] != '') {
-//                    $date = explode(' to ', $data_post['date']);
-//                    $date_form = $date[0];
-//                    $date_to = $date[1];
-//                    $date_to = Datetime::createFromFormat('d-m-Y', $date_to)->format('Y-m-d');
-//                    $date_form = Datetime::createFromFormat('d-m-Y', $date_form)->format('Y-m-d');
-//                    $conditions['Partners.created >='] = $date_form;
-//                    $conditions['Partners.created <='] = $date_to;
-//                    $list_day = $this->get_label($date);
-//                }
-//                if (isset($data_post['name']) && $data_post['name'] != '') {
-//                    $conditions['Partners.name LIKE'] = "%" . trim($data_post['name']) . "%";
-//                }
-//                if (isset($data_post['phone']) && $data_post['phone'] != '') {
-//                    $conditions['Partners.phone'] = trim($data_post['phone']);
-//                }
-//                if (isset($data_post['device_name']) && $data_post['device_name'] != '') {
-//                    $conditions['Devices.name LIKE'] = "%" . trim($data_post['device_name']) . "%";
-//                }
-//                if (isset($data_post['client_mac']) && $data_post['client_mac'] != '') {
-//                    $conditions['Partners.client_mac LIKE'] = "%" . trim($data_post['client_mac']) . "%";
-//                }
-//                $this->request->session()->write('data_search', $conditions);
-//                $conditions = $this->request->session()->read('data_search');
-//            }
-//            $this->request->session()->write('conditions', $data_post);
-//            $conditions['device_id IN'] = $list_id_devices;
-//            $order = array(
-//                'Partners.created' => 'DESC'
-//            );
-//
-//            $data['limit'] = $limit;
-//            $data['page'] = $page;
-//            $currentPage = $page;
-//            $offset = $limit*($page-1);
-////            $total = $this->Partners->find()->where($conditions)->count();
-////            $partners = $this->Partners->find()->where($conditions)->page($page)->limit($limit)->order($order)->offset($offset)->toArray();
-//            $query = $this->Partners->getOders($conditions);
-//            $data = array();
-//            $total_partner = count($query->toArray());
-//            foreach ($query->toArray() as $k => $vl) {
-//                $vl['created'] = date('Y-m-d', strtotime($vl['created']));
-//                $data[$k] = $vl;
-//            }
-//            $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
-//            $count_phone_partner = array();
-//            $list_id_partner = array();
-//            foreach ($partner_phone as  $k => $partner) {
-//                $phone_partner = array();
-//                $id_partner = array();
-//                foreach ($partner as $key => $val) {
-//                    if ($val != '') {
-//                        $phone_partner[] = $val;
-//                        $id_partner[] = $key;
-//                    }
-//                }
-//                $count_phone_partner[] = count($phone_partner);
-//                $list_id_partner[] = $id_partner;
-//            }
-//            $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
-//            $partners = Hash::combine($data, '{n}.id', '{n}.num_clients_connect', '{n}.created');
-//            $count_old_partner = array();
-//            $count_new_partner = array();
-//            $chart_number_partner = array();
-//            foreach ($partners as  $k => $partner) {
-//                $chart_number_partner[] = count($partner);
-//                $old_partner = array();
-//                $new_partner = array();
-//                foreach ($partner as $key => $val) {
-//                    if ($val > 1) {
-//                        $old_partner[] = $val;
-//                    } else {
-//                        $new_partner[] = $val;
-//                    }
-//                }
-//                $count_old_partner[] = count($old_partner);
-//                $count_new_partner[] = count($new_partner);
-//            }
-//            $sum_old_partner = array_sum($count_old_partner);
-//            $sum_new_partner = array_sum($count_new_partner);
-//            $sum_phone_partner = array_sum($count_phone_partner);
-//            $chart_number_partner = json_encode($chart_number_partner);
-//            $count_old_partner = json_encode($count_old_partner);
-//            $count_new_partner = json_encode($count_new_partner);
-//            $count_phone_partner = json_encode($count_phone_partner);
-//            $list_id_partner = json_encode($list_id_partner);
-//            $list_id_devices = json_encode($list_id_devices);
-//            $conditions = $this->request->session()->read('conditions');
-//            $partners = $this->paginate($query, ['limit' => 10])->toArray();
-////            $fields = $this->getLableField();
-////            $fields = array_merge($fields, ['Devices.name']);
-////            $partners = $this->Partners->find('all')->join([
-////                'Devices' => [
-////                    'table' => 'devices',
-////                    'type' => 'LEFT',
-////                    'conditions' => 'Devices.id = Partners.device_id',
-////                ]
-////            ])
-////            ->select($fields)
-////            ->where($conditions)->page($page)->limit($limit)->order($order)->offset($offset)->toArray();
-//        } else {
-//            $partners = array();
-//        }
-//        $this->set(compact('list_users_exam','total', 'currentPage', 'detail_sevice', 'num_clients_connect'));
-//        $this->set(compact('partners', 'list_id_devices'));
-//        $this->set(compact(
-//            'partners', 'conditions',
-//            'list_day', 'chart_number_partner',
-//            'count_old_partner', 'sum_phone_partner',
-//            'total_partner', 'count_new_partner',
-//            'count_phone_partner', 'sum_old_partner', 'sum_new_partner', 'list_id_partner'
-//        ));
     }
     public function getLableField()
     {

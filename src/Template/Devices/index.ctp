@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\View\AppView $Adgroups
+ * @var \App\View\AppView $conditions
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $devices
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $userData
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $action
@@ -14,33 +15,36 @@ $this->assign('title', 'Quản lý thiết bị');
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="card">
                     <div class="header bg-green">
-                        <h2>
-                            Quản lý thiết bị
-                            <small>Description text here...</small>
-                        </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
+                        <h2>Quản lý thiết bị</h2>
                     </div>
                     <div class="body">
-                        <?php if ($userData['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
-                            <div class="button-demo">
-                                <a href="javascript:void(0);"
-                                   class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
+                        <div class="col-md-6" style="margin-bottom: 0 !important; padding-left:0">
+                            <?php echo $this->Form->create('Devices', array(
+                                'id' => 'form_advanced_validation_x',
+                                'type' => 'post'
+                            ));
+                            ?>
+                            <div class="col-md-6" style="padding-left:0">
+                                <b>Tên thiết bị</b>
+                                <div class="input-group" style="margin-bottom: 0px !important;">
+                                    <div class="form-line">
+                                        <?php
+                                        $name = isset($conditions['name']) ? ($conditions['name']):'';
+                                        echo $this->Form->control('name', array(
+                                            'label' => false,
+                                            'class' => 'form-control',
+                                            'value' => $name,
+                                            'required' => false,
+                                            'id' => 'name'
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary waves-effect" id="submit" type="submit">Tìm kiếm</button>
                             </div>
-                        <?php } else { ?>
-                            <a disabled="disabled" href="javascript:void(0);"
-                               class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
-                        <?php } ?>
+                            <?= $this->Form->end(); ?>
+                        </div>
+                        <div class="row"></div>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="home">
                                 <?php if (!empty($devices)) { ?>

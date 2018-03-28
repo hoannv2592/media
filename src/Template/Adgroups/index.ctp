@@ -14,20 +14,9 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                 <div class="card">
                     <div class="header bg-green">
                         <h2>
-                            Quản lý nhóm thiết bị quảng cáo <small>Description text here...</small>
+                            Quản lý nhóm thiết bị quảng cáo
                         </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
+
                     </div>
                     <div class="body">
                         <div class="button-demo">

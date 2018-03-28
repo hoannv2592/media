@@ -158,17 +158,7 @@ $cakeDescription = 'Media ';
     <aside id="leftsidebar" class="sidebar">
         <!-- Menu -->
         <div class="menu">
-            <ul class="list">
-                <?php if ($controller == 'Users') { ?>
-            <li class="left_menu active ac">
-            <?php } else { ?>
-                <li class="left_menu ac">
-                    <?php } ?>
-                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>">
-                        <i class="material-icons">supervisor_account</i>
-                        <span>Quản lý người dùng</span>
-                    </a>
-                </li>
+            <ul class="list" style="margin-top: 10px">
                 <?php if ($controller == 'Devices') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
@@ -180,6 +170,17 @@ $cakeDescription = 'Media ';
                         <span>Quản lý thiết bị</span>
                     </a>
                 </li>
+                <?php if ($controller == 'Users') { ?>
+            <li class="left_menu active ac">
+            <?php } else { ?>
+                <li class="left_menu ac">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>">
+                        <i class="material-icons">supervisor_account</i>
+                        <span>Quản lý người dùng</span>
+                    </a>
+                </li>
+
                 <?php if ($controller == 'Adgroups') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
@@ -196,7 +197,7 @@ $cakeDescription = 'Media ';
                 <li class="left_menu">
                     <?php } ?>
                     <a href="<?php echo $this->Url->build(["controller" => "CampaignGroups", "action" => "index"]); ?>">
-                        <i class="material-icons">trending_up</i>
+                        <i class="material-icons">adjust</i>
                         <span>Nhóm chiến dịch</span>
                     </a>
                 </li>

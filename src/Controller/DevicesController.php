@@ -8,6 +8,7 @@ use App\Model\Entity\User;
 use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 use Cake\Utility\Hash;
+use DateTime;
 
 /**
  * Devices Controller
@@ -72,9 +73,27 @@ class DevicesController extends AppController
     public function index()
     {
         $login = $this->Auth->user();
-        $data = $this->request->data;
-        $limit_value = 15;
+        $limit_value = 10;
+        if ($this->request->is('get')) {
+            $conditions = $this->request->session()->check('data_search_device');
+            if (!$conditions) {
+                $data_post['name'] = '';
+            } else {
+                $conditions = $this->request->session()->read('data_search_device');
+                $data_post = $this->request->session()->read('devive_name');
+            }
+        }
+        if ($this->request->is('post')) {
+            $data_post = $this->request->getData();
+            $conditions = array();
+            if (isset($data_post['name']) && $data_post['name'] != '') {
+                $conditions['Devices.name LIKE'] = "%".trim($data_post['name'])."%";
 
+            }
+            $this->request->session()->write('data_search_device', $conditions);
+        }
+        $this->request->session()->write('devive_name', $data_post);
+        $conditions['Devices.delete_flag !='] = DELETED;
         if ($login['role'] == User::ROLE_ONE) {
             $devices = $this->Devices->find('all', [
                 'contain' => ['Users' => function ($q) {
@@ -90,13 +109,12 @@ class DevicesController extends AppController
                             ]);
                     }
                     ],
-                'conditions' => [
-                    'Devices.delete_flag !=' => DELETED
-                ],
+                'conditions' => $conditions,
                 'order' => ['Devices.modified' => 'DESC']
             ]);
 
         } else {
+            $conditions['Devices.user_id '] = $login['id'];
             $devices = $this->Devices->find('all', [
                 'contain' => ['Users' => function ($q) {
                     return $q
@@ -109,20 +127,13 @@ class DevicesController extends AppController
                             ]);
                     }
                     ],
-                'conditions' => [
-                    'Devices.user_id ' => $login['id'],
-                    'Devices.delete_flag !=' => DELETED
-                ],
+                'conditions' => $conditions,
                 'order' => ['Devices.modified' => 'DESC']
             ]);
         }
+        $conditions = $this->request->session()->read('devive_name');
         $devices = $this->paginate($devices, ['limit' => $limit_value])->toArray();
-        $result = Hash::combine($devices, '{n}.id', '{n}.adgroup_id');
-        $Adgroups = array();
-//        if (!empty($result)) {
-//            $Adgroups = $this->Adgroups->find()->where(['id IN' => array_unique($result)])->combine('id', 'name')->toArray();
-//        }
-        $this->set(compact('Adgroups', 'devices'));
+        $this->set(compact('Adgroups', 'devices', 'conditions'));
     }
 
     /**
@@ -486,12 +497,13 @@ class DevicesController extends AppController
                     $current_date = date('Y-m-d');
                     $campaing_id = array();
                     foreach ($device_campaign as $k => $vl) {
-                        $vl = explode('-', $vl);
-                        $my_date = date('Y-m-d', strtotime($vl[1]));
+                        $vl = explode(' - ', $vl);
+                        $my_date = Datetime::createFromFormat('d/m/Y', $vl[1])->format('Y-m-d');
                         if ($my_date >= $current_date) {
                             $campaing_id[$k] = $vl[1];
                         }
                     }
+
                     $interval = array();
                     if (!empty($campaing_id)) {
                         foreach ($campaing_id as $k => $vl) {
