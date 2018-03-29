@@ -20,9 +20,9 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
     <div class="container-fluid">
         <div class="row clearfix">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <ol class="breadcrumb breadcrumb-bg-blue-grey">
+                <ol class=" header breadcrumb breadcrumb-bg-blue-grey">
                     <li>
-                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
+                        <a style="margin-left: 10px" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'index'])?>">
                             <i class="material-icons">home</i> Trang chủ
                         </a>
                     </li>
@@ -74,7 +74,26 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                         'class' => 'form-control',
                                         'id' => 'tile_name',
                                         'value' => $address,
-                                        'placeholder' => 'Điền địa chỉ nhóm thiết bị..'
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php
+                                    $type_adv = isset($device->type_adv) ? $device->type_adv: '1';
+                                    echo  $this->Form->input('type_adv', array(
+                                        'type' => 'select',
+                                        'options' => [
+                                            '1' => 'Kết nối bình thường',
+                                            '2' => 'Hiển thị popup quảng cáo'
+                                        ],
+                                        'empty' => '--- Chọn hiển thị ---',
+                                        'label'=> 'Cài đặt loại quảng cáo',
+                                        'value' => $type_adv,
+                                        'escape' => false,
+                                        'error' => false,
+                                        'class' => 'form-control required input_select_medium'
                                     ));
                                     ?>
                                 </div>
@@ -83,10 +102,9 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                 <div class="form-line">
                                     <?php $tile_congratulations_return = isset($device->tile_congratulations_return) ? ($device->tile_congratulations_return):'' ?>
                                     <?php echo $this->Form->control('tile_congratulations_return', array(
-                                        'label' => 'Tile congratulations return',
+                                        'label' => 'Tiêu đề chúc mừng kết nối lại',
                                         'class' => 'form-control',
                                         'value' => $tile_congratulations_return,
-                                        'placeholder' => 'Tile congratulations return..'
                                     ));
                                     ?>
                                 </div>
@@ -95,7 +113,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                 <div class="form-line">
                                     <?php $title_connect = isset($device->title_connect) ? ($device->title_connect):'' ?>
                                     <?php echo $this->Form->control('title_connect', array(
-                                        'label' => 'Title button connect',
+                                        'label' => 'Tiêu đề button kết nối',
                                         'class' => 'form-control',
                                         'value' => $title_connect,
                                         'placeholder' => 'Title button connect..'
@@ -108,13 +126,11 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     <?php
                                     $title_campaign = isset($device->title_campaign) ? ($device->title_campaign):'' ?>
                                     <?php echo $this->Form->control('title_campaign', array(
-                                        'label' => 'Title campaign ',
+                                        'label' => 'Tiêu đề button khảo sát',
                                         'class' => 'form-control',
                                         'value' => $title_campaign,
-                                        'placeholder' => 'title_campaign..'
                                     ));
                                     ?>
-                                    <div class="help-info">Title_campaign</div>
                                 </div>
                             </div>
 
@@ -161,7 +177,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                             '2' => 'Không hiển thị'
                                         ],
                                         'empty' => '--- Chọn hiển thị ---',
-                                        'label'=> 'Setting hidden button connect-snow',
+                                        'label'=> 'Cài đặt hiển thị button connect-snow',
                                         'value' => $hidden_connect,
                                         'escape' => false,
                                         'error' => false,
