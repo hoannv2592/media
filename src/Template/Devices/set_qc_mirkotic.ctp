@@ -443,11 +443,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         maxFileSize: 10000,
         maxFilesNum: 5,
         dropZoneEnabled : false,
-        showUpload : false,
-        //allowedFileTypes: ['image', 'video', 'flash'],
-        // slugCallback: function (filename) {
-        //     return filename.replace('(', '_').replace(']', '_');
-        // }
+        showUpload : false
     });
 
     $("#file-2").fileinput({

@@ -92,6 +92,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                         'label'=> 'Cài đặt loại quảng cáo',
                                         'value' => $type_adv,
                                         'escape' => false,
+                                        'id' => 'type_adv',
                                         'error' => false,
                                         'class' => 'form-control required input_select_medium'
                                     ));
@@ -116,25 +117,10 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                         'label' => 'Tiêu đề button kết nối',
                                         'class' => 'form-control',
                                         'value' => $title_connect,
-                                        'placeholder' => 'Title button connect..'
                                     ));
                                     ?>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <?php
-                                    $title_campaign = isset($device->title_campaign) ? ($device->title_campaign):'' ?>
-                                    <?php echo $this->Form->control('title_campaign', array(
-                                        'label' => 'Tiêu đề button khảo sát',
-                                        'class' => 'form-control',
-                                        'value' => $title_campaign,
-                                    ));
-                                    ?>
-                                </div>
-                            </div>
-
-
                             <div class="form-group">
                                 <label> Ảnh logo </label>
                                 <div class="form-line">
@@ -166,6 +152,18 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             </div>
                         </div>
                         <div class="col-md-6">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php
+                                    $title_campaign = isset($device->title_campaign) ? ($device->title_campaign):'' ?>
+                                    <?php echo $this->Form->control('title_campaign', array(
+                                        'label' => 'Tiêu đề button khảo sát',
+                                        'class' => 'form-control',
+                                        'value' => $title_campaign,
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <div class="form-line">
                                     <?php
@@ -285,32 +283,34 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="border">
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php echo $this->Form->control('link_adv[]', array(
-                                            'label' => 'Link quảng cáo',
-                                            'class' => 'form-control',
-                                            'id' => 'tile_name',
-                                            'placeholder' => 'Link...'
-                                        ));
-                                        ?>
+                            <div class="show_adv">
+                                <div class="border">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php echo $this->Form->control('link_adv[]', array(
+                                                'label' => 'Link quảng cáo',
+                                                'class' => 'form-control',
+                                                'id' => 'tile_name',
+                                                'placeholder' => 'Link...'
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php echo $this->Form->control('image_adv[]', array(
+                                                'type' => 'file',
+                                                'label' => ' Ảnh quảng cáo',
+                                                'class' => 'form-control',
+                                                'id' => 'file',
+                                            ));
+                                            ?>
+                                        </div>
+                                        <a href="javascript:void(0);"  id="delete_bak" class="btn btn-danger waves-effect plus-file" style="margin-top: 10px">Thêm mới</a>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php echo $this->Form->control('image_adv[]', array(
-                                            'type' => 'file',
-                                            'label' => ' Ảnh quảng cáo',
-                                            'class' => 'form-control',
-                                            'id' => 'file',
-                                        ));
-                                        ?>
-                                    </div>
-                                    <a href="javascript:void(0);"  id="delete_bak" class="btn btn-danger waves-effect plus-file" style="margin-top: 10px">Thêm mới</a>
-                                </div>
+                                <div class="file-add"></div>
                             </div>
-                            <div class="file-add"></div>
                         </div>
                         <?php echo $this->Form->input('device_id', [
                             'type' => 'hidden',
@@ -407,11 +407,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         maxFileSize: 10000,
         maxFilesNum: 5,
         dropZoneEnabled : false,
-        showUpload : false,
-        //allowedFileTypes: ['image', 'video', 'flash'],
-        // slugCallback: function (filename) {
-        //     return filename.replace('(', '_').replace(']', '_');
-        // }
+        showUpload : false
     });
 
     $("#file-2").fileinput({
@@ -423,11 +419,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         maxFilesNum: 5,
         maxFileCount: 10,
         dropZoneEnabled : false,
-        showUpload : false,
-        //allowedFileTypes: ['image', 'video', 'flash'],
-        // slugCallback: function (filename) {
-        //     return filename.replace('(', '_').replace(']', '_');
-        // }
+        showUpload : false
     });
 
         function checkuploadfile() {
@@ -470,14 +462,26 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             'tile_name': { required: true },
             'langdingpage_id': { required: true },
             'apt_device_number': { required: true },
-            // 'link_adv[]': { required: true },
-            // 'image_adv[]': { required: true },
+            'title_campaign': { required: true },
+            // 'link_adv[]': {
+            //     required: function (element) {
+            //         var val = $('#type_adv').val();
+            //         if (val == 2) {return true} else {return false;}
+            //     }
+            //
+            // },
+            // 'image_adv[]': {
+            //     required: function (element) {
+            //         var val = $('#type_adv').val();
+            //         if (val == 2) {return true} else {return false;}
+            //     } },
             'packages[]': { required: true }
         },
         messages:{
             'tile_name': { required: 'Hãy nhập' },
             'langdingpage_id': { required: 'Hãy nhập' },
             'apt_device_number': { required: 'Hãy nhập' },
+            'title_campaign': { required: 'Hãy nhập' },
             // 'link_adv[]': { required: 'Hãy nhập' },
             // 'image_adv[]': { required: 'Hãy nhập' },
             'packages[]': { required: 'Hãy chọn các label' }
@@ -492,20 +496,23 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         }
 
     });
-//    function filePreview(input) {
-//        if (input.files && input.files[0]) {
-//            var reader = new FileReader();
-//            reader.onload = function (e) {
-//                $('.image').html('');
-//                $('.image').append('<div class="text-center"><img src="'+e.target.result+'" width="450" height="300"/></div>');
-//            };
-//            reader.readAsDataURL(input.files[0]);
-//        }
-//    }
-//    $("#file").change(function () {
-//        filePreview(this);
-//    });
 
+    $('#type_adv').change(function () {
+        var val = $(this).val();
+        if (val == 1) {
+            $('.show_adv').hide();
+        } else {
+            $('.show_adv').show();
+        }
+    });
+    $(document).ready(function () {
+        var val = $('#type_adv').val();
+        if (val == 1) {
+            $('.show_adv').hide();
+        } else {
+            $('.show_adv').show();
+        }
+    });
     $('.radio-col-grey').change(function () {
         if ($(this).is(':checked')){
             $(this).prop('checked', true).attr('checked', 'checked');

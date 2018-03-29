@@ -530,13 +530,6 @@ class DevicesController extends AppController
             $infor_devices->path_logo = $logo;
             if (!empty($infor_devices)) {
                 $apt = $infor_devices->apt_key;
-                $url_buil = URL.'Devices/adv/'.$apt;
-                if ($infor_devices->type == 1) {
-                    $auth = $infor_devices->auth_target;
-                    $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
-                } else {
-                    $infor_devices->link_orig = $url_buil;
-                }
                 $vouchers = $this->CampaignGroups->find()
                     ->where(['delete_flag !=' => DELETED])->combine('id', 'device_id')
                     ->toArray();
@@ -613,6 +606,15 @@ class DevicesController extends AppController
                         $infor_devices->title_campaign = $device_group->title_campaign;
                         $infor_devices->tile_congratulations_return = $device_group->tile_congratulations_return;
                         $infor_devices->packages = $device_group->packages;
+                    }
+                }
+                if (isset($infor_devices->type_adv) && $infor_devices->type_adv == 2) {
+                    $url_buil = URL.'Devices/adv/'.$apt;
+                    if ($infor_devices->type == 1) {
+                        $auth = $infor_devices->auth_target;
+                        $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
+                    } else {
+                        $infor_devices->link_orig = $url_buil;
                     }
                 }
             }
@@ -1737,12 +1739,14 @@ class DevicesController extends AppController
 
             if (!empty($infor_devices)) {
                 $apt = $infor_devices->apt_key;
-                $url_buil = URL.'Devices/adv/'.$apt;
-                if ($infor_devices->type == 1) {
-                    $auth = $infor_devices->auth_target;
-                    $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
-                } else {
-                    $infor_devices->link_orig = $url_buil;
+                if (isset($infor_devices->type_adv) && $infor_devices->type_adv == 2) {
+                    $url_buil = URL.'Devices/adv/'.$apt;
+                    if ($infor_devices->type == 1) {
+                        $auth = $infor_devices->auth_target;
+                        $infor_devices->auth_target = $this->getAuth($auth, $url_buil);
+                    } else {
+                        $infor_devices->link_orig = $url_buil;
+                    }
                 }
                 if (isset($infor_devices->campaign_group_id) && $infor_devices->campaign_group_id != '') {
                     $device_campaign = $this->CampaignGroups->find()
@@ -1803,16 +1807,20 @@ class DevicesController extends AppController
         $this->loadModel('Partners');
         if ($this->request->data) {
             $partner_id = $this->request->data['partner_id'];
-            $partner = $this->Partners->get($partner_id);
-            $partner = $this->Partners->patchEntity($partner, $this->request->data);
-            if (empty($partner->errors())) {
-                if ($this->Partners->save($partner)) {
-                    $conn->commit();
-                    die(json_encode(true));
-                }else {
-                    $conn->rollback();
-                    die(json_encode(false));
+            if ($partner_id != '') {
+                $partner = $this->Partners->get($partner_id);
+                $partner = $this->Partners->patchEntity($partner, $this->request->data);
+                if (empty($partner->errors())) {
+                    if ($this->Partners->save($partner)) {
+                        $conn->commit();
+                        die(json_encode(true));
+                    }else {
+                        $conn->rollback();
+                        die(json_encode(false));
+                    }
                 }
+            } else {
+                die(json_encode(false));
             }
         }
     }

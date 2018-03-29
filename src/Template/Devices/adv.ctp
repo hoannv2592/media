@@ -49,7 +49,6 @@ $this->layout = 'landing';
     <?php } ?>
 <!-- Content -->
 <div class="top-content">
-
     <div class="inner-bg">
         <div class="container">
             <div class="row">
@@ -60,7 +59,9 @@ $this->layout = 'landing';
                         </p>
                     </div>
                     <div class="top-big-link">
-                        <a class="btn btn-link-1 launch-modal" href="#" data-modal-id="modal-register">Click here to show</a>
+                        <?php if (count($paths) > 1) { ?>
+                            <a class="btn btn-link-1 launch-modal" href="#" data-modal-id="modal-register">Click here to show</a>
+                        <?php } ?>
                     </div>
                 </div>
             </div>
@@ -140,8 +141,11 @@ $this->layout = 'landing';
 
 </html>
 <script>
+    var val = '<?php echo  count($paths) ;?>';
     $(window).on('load', function () {
-        $('#modal-register').modal('show');
+        if (val > 1) {
+            $('#modal-register').modal('show');
+        }
     });
 
 </script>

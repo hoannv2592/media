@@ -248,6 +248,7 @@ class AdgroupsController extends AppController
                 'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
                 'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
+                'type_adv' => 1
             );
 
             $device_group = $this->DeviceGroups->newEntity();
@@ -270,6 +271,7 @@ class AdgroupsController extends AppController
                 'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
                 'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
+                'type_adv' => 1
             );
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             $adgroup->delete_flag = UN_DELETED;
@@ -613,6 +615,7 @@ class AdgroupsController extends AppController
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
                 'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
+                'type_adv' => 1
             );
 
             if (!empty($this->request->data['logo_image']['error'] != 4)) {
@@ -675,6 +678,7 @@ class AdgroupsController extends AppController
                 'title_campaign' => isset($this->request->data['title_campaign']) ? $this->request->data['title_campaign']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
                 'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
+                'type_adv' => 1
             );
             if ($user['role'] == User::ROLE_ONE) {
                 $data_group['user_id_group'] = isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'';

@@ -153,35 +153,31 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                     'class' => 'form-control',
                                     'id' => 'slogan',
                                     'value' => $address,
-                                    'placeholder' => "Điền địa chỉ nhóm thiết bị.."
                                 ));
                                 ?>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $tile_congratulations_return = isset($adgroup->tile_congratulations_return) ? ($adgroup->tile_congratulations_return):'' ?>
                                 <?php echo $this->Form->control('tile_congratulations_return', array(
-                                    'label' => 'Tile congratulations return',
+                                    'label' => 'Tiêu đề chúc mừng kết nối lại',
                                     'class' => 'form-control',
                                     'value' => $tile_congratulations_return,
-                                    'placeholder' => 'Tile congratulations return..'
                                 ));
                                 ?>
-                                <div class="help-info">Tile congratulations return</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $title_connect = isset($adgroup->title_connect) ? ($adgroup->title_connect):'' ?>
                                 <?php echo $this->Form->control('title_connect', array(
-                                    'label' => 'Title button connect',
+                                    'label' => 'Tiêu đề button kết nối',
                                     'class' => 'form-control',
                                     'value' => $title_connect,
-                                    'placeholder' => 'Title button connect..'
                                 ));
                                 ?>
-                                <div class="help-info">Title_connect</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -189,13 +185,11 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                 <?php
                                 $title_campaign = isset($adgroup->title_campaign) ? ($adgroup->title_campaign):'' ?>
                                 <?php echo $this->Form->control('title_campaign', array(
-                                    'label' => 'Title campaign ',
+                                    'label' => 'Tiêu đề button khảo sát',
                                     'class' => 'form-control',
                                     'value' => $title_campaign,
-                                    'placeholder' => 'title_campaign..'
                                 ));
                                 ?>
-                                <div class="help-info">Title_campaign</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -209,7 +203,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                         '2' => 'Không hiển thị'
                                     ],
                                     'empty' => '--- Chọn hiển thị ---',
-                                    'label'=> 'Setting hidden button connect-snow',
+                                    'label'=> 'Cài đặt hiển thị button connect-snow',
                                     'value' => $hidden_connect,
                                     'escape' => false,
                                     'error' => false,
@@ -222,7 +216,6 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                             <label> Logo Image </label>
                             <div class="form-line">
                                 <input type="file" name="logo_image" id="file" value="" class="form-control"/>
-                                <div class="help-info">logo_image</div>
                             </div>
                         </div>
                         <div class="check_pass_device m-t-15">
