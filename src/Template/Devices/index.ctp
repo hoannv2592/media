@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\View\AppView $Adgroups
+ * @var \App\View\AppView $conditions
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $devices
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $userData
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $action
@@ -14,43 +15,45 @@ $this->assign('title', 'Quản lý thiết bị');
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="card">
                     <div class="header bg-green">
-                        <h2>
-                            Quản lý thiết bị
-                            <small>Description text here...</small>
-                        </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
+                        <h2>Quản lý thiết bị</h2>
                     </div>
                     <div class="body">
-                        <?php if ($userData['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
-                            <div class="button-demo">
-                                <a href="javascript:void(0);"
-                                   class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
+                        <div class="col-md-6" style="margin-bottom: 0 !important; padding-left:0">
+                            <?php echo $this->Form->create('Devices', array(
+                                'id' => 'form_advanced_validation_x',
+                                'type' => 'post'
+                            ));
+                            ?>
+                            <div class="col-md-6" style="padding-left:0">
+                                <b>Tên thiết bị</b>
+                                <div class="input-group" style="margin-bottom: 0px !important;">
+                                    <div class="form-line">
+                                        <?php
+                                        $name = isset($conditions['name']) ? ($conditions['name']):'';
+                                        echo $this->Form->control('name', array(
+                                            'label' => false,
+                                            'class' => 'form-control',
+                                            'value' => $name,
+                                            'required' => false,
+                                            'id' => 'name'
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary waves-effect" id="submit" type="submit">Tìm kiếm</button>
                             </div>
-                        <?php } else { ?>
-                            <a disabled="disabled" href="javascript:void(0);"
-                               class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
-                        <?php } ?>
+                            <?= $this->Form->end(); ?>
+                        </div>
+                        <div class="row"></div>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="home">
                                 <?php if (!empty($devices)) { ?>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable js-exportable_has">
+                                        <table class="table table-bordered table-striped table-hover ">
                                             <thead>
                                             <tr class="bg-blue-grey">
                                                 <th style="text-align: center">No</th>
                                                 <th>Name</th>
-<!--                                                <th>Name</th>-->
                                                 <th>Code</th>
                                                 <th>Type</th>
                                                 <th>Ad type</th>
@@ -66,11 +69,10 @@ $this->assign('title', 'Quản lý thiết bị');
                                                 <tr valign="middle">
                                                     <td style="text-align: center"><?php echo $count; ?></td>
                                                     <td class="advertise font-bold col-cyan"><a href="#" onclick="view_log_partner_histories(<?php echo $device->id; ?>)" data-toggle="modal" data-target="#defaultModal"><?php echo h($device->name); ?></a></td>
-<!--                                                    <td class="advertise font-bold col-cyan"><a href="--><?php //echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->id)]) ?><!--">--><?php //echo h($device->name); ?><!--</a></td>-->
                                                     <td><?php echo nl2br($device->apt_key); ?></td>
                                                     <td><?php echo isset($device->type) ? \App\Model\Entity\Device::$category[$device->type] : 'Thiết bị thường'; ?></td>
                                                     <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : 'Mặc định'; ?></td>
-                                                    <td><?php echo date('d/m/Y', strtotime($device->created)); ?></td>
+                                                    <td><?php echo date('d/m/Y', strtotime($device->modified)); ?></td>
                                                     <td class="delete_advertise" value="<?php echo h($device->id); ?>">
                                                         <div class="button-demo">
                                                             <?php
@@ -108,6 +110,16 @@ $this->assign('title', 'Quản lý thiết bị');
                                             <?php } ?>
                                             </tbody>
                                         </table>
+                                    </div>
+                                    <div class="paginator">
+                                        <ul class="pagination pull-right">
+                                            <?= $this->Paginator->first(__('First')) ?>
+                                            <?= $this->Paginator->prev(__('Previous')) ?>
+                                            <?= $this->Paginator->numbers() ?>
+                                            <?= $this->Paginator->next(__('Next')) ?>
+                                            <?= $this->Paginator->last(__('Last')) ?>
+                                        </ul>
+                                        <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
                                     </div>
                                 <?php } ?>
                             </div>
@@ -206,3 +218,17 @@ $this->assign('title', 'Quản lý thiết bị');
     };
 
 </script>
+<style>
+    .pagination > .disabled > a, .pagination > .disabled > a:focus, .pagination > .disabled > a:hover, .pagination > .disabled > span, .pagination > .disabled > span:focus, .pagination > .disabled > span:hover {
+        color: #777;
+        cursor: not-allowed;
+        background-color: #fff !important;
+        border-color: #ddd;
+    }
+    .desc {
+        float: right;
+    }
+    th>a {
+        float: right;
+    }
+</style>

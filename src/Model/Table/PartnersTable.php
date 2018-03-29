@@ -90,4 +90,42 @@ class PartnersTable extends Table
 
         return $rules;
     }
+
+    /**
+     * @param array $conditions
+     * @return $this|array
+     */
+    public function getOders($conditions = array())
+    {
+        $fields = $this->getLableField();
+        $fields = array_merge($fields, ['Devices.name']);
+        $query = $this->find('all');
+        $result = $query->hydrate(false)
+            ->select($fields)
+            ->join([
+                'Devices' => [
+                    'table' => 'devices',
+                    'type' => 'LEFT',
+                    'conditions' => 'Devices.id = Partners.device_id',
+                ]
+            ])
+        ;
+        if (!empty($conditions)) {
+            $result->where($conditions);
+        }
+        return $result;
+    }
+
+    /**
+     * get Label of table member_history and t_member
+     * @return array
+     */
+    public function getLableField()
+    {
+        $fields_member_histoty = $this->query()->aliasFields(
+            $this->schema()->columns(), $this->alias()
+        );
+        return $fields_member_histoty;
+    }
+
 }

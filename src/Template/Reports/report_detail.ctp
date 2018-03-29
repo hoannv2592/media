@@ -22,31 +22,14 @@
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="card">
                     <div class="header bg-green">
-                        <h2>
-                            Báo cáo chiến dịch
-                            <small>Description text here...</small>
-                        </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
+                        <h2>Báo cáo chiến dịch</h2>
                     </div>
                     <div class="body">
                         <?php
                         foreach ($campaignGroups_title as $k => $campaign) { if ($k == 0) { ?>
 
                             <h2 class="card-inside-title">Tên chiến dịch : <?php echo $campaign->name?> </h2>
-                            <h2 class="card-inside-title">Số lượng voucher : <?php
-                                $number = count($campaign->partner_vouchers);
-                                echo $number.'/'.$campaign->number_voucher; ?> </h2>
+                            <h2 class="card-inside-title">Số lượng voucher : <?php $number = count($campaign->partner_vouchers); echo $number.'/'.$campaign->number_voucher; ?> </h2>
                             <h2 class="card-inside-title">Thời gian : <?php echo $campaign->time?> </h2>
                          <?php } } ?>
                         <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'componentExcel'.'/'.$campaignGroups_title[0]['id']]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>

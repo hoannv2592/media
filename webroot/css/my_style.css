@@ -210,3 +210,7 @@ section.content {
     font-size: 13px;
     font-weight: normal;
 }
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: right !important;
+    margin-right: 10px;
+}

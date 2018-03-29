@@ -426,6 +426,8 @@ class CampaignGroupsController extends AppController
         ;
         $before_device = json_decode($campaign_group->device_id);
         if ($this->request->is('post')) {
+            $packages = array_values($this->request->data['packages']);
+            $this->request->data['packages'] = json_encode($packages);
             //$time = $this->request->getData('time');
             //$campaign_old = $this->CampaignGroups->find()->where(['time' => $time, 'delete_flag !=' => DELETED])->count();
             $new_device = $this->request->getData()['device_id'];

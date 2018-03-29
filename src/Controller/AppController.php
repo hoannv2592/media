@@ -67,7 +67,7 @@ class AppController extends Controller
                 ]
             ],
             'loginRedirect' => [
-                'controller' => 'Users',
+                'controller' => 'Devices',
                 'action' => 'index'
             ],
             'logoutRedirect' => [
@@ -176,11 +176,21 @@ class AppController extends Controller
         if ($this->Auth->user()) {
             $this->set('userData', $this->Auth->user());
         }
+        if ($controller != 'Partners') {
+            $this->request->session()->delete('conditions');
+            $this->request->session()->delete('data_search');
+        }
+        if ($param['action'] != 'seviceDetail') {
+            $this->request->session()->delete('services');
+            $this->request->session()->delete('data_search_service_group');
+        }
+        if ($controller != 'Devices') {
+            $this->request->session()->delete('devive_name');
+            $this->request->session()->delete('data_search_device');
+        }
         if (!$this->Auth->user()) {
             $this->Auth->config('authError', false);
         }
-
-
         switch ($this->name) {
             case 'Devices':
                 $this->Auth->allow([

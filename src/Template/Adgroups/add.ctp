@@ -107,6 +107,31 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                             </div>
                             </div>
                         </div>
+                        <div class="hiddenccc">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php
+                                    $packages = isset($device->packages) ? json_decode($device->packages):'';
+                                    echo $this->Form->control('packages', [
+                                        'type' => 'select',
+                                        'multiple' => 'checkbox',
+                                        'label' => false,
+                                        'options' => [
+                                            ['value' => 1, 'text' => __('Họ và tên')],
+                                            ['value' => 2, 'text' => __('Số điện thoại')],
+                                            ['value' => 3, 'text' => __('Địa chỉ')]
+                                        ],
+                                        'templates' => [
+                                            'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                            'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                        ],
+                                        'value' => $packages
+                                    ]);
+                                    ?>
+                                    <div id="check_error"></div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
                                 <?php $tile_name = isset($adgroup->tile_name) ? ($adgroup->tile_name):'' ?>
@@ -274,7 +299,8 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                 'apt_device_number': {required: true},
                 'slogan': {required: true},
                 'message': {required: true},
-                "device_id[]": "required"
+                "device_id[]": "required",
+                'packages[]': { required: true }
 
             },
             highlight: function (input) {
@@ -298,20 +324,26 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
         var langding = "<?php echo isset($device->langdingpage_id) ? $device->langdingpage_id:'1'; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
     });
 </script>

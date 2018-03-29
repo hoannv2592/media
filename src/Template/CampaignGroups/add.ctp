@@ -138,6 +138,30 @@
                         <div class="form-group">
                             <div class="form-line">
                                 <?php
+                                $packages = isset($campaign_group->packages) ? json_decode($campaign_group->packages):'';
+                                echo $this->Form->control('packages', [
+                                    'type' => 'select',
+                                    'multiple' => 'checkbox',
+                                    'label' => false,
+                                    'options' => [
+                                        ['value' => 1, 'text' => __('Họ và tên')],
+                                        ['value' => 2, 'text' => __('Ngày sinh')],
+                                        ['value' => 3, 'text' => __('Số điện thoại')],
+                                        ['value' => 4, 'text' => __('Địa chỉ')]
+                                    ],
+                                    'templates' => [
+                                        'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                        'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                    ],
+                                    'value' => $packages
+                                ]);
+                                ?>
+                                <div id="check_error"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
                                 $random = isset($campaign_group->random) ? $campaign_group->random: '2';
                                 echo  $this->Form->input('random', array(
                                     'type' => 'select',
@@ -331,7 +355,8 @@
                 },
                 'random': {
                     required: true
-                }
+                },
+                'packages[]': { required: true }
             }
         });
     });

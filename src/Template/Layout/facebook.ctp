@@ -144,8 +144,8 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                 <form class="form-validation" style="width: 100%" name="login_slow" id="" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLoginSlow()">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="false"/>
-                                    <input style="display: none;" name="username" type="text" value="wifimediaslow"/>
-                                    <input style="display: none;" name="password" type="password" value="wifimediaslow"/>
+                                    <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                    <input style="display: none;" name="password" type="password" value="wifimedia"/>
                                     <button class="btn btn-primary btn-success mb-10 br-2 _wifi"><i class="fa fa-wifi"></i>Connect now - Slow </button>
                                 </form>
                             </div>

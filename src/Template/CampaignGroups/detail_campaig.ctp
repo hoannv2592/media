@@ -25,20 +25,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                 <div class="card">
                     <div class="header bg-blue">
                         <h2>
-                            Thông tin nhóm thiết bị quảng cáo <small>Description text here...</small>
+                            Thông tin nhóm thiết bị quảng cáo
                         </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
                     <div class="body">
                         <?php
@@ -154,6 +142,30 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                     <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey langding" <?php if ($campaign_group->langdingpage_id == 3) { echo 'checked'; }?> />
                                     <label style="font-weight: bold" for="radio_32">Khảo sát thông tin khách hàng</label>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
+                                $packages = isset($campaign_group->packages) ? json_decode($campaign_group->packages):'';
+                                echo $this->Form->control('packages', [
+                                    'type' => 'select',
+                                    'multiple' => 'checkbox',
+                                    'label' => false,
+                                    'options' => [
+                                        ['value' => 1, 'text' => __('Họ và tên')],
+                                        ['value' => 2, 'text' => __('Ngày sinh')],
+                                        ['value' => 3, 'text' => __('Số điện thoại')],
+                                        ['value' => 4, 'text' => __('Địa chỉ')]
+                                    ],
+                                    'templates' => [
+                                        'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                        'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                    ],
+                                    'value' => $packages
+                                ]);
+                                ?>
+                                <div id="check_error"></div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -448,7 +460,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             'apt_device_number': { required: true },
             'device_id[]': { required: true },
             'number_voucher': { required: true },
-            'random': { required: true }
+            'random': { required: true },
+            'packages[]': { required: true }
         },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');

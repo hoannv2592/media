@@ -23,20 +23,9 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                 <div class="card">
                     <div class="header bg-blue">
                         <h2>
-                            Thông tin nhóm thiết bị quảng cáo <small>Description text here...</small>
+                            Thông tin nhóm thiết bị quảng cáo
                         </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
+
                     </div>
                     <div class="body">
                         <?php
@@ -111,6 +100,31 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                     <label style="font-weight: bold" for="radio_31">Quảng cáo Facebook-Login</label>
                                     <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 3) { echo 'checked'; }?> />
                                     <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hiddenccc">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php
+                                    $packages = isset($adgroup->packages) ? json_decode($adgroup->packages):'';
+                                    echo $this->Form->control('packages', [
+                                        'type' => 'select',
+                                        'multiple' => 'checkbox',
+                                        'label' => false,
+                                        'options' => [
+                                            ['value' => 1, 'text' => __('Họ và tên')],
+                                            ['value' => 2, 'text' => __('Số điện thoại')],
+                                            ['value' => 3, 'text' => __('Địa chỉ')]
+                                        ],
+                                        'templates' => [
+                                            'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                            'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                        ],
+                                        'value' => $packages
+                                    ]);
+                                    ?>
+                                    <div id="check_error"></div>
                                 </div>
                             </div>
                         </div>
@@ -372,20 +386,26 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         var langding = "<?php echo $adgroup->langdingpage_id; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
         if ($(this).is(':checked')){
             $(this).prop('checked', true).attr('checked', 'checked');
@@ -413,6 +433,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             'langdingpage_id': { required: true },
             'apt_device_number': { required: true },
             'device_id[]': { required: true },
+            'packages[]': { required: true }
         },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');
