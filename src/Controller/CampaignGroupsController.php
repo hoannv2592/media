@@ -203,6 +203,7 @@ class CampaignGroupsController extends AppController
                 $this->request->data['device_name'] = $listNameDevice;
                 $campaign_groups = $this->CampaignGroups->patchEntity($campaign_groups, $this->request->data);
                 $campaign_groups->delete_flag = UN_DELETED;
+                $campaign_groups->type_adv = 1;
                 if (empty($campaign_groups->errors())) {
                     $save_ad = $this->CampaignGroups->save($campaign_groups);
                     if ($save_ad) {
@@ -488,6 +489,7 @@ class CampaignGroupsController extends AppController
             );
             $this->publishall($new_device, $device_adgroup);
             $this->removeAdgroupIdDevice($list_remove_device_id);
+            $this->request->data['type_adv'] = 1;
             $campaign_group = $this->CampaignGroups->patchEntity($campaign_group, $this->request->data);
             if (empty($campaign_group->errors())) {
                 if ($this->CampaignGroups->save($campaign_group)) {
