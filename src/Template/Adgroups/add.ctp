@@ -293,7 +293,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                 'slogan': {required: true},
                 'message': {required: true},
                 "device_id[]": "required",
-                'packages[]': { required: true }
+                // 'packages[]': { required: true }
 
             },
             highlight: function (input) {

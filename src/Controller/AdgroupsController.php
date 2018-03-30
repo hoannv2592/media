@@ -178,8 +178,10 @@ class AdgroupsController extends AppController
         }
         $adgroup = $this->Adgroups->newEntity();
         if ($this->request->is('post')) {
-            $packages = array_values($this->request->data['packages']);
-            $this->request->data['packages'] = json_encode($packages);
+            if ($this->request->data['packages'] != '') {
+                $packages = array_values($this->request->data['packages']);
+                $this->request->data['packages'] = json_encode($packages);
+            }
             $listNameDevice = ($this->getNameDevice($this->request->getData()['device_id']));
             $devices = $this->Devices->find()
                 ->where(['id IN' => $this->request->getData()['device_id']])->select(['id'])
@@ -598,8 +600,10 @@ class AdgroupsController extends AppController
             ->select(['id'])->first()->toArray();
         $before_device = json_decode($adgroup->device_id);
         if ($this->request->is('post')) {
-            $packages = array_values($this->request->data['packages']);
-            $this->request->data['packages'] = json_encode($packages);
+            if ($this->request->data['packages'] != '') {
+                $packages = array_values($this->request->data['packages']);
+                $this->request->data['packages'] = json_encode($packages);
+            }
             $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
             $data_group = array(
                 'device_name' => $listUserid,

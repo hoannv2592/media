@@ -557,14 +557,14 @@ class DevicesController extends AppController
                         $vl = explode(' - ', $vl);
                         $my_date = Datetime::createFromFormat('d/m/Y', $vl[1])->format('Y-m-d');
                         if ($my_date >= $current_date) {
-                            $campaing_id[$k] = $vl[1];
+                            $campaing_id[$k] = $my_date;
                         }
                     }
 
                     $interval = array();
                     if (!empty($campaing_id)) {
                         foreach ($campaing_id as $k => $vl) {
-                            $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
+                            $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d")));
                         }
                     }
                     $device_campaign = array();

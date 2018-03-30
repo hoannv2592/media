@@ -461,7 +461,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             'device_id[]': { required: true },
             'number_voucher': { required: true },
             'random': { required: true },
-            'packages[]': { required: true }
+            // 'packages[]': { required: true }
         },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');

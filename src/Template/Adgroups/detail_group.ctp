@@ -433,7 +433,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             'langdingpage_id': { required: true },
             'apt_device_number': { required: true },
             'device_id[]': { required: true },
-            'packages[]': { required: true }
+            // 'packages[]': { required: true }
         },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');

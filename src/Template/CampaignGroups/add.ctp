@@ -356,7 +356,7 @@
                 'random': {
                     required: true
                 },
-                'packages[]': { required: true }
+                // 'packages[]': { required: true }
             }
         });
     });

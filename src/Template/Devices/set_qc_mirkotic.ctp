@@ -91,6 +91,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                         'label'=> 'Cài đặt loại quảng cáo',
                                         'value' => $type_adv,
                                         'escape' => false,
+                                        'id' => 'type_adv',
                                         'error' => false,
                                         'class' => 'form-control required input_select_medium'
                                     ));
@@ -268,57 +269,60 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     <input id="file-1" type="file" multiple class="file" name="file_upload[]" data-overwrite-initial="false" data-min-file-count="2">
                                 </div>
                             </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped dataTable table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th width="20%">Ảnh quảng cáo</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php if (!empty($adv)) {
-                                        foreach ($adv as $k => $vl) {
-                                            if ($vl['path'] != '') { ?>
-                                            <tr id="<?= $vl['id'];?>">
-                                                <td class="image"><embed src="<?= '/'.$vl['path'] ?>" width="330" height="180">
-                                                    <strong><?php echo $vl['url_link']?></strong>
-                                                    <input type="hidden" name="file_backup[]" value="<?= '/'.$vl['path']; ?>">
-                                                </td>
-                                                <td><a href="javascript:void(0);"  id="delete_bak" onclick="delete_adv(<?php echo $vl['id']; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
-                                            </tr>
-                                        <?php }}?>
-                                    <?php } else { ?>
-                                        <tr><td colspan="4" class="image">No file(s) found......</td></tr>
-                                    <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="border">
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php echo $this->Form->control('link_adv[]', array(
-                                            'label' => 'Link quảng cáo',
-                                            'class' => 'form-control',
-                                            'id' => 'tile_name',
-                                            'placeholder' => 'Link...'
-                                        ));
-                                        ?>
+                            <div class="show_adv">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped dataTable table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th width="20%">Ảnh quảng cáo</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php if (!empty($adv)) {
+                                            foreach ($adv as $k => $vl) {
+                                                if ($vl['path'] != '') { ?>
+                                                <tr id="<?= $vl['id'];?>">
+                                                    <td class="image"><embed src="<?= '/'.$vl['path'] ?>" width="330" height="180">
+                                                        <strong><?php echo $vl['url_link']?></strong>
+                                                        <input type="hidden" name="file_backup[]" value="<?= '/'.$vl['path']; ?>">
+                                                    </td>
+                                                    <td><a href="javascript:void(0);"  id="delete_bak" onclick="delete_adv(<?php echo $vl['id']; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
+                                                </tr>
+                                            <?php }}?>
+                                        <?php } else { ?>
+                                            <tr><td colspan="4" class="image">No file(s) found......</td></tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div class="border">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php echo $this->Form->control('link_adv[]', array(
+                                                'label' => 'Link quảng cáo',
+                                                'class' => 'form-control',
+                                                'id' => 'tile_name',
+                                                'placeholder' => 'Link...'
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php echo $this->Form->control('image_adv[]', array(
+                                                'type' => 'file',
+                                                'label' => ' Ảnh quảng cáo',
+                                                'class' => 'form-control',
+                                                'id' => 'file',
+                                            ));
+                                            ?>
+                                        </div>
+                                        <a href="javascript:void(0);"  id="delete_bak" class="btn btn-danger waves-effect plus-file" style="margin-top: 10px">Thêm mới</a>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php echo $this->Form->control('image_adv[]', array(
-                                            'type' => 'file',
-                                            'label' => ' Ảnh quảng cáo',
-                                            'class' => 'form-control',
-                                            'id' => 'file',
-                                        ));
-                                        ?>
-                                    </div>
-                                    <a href="javascript:void(0);"  id="delete_bak" class="btn btn-danger waves-effect plus-file" style="margin-top: 10px">Thêm mới</a>
-                                </div>
-                            </div>
                             <div class="file-add"></div>
+                            </div>
                         </div>
                         <?php echo $this->Form->input('device_id', [
                             'type' => 'hidden',
@@ -496,6 +500,22 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             $(this).prop('checked', true).attr('checked', 'checked');
         } else {
             $(this).prop('checked', false).removeAttr('checked');
+        }
+    });
+    $(document).ready(function () {
+        var val = $('#type_adv').val();
+        if (val == 1) {
+            $('.show_adv').hide();
+        } else {
+            $('.show_adv').show();
+        }
+    });
+    $('#type_adv').change(function () {
+        var val = $(this).val();
+        if (val == 1) {
+            $('.show_adv').hide();
+        } else {
+            $('.show_adv').show();
         }
     });
 </script>
