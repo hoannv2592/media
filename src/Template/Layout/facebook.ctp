@@ -126,17 +126,16 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <?php } else { ?>
                             <div class="redirect">
                                 <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
-                                    <input type="hidden" class="need_push_username" name="username"/>
-                                    <input type="hidden" name="password"/>
-                                    <input type="hidden" class="need_push_password" name="password"/>
+                                    <input type="hidden" value="wifimedia" name="username"/>
+                                    <input type="hidden" value="wifimedia" name="password"/>
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="false"/>
                                 </form>
                                 <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="true"/>
-                                    <input style="display: none;" name="username" type="text" value="wifimedia"/>
-                                    <input style="display: none;" name="password" type="password" value="wifimedia"/>
+                                    <input name="username" type="hidden" value="wifimedia" />
+                                    <input name="password" type="hidden" value="wifimedia" />
                                     <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
                                     <button class="btn btn-primary btn-success mb-10 br-2 _goog"><i class="fa fa-google-plus"></i>Login with Google </button>
                                     <div class="c-spacer"></div>
@@ -170,6 +169,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
             var data = {
                 partner_id: "<?= $partner_id ?>",
                 device_id: "<?= $infor_devices->id ?>",
+                user_id: "<?= $infor_devices->user_id; ?>",
                 name: response.name,
                 email: response.email};
             $.ajax({
@@ -226,7 +226,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     function doLogin() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login.username.value;
-        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.password.value = hexMD5 ('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }
@@ -234,7 +234,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     function doLoginSlow() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login_slow.username.value;
-        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.password.value = hexMD5 ('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }
