@@ -475,7 +475,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             //         var val = $('#type_adv').val();
             //         if (val == 2) {return true} else {return false;}
             //     } },
-            'packages[]': { required: true }
+            //'packages[]': { required: true }
         },
         messages:{
             'tile_name': { required: 'Hãy nhập' },
@@ -484,7 +484,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             'title_campaign': { required: 'Hãy nhập' },
             // 'link_adv[]': { required: 'Hãy nhập' },
             // 'image_adv[]': { required: 'Hãy nhập' },
-            'packages[]': { required: 'Hãy chọn các label' }
+            //'packages[]': { required: 'Hãy chọn các label' }
         },
         errorPlacement: function (error, element) {
             if (element.attr("name") === "packages[]") {
