@@ -121,9 +121,24 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="discount">
                             <div class="c-spacer--x-large c-spacer"></div>
+                            <?php
+                            if (empty($packages)) { ?>
+                                <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
+                                    <a class="redirect__discount" href="<?php echo $infor_devices->auth_target; ?>">Connect now - Fast</a>
+                                <?php } else { ?>
+                                    <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                                        <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                        <input type="hidden" name="popup" value="false"/>
+                                        <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                        <input style="display: none;" name="password" type="password" value="wifimedia"/>
+                                        <button class="redirect__discount">Connect now - Fast</button>
+                                    </form>
+                                <?php } ?>
+                            <?php } else {?>
                             <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php
                                 if ($title_connect != '') { echo $title_connect; } else { echo 'Nhận voucher'; } ?>
                             </a>
+                            <?php } ?>
                         </div>
                         <div class="c-spacer--x-large c-spacer"></div>
                         <div class="redirect">

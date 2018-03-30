@@ -163,37 +163,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     ?>
                                 </div>
                             </div>
-
-                            <div class="form-group">
-                                <label> Ảnh logo </label>
-                                <div class="form-line">
-                                    <?php
-                                    $logo_image = isset($device->path_logo) ? ($device->path_logo):''; ?>
-                                    <input type="file" name="logo_image" id="file" value="<?php echo $logo_image;?>" class="form-control"/>
-                                </div>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped dataTable table-hover">
-                                    <thead>
-                                    <tr>
-                                        <th width="20%">Ảnh logo</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <?php if (!empty($logo)) {
-                                        foreach ($logo as $k => $vl) {  if ($vl != '') { ?>
-                                            <tr>
-                                                <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="180"></td>
-                                            </tr>
-                                        <?php }
-                                        }
-                                        ?>
-                                    <?php } else { ?>
-                                    <tr><td colspan="4" class="image">No file(s) found......</td>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
@@ -502,7 +471,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             'apt_device_number': { required: true },
             // 'link_adv[]': { required: true },
             // 'image_adv[]': { required: true },
-            'packages[]': { required: true }
+            // 'packages[]': { required: true }
         },
         messages:{
             'tile_name': { required: 'Hãy nhập' },
@@ -510,7 +479,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             'apt_device_number': { required: 'Hãy nhập' },
             // 'link_adv[]': { required: 'Hãy nhập' },
             // 'image_adv[]': { required: 'Hãy nhập' },
-            'packages[]': { required: 'Hãy chọn các label' }
+            // 'packages[]': { required: 'Hãy chọn các label' }
         },
         errorPlacement: function (error, element) {
             if (element.attr("name") === "packages[]") {
