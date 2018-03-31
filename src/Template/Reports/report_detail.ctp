@@ -25,19 +25,54 @@
                         <h2>Báo cáo chiến dịch</h2>
                     </div>
                     <div class="body">
-                        <?php
-                        foreach ($campaignGroups_title as $k => $campaign) { if ($k == 0) { ?>
+                        <div class="col-md-6">
+                                <h2 class="card-inside-title">Tên chiến dịch : <?php echo $campaignGroups_title->name?> </h2>
+                                <h2 class="card-inside-title">Số lượng voucher : <?php $number = count($campaignGroups_title->partner_vouchers); echo $number.'/'.$campaignGroups_title->number_voucher; ?> </h2>
+                                <h2 class="card-inside-title">Thời gian : <?php echo $campaignGroups_title->time?> </h2>
+                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'downloadExcelVoucher/'.$list_id_partner]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có số điện thoại</a>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-box">
+                                <div class="text-center">
+                                    <div class="row">
+                                        <div class="col-xs-3">
+                                            <div class="m-t-20 m-b-20 storke_1">
+                                                <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">Tổng khách hàng</p>
+                                                <h4 class="m-b-10"><?= $this->Paginator->counter(['format' => __('{{count}}')]) ?></h4>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="m-t-20 m-b-20 storke_2">
+                                                <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">khách đã confirm</p>
+                                                <h4 class="m-b-10"><?= isset($sum_confirm_partner) ? $sum_confirm_partner:'';?></h4>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="m-t-20 m-b-20 storke_3">
+                                                <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">khách chưa confirm</p>
+                                                <h4 class="m-b-10"><?= isset($sum_no_confirm_partner) ? $sum_no_confirm_partner:'';?></h4>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-3">
+                                            <div class="m-t-20 m-b-20 storke_4">
+                                                <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">Khách có SDT</p>
+                                                <h4 class="m-b-10"><?= isset($sum_phone_partner) ? $sum_phone_partner:'';?></h4>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
 
-                            <h2 class="card-inside-title">Tên chiến dịch : <?php echo $campaign->name?> </h2>
-                            <h2 class="card-inside-title">Số lượng voucher : <?php $number = count($campaign->partner_vouchers); echo $number.'/'.$campaign->number_voucher; ?> </h2>
-                            <h2 class="card-inside-title">Thời gian : <?php echo $campaign->time?> </h2>
-                         <?php } } ?>
-                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'componentExcel'.'/'.$campaignGroups_title[0]['id']]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Tải xuống</a>
+                                <div class="m-t-10">
+                                    <div id="line-chart-tooltips" class="ct-chart ct-golden-section"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"></div>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="home">
                                 <?php if (!empty($campaigns)) { ?>
                                 <div class="table-responsive">
-                                    <table class="table table-bordered table-striped table-hover dataTable exportable_partner_voucher">
+                                    <table class="table table-bordered table-striped table-hover dataTable">
                                         <thead>
                                         <tr class="bg-blue-grey">
                                             <th>STT</th>
@@ -53,7 +88,7 @@
                                         <tbody>
                                         <?php
                                         $count = 0;
-                                        foreach ($campaigns[0]['partner_vouchers'] as $partner_voucher_log) {
+                                        foreach ($campaigns as $partner_voucher_log) {
                                             $count++; ?>
                                             <tr valign="middle">
                                                 <td><?php echo $count; ?></td>
@@ -80,6 +115,16 @@
                                        ?>
                                         </tbody>
                                     </table>
+                                    <div class="paginator">
+                                        <ul class="pagination pull-right">
+                                            <?= $this->Paginator->first(__('First')) ?>
+                                            <?= $this->Paginator->prev(__('Previous')) ?>
+                                            <?= $this->Paginator->numbers() ?>
+                                            <?= $this->Paginator->next(__('Next')) ?>
+                                            <?= $this->Paginator->last(__('Last')) ?>
+                                        </ul>
+                                        <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+                                    </div>
                                 </div>
                                 <?php } ?>
                             </div>
@@ -131,3 +176,70 @@
          font-size: 14px !important;
      }
  </style>
+<?php
+echo $this->Html->script([
+    'chartist/js/chartist.min',
+    'chartist/js/chartist-plugin-tooltip.min'
+])
+?>
+<script type="application/javascript">
+    //Line chart with tooltips
+    var list_day = jQuery.parseJSON('<?= $list_day;?>');
+    var chart_number_partner = jQuery.parseJSON('<?= $chart_number_partner;?>');
+    var count_confirm_partner = jQuery.parseJSON('<?= $count_confirm_partner;?>');
+    var count_no_confirm_partner = jQuery.parseJSON('<?= $count_no_confirm_partner;?>');
+    var count_phone_partner = jQuery.parseJSON('<?= $count_phone_partner;?>');
+    new Chartist.Line('#line-chart-tooltips', {
+            labels: list_day,
+            series: [
+                {
+                    name: 'Khách hàng',
+                    data: chart_number_partner
+                },
+                {
+                    name: 'khách hàng đã confirm',
+                    data: count_confirm_partner
+                },
+                {
+                    name: 'khách hàng chưa confirm',
+                    data: count_no_confirm_partner
+                },
+                {
+                    name: 'khách hàng có số điện thoại',
+                    data: count_phone_partner
+                }
+            ]
+        },
+        {
+            low: 0,
+            showArea: false,
+            plugins: [
+                Chartist.plugins.tooltip()
+            ]
+        }
+    );
+    var $chart = $('#line-chart-tooltips');
+    var $toolTip = $chart
+        .append('<div class="tooltip"></div>')
+        .find('.tooltip')
+        .hide();
+
+    $chart.on('mouseenter', '.ct-point', function() {
+        var $point = $(this),
+            value = $point.attr('ct:value'),
+            seriesName = $point.parent().attr('ct:series-name');
+        $toolTip.html(seriesName + '<br>' + value).show();
+    });
+
+    $chart.on('mouseleave', '.ct-point', function() {
+        $toolTip.hide();
+    });
+
+    $chart.on('mousemove', function(event) {
+        $toolTip.css({
+            left: (event.offsetX || event.originalEvent.layerX) - $toolTip.width() / 2 - 10,
+            top: (event.offsetY || event.originalEvent.layerY) - $toolTip.height() - 40
+        });
+    });
+
+</script>
