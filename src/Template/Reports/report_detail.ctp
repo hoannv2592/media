@@ -10,7 +10,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <ol class="breadcrumb breadcrumb-bg-blue-grey">
                     <li>
-                        <a href="<?php echo $this->Url->build(['controller' => 'Reports', 'action' => 'index']);?>">
+                        <a href="<?php echo $this->Url->build(['controller' => 'Reports', 'action' => 'index']);?>" style="margin-left: 10px">
                             <i class="material-icons">home</i> Trang chủ
                         </a>
                     </li>
@@ -27,7 +27,7 @@
                     <div class="body">
                         <div class="col-md-6">
                                 <h2 class="card-inside-title">Tên chiến dịch : <?php echo $campaignGroups_title->name?> </h2>
-                                <h2 class="card-inside-title">Số lượng voucher : <?php $number = count($campaignGroups_title->partner_vouchers); echo $number.'/'.$campaignGroups_title->number_voucher; ?> </h2>
+                                <h2 class="card-inside-title">Số lượng voucher : <?php echo $this->Paginator->counter(['format' => __('{{count}}')]).'/'.$campaignGroups_title->number_voucher; ?> </h2>
                                 <h2 class="card-inside-title">Thời gian : <?php echo $campaignGroups_title->time?> </h2>
                             <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'downloadExcelVoucher/'.$list_id_partner]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có số điện thoại</a>
                         </div>

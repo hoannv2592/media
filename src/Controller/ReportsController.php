@@ -57,9 +57,9 @@ class ReportsController extends AppController
             );
         }
         $list_campaign = $this->CampaignGroups->find('all', [
-            'contain'  => ['PartnerVouchers' => function ($q) {
-                return $q ;
-            }],
+//            'contain'  => ['PartnerVouchers' => function ($q) {
+//                return $q ;
+//            }],
             'conditions' => $conditions
         ]) ->toArray();
         $this->set(compact('list_campaign'));
@@ -215,7 +215,9 @@ class ReportsController extends AppController
             $count_phone_partner[] = count($phone_partner);
             $list_id_partner[] = $id_partner;
         }
-        $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
+        if (!empty($list_id_partner)) {
+            $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
+        }
         $sum_no_confirm_partner = array_sum($count_no_confirm_partner);
         $sum_confirm_partner = array_sum($count_confirm_partner);
         $sum_phone_partner = array_sum($count_phone_partner);

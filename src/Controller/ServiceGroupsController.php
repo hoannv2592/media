@@ -303,14 +303,9 @@ class ServiceGroupsController extends AppController
             ]
         ])->first();
         $limit_value = 10;
-        $current_month = date('m');
-        $day_before_ten_day = date('d', strtotime('-10 days'));
-        $current = date('d');
-        $list_day = array();
-        for ($i = $day_before_ten_day; $i <= $current; $i++) {
-            $list_day[] = $i.'/'.$current_month;
-        }
-        $list_day = json_encode(array_values($list_day));
+        $day_before_ten_day = date('d-m-Y', strtotime('-10 days'));
+        $current = date('d-m-Y');
+        $list_day = $this->get_label(array($day_before_ten_day, $current));
         if ($this->request->is('get')) {
             $conditions = $this->request->session()->check('data_search_service_group');
             if (!$conditions) {
