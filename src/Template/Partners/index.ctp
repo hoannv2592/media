@@ -181,7 +181,11 @@
                                     </div>
                                     <div class="col-md-12 pull-right">
                                         <div class="">
-                                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'download_excel/'.$list_id_partner]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có số điện thoại</a>
+                                            <?php $list_id_partner = json_decode($list_id_partner);
+                                            if (!empty($list_id_partner)) {
+                                                $list_id_partner = json_encode($list_id_partner); ?>
+                                                <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'download_excel/'.$list_id_partner]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có số điện thoại</a>
+                                            <?php } ?>
                                         </div>
                                     </div>
                                 </div>
