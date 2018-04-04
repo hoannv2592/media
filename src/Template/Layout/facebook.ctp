@@ -178,8 +178,8 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 data: data,
                 cache: false,
                 success: function (data) {
+                                        checkin();
                     if (data == 'true') {
-                        processAuth();
                         return true;
                     } else {
                         return false;
@@ -189,6 +189,17 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
         })
     }
 
+        function checkin(){
+        <?php if($infor_devices->fb_fanpage): ?>
+                FB.api('/'+encodeURIComponent('<?= $infor_devices->fb_fanpage ?>'), function(response){
+                        var fanpage_id = response.id;
+                        FB.api('/me/feed', 'post', { message: "<?= ($infor_devices->fb_checkin_msg ? $infor_devices->fb_checkin_msg : 'Đang ở đây, rất ok!') ?>", place: fanpage_id}, function(response){
+                                processAuth();
+                        });
+                });
+        <?php endif; ?>
+        }
+
     window.fbAsyncInit = function() {
         // FB JavaScript SDK configuration and setup
         FB.init({
@@ -197,11 +208,11 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
             xfbml      : true,  // parse social plugins on this page
             version    : 'v2.8' // use graph api version 2.8
         });
-        
+
         // Check whether the user already logged in
         FB.getLoginStatus(handleLoginStatus);
     };
-    
+
     // Load the JavaScript SDK asynchronously
     (function(d, s, id) {
         var js, fjs = d.getElementsByTagName(s)[0];
