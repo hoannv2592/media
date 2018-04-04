@@ -101,6 +101,28 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             </div>
                             <div class="form-group">
                                 <div class="form-line">
+                                    <?php $fb_fanpage = isset($device->fb_fanpage) ? ($device->fb_fanpage):'' ?>
+                                    <?php echo $this->Form->control('fb_fanpage', array(
+                                        'label' => 'Facebook Fan Page',
+                                        'class' => 'form-control',
+                                        'value' => $fb_fanpage,
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php $fb_checkin_msg = isset($device->fb_checkin_msg) ? ($device->fb_checkin_msg):'' ?>
+                                    <?php echo $this->Form->control('fb_checkin_msg', array(
+                                        'label' => 'Check-in message',
+                                        'class' => 'form-control',
+                                        'value' => $fb_checkin_msg,
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-line">
                                     <?php $tile_congratulations_return = isset($device->tile_congratulations_return) ? ($device->tile_congratulations_return):'' ?>
                                     <?php echo $this->Form->control('tile_congratulations_return', array(
                                         'label' => 'Tiêu đề chúc mừng kết nối lại',
