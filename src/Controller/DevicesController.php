@@ -346,6 +346,10 @@ class DevicesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is('post')) {
+            if ($this->request->data['tile_congratulations_return'] != '') {
+                $packages = array_values($this->request->data['tile_congratulations_return']);
+                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+            }
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
                 $this->request->data['packages'] = json_encode($packages);
@@ -1505,6 +1509,10 @@ class DevicesController extends AppController
             'contain' => []
         ]);
         if ($this->request->is('post')) {
+            if ($this->request->data['tile_congratulations_return'] != '') {
+                $packages = array_values($this->request->data['tile_congratulations_return']);
+                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+            }
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
                 $this->request->data['packages'] = json_encode($packages);
@@ -1899,6 +1907,7 @@ class DevicesController extends AppController
         // render to a variable
         $campaign_id = $this->CampaignGroups->find()->select()->where(['delete_flag !=' => 1])->combine('id', 'device_id')->toArray();
         $list_campaign = array();
+        $campaign_name = '';
         if (!empty($campaign_id)) {
             foreach ($campaign_id as $k => $vl) {
                 $vl = json_decode($vl);
@@ -1908,7 +1917,6 @@ class DevicesController extends AppController
                     }
                 }
             }
-            $campaign_name = '';
             if (!empty($list_campaign)) {
                 $list_campaign = call_user_func_array('array_merge', $list_campaign);
                 $list_campaign = array_unique($list_campaign);

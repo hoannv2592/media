@@ -118,8 +118,10 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                         'label' => false,
                                         'options' => [
                                             ['value' => 1, 'text' => __('Họ và tên')],
-                                            ['value' => 2, 'text' => __('Số điện thoại')],
-                                            ['value' => 3, 'text' => __('Địa chỉ')]
+                                            ['value' => 2, 'text' => __('Ngày sinh')],
+                                            ['value' => 3, 'text' => __('Số điện thoại')],
+                                            ['value' => 4, 'text' => __('Địa chỉ')],
+                                            ['value' => 5, 'text' => __('Địa chỉ email')]
                                         ],
                                         'templates' => [
                                             'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
@@ -158,17 +160,27 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                             </div>
                         </div>
 
-                        <div class="form-group">
+<!--                        <div class="form-group">-->
+<!--                            <div class="form-line">-->
+<!--                                --><?php //echo $this->Form->control('tile_congratulations_return', array(
+//                                    'label' => 'Tiêu đề chúc mừng kết nối lại',
+//                                    'class' => 'form-control',
+//                                    'value' => $tile_congratulations_return,
+//                                ));
+//                                ?>
+<!--                            </div>-->
+<!--                        </div>-->
+                        <?php $tile_congratulations_return = isset($adgroup->tile_congratulations_return) ? ($adgroup->tile_congratulations_return):'' ?>
+                        <div class="form-group" style="margin-bottom: 10px !important;">
                             <div class="form-line">
-                                <?php $tile_congratulations_return = isset($adgroup->tile_congratulations_return) ? ($adgroup->tile_congratulations_return):'' ?>
-                                <?php echo $this->Form->control('tile_congratulations_return', array(
-                                    'label' => 'Tiêu đề chúc mừng kết nối lại',
-                                    'class' => 'form-control',
-                                    'value' => $tile_congratulations_return,
-                                ));
-                                ?>
+                                <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                <input name="tile_congratulations_return[]"
+                                       class="form-control valid" id="tile-congratulations-return"
+                                       value="<?= $tile_congratulations_return ?>" aria-invalid="false" type="text" />
                             </div>
+                            <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
                         </div>
+                        <div class="add"></div>
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $title_connect = isset($adgroup->title_connect) ? ($adgroup->title_connect):'' ?>
@@ -244,7 +256,33 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
 </section>
 
 <script type="application/javascript">
+    var y = 1; //initlal text box count
+    var max_fields = 10; //maximum input boxes allowed
+    var wrapper_title = $("div.add"); //Fields wrapper
+    var add_button_title = $("#add_title"); //Add button class
+    $(add_button_title).click(function (e) { //on add file button click
+        e.preventDefault();
+        if (y < max_fields) { //max input file allowed
+            $(wrapper_title).append('<div class="border_add">'+
+                '<div class="form-group" style="margin-bottom: 5px !important;">\n' +
+                '<div class="form-line">\n' +
+                '<div class="input text">' +
+                '<input name="tile_congratulations_return[]" class="form-control valid" aria-invalid="false" type="text"></div>' +
+                '</div>' +
+                '</div>\n' +
+                '<a href="javascript:void(0);" id="delete_bak" class="btn btn-danger waves-effect remove_field_title" style="margin-top: 0;margin-bottom: 10px">Xóa</a>\n' +
+                '</div>'
 
+            );
+            y++; //input file increment
+        }
+    }); //add input box
+    $(wrapper_title).on("click", ".remove_field_title", function (e) { //user click on remove
+        e.preventDefault();
+        $(this).parent('div').remove();
+        $(this).parent('div').remove();
+        y--;
+    });
     $('#select_device').change(function () {
         var val = $(this).val();
         var role = "<?php echo $user_login['role'];?>";

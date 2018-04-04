@@ -44,6 +44,16 @@ $title_connect = isset($infor_devices->title_connect) ? $infor_devices->title_co
 $title_connect_normal = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Đăng ký nhận voucher';
 $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_isexit_partner : '2';
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
+if (isset($infor_devices->tile_congratulations_return)) {
+    if (!empty($infor_devices->tile_congratulations_return)) {
+        $tile_congratulations = json_decode($infor_devices->tile_congratulations_return);
+        $tile_congratulations_return = $tile_congratulations[array_rand($tile_congratulations, 1)];
+    } else {
+        $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+    }
+} else {
+    $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+}
 $list_path_old = explode(',', $infor_devices->path);
 foreach ($list_path_old as $k =>  $item) {
     if ($item != '') {
@@ -125,7 +135,6 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 </form>
                 <form id="signup_form_mirkotic" method="post" action="<?php echo $infor_devices->link_login_only; ?>">
                     <div class="form-group">
-                        <?php //pr($infor_devices);?>
                         <div class="form-line">
                             <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                             <input type="hidden" name="popup" value="true"/>

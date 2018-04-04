@@ -147,6 +147,11 @@ class CampaignGroupsController extends AppController
             ->combine('id', 'name')->toArray();
         $campaign_groups = $this->CampaignGroups->newEntity();
         if ($this->request->is('post')) {
+            if ($this->request->data['tile_congratulations_return'] != '') {
+                $packages = array_values($this->request->data['tile_congratulations_return']);
+                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+            }
+
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
                 $this->request->data['packages'] = json_encode($packages);
@@ -431,6 +436,10 @@ class CampaignGroupsController extends AppController
         ;
         $before_device = json_decode($campaign_group->device_id);
         if ($this->request->is('post')) {
+            if ($this->request->data['tile_congratulations_return'] != '') {
+                $packages = array_values($this->request->data['tile_congratulations_return']);
+                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+            }
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
                 $this->request->data['packages'] = json_encode($packages);

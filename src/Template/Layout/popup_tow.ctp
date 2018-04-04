@@ -30,6 +30,7 @@ $cakeDescription = 'Media ';
             'password/bootstrap.min',
             'back_end/my_style',
             'page1',
+            'bootstrap-datetimepicker'
         ]
     );
     echo $this->Html->script([
@@ -56,6 +57,16 @@ if (isset($infor_devices->title_connect) && $infor_devices->title_connect != '')
 }
 $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_isexit_partner : '2';
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
+if (isset($infor_devices->tile_congratulations_return)) {
+    if (!empty($infor_devices->tile_congratulations_return)) {
+        $tile_congratulations = json_decode($infor_devices->tile_congratulations_return);
+        $tile_congratulations_return = $tile_congratulations[array_rand($tile_congratulations, 1)];
+    } else {
+        $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+    }
+} else {
+    $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+}
 $list_path_old = explode(',', $infor_devices->path);
 foreach ($list_path_old as $k =>  $item) {
     if ($item != '') {
@@ -66,6 +77,7 @@ $auth_target = isset($infor_devices->auth_target) ? $infor_devices->auth_target 
 $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->apt_device_number :'';
 $title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_campaign: 'Vui lòng điền thông tin khảo sát';
 $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packages): array();
+
 ?>
 <body>
 <!-- Inspired by https://codepen.io/transportedman/pen/NPWRGq -->
@@ -191,14 +203,20 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                                             <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                         <?php } elseif ($vl == 2) { ?>
                                             <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
-                                        <?php } else { ?>
+                                        <?php } elseif($vl == 3) { ?>
+                                            <p><input type="text" id="_reg_full_birthday" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
+                                        <?php } else if ($vl== 4) {?>
                                             <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                        <?php } else { ?>
+                                            <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
                                         <?php }
                                     }
-                                } else {?>
+                                } else { ?>
                                     <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                     <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                    <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
                                     <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                    <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
                                 <?php }?>
                                 <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                 <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
@@ -267,65 +285,23 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                             <?php if (!empty($packages)) {
                                 foreach ($packages as $k => $vl) {
                                     if ($vl == 1) { ?>
-                                        <p>
-                                            <?php  echo $this->Form->control('name', array(
-                                                'type' => 'text',
-                                                'class' => 'txt_input',
-                                                'id' => '_reg_full_name',
-                                                'label' => false,
-                                                'placeholder' => 'Họ và tên',
-                                            )); ?>
-                                        </p>
+                                        <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
                                     <?php } elseif ($vl == 2) { ?>
-                                        <p>
-                                            <?php echo $this->Form->control('phone', array(
-                                                'type' => 'text',
-                                                'class' => 'txt_input',
-                                                'id' => '_reg_telephone',
-                                                'label' => false,
-                                                'placeholder' => 'Số điện thoại',
-                                            ));
-                                            ?>
-                                        </p>
+                                        <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                    <?php } elseif($vl == 3) { ?>
+                                        <p><input type="text" id="_reg_full_birthday" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
+                                    <?php } else if ($vl== 4) {?>
+                                        <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
                                     <?php } else { ?>
-                                        <p> <?php echo $this->Form->control('address', array(
-                                                'type' => 'text',
-                                                'class' => 'txt_input',
-                                                'id' => '_reg_address',
-                                                'label' => false,
-                                                'placeholder' => 'Địa chỉ',
-                                            )); ?>
-                                        </p>
+                                        <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
                                     <?php }
                                 }
                             } else { ?>
-                                <p>
-                                    <?php  echo $this->Form->control('name', array(
-                                        'type' => 'text',
-                                        'class' => 'txt_input',
-                                        'id' => '_reg_full_name',
-                                        'label' => false,
-                                        'placeholder' => 'Họ và tên',
-                                    )); ?>
-                                </p>
-                                <p>
-                                    <?php echo $this->Form->control('phone', array(
-                                        'type' => 'text',
-                                        'class' => 'txt_input',
-                                        'id' => '_reg_telephone',
-                                        'label' => false,
-                                        'placeholder' => 'Số điện thoại',
-                                    ));
-                                    ?>
-                                </p>
-                                <p> <?php echo $this->Form->control('address', array(
-                                        'type' => 'text',
-                                        'class' => 'txt_input',
-                                        'id' => '_reg_address',
-                                        'label' => false,
-                                        'placeholder' => 'Địa chỉ',
-                                    )); ?>
-                                </p>
+                                <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
+                                <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
                             <?php } ?>
                             <?php
                             $device_id = isset($infor_devices->id) ? $infor_devices->id : '';
@@ -357,6 +333,7 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
     </div>
 </body>
 </html>
+<?= $this->Html->script(['bootstrap-datetimepicker'])?>
 <script type="text/javascript">
     function doLogin() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
@@ -366,7 +343,6 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
         return false;
     }
     $('.carousel').carousel();
-
     var url = "<?php echo $infor_devices->auth_target;?>";
     $('#register_form').validate({
         rules: {
@@ -376,6 +352,9 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
             'phone': {
                 required: true,
                 number: true
+            },
+            'email': {
+                email: true
             }
         },
         messages: {
@@ -385,6 +364,9 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
             'phone': {
                 required: 'Hãy nhập',
                 number: 'Hãy nhập đúng định dạng'
+            },
+            'email': {
+                email: 'Hãy nhập đúng định dạng email'
             }
         },
         submitHandler: function (form) {
@@ -414,6 +396,9 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
             'phone': {
                 required: true,
                 number: true
+            },
+            'email': {
+                email: true
             }
         },
         messages: {
@@ -423,6 +408,9 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
             'phone': {
                 required: 'Hãy nhập',
                 number: 'Hãy nhập đúng định dạng'
+            },
+            'email': {
+                email: 'Hãy nhập đúng định dạng email'
             }
         },
         submitHandler: function () {
@@ -443,6 +431,18 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
             return doLogin();
         }
     });
+    $(document).ready(function () {
+        $('.datetime_birthday').datetimepicker({
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0,
+            format: "dd / mm / yyyy"
+        });
+    })
 </script>
 <style>
     html {

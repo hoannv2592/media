@@ -54,7 +54,6 @@
                                     'label' => 'Tên chiến dịch',
                                 ));
                                 ?>
-                                <div class="help-info">Tên chiến dịch</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -66,7 +65,6 @@
                                     'id' => 'config-demo'
                                 ));
                                 ?>
-                                <div class="help-info">hời gian bắt đầu và kết thúc chiến dịch</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -77,7 +75,6 @@
                                     'class' => 'form-control',
                                 ));
                                 ?>
-                                <div class="help-info">Số lượng voucher phát ra</div>
                             </div>
                         </div>
 
@@ -91,7 +88,6 @@
                                     'type' => 'textarea'
                                 ));
                                 ?>
-                                <div class="help-info">Mô tả chiến dịch</div>
                             </div>
                         </div>
                         <h2 class="card-inside-title">Chọn thiết bị cho nhóm</h2>
@@ -121,7 +117,6 @@
                                         <?php  } ?>
                                     </select>
                                 </div>
-                                <div class="help-info">User quản lý nhóm thiết bị</div>
                             </div>
                         <?php } else { ?>
                             <input type="hidden" name="user_id_campaign_group"  value="<?php echo $user_login['id'];?>" class="form-control"/>
@@ -147,7 +142,8 @@
                                         ['value' => 1, 'text' => __('Họ và tên')],
                                         ['value' => 2, 'text' => __('Ngày sinh')],
                                         ['value' => 3, 'text' => __('Số điện thoại')],
-                                        ['value' => 4, 'text' => __('Địa chỉ')]
+                                        ['value' => 4, 'text' => __('Địa chỉ')],
+                                        ['value' => 5, 'text' => __('Địa chỉ email')]
                                     ],
                                     'templates' => [
                                         'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
@@ -184,22 +180,18 @@
                                 <?php echo $this->Form->control('tile_name', array(
                                     'label' => 'Tên cơ sở dịch vụ',
                                     'class' => 'form-control',
-                                    'id' => 'tile_name',
-                                    'placeholder' => 'Điền tên..'
+                                    'id' => 'tile_name'
                                 ));
                                 ?>
-                                <div class="help-info">Tên cơ sở dịch vụ</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-line"
                             <?php echo $this->Form->control('tile_congratulations', array(
                                 'label' => 'Nội dung tin nhắn chúc mừng',
-                                'class' => 'form-control',
-                                'placeholder' => 'Nội dung tin nhắn chúc mừng..'
+                                'class' => 'form-control'
                             ));
                             ?>
-                            <div class="help-info">Nội dung tin nhắn chúc mừng</div>
                         </div>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
@@ -208,37 +200,42 @@
                                     'label' => 'Địa chỉ nhóm thiết bị',
                                     'class' => 'form-control',
                                     'id' => 'slogan',
-                                    'value' => $address,
-                                    'placeholder' => 'Điền địa chỉ nhóm thiết bị..'
+                                    'value' => $address
                                 ));
                                 ?>
-                                <div class="help-info">Địa chỉ nhóm thiết bị</div>
                             </div>
                         </div>
-                        <div class="form-group">
+<!--                        <div class="form-group">-->
+<!--                            <div class="form-line">-->
+<!--                                --><?php //$tile_congratulations_return = isset($campaign_group->tile_congratulations_return) ? ($campaign_group->tile_congratulations_return):'' ?>
+<!--                                --><?php //echo $this->Form->control('tile_congratulations_return', array(
+//                                    'label' => 'Title thống báo truy cập trở lại',
+//                                    'class' => 'form-control',
+//                                    'value' => $tile_congratulations_return
+//                                ));
+//                                ?>
+<!--                            </div>-->
+<!--                        </div>-->
+                        <?php $tile_congratulations_return = isset($campaign_group->tile_congratulations_return) ? ($campaign_group->tile_congratulations_return):'' ?>
+                        <div class="form-group" style="margin-bottom: 10px !important;">
                             <div class="form-line">
-                                <?php $tile_congratulations_return = isset($campaign_group->tile_congratulations_return) ? ($campaign_group->tile_congratulations_return):'' ?>
-                                <?php echo $this->Form->control('tile_congratulations_return', array(
-                                    'label' => 'Tile congratulations return',
-                                    'class' => 'form-control',
-                                    'value' => $tile_congratulations_return,
-                                    'placeholder' => 'Tile congratulations return..'
-                                ));
-                                ?>
-                                <div class="help-info">Tile congratulations return</div>
+                                <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                <input name="tile_congratulations_return[]"
+                                       class="form-control valid" id="tile-congratulations-return"
+                                       value="<?= $tile_congratulations_return ?>" aria-invalid="false" type="text" />
                             </div>
+                            <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
                         </div>
+                        <div class="add"></div>
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
                                 <?php echo $this->Form->control('title_connect', array(
-                                    'label' => 'Title button connect',
+                                    'label' => 'Title button kết nối',
                                     'class' => 'form-control',
                                     'value' => $title_connect,
-                                    'placeholder' => 'Title_connect..'
                                 ));
                                 ?>
-                                <div class="help-info">Title_connect</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -246,13 +243,11 @@
                                 <?php
                                 $title_campaign = isset($campaign_group->title_campaign) ? ($campaign_group->title_campaign):'' ?>
                                 <?php echo $this->Form->control('title_campaign', array(
-                                    'label' => 'Title campaign ',
+                                    'label' => 'Title button khảo sát',
                                     'class' => 'form-control',
                                     'value' => $title_campaign,
-                                    'placeholder' => 'title_campaign..'
                                 ));
                                 ?>
-                                <div class="help-info">Title_campaign</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -280,7 +275,6 @@
                             <div class="form-line">
                                 <?php $logo_image = isset($campaign_group->path_logo) ? ($campaign_group->path_logo):''; ?>
                                 <input type="file" name="logo_image" id="file" value="" class="form-control"/>
-                                <div class="help-info">logo_image</div>
                             </div>
                         </div>
                         <h2 class="card-inside-title"> Chọn ảnh nền </h2>
@@ -299,6 +293,33 @@
     </div>
 </section>
 <script type="application/javascript">
+    var y = 1; //initlal text box count
+    var max_fields = 10; //maximum input boxes allowed
+    var wrapper_title = $("div.add"); //Fields wrapper
+    var add_button_title = $("#add_title"); //Add button class
+    $(add_button_title).click(function (e) { //on add file button click
+        e.preventDefault();
+        if (y < max_fields) { //max input file allowed
+            $(wrapper_title).append('<div class="border_add">'+
+                '<div class="form-group" style="margin-bottom: 5px !important;">\n' +
+                '<div class="form-line">\n' +
+                '<div class="input text">' +
+                '<input name="tile_congratulations_return[]" class="form-control valid" aria-invalid="false" type="text"></div>' +
+                '</div>' +
+                '</div>\n' +
+                '<a href="javascript:void(0);" id="delete_bak" class="btn btn-danger waves-effect remove_field_title" style="margin-top: 0;margin-bottom: 10px">Xóa</a>\n' +
+                '</div>'
+
+            );
+            y++; //input file increment
+        }
+    }); //add input box
+    $(wrapper_title).on("click", ".remove_field_title", function (e) { //user click on remove
+        e.preventDefault();
+        $(this).parent('div').remove();
+        $(this).parent('div').remove();
+        y--;
+    });
     $('#select_device').change(function () {
         var role = "<?php echo $user_login['role'];?>";
         var val = $(this).val();

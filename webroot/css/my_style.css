@@ -244,3 +244,7 @@ th>a {
 .storke_4{
     border: 2px solid #32c861;
 }
+
+.ct-label.ct-horizontal.ct-end {
+    margin-left: -35px !important;
+}

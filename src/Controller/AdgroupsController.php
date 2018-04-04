@@ -178,6 +178,11 @@ class AdgroupsController extends AppController
         }
         $adgroup = $this->Adgroups->newEntity();
         if ($this->request->is('post')) {
+            if ($this->request->data['tile_congratulations_return'] != '') {
+                $packages = array_values($this->request->data['tile_congratulations_return']);
+                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+            }
+
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
                 $this->request->data['packages'] = json_encode($packages);
@@ -600,6 +605,10 @@ class AdgroupsController extends AppController
             ->select(['id'])->first()->toArray();
         $before_device = json_decode($adgroup->device_id);
         if ($this->request->is('post')) {
+            if ($this->request->data['tile_congratulations_return'] != '') {
+                $packages = array_values($this->request->data['tile_congratulations_return']);
+                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+            }
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
                 $this->request->data['packages'] = json_encode($packages);

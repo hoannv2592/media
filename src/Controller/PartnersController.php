@@ -163,7 +163,21 @@ class PartnersController extends AppController
         $begin = new DateTime( $begin );
         $end   = new DateTime( $end );
         for($i = $begin; $i <= $end; $i->modify('+1 day')){
-            $list_day[] = $i->format("d");
+            $list_day[] = $i->format("d/m/Y");
+        }
+        $count = count($list_day);
+        end($list_day);         // move the internal pointer to the end of the array
+        $last_key = key($list_day);  // fetches the key of the element pointed to by the internal pointer
+        reset($list_day);
+        $first_key = key($list_day);
+        $check_list = array($first_key, $last_key);
+        if ($count > 7) {
+            foreach ($list_day as $k => $vl) {
+                if (!in_array($k, $check_list)) {
+                    $vl = '';
+                }
+                $list_day[$k] = $vl;
+            }
         }
         return json_encode($list_day);
     }
