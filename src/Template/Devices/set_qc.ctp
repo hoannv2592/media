@@ -181,7 +181,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                 <?php if (isset($device->tile_congratulations_return) && $device->tile_congratulations_return != '') {
                                     $tile_congratulations_return = json_decode($device->tile_congratulations_return) ;
                                     $count = count($tile_congratulations_return);
-                                    if ($count > 1) {
+                                    if ($count > 0) {
                                         foreach ($tile_congratulations_return as $k => $item) {
                                             if ($k == 0) {?>
                                                 <div class="form-group">
