@@ -202,7 +202,6 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     if (data == 'true') {
                         processAuth();
                     }
-                }
             });
         <?php else: ?>
             if (data == 'true') {
