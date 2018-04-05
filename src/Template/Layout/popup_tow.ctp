@@ -59,8 +59,16 @@ $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_ise
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
 if (isset($infor_devices->tile_congratulations_return)) {
     if (!empty($infor_devices->tile_congratulations_return)) {
-        $tile_congratulations = json_decode($infor_devices->tile_congratulations_return);
-        $tile_congratulations_return = $tile_congratulations[array_rand($tile_congratulations, 1)];
+        function isJSON($string){
+            return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
+        }
+        $isJson = isJSON($infor_devices->tile_congratulations_return);
+        if ($isJson) {
+            $tile_congratulations = json_decode($infor_devices->tile_congratulations_return);
+            $tile_congratulations_return = $tile_congratulations[array_rand($tile_congratulations, 1)];
+        } else {
+            $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+        }
     } else {
         $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
     }
