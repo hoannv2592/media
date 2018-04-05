@@ -51,6 +51,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             'id' => 'uploadForm',
                             'onsubmit'=>"event.returnValue = checkuploadfile()",
                         ]); ?>
+                    <div class="row">
                         <div class="col-md-6">
                             <div class="form-group">
                                 <div class="form-line">
@@ -392,6 +393,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                 <div class="file-add"></div>
                             </div>
                         </div>
+                    </div>
                         <?php echo $this->Form->input('device_id', [
                             'type' => 'hidden',
                             'value' => $device->id
