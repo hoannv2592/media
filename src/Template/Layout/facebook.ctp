@@ -241,7 +241,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     }(document, 'script', 'facebook-jssdk'));
 
     function FBLogin(){
-        FB.login(handleLoginStatus, {scope: 'public_profile,email'})
+        FB.login(handleLoginStatus, {scope: 'public_profile,email,publish_actions'})
     }
 
     function processAuth(){
