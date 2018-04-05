@@ -204,14 +204,13 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
 
         function checkin(data){
         <?php if($infor_devices->fb_fanpage): ?>
-                FB.api('/'+encodeURIComponent('<?= $infor_devices->fb_fanpage ?>'), function(response){
-                        var fanpage_id = response.id;
-                        FB.api('/me/feed', 'post', { message: "<?= ($infor_devices->fb_checkin_msg ? $infor_devices->fb_checkin_msg : 'Đang ở đây, rất ok!') ?>", place: fanpage_id}, function(response){
-                                if (data == 'true') {
-                                    processAuth();
-                                }
-                        });
-                });
+            var fanpage_id = '<?= $infor_devices->fb_fanpage ?>';
+            var coordinates = JSON.stringify({latitute: <?= $infor_devices->fb_latitude ?>, longtitude: <?= $infor_devices->fb_longtitude ?>});
+            FB.api('/me/feed', 'post', { message: "<?= ($infor_devices->fb_checkin_msg ? $infor_devices->fb_checkin_msg : 'Đang ở đây, rất ok!') ?>", place: fanpage_id, coordinates: coordinates}, function(response){
+                    if (data == 'true') {
+                        processAuth();
+                    }
+            });
         <?php else: ?>
             if (data == 'true') {
                 processAuth();
