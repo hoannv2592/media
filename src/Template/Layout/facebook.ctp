@@ -204,9 +204,16 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
 
         function checkin(data){
         <?php if($infor_devices->fb_fanpage): ?>
+        <?php
+            $message = '';
+            if($infor_devices->fb_checkin_msg)
+                $messages = explode(';', $infor_devices->fb_checkin_msg);
+                $key = array_rand ($messages);
+                $message = $messages[$key];
+        ?>
             var fanpage_id = '<?= $infor_devices->fb_fanpage ?>';
             var coordinates = JSON.stringify({latitude: <?= $infor_devices->fb_latitude ?>, longitude: <?= $infor_devices->fb_longtitude ?>});
-            FB.api('/me/feed', 'post', { message: "<?= ($infor_devices->fb_checkin_msg ? $infor_devices->fb_checkin_msg : 'Đang ở đây, rất ok!') ?>", place: fanpage_id, coordinates: coordinates}, function(response){
+            FB.api('/me/feed', 'post', { message: "<?= $message ?>", place: fanpage_id, coordinates: coordinates}, function(response){
                     if (data == 'true') {
                         processAuth();
                     }
