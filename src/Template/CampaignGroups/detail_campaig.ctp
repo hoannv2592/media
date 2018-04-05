@@ -281,7 +281,16 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                         <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
                                     </div>
                                 <?php }
-                            }
+                            } else { ?>
+                                <div class="form-group" style="margin-bottom: 10px !important;">
+                                    <div class="form-line">
+                                        <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                        <input name="tile_congratulations_return[]"
+                                               class="form-control valid" id="tile-congratulations-return" aria-invalid="false" type="text" />
+                                    </div>
+                                    <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                </div>
+                            <?php }
                             ?>
                         </div>
                         <div class="add"></div>
