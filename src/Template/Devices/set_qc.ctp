@@ -112,6 +112,28 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                             </div>
                             <div class="form-group">
                                 <div class="form-line">
+                                    <?php $fb_latitude = isset($device->fb_latitude) ? ($device->fb_latitude):'' ?>
+                                    <?php echo $this->Form->control('fb_latitude', array(
+                                        'label' => 'Latitude',
+                                        'class' => 'form-control',
+                                        'value' => $fb_latitude,
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php $fb_longtitude = isset($device->fb_longtitude) ? ($device->fb_longtitude):'' ?>
+                                    <?php echo $this->Form->control('fb_longtitude', array(
+                                        'label' => 'Longtitude',
+                                        'class' => 'form-control',
+                                        'value' => $fb_longtitude,
+                                    ));
+                                    ?>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="form-line">
                                     <?php $fb_checkin_msg = isset($device->fb_checkin_msg) ? ($device->fb_checkin_msg):'' ?>
                                     <?php echo $this->Form->control('fb_checkin_msg', array(
                                         'label' => 'Check-in message',
