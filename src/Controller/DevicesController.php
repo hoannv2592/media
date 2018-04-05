@@ -511,7 +511,13 @@ class DevicesController extends AppController
      * @param null $client_mac
      * @return \Cake\Http\Response|null
      */
-    public function viewQc($device_id = null, $voucher_flag = null, $partner_id = null, $flag_check_isexit_partner = null, $flag_client_mac = null)
+    public function viewQc (
+        $device_id = null,
+        $voucher_flag = null,
+        $partner_id = null,
+        $flag_check_isexit_partner = null,
+        $flag_client_mac = null
+    )
     {
         $flag_check_isexit_partner = \UrlUtil::_decodeUrl($flag_check_isexit_partner);
         $partner_id = isset($partner_id) ? $partner_id :'';
@@ -679,10 +685,10 @@ class DevicesController extends AppController
                             $current_date = date('Y-m-d');
                             $campaing_id = array();
                             foreach ($device_campaign as $k => $vl) {
-                                $vl = explode('-', $vl);
-                                $my_date = date('Y-m-d', strtotime($vl[1]));
+                                $vl = explode(' - ', $vl);
+                                $my_date = Datetime::createFromFormat('d/m/Y', $vl[1])->format('Y-m-d');
                                 if ($my_date >= $current_date) {
-                                    $campaing_id[$k] = $vl[1];
+                                    $campaing_id[$k] = $my_date;
                                 }
                             }
                             $interval = array();
@@ -722,7 +728,7 @@ class DevicesController extends AppController
                                                 'client_mac' => $client_mac,
                                                 'num_clients_connect' => 1,
                                                 'name' => 'user_online',
-                                                'campaign_group_id' => $id_campaign,
+                                                'campaign_group_id' => $campaign_id_only,
                                                 'link_login_only' => $link_login_only,
                                                 'link_orig' => $link_orig,
                                                 'chap_id' => $chap_id,
@@ -746,7 +752,7 @@ class DevicesController extends AppController
                                             $partner_id = $pa_voucher_v['partner_id'];
                                             $data_update = array(
                                                 'num_clients_connect' => $pa_voucher_v->num_clients_connect + 1,
-                                                'campaign_group_id' => $id_campaign,
+                                                'campaign_group_id' => $campaign_id_only,
                                                 'link_login_only' => $link_login_only,
                                                 'link_orig' => $link_orig,
                                                 'chap_id' => $chap_id,
@@ -759,7 +765,7 @@ class DevicesController extends AppController
                                             }
                                             $data_update_pa = array(
                                                 'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
-                                                'campaign_group_id' => $id_campaign,
+                                                'campaign_group_id' => $campaign_id_only,
                                                 'link_login_only' => $link_login_only,
                                                 'link_orig' => $link_orig,
                                                 'chap_id' => $chap_id,
@@ -784,7 +790,7 @@ class DevicesController extends AppController
                                         $partner_id = $pa_confirm['id'];
                                         $data_update = array(
                                             'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
-                                            'campaign_group_id' => $id_campaign,
+                                            'campaign_group_id' => $campaign_id_only,
                                             'link_login_only' => $link_login_only,
                                             'link_orig' => $link_orig,
                                             'chap_id' => $chap_id,
@@ -821,7 +827,7 @@ class DevicesController extends AppController
                                             'client_mac' => $client_mac,
                                             'num_clients_connect' => 1,
                                             'name' => 'user_online',
-                                            'campaign_group_id' => $id_campaign,
+                                            'campaign_group_id' => $campaign_id_only,
                                             'link_login_only' => $link_login_only,
                                             'link_orig' => $link_orig,
                                             'chap_id' => $chap_id,
@@ -850,7 +856,7 @@ class DevicesController extends AppController
                                             'client_mac' => $client_mac,
                                             'num_clients_connect' => 1,
                                             'name' => 'user_online',
-                                            'campaign_group_id' => $id_campaign,
+                                            'campaign_group_id' => $campaign_id_only,
                                             'link_login_only' => $link_login_only,
                                             'link_orig' => $link_orig,
                                             'chap_id' => $chap_id,
@@ -1027,13 +1033,23 @@ class DevicesController extends AppController
                             $this->redirect([
                                 'plugin' => null,
                                 'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner). '/'.$flag_return
+                                'action' => 'view_qc' . '/'
+                                    . \UrlUtil::_encodeUrl($device->id) . '/'
+                                    . \UrlUtil::_encodeUrl(1). '/'
+                                    . \UrlUtil::_encodeUrl($partner_id). '/'
+                                    . \UrlUtil::_encodeUrl($flag_check_isexit_partner). '/'
+                                    . $flag_return
                             ]);
                         } else {
                             $this->redirect([
                                 'plugin' => null,
                                 'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner). '/'.$flag_return
+                                'action' => 'view_qc' . '/'
+                                    . \UrlUtil::_encodeUrl($device->id) . '/'
+                                    . \UrlUtil::_encodeUrl(2). '/'
+                                    . \UrlUtil::_encodeUrl($partner_id). '/'
+                                    . \UrlUtil::_encodeUrl($flag_check_isexit_partner). '/'
+                                    . $flag_return
                             ]);
                         }
                     } else {
@@ -1058,29 +1074,29 @@ class DevicesController extends AppController
                             }
                         }
                         if (!empty($id_campaign)) {
-                            $device_campaign = $this->CampaignGroups->find()
-                                ->where(['id IN' => $id_campaign])->combine('id', 'time')
-                                ->toArray();
+                            $device_campaign = $this->CampaignGroups->find()->where(['id IN' => $id_campaign])->combine('id', 'time')->toArray();
                             $current_date = date('Y-m-d');
                             $campaing_id = array();
                             foreach ($device_campaign as $k => $vl) {
-                                $vl = explode('-', $vl);
-                                $my_date = date('Y-m-d', strtotime($vl[1]));
+                                $vl = explode(' - ', $vl);
+                                $my_date = Datetime::createFromFormat('d/m/Y', $vl[1])->format('Y-m-d');
+                                //$my_date = date('Y-m-d', strtotime($vl[1]));
                                 if ($my_date >= $current_date) {
-                                    $campaing_id[$k] = $vl[1];
+                                    $campaing_id[$k] = $my_date;
                                 }
                             }
                             $interval = array();
                             foreach ($campaing_id as $k => $vl) {
-                                $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
+                                $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d")));
                             }
                             $device_campaign = array();
                             if (!empty($interval)) {
                                 asort($interval);
                                 $campaign_id_only = key($interval);
-                                $device_campaign = $this->CampaignGroups->find()
-                                    ->where(['id' => $campaign_id_only, 'delete_flag !=' => DELETED])
-                                    ->first();
+                                $device_campaign = $this->CampaignGroups->find()->where([
+                                    'id' => $campaign_id_only,
+                                    'delete_flag !=' => DELETED
+                                ])->first();
                             }
                             if (!empty($device_campaign)) {
                                 // todo kiem tra partner da ton tai trong partner_voucher.
@@ -1102,6 +1118,7 @@ class DevicesController extends AppController
                                             array(
                                                 'device_id' => $id_device,
                                                 'client_mac' => $client_mac,
+                                                'campaign_group_id' => $campaign_id_only
                                             ))
                                             ->first();
                                         if (empty($pa_confirm)) {
@@ -1111,7 +1128,7 @@ class DevicesController extends AppController
                                                 'client_mac' => $client_mac,
                                                 'num_clients_connect' => 1,
                                                 'name' => 'user_online',
-                                                'campaign_group_id' => $id_campaign,
+                                                'campaign_group_id' => $campaign_id_only,
                                                 'auth_target' => $auth_target
                                             );
                                             $new_partner = $this->Partners->newEntity();
@@ -1128,13 +1145,14 @@ class DevicesController extends AppController
                                                 array(
                                                     'device_id' => $id_device,
                                                     'client_mac' => $client_mac,
+                                                    'campaign_group_id' => $campaign_id_only
                                                 ))
                                                 ->first();
                                             $partner_id = $pa_voucher['partner_id'];
                                             $data_update = array(
                                                 'num_clients_connect' => $pa_voucher->num_clients_connect + 1,
                                                 'auth_target' => $auth_target,
-                                                'campaign_group_id' => $id_campaign,
+                                                'campaign_group_id' => $campaign_id_only,
                                             );
                                             $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
                                             if (empty($partner_v->errors())) {
@@ -1145,7 +1163,7 @@ class DevicesController extends AppController
                                             $data_update_pa = array(
                                                 'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
                                                 'auth_target' => $auth_target,
-                                                'campaign_group_id' => $id_campaign,
+                                                'campaign_group_id' => $campaign_id_only,
                                             );
                                             $partner = $this->Partners->patchEntity($pa_confirm, $data_update_pa);
                                             if (empty($partner->errors())) {
@@ -1162,14 +1180,15 @@ class DevicesController extends AppController
                                             array(
                                                 'device_id' => $id_device,
                                                 'client_mac' => $client_mac,
+                                                'campaign_group_id' => $campaign_id_only,
                                             ))->first();
                                         $partner_id = $pa_confirm['id'];
                                         $data_update = array(
                                             'num_clients_connect' => $pa_confirm->num_clients_connect + 1,
                                             'auth_target' => $auth_target,
-                                            'campaign_group_id' => $id_campaign,
+                                            'campaign_group_id' => $campaign_id_only,
                                         );
-                                        $partner_v = $this->PartnerVouchers->patchEntity($pa_confirm, $data_update);
+                                        $partner_v = $this->PartnerVouchers->patchEntity($pa_voucher, $data_update);
                                         if (empty($partner_v->errors())) {
                                             if (!$this->PartnerVouchers->save($partner_v)) {
                                                 $chk = true;
@@ -1203,7 +1222,7 @@ class DevicesController extends AppController
                                             'num_clients_connect' => 1,
                                             'name' => 'user_online',
                                             'apt_device_pass' => $this->radompassWord(),
-                                            'campaign_group_id' => $id_campaign,
+                                            'campaign_group_id' => $campaign_id_only,
                                         );
                                         $new_partner_v = $this->PartnerVouchers->newEntity();
                                         $new_partner_v = $this->PartnerVouchers->patchEntity($new_partner_v, $save_new_pa_vou_v);
@@ -1232,7 +1251,7 @@ class DevicesController extends AppController
                                             'num_clients_connect' => 1,
                                             'name' => 'user_online',
                                             'apt_device_pass' => $this->radompassWord(),
-                                            'campaign_group_id' => $id_campaign,
+                                            'campaign_group_id' => $campaign_id_only,
                                         );
                                         $new_partner = $this->Partners->newEntity();
                                         $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou_v);
@@ -1277,7 +1296,7 @@ class DevicesController extends AppController
                                     $data_update = array(
                                         'num_clients_connect' => $partner['num_clients_connect'] + 1,
                                         'auth_target' => $auth_target,
-                                        'campaign_group_id' => $id_campaign,
+                                        'campaign_group_id' => $campaign_id_only,
                                     );
                                     $partner = $this->Partners->patchEntity($partner, $data_update);
                                     if (empty($partner->errors())) {
@@ -1400,13 +1419,23 @@ class DevicesController extends AppController
                             $this->redirect([
                                 'plugin' => null,
                                 'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(1). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner).'/'.$flag_return
+                                'action' => 'view_qc' . '/'
+                                    . \UrlUtil::_encodeUrl($device->id) . '/'
+                                    . \UrlUtil::_encodeUrl(1). '/'
+                                    . \UrlUtil::_encodeUrl($partner_id). '/'
+                                    . \UrlUtil::_encodeUrl($flag_check_isexit_partner).'/'
+                                    . $flag_return
                             ]);
                         } else {
                             $this->redirect([
                                 'plugin' => null,
                                 'controller' => 'Devices',
-                                'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($device->id) . '/' . \UrlUtil::_encodeUrl(2). '/' . \UrlUtil::_encodeUrl($partner_id). '/' . \UrlUtil::_encodeUrl($flag_check_isexit_partner).'/'.$flag_return
+                                'action' => 'view_qc' . '/'
+                                    . \UrlUtil::_encodeUrl($device->id) . '/'
+                                    . \UrlUtil::_encodeUrl(2). '/'
+                                    . \UrlUtil::_encodeUrl($partner_id). '/'
+                                    . \UrlUtil::_encodeUrl($flag_check_isexit_partner).'/'
+                                    . $flag_return
                             ]);
                         }
                     } else {
@@ -1664,6 +1693,11 @@ class DevicesController extends AppController
         $this->set(compact('logo', 'back_group','device', 'device_id', 'user_id', 'apt', 'adv'));
     }
 
+    /**
+     * ***********
+     *
+     ************************
+     */
     public function checkPassword()
     {
         $this->autoRender = false;
@@ -1689,6 +1723,12 @@ class DevicesController extends AppController
         }
     }
 
+    /**
+     ***************
+     *  addLogVoucher
+     *
+     * ******************************
+     */
     public function addLogVoucher()
     {
         $conn = ConnectionManager::get('default');
@@ -1701,15 +1741,20 @@ class DevicesController extends AppController
             $partner_id = $this->request->data['partner_id'];
             $partner = $this->Partners->get($partner_id);
             $data_save_pa = array(
-                'name' => $this->request->data['name'],
-                'birthday' => $this->request->data['birthday'],
-                'phone' => $this->request->data['phone'],
-                'address' => $this->request->data['address'],
-                'device_id' => $this->request->data['device_id'],
-                'user_id' => $this->request->data['user_id'],
-                'campaign_group_id' => $this->request->data['campaign_group_id'],
+                'name' => isset($this->request->data['name']) ? $this->request->data['name']:'',
+                'birthday' => isset($this->request->data['birthday']) ? $this->request->data['birthday']:'',
+                'phone' => isset($this->request->data['phone']) ? $this->request->data['phone']:'',
+                'address' => isset($this->request->data['address']) ?$this->request->data['address']:'',
+                'device_id' => isset($this->request->data['device_id']) ?$this->request->data['device_id']:'',
+                'user_id' => isset($this->request->data['user_id']) ?$this->request->data['user_id']:'',
+                'campaign_group_id' => isset ($this->request->data['campaign_group_id'])? $this->request->data['campaign_group_id']:'',
             );
-            $partner = $this->Partners->patchEntity($partner, $data_save_pa);
+            if (empty($partner)) {
+                $partner = $this->Partners->newEntity();
+                $partner = $this->Partners->patchEntity($partner, $data_save_pa);
+            } else {
+                $partner = $this->Partners->patchEntity($partner, $data_save_pa);
+            }
             if (empty($partner->errors())) {
                 if (!$this->Partners->save($partner)) {
                     $chk = true;
@@ -1722,6 +1767,16 @@ class DevicesController extends AppController
                 $voucher_pa = $this->Partners->patchEntity($voucher_pa, $data_save_pa);
                 if (empty($voucher_pa->errors())) {
                     if (!$this->PartnerVouchers->save($voucher_pa)) {
+                        $chk = true;
+                    }
+                }
+            } else {
+                $data_save_pa['partner_id'] = $partner_id;
+                $data_save_pa['confirm'] = 0;
+                $pa_vou = $this->PartnerVouchers->newEntity();
+                $pa_vou = $this->PartnerVouchers->patchEntity($pa_vou, $data_save_pa);
+                if (empty($pa_vou->errors())) {
+                    if (!$this->PartnerVouchers->save($pa_vou)) {
                         $chk = true;
                     }
                 }

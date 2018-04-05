@@ -179,7 +179,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                             if (isset($adgroup->tile_congratulations_return) && $adgroup->tile_congratulations_return != '') {
                                 $tile_congratulations_return = json_decode($adgroup->tile_congratulations_return) ;
                                 $count = count($tile_congratulations_return);
-                                if ($count > 1) {
+                                if ($count > 0) {
                                     foreach ($tile_congratulations_return as $k => $item) {
                                         if ($k == 0) {?>
                                             <div class="form-group" style="margin-bottom: 10px !important;;">
