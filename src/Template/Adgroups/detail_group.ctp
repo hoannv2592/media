@@ -15,17 +15,14 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                 <ol class="breadcrumb breadcrumb-bg-blue-grey">
                     <li>
                         <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'index']) ?>">
-                            <i class="material-icons">home</i> Trang chủ
+                            <i class="material-icons" style="margin-left: 10px">home</i> Trang chủ
                         </a>
                     </li>
                     <li class="active"><a href="javascript:void(0)">Chỉnh sửa nhóm thiết bị</a></li>
                 </ol>
                 <div class="card">
                     <div class="header bg-blue">
-                        <h2>
-                            Thông tin nhóm thiết bị quảng cáo
-                        </h2>
-
+                        <h2>Thông tin nhóm thiết bị quảng cáo</h2>
                     </div>
                     <div class="body">
                         <?php
@@ -39,308 +36,314 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                             )
                         ));
                         ?>
-                        <input id="cname" name="id" type="hidden">
-                        <input id="landingpage" name="landingpage" value="<?php echo isset($adgroup->name) ? $adgroup->name:'' ?>" type="hidden">
-                        <label class="" for="name">Tên loại nhóm quảng cáo</label>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" class="form-control" name="name" id="name" placeholder="Tên loại nhóm quảng cáo" value="<?php echo isset($adgroup->name) ? ($adgroup->name):'' ?>" required>
-                            </div>
-                            <div class="help-info">Tên loại nhóm quảng cáo</div>
-                        </div>
-                        <label class="" for="description">Mô tả quảng cáo</label>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <textarea name="description" cols="30" rows="2" class="form-control no-resize" id="description" placeholder="Mô tả quảng cáo"><?php echo isset($adgroup->description) ? ($adgroup->description):''; ?></textarea>
-                            </div>
-                            <div class="help-info">Mô tả quảng cáo</div>
-                        </div>
-                        <label class="">Chọn thiết bị cho nhóm</label>
-                        <div class="form-group" id="end_show">
-                            <div class="form-line">
-                                <select data-placeholder="Chọn thiết bị" id="select_device" class="chosen-select " multiple tabindex="8" name="device_id[]">
-                                    <?php
-                                    $user_de_id = json_decode($adgroup->device_name);
-                                    foreach ($devices as $key => $device) {
-                                        if (isset($user_de_id->$key)) { ?>
-                                            <option selected="selected" value="<?php echo $key; ?>"><?php echo $device ?></option>
-                                        <?php } else { ?>
-                                            <option value="<?php echo $key; ?>"><?php echo $device ?></option>
-                                        <?php }
-                                        ?>
-                                    <?php } ?>
-                                </select>
-                            </div>
-                        </div>
-                        <?php if ($user_login['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
-                            <label class="" for="description">User quản lý nhóm thiết bị</label>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <input id="cname" name="id" type="hidden">
+                                <input id="landingpage" name="landingpage" value="<?php echo isset($adgroup->name) ? $adgroup->name:'' ?>" type="hidden">
+                                <label class="" for="name">Tên loại nhóm quảng cáo</label>
                                 <div class="form-group form-float">
                                     <div class="form-line">
-                                        <select class="form-control required" name="user_id_group" id="user_id_group">
-                                            <option disabled selected value> --- Chọn user --- </option>
-                                            <?php foreach ($users as $key => $item) {
-                                                if (isset($adgroup->user_id_group) && $adgroup->user_id_group == $key) { ?>
-                                                    <option selected="selected" value="<?php echo $key; ?>"><?php echo $item ?></option>
+                                        <input type="text" class="form-control" name="name" id="name" placeholder="Tên loại nhóm quảng cáo" value="<?php echo isset($adgroup->name) ? ($adgroup->name):'' ?>" required>
+                                    </div>
+                                    <div class="help-info">Tên loại nhóm quảng cáo</div>
+                                </div>
+                                <label class="" for="description">Mô tả quảng cáo</label>
+                                <div class="form-group form-float">
+                                    <div class="form-line">
+                                        <textarea name="description" cols="30" rows="2" class="form-control no-resize" id="description" placeholder="Mô tả quảng cáo"><?php echo isset($adgroup->description) ? ($adgroup->description):''; ?></textarea>
+                                    </div>
+                                    <div class="help-info">Mô tả quảng cáo</div>
+                                </div>
+                                <label class="">Chọn thiết bị cho nhóm</label>
+                                <div class="form-group" id="end_show">
+                                    <div class="form-line">
+                                        <select data-placeholder="Chọn thiết bị" id="select_device" class="chosen-select " multiple tabindex="8" name="device_id[]">
+                                            <?php
+                                            $user_de_id = json_decode($adgroup->device_name);
+                                            foreach ($devices as $key => $device) {
+                                                if (isset($user_de_id->$key)) { ?>
+                                                    <option selected="selected" value="<?php echo $key; ?>"><?php echo $device ?></option>
                                                 <?php } else { ?>
-                                                    <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
-                                                <?php }?>
-                                            <?php  } ?>
+                                                    <option value="<?php echo $key; ?>"><?php echo $device ?></option>
+                                                <?php }
+                                                ?>
+                                            <?php } ?>
                                         </select>
                                     </div>
-                                <div class="help-info">User quản lý nhóm thiết bị</div>
-                            </div>
-                        <?php }?>
-                        <div class="row clearfix">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <label class=""> Chọn loại quảng cáo </label>
-                                <div class="demo-radio-button">
-                                    <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 1 || $adgroup->langdingpage_id == '') { echo 'checked'; } ?> />
-                                    <label style="font-weight: bold" for="radio_30">Quảng cáo với password</label>
-                                    <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 2) { echo 'checked'; }?> />
-                                    <label style="font-weight: bold" for="radio_31">Quảng cáo Facebook-Login</label>
-                                    <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 3) { echo 'checked'; }?> />
-                                    <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
+                                </div>
+                                <?php if ($user_login['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
+                                    <label class="" for="description">User quản lý nhóm thiết bị</label>
+                                    <div class="form-group form-float">
+                                        <div class="form-line">
+                                            <select class="form-control required" name="user_id_group" id="user_id_group">
+                                                <option disabled selected value> --- Chọn user --- </option>
+                                                <?php foreach ($users as $key => $item) {
+                                                    if (isset($adgroup->user_id_group) && $adgroup->user_id_group == $key) { ?>
+                                                        <option selected="selected" value="<?php echo $key; ?>"><?php echo $item ?></option>
+                                                    <?php } else { ?>
+                                                        <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
+                                                    <?php }?>
+                                                <?php  } ?>
+                                            </select>
+                                        </div>
+                                        <div class="help-info">User quản lý nhóm thiết bị</div>
+                                    </div>
+                                <?php }?>
+                                <div class="row clearfix">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <label class=""> Chọn loại quảng cáo </label>
+                                        <div class="demo-radio-button">
+                                            <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 1 || $adgroup->langdingpage_id == '') { echo 'checked'; } ?> />
+                                            <label style="font-weight: bold" for="radio_30">Password</label>
+                                            <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 2) { echo 'checked'; }?> />
+                                            <label style="font-weight: bold" for="radio_31">Facebook-Login</label>
+                                            <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 3) { echo 'checked'; }?> />
+                                            <label style="font-weight: bold" for="radio_32">Thông tin khách hàng</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="check_pass_device">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php $apt_device_number = isset($adgroup->apt_device_number) ? ($adgroup->apt_device_number):'' ?>
+                                            <?php echo $this->Form->control('apt_device_number', array(
+                                                'label' => 'Mật khẩu thiết bị',
+                                                'class' => 'form-control',
+                                                'id' => 'apt_device_number',
+                                                'value' => $apt_device_number,
+                                                'placeholder' => "Điền mật khẩu.."
+                                            ));
+                                            ?>
+                                            <div class="help-info">Mật khẩu thiết bị</div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hiddenccc">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $packages = isset($adgroup->packages) ? json_decode($adgroup->packages):'';
+                                            echo $this->Form->control('packages', [
+                                                'type' => 'select',
+                                                'multiple' => 'checkbox',
+                                                'label' => false,
+                                                'options' => [
+                                                    ['value' => 1, 'text' => __('Họ và tên')],
+                                                    ['value' => 2, 'text' => __('Ngày sinh')],
+                                                    ['value' => 3, 'text' => __('Số điện thoại')],
+                                                    ['value' => 4, 'text' => __('Địa chỉ')],
+                                                    ['value' => 5, 'text' => __('Địa chỉ email')]
+                                                ],
+                                                'templates' => [
+                                                    'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                                    'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                                ],
+                                                'value' => $packages
+                                            ]);
+                                            ?>
+                                            <div id="check_error"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped dataTable table-hover">
+                                        <thead>
+                                        <tr>
+                                            <th width="25%">Ảnh logo</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <?php if (isset($adgroup->path_logo) && $adgroup->path_logo != '') {
+                                            $list_background = explode(',', $adgroup->path_logo);
+                                            foreach ($list_background as $k => $vl) { ?>
+                                                <tr>
+                                                    <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="200"></td>
+                                                </tr>
+                                            <?php }
+                                        } else { ?>
+                                        <tr><td colspan="4" class="image">No file(s) found......</td><?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="form-group">
+                                    <label> Ảnh Logo </label>
+                                        <?php $logo_image = isset($adgroup->path_logo) ? ($adgroup->path_logo):''; ?>
+<!--                                    <div class="form-line">-->
+<!--                                        <input type="file" name="logo_image" value="--><?php //echo $logo_image;?><!--" class="form-control"/>-->
+<!--                                        <div class="help-info">logo_image</div>-->
+<!--                                    </div>-->
+                                    <div class="form-group">
+                                        <div class="file-loading">
+                                            <input id="file-2" type="file" class="file" name="logo_image" value="<?php echo $logo_image;?>" data-overwrite-initial="false" data-min-file-count="2">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="hiddenccc">
-                            <div class="form-group">
-                                <div class="form-line">
+                            <div class="col-md-6">
+                                <div class="form-group" id="end_show">
+                                    <div class="form-line">
+                                        <?php $tile_name = isset($adgroup->tile_name) ? ($adgroup->tile_name):'' ?>
+                                        <?php echo $this->Form->control('tile_name', array(
+                                            'label' => 'Tên cơ sở dịch vụ',
+                                            'class' => 'form-control',
+                                            'id' => 'tile_name',
+                                            'value' => $tile_name,
+                                            'placeholder' => 'Điền tên..'
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                                <div class="form-group" id="end_show">
+                                    <div class="form-line">
+                                        <?php $address = isset($adgroup->address) ? ($adgroup->address):'' ?>
+                                        <?php echo $this->Form->control('address', array(
+                                            'label' => 'Địa chỉ nhóm thiết bị',
+                                            'class' => 'form-control',
+                                            'id' => 'tile_name',
+                                            'value' => $address,
+                                            'placeholder' => 'Điền địa chỉ nhóm thiết bị..'
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                                <div class="show_tite">
                                     <?php
-                                    $packages = isset($adgroup->packages) ? json_decode($adgroup->packages):'';
-                                    echo $this->Form->control('packages', [
-                                        'type' => 'select',
-                                        'multiple' => 'checkbox',
-                                        'label' => false,
-                                        'options' => [
-                                            ['value' => 1, 'text' => __('Họ và tên')],
-                                            ['value' => 2, 'text' => __('Ngày sinh')],
-                                            ['value' => 3, 'text' => __('Số điện thoại')],
-                                            ['value' => 4, 'text' => __('Địa chỉ')],
-                                            ['value' => 5, 'text' => __('Địa chỉ email')]
-                                        ],
-                                        'templates' => [
-                                            'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
-                                            'radioWrapper' => '<div class="radio">{{label}}</div>'
-                                        ],
-                                        'value' => $packages
-                                    ]);
-                                    ?>
-                                    <div id="check_error"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group" id="end_show">
-                            <div class="form-line">
-                                <?php $tile_name = isset($adgroup->tile_name) ? ($adgroup->tile_name):'' ?>
-                                <?php echo $this->Form->control('tile_name', array(
-                                    'label' => 'Tên cơ sở dịch vụ',
-                                    'class' => 'form-control',
-                                    'id' => 'tile_name',
-                                    'value' => $tile_name,
-                                    'placeholder' => 'Điền tên..'
-                                ));
-                                ?>
-                            </div>
-                            <div class="help-info">Tên cơ sở dịch vụ</div>
-                        </div>
-                        <div class="form-group" id="end_show">
-                            <div class="form-line">
-                                <?php $address = isset($adgroup->address) ? ($adgroup->address):'' ?>
-                                <?php echo $this->Form->control('address', array(
-                                    'label' => 'Địa chỉ nhóm thiết bị',
-                                    'class' => 'form-control',
-                                    'id' => 'tile_name',
-                                    'value' => $address,
-                                    'placeholder' => 'Điền địa chỉ nhóm thiết bị..'
-                                ));
-                                ?>
-                            </div>
-                            <div class="help-info">Địa chỉ nhóm thiết bị</div>
-                        </div>
-                        <div class="check_pass_device">
-                            <div class="form-group">
-                                <div class="form-line">
-                                    <?php $apt_device_number = isset($adgroup->apt_device_number) ? ($adgroup->apt_device_number):'' ?>
-                                    <?php echo $this->Form->control('apt_device_number', array(
-                                        'label' => 'Mật khẩu thiết bị',
-                                        'class' => 'form-control',
-                                        'id' => 'apt_device_number',
-                                        'value' => $apt_device_number,
-                                        'placeholder' => "Điền mật khẩu.."
-                                    ));
-                                    ?>
-                                    <div class="help-info">Mật khẩu thiết bị</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="show_tite">
-                            <?php
-                            if (isset($adgroup->tile_congratulations_return) && $adgroup->tile_congratulations_return != '') {
-                                $tile_congratulations_return = json_decode($adgroup->tile_congratulations_return) ;
-                                $count = count($tile_congratulations_return);
-                                if ($count > 0) {
-                                    foreach ($tile_congratulations_return as $k => $item) {
-                                        if ($k == 0) {?>
-                                            <div class="form-group" style="margin-bottom: 10px !important;;">
+                                    if (isset($adgroup->tile_congratulations_return) && $adgroup->tile_congratulations_return != '') {
+                                        $tile_congratulations_return = json_decode($adgroup->tile_congratulations_return) ;
+                                        $count = count($tile_congratulations_return);
+                                        if ($count > 0) {
+                                            foreach ($tile_congratulations_return as $k => $item) {
+                                                if ($k == 0) {?>
+                                                    <div class="form-group" style="margin-bottom: 10px !important;;">
+                                                        <div class="form-line">
+                                                            <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                                            <input name="tile_congratulations_return[]"
+                                                                   class="form-control valid" id="tile-congratulations-return"
+                                                                   value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                        </div>
+                                                        <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                                    </div>
+                                                <?php } else {?>
+                                                    <div class="form-group" id="title_<?= $k?>" style="margin-bottom: 10px !important;">
+                                                        <div class="form-line">
+                                                            <input name="tile_congratulations_return[]"
+                                                                   class="form-control valid" id="tile-congratulations-return"
+                                                                   value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                        </div>
+                                                        <a href="javascript:void(0);" id="delete_" onclick="delete_title(<?= $k?>)" class="btn btn-danger waves-effect" style="margin-top: 10px">Xóa</a>
+                                                    </div>
+                                                <?php }
+
+                                            }
+                                        } else { ?>
+                                            <div class="form-group" style="margin-bottom: 10px !important;">
                                                 <div class="form-line">
                                                     <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
                                                     <input name="tile_congratulations_return[]"
                                                            class="form-control valid" id="tile-congratulations-return"
-                                                           value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                           value="<?= $adgroup->tile_congratulations_return ?>" aria-invalid="false" type="text" />
                                                 </div>
                                                 <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
                                             </div>
-                                        <?php } else {?>
-                                            <div class="form-group" id="title_<?= $k?>" style="margin-bottom: 10px !important;">
-                                                <div class="form-line">
-                                                    <input name="tile_congratulations_return[]"
-                                                           class="form-control valid" id="tile-congratulations-return"
-                                                           value="<?= $item ?>" aria-invalid="false" type="text" />
-                                                </div>
-                                                <a href="javascript:void(0);" id="delete_" onclick="delete_title(<?= $k?>)" class="btn btn-danger waves-effect" style="margin-top: 10px">Xóa</a>
-                                            </div>
                                         <?php }
-
-                                    }
-                                } else { ?>
-                                    <div class="form-group" style="margin-bottom: 10px !important;">
-                                        <div class="form-line">
-                                            <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
-                                            <input name="tile_congratulations_return[]"
-                                                   class="form-control valid" id="tile-congratulations-return"
-                                                   value="<?= $adgroup->tile_congratulations_return ?>" aria-invalid="false" type="text" />
+                                    } else { ?>
+                                        <div class="form-group" style="margin-bottom: 10px !important;">
+                                            <div class="form-line">
+                                                <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                                <input name="tile_congratulations_return[]"
+                                                       class="form-control valid" id="tile-congratulations-return" aria-invalid="false" type="text" />
+                                            </div>
+                                            <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
                                         </div>
-                                        <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
-                                    </div>
-                                <?php }
-                            } else { ?>
-                                <div class="form-group" style="margin-bottom: 10px !important;">
-                                    <div class="form-line">
-                                        <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
-                                        <input name="tile_congratulations_return[]"
-                                               class="form-control valid" id="tile-congratulations-return" aria-invalid="false" type="text" />
-                                    </div>
-                                    <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                    <?php }
+                                    ?>
                                 </div>
-                            <?php }
-                            ?>
-                        </div>
-                        <div class="add"></div>
-                        <div class="form-group">
-                            <div class="form-line">
-                                <?php $title_connect = isset($adgroup->title_connect) ? ($adgroup->title_connect):'' ?>
-                                <?php echo $this->Form->control('title_connect', array(
-                                    'label' => 'Title button connect',
-                                    'class' => 'form-control',
-                                    'value' => $title_connect
-                                ));
-                                ?>
-                                <div class="help-info">Title_connect</div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-line">
-                                <?php
-                                $title_campaign = isset($adgroup->title_campaign) ? ($adgroup->title_campaign):'' ?>
-                                <?php echo $this->Form->control('title_campaign', array(
-                                    'label' => 'Title campaign ',
-                                    'class' => 'form-control',
-                                    'value' => $title_campaign,
-                                    'placeholder' => 'title_campaign..'
-                                ));
-                                ?>
-                                <div class="help-info">Title_campaign</div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="form-line">
-                                <?php
-                                $hidden_connect = isset($adgroup->hidden_connect) ? $adgroup->hidden_connect: '1';
-                                echo  $this->Form->input('hidden_connect', array(
-                                    'type' => 'select',
-                                    'options' => [
-                                        '1' => 'Hiển thị button connect-snow',
-                                        '2' => 'Không hiển thị'
-                                    ],
-                                    'empty' => '--- Chọn hiển thị ---',
-                                    'label'=> 'Setting hidden button connect-snow',
-                                    'value' => $hidden_connect,
-                                    'escape' => false,
-                                    'error' => false,
-                                    'class' => 'form-control required input_select_medium'
-                                ));
-                                ?>
-                            </div>
-                            <div class="help-info">Setting hidden button connect-snow</div>
-                        </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped dataTable table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="25%">Ảnh logo</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php if (isset($adgroup->path_logo) && $adgroup->path_logo != '') {
-                                    $list_background = explode(',', $adgroup->path_logo);
-                                    foreach ($list_background as $k => $vl) { ?>
+                                <div class="add"></div>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <?php $title_connect = isset($adgroup->title_connect) ? ($adgroup->title_connect):'' ?>
+                                        <?php echo $this->Form->control('title_connect', array(
+                                            'label' => 'Title button connect',
+                                            'class' => 'form-control',
+                                            'value' => $title_connect
+                                        ));
+                                        ?>
+                                        <div class="help-info">Title_connect</div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <?php
+                                        $title_campaign = isset($adgroup->title_campaign) ? ($adgroup->title_campaign):'' ?>
+                                        <?php echo $this->Form->control('title_campaign', array(
+                                            'label' => 'Title campaign ',
+                                            'class' => 'form-control',
+                                            'value' => $title_campaign,
+                                            'placeholder' => 'title_campaign..'
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="form-line">
+                                        <?php
+                                        $hidden_connect = isset($adgroup->hidden_connect) ? $adgroup->hidden_connect: '1';
+                                        echo  $this->Form->input('hidden_connect', array(
+                                            'type' => 'select',
+                                            'options' => [
+                                                '1' => 'Hiển thị button connect-snow',
+                                                '2' => 'Không hiển thị'
+                                            ],
+                                            'empty' => '--- Chọn hiển thị ---',
+                                            'label'=> 'Setting hidden button connect-snow',
+                                            'value' => $hidden_connect,
+                                            'escape' => false,
+                                            'error' => false,
+                                            'class' => 'form-control required input_select_medium'
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped dataTable table-hover">
+                                        <thead>
                                         <tr>
-                                            <td class="image"><embed src="<?= '/'.$vl ?>" width="450" height="300"></td>
+                                            <th width="20%">Ảnh nền</th>
+                                            <th width="10%">Ngày tải lên</th>
                                         </tr>
-                                    <?php }
-                                    ?>
-                                <?php } else { ?>
-                                <tr><td colspan="4" class="image">No file(s) found......</td>
-                                    <?php } ?>
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="form-group">
-                            <label> Logo Image </label>
-                            <div class="form-line">
-                                <?php $logo_image = isset($adgroup->path_logo) ? ($adgroup->path_logo):''; ?>
-                                <input type="file" name="logo_image" value="<?php echo $logo_image;?>" class="form-control"/>
-                                <div class="help-info">logo_image</div>
+                                        </thead>
+                                        <tbody>
+                                        <?php if (isset($adgroup->path) && $adgroup->path != '') {
+                                            $list_background = explode(',', $adgroup->path);
+                                            foreach ($list_background as $k => $vl) { ?>
+                                                <tr id="<?= $k;?>">
+                                                    <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="200"></td>
+                                                    <td><a href="javascript:void(0);"  id="delete_bak" onclick="delete_bak(<?php echo $k; ?>, <?= $adgroup->id ?>)" class="btn btn-danger waves-effect">Xóa</a> </td>
+                                                </tr>
+                                            <?php }
+                                            ?>
+                                        <?php } else { ?>
+                                            <tr><td colspan="4" class="image">No file(s) found......</td></tr>
+                                        <?php } ?>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <label class=""> Chọn ảnh nền </label>
+<!--                                <div class="form-group">-->
+<!--                                    <div class="form-line">-->
+<!--                                        <input type="file" name="file[]" id="file" multiple="multiple" value="--><?php //echo isset($adgroup->path) ? '/'.$adgroup->path: '';?><!--" class="form-control">-->
+<!--                                    </div>-->
+<!--                                </div>-->
+                                <div class="form-group">
+                                    <div class="file-loading">
+                                        <input id="file-1" type="file" multiple class="file" name="file[]" value="<?php echo isset($adgroup->path) ? '/'.$adgroup->path: '';?> data-overwrite-initial="false" data-min-file-count="2">
+                                    </div>
+                                </div>
+                                <!-- #END# Multi Select -->
                             </div>
                         </div>
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped dataTable table-hover">
-                                <thead>
-                                <tr>
-                                    <th width="5%">ID</th>
-                                    <th width="15%">Tên cơ sở dịch vụ</th>
-                                    <th width="25%">Ảnh nền</th>
-                                    <th width="10%">Ngày tải lên</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <?php if (isset($adgroup->path) && $adgroup->path != '') {
-                                    $list_background = explode(',', $adgroup->path);
-                                    foreach ($list_background as $k => $vl) { ?>
-                                        <tr>
-                                            <td><?php echo $adgroup->id; ?></td>
-                                            <td><?php echo $adgroup->tile_name; ?></td>
-                                            <td class="image"><embed src="<?= '/'.$vl ?>" width="450" height="300"></td>
-                                            <td><?php echo $adgroup->created; ?></td>
-                                        </tr>
-                                    <?php }
-                                    ?>
-                                <?php } else { ?>
-                                    <tr><td colspan="4" class="image">No file(s) found......</td></tr>
-                                <?php } ?>
-                                </tbody>
-                            </table>
-                        </div>
-                        <label class=""> Chọn một ảnh </label>
-                        <div class="form-group">
-                            <div class="form-line">
-                                <input type="file" name="file[]" id="file" multiple="multiple" value="<?php echo isset($adgroup->path) ? '/'.$adgroup->path: '';?>" class="form-control">
-                            </div>
-                        <div class="help-info">Chọn một ảnh</div>
-                        </div>
-                        <!-- #END# Multi Select -->
                         <button class="btn btn-primary waves-effect" id = "submit" type="submit">CẬP NHẬT</button>
+
                         <?php echo $this->Form->end(); ?>
                     </div>
                 </div>
@@ -349,6 +352,44 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
     </div>
 </section>
 <script type="application/javascript">
+    function delete_bak(id, ad_id) {
+        $.ajax({
+            type: 'POST',
+            url: '/Adgroups/delete_backgroud',
+            async: true,
+            data: {
+                id: id,
+                ad_id: ad_id,
+            },
+            dataType: 'json',
+            success: function (rp) {
+                if (rp == true) {
+                    $('tr#'+id).remove()
+                }
+            }
+        });
+    }
+    $("#file-2").fileinput({
+        theme: 'fa',
+        uploadUrl: '/Devices/upload', // you must set a valid URL here else you will get an error
+        allowedFileExtensions: ['jpg', 'png', 'gif', 'pjpeg', 'jpeg'],
+        overwriteInitial: false,
+        maxFileSize: 10000,
+        maxFilesNum: 5,
+        maxFileCount: 10,
+        dropZoneEnabled : false,
+        showUpload : false
+    });
+    $("#file-1").fileinput({
+        theme: 'fa',
+        uploadUrl: '/Devices/upload', // you must set a valid URL here else you will get an error
+        allowedFileExtensions: ['jpg', 'png', 'gif', 'pjpeg', 'jpeg'],
+        overwriteInitial: false,
+        maxFileSize: 10000,
+        maxFilesNum: 5,
+        dropZoneEnabled : false,
+        showUpload : false
+    });
     function delete_title(id) {
         $('#title_'+id).remove();
     }
@@ -543,5 +584,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
 <style>
     .chosen-container{
         width: 100% !important;
+    }
+    button.kv-file-upload.btn.btn-kv.btn-default.btn-outline-secondary {
+        display: none;
     }
 </style>

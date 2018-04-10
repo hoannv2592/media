@@ -630,24 +630,31 @@ class AdgroupsController extends AppController
                 'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
                 'type_adv' => 1
             );
-
+            $image_logo = '';
+            $path_logo = '';
             if (!empty($this->request->data['logo_image']['error'] != 4)) {
                 $list_file['file'] = $this->request->getData('logo_image');
                 $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
                 $path = $fileOK['urls'][0];
                 $image_up_load = $list_file['file']['name'];
                 if ($path != '') {
-                    $this->request->data['path_logo'] = $path;
+                    $path_logo = $path;
                 }
                 if ($image_up_load != '') {
-                    $this->request->data['image_logo'] = $image_up_load;
+                    $image_logo = $image_up_load;
                 }
                 unset($this->request->data['logo_image']);
             } else {
                 unset($this->request->data['logo_image']);
             }
-            $data_group['path_logo'] = isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'';
-            $data_group['image_logo'] = isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:'';
+
+            if (isset($path_logo) && $path_logo != '') {
+                $data_group['path_logo'] = $path_logo;
+                $data_group['image_logo'] = $image_logo;
+            } else {
+                $data_group['path_logo'] = $adgroup->path_logo;
+                $data_group['image_logo'] = $adgroup->image_logo;
+            }
             if (!empty($this->request->data['file'][0]['error'] != 4)) {
                 $new_arr = array();
                 $list_file = $this->request->getData('file');
@@ -672,22 +679,32 @@ class AdgroupsController extends AppController
             } else {
                 unset($this->request->data['file']);
             }
+            if (isset($data_group['path']) && $data_group['path'] != '') {
+                $data_group['path'] = $data_group['path'].','.$adgroup->path;
+            } else {
+                $data_group['path'] = $adgroup->path;
+            }
+            if (isset($data_group['image_backgroup']) && $data_group['image_backgroup'] != '') {
+                $data_group['image_backgroup'] = $data_group['image_backgroup'].','.$adgroup->image_backgroup;
+            } else {
+                $data_group['image_backgroup'] = $adgroup->image_backgroup;
+            }
             // Common Usage:
             $device_group = array(
                 'id' => $device_group_id['id'],
                 'adgroup_id' => $id,
                 'device_id' => json_encode($this->request->getData()['device_id']),
                 'langdingpage_id' => $this->request->getData()['langdingpage_id'],
-                'back_ground' => isset($data_group['image_backgroup']) ? $data_group['image_backgroup'] : $adgroup->image_backgroup ,
-                'path' => isset($data_group['path']) ? $data_group['path']: $adgroup->path ,
+//                'back_ground' => isset($data_group['image_backgroup']) ? $data_group['image_backgroup'] : $adgroup->image_backgroup ,
+//                'path' => isset($data_group['path']) ? $data_group['path']: $adgroup->path ,
                 'number_pass' => $this->request->getData()['apt_device_number'],
                 'tile_name' => $this->request->getData()['tile_name'],
                 'device_name' => $listUserid,
                 'address' => $this->request->getData()['address'],
                 'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
-                'path_logo' => isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'',
-                'image_logo' => isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:'',
+//                'path_logo' => isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'',
+//                'image_logo' => isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:'',
                 'title_campaign' => isset($this->request->data['title_campaign']) ? $this->request->data['title_campaign']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
                 'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
@@ -700,6 +717,10 @@ class AdgroupsController extends AppController
                 $data_group['user_id_group'] =  isset($adgroup->user_id_group) ? $adgroup->user_id_group:'';
                 $device_group['user_id_group'] =  isset($adgroup->user_id_group) ? $adgroup->user_id_group:'';
             }
+            $device_group['path'] = $data_group['path'];
+            $device_group['image_backgroup'] = $data_group['image_backgroup'];
+            $device_group['path_logo'] = $data_group['path_logo'];
+            $device_group['image_logo'] = $data_group['image_logo'];
             $list_remove_device_id = array();
             foreach ($before_device as $k => $vl) {
                 if (!in_array($vl, $this->request->getData()['device_id'])) {
@@ -865,6 +886,35 @@ class AdgroupsController extends AppController
                 die(json_encode($username));
             } else {
                 die(json_encode(array()));
+            }
+        }
+    }
+
+    public function deleteBackgroud()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('Post'))
+        {
+            $post_data = $this->request->getData();
+            $ad = $this->Adgroups->find()->where(['id' => $post_data['ad_id'], 'delete_flag !=' => DELETED])->first();
+            if (!empty($ad)) {
+                $path = $ad['path'];
+                $path = explode(',', $path);
+                $image_bak = $ad['image_backgroup'];
+                $image_bak = explode(',', $image_bak);
+                unset($path[$post_data['id']]);
+                unset($image_bak[$post_data['id']]);
+                $list = array_values($path);
+                $list_ad_path['path'] = implode(',', $list);
+                $list_ad_path['image_backgroup'] = implode(',', $image_bak);
+                $ad = $this->Adgroups->patchEntity($ad, $list_ad_path);
+                if ($this->Adgroups->save($ad)) {
+                    die(json_encode(true));
+                } else {
+                    die(json_encode(false));
+                }
+            } else {
+                die(json_encode(false));
             }
         }
     }
