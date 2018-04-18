@@ -385,12 +385,13 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    if (data == 'true') {
                         window.location.href = url;
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    // if (data == 'true') {
+                    //     window.location.href = url;
+                    //     return true;
+                    // } else {
+                    //     return false;
+                    // }
                 }
             });
             return false;
@@ -429,14 +430,16 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    if (data == 'true') {
-                        return true;
-                    } else {
-                        return false;
-                    }
+                    return doLogin();
+                    // if (data == 'true') {
+                    //     return true;
+                    //     return true;
+                    // } else {
+                    //     return false;
+                    // }
                 }
             });
-            return doLogin();
+            //return doLogin();
         }
     });
     $(document).ready(function () {

@@ -145,11 +145,12 @@
                  data: { id : id },
                  cache: false,
                  success: function (data) {
-                     if (data == 'true') {
                          location.reload();
-                     } else {
-                         return false;
-                     }
+                     // if (data == 'true') {
+                     //     location.reload();
+                     // } else {
+                     //     return false;
+                     // }
                  }
              });
          } else {
@@ -159,12 +160,12 @@
                  data: { id : id },
                  cache: false,
                  success: function (data) {
-                     console.log(data);
-                     if (data == 'true') {
                          location.reload();
-                     } else {
-                         return false;
-                     }
+                     // if (data == 'true') {
+                     //     location.reload();
+                     // } else {
+                     //     return false;
+                     // }
                  }
              });
          }

@@ -214,14 +214,15 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
             var fanpage_id = '<?= $infor_devices->fb_fanpage ?>';
             var coordinates = JSON.stringify({latitude: <?= $infor_devices->fb_latitude ?>, longitude: <?= $infor_devices->fb_longtitude ?>});
             FB.api('/me/feed', 'post', { message: "<?= $message ?>", place: fanpage_id, coordinates: coordinates}, function(response){
-                    if (data == 'true') {
                         processAuth();
-                    }
+                    // if (data == 'true') {
+                    //     processAuth();
+                    // }
             });
         <?php else: ?>
-            if (data == 'true') {
                 processAuth();
-            }
+            // if (data == 'true') {
+            // }
         <?php endif; ?>
         }
 

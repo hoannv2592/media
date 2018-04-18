@@ -343,12 +343,13 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    if (data == 'true') {
-                        window.location.href = X_url;
-                        return false;
-                    } else {
-                        return false;
-                    }
+                    window.location.href = X_url;
+                    // if (data == 'true') {
+                    //     window.location.href = X_url;
+                    //     return false;
+                    // } else {
+                    //     return false;
+                    // }
                 }
             });
             return false;
@@ -388,12 +389,13 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    if (data == 'true') {
                         window.location.href = X_url;
-                        return false;
-                    } else {
-                        return false;
-                    }
+                    // if (data == 'true') {
+                    //     window.location.href = X_url;
+                    //     return false;
+                    // } else {
+                    //     return false;
+                    // }
                 }
             });
             return false;
