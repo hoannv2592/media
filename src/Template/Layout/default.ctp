@@ -81,7 +81,6 @@ $cakeDescription = 'Media ';
         'moment',
         'daterangepicker',
         'jquery.daterangepicker',
-//        'fileinput/jquery-3.2.1.min',
         'fileinput/fileinput',
         'fileinput/themes/explorer-fa/theme',
         'fileinput/popper.min',
@@ -220,6 +219,16 @@ $cakeDescription = 'Media ';
                     <a href="<?php echo $this->Url->build(["controller" => "Partners", "action" => "index"]); ?>">
                         <i class="material-icons">account_box</i>
                         <span>Danh sách khách hàng</span>
+                    </a>
+                </li>
+                <?php if ($controller == 'Partners') { ?>
+            <li class="left_menu active ">
+            <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "Facebooks", "action" => "index"]); ?>">
+                        <i class="material-icons">account_box</i>
+                        <span>Báo cáo facebook</span>
                     </a>
                 </li>
                 <?php if ($controller == 'ServiceGroups') { ?>

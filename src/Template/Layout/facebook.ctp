@@ -2,13 +2,9 @@
 /**
  * @var \App\View\AppView $apt_key_check
  * @var \App\View\AppView $this
- */
-$cakeDescription = 'Media ';
-?>
-<?php
-/**
- * @var \App\View\AppView $apt_key_check
- * @var \App\View\AppView $this
+ * @var $partner_id
+ * @var $infor_devices
+ * @var $list_path
  */
 $cakeDescription = 'Media ';
 ?>
@@ -28,7 +24,6 @@ $cakeDescription = 'Media ';
     <?php echo $this->Html->css(['back_end/font-awesome.min']); ?>
     <?php echo $this->Html->css([
             'password/bootstrap.min',
-//            'password/main',
             'back_end/my_style',
             'page3',
         ]
@@ -44,15 +39,14 @@ $cakeDescription = 'Media ';
     );
     echo $this->Html->css('back_end/page3');
     ?>
-
 </head>
 <?php
+$path = isset($infor_devices->path) ? $infor_devices->path : '/images/entry3.jpg';
+$type = isset($infor_devices->type) ? $infor_devices->type : '';
 $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
 $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
-$path = isset($infor_devices->path) ? $infor_devices->path : '/images/entry3.jpg';
-$langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
-$type = isset($infor_devices->type) ? $infor_devices->type : '';
 $title_connect = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Nhận voucher';
+$langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $title_connect_normal = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Đăng ký nhận voucher';
 $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_isexit_partner : '2';
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
@@ -188,6 +182,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 partner_id: "<?= $partner_id ?>",
                 device_id: "<?= $infor_devices->id ?>",
                 user_id: "<?= $infor_devices->user_id; ?>",
+                flag_face: "1",
                 name: response.name,
                 email: response.email};
             $.ajax({
