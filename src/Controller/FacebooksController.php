@@ -44,10 +44,16 @@ class FacebooksController extends AppController
             $date = explode(' to ', $data_get['date']);
             $date_form = $date[0];
             $date_to = $date[1];
-            $date_to = Datetime::createFromFormat('Y-m-d', $date_to)->format('Y-m-d');
-            $date_form = Datetime::createFromFormat('Y-m-d', $date_form)->format('Y-m-d');
-            $conditions['Partners.created >='] = $date_form;
-            $conditions['Partners.created <='] = $date_to;
+            $flag_date_to = $this->verifyDate($date_to);
+            $flag_date_form = $this->verifyDate($date_form);
+            if ($flag_date_to) {
+                $date_to = Datetime::createFromFormat('Y-m-d', $date_to)->format('Y-m-d');
+                $conditions['Partners.created <='] = $date_to;
+            }
+            if ($flag_date_form) {
+                $date_form = Datetime::createFromFormat('Y-m-d', $date_form)->format('Y-m-d');
+                $conditions['Partners.created >='] = $date_form;
+            }
             $list_day = $this->get_label($date);
             $data_get['date'] = $date_form.' to '. $date_to;
         }
@@ -175,10 +181,19 @@ class FacebooksController extends AppController
      */
     public function get_label ($date = array())
     {
-        $begin = Datetime::createFromFormat('Y-m-d', $date[0])->format('Y-m-d');
-        $end = Datetime::createFromFormat('Y-m-d', $date[1])->format('Y-m-d');
+        if ($this->verifyDate($date[0])) {
+            $begin = Datetime::createFromFormat('Y-m-d', $date[0])->format('Y-m-d');
+        } else {
+            $begin = date('Y-m-d', strtotime('-10 days'));
+        }
+        if ($this->verifyDate($date[1])) {
+            $end = Datetime::createFromFormat('Y-m-d', $date[1])->format('Y-m-d');
+        } else {
+            $end = date('Y-m-d');
+        }
         $begin = new DateTime( $begin );
         $end   = new DateTime( $end );
+        $list_day = [];
         for($i = $begin; $i <= $end; $i->modify('+1 day')){
             $list_day[] = $i->format("d/m/Y");
         }

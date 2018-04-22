@@ -24,6 +24,7 @@ use Cake\Test\TestCase\I18n\PluralRulesTest;
 use Cake\Utility\Inflector;
 use Cake\Routing\Exception\MissingControllerException;
 use Cake\Datasource\ConnectionManager;
+use Datetime;
 
 /**
  * Application Controller
@@ -364,5 +365,17 @@ class AppController extends Controller
             $r[$keys[$i]] = $arr[$keys[$i]];
         }
         return $r;
+    }
+    /**
+     * **************************************
+     *
+     * @param $date
+     * @return bool
+     *
+     * * **************************************
+     */
+    static public function verifyDate($date)
+    {
+        return (DateTime::createFromFormat('Y-m-d', $date) !== false);
     }
 }
