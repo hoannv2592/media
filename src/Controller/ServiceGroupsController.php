@@ -280,9 +280,12 @@ class ServiceGroupsController extends AppController
     }
 
     /**
+     *
+     * ********************************************
+     *
      * @param null $user_id
-     *
-     *
+     * @return void || arra data
+     * ***********************************************
      */
     public function seviceDetail($user_id = null)
     {
@@ -303,52 +306,92 @@ class ServiceGroupsController extends AppController
             ]
         ])->first();
         $limit_value = 10;
-        $day_before_ten_day = date('d-m-Y', strtotime('-10 days'));
-        $current = date('d-m-Y');
+        $day_before_ten_day = date('Y-m-d', strtotime('-10 days'));
+        $current = date('Y-m-d');
+        $get_date = $day_before_ten_day.' to '. $current;
         $list_day = $this->get_label(array($day_before_ten_day, $current));
-        if ($this->request->is('get')) {
-            $conditions = $this->request->session()->check('data_search_service_group');
-            if (!$conditions) {
-                $date_full_current = date('Y-m-d');
-                $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
-                $conditions['Partners.created >='] = $date_full_before_ten_day;
-                $conditions['Partners.created <='] = $date_full_current;
-                $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('d-m-Y');
-                $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('d-m-Y');
-                $data_post['date'] = $date_form.' to '. $date_to;
-            } else {
-                $conditions = $this->request->session()->read('data_search_service_group');
-                $data_post = $this->request->session()->read('services');
-            }
-        }
-        if ($this->request->is('post')) {
-            $data_post = $this->request->getData();
+        if (isset($_GET) && $_GET != '') {
+            $date_full_current = date('Y-m-d');
+            $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
+            $conditions['Partners.created >='] = $date_full_before_ten_day;
+            $conditions['Partners.created <='] = $date_full_current;
+            $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('Y-m-d');
+            $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('Y-m-d');
+            $data_get['date'] = $date_form.' to '. $date_to;
             $conditions = array();
-            if (isset($data_post['date']) && $data_post['date'] != '') {
-                $date = explode(' to ', $data_post['date']);
+            if (isset($_GET['date']) && $_GET['date'] != '') {
+                $date = explode(' to ', $_GET['date']);
                 $date_form = $date[0];
                 $date_to = $date[1];
-                $date_to = Datetime::createFromFormat('d-m-Y', $date_to)->format('Y-m-d');
-                $date_form = Datetime::createFromFormat('d-m-Y', $date_form)->format('Y-m-d');
-                $conditions['Partners.created >='] = $date_form;
-                $conditions['Partners.created <='] = $date_to;
+                $flag_date_to = $this->verifyDate($date_to);
+                $flag_date_form = $this->verifyDate($date_form);
+                if ($flag_date_to) {
+                    $date_to = Datetime::createFromFormat('Y-m-d', $date_to)->format('Y-m-d');
+                    $conditions['Partners.created <='] = $date_to;
+                }
+                if ($flag_date_form) {
+                    $date_form = Datetime::createFromFormat('Y-m-d', $date_form)->format('Y-m-d');
+                    $conditions['Partners.created >='] = $date_form;
+                }
                 $list_day = $this->get_label($date);
             }
-            if (isset($data_post['name']) && $data_post['name'] != '') {
-                $conditions['Partners.name LIKE'] = "%".trim($data_post['name'])."%";
+            if (isset($_GET['name']) && $_GET['name'] != '') {
+                $conditions['Partners.name LIKE'] = "%".trim($_GET['name'])."%";
             }
-            if (isset($data_post['phone']) && $data_post['phone'] != '') {
-                $conditions['Partners.phone'] = trim($data_post['phone']);
+            if (isset($_GET['phone']) && $_GET['phone'] != '') {
+                $conditions['Partners.phone'] = trim($_GET['phone']);
             }
-            if (isset($data_post['device_name']) && $data_post['device_name'] != '') {
-                $conditions['Devices.name LIKE'] = "%".trim($data_post['device_name'])."%";
+            if (isset($_GET['device_name']) && $_GET['device_name'] != '') {
+                $conditions['Devices.name LIKE'] = "%".trim($_GET['device_name'])."%";
             }
-            if (isset($data_post['client_mac']) && $data_post['client_mac'] != '') {
-                $conditions['Partners.client_mac LIKE'] = "%".trim($data_post['client_mac'])."%";
+            if (isset($_GET['client_mac']) && $_GET['client_mac'] != '') {
+                $conditions['Partners.client_mac LIKE'] = "%".trim($_GET['client_mac'])."%";
             }
-            $this->request->session()->write('data_search_service_group', $conditions);
+            $data_get = $_GET;
         }
-        $this->request->session()->write('services', $data_post);
+//        if ($this->request->is('get')) {
+//            $conditions = $this->request->session()->check('data_search_service_group');
+//            if (!$conditions) {
+//                $date_full_current = date('Y-m-d');
+//                $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
+//                $conditions['Partners.created >='] = $date_full_before_ten_day;
+//                $conditions['Partners.created <='] = $date_full_current;
+//                $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('d-m-Y');
+//                $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('d-m-Y');
+//                $data_post['date'] = $date_form.' to '. $date_to;
+//            } else {
+//                $conditions = $this->request->session()->read('data_search_service_group');
+//                $data_post = $this->request->session()->read('services');
+//            }
+//        }
+//        if ($this->request->is('post')) {
+//            $data_post = $this->request->getData();
+//            $conditions = array();
+//            if (isset($data_post['date']) && $data_post['date'] != '') {
+//                $date = explode(' to ', $data_post['date']);
+//                $date_form = $date[0];
+//                $date_to = $date[1];
+//                $date_to = Datetime::createFromFormat('d-m-Y', $date_to)->format('Y-m-d');
+//                $date_form = Datetime::createFromFormat('d-m-Y', $date_form)->format('Y-m-d');
+//                $conditions['Partners.created >='] = $date_form;
+//                $conditions['Partners.created <='] = $date_to;
+//                $list_day = $this->get_label($date);
+//            }
+//            if (isset($data_post['name']) && $data_post['name'] != '') {
+//                $conditions['Partners.name LIKE'] = "%".trim($data_post['name'])."%";
+//            }
+//            if (isset($data_post['phone']) && $data_post['phone'] != '') {
+//                $conditions['Partners.phone'] = trim($data_post['phone']);
+//            }
+//            if (isset($data_post['device_name']) && $data_post['device_name'] != '') {
+//                $conditions['Devices.name LIKE'] = "%".trim($data_post['device_name'])."%";
+//            }
+//            if (isset($data_post['client_mac']) && $data_post['client_mac'] != '') {
+//                $conditions['Partners.client_mac LIKE'] = "%".trim($data_post['client_mac'])."%";
+//            }
+//            $this->request->session()->write('data_search_service_group', $conditions);
+//        }
+        //$this->request->session()->write('services', $data_post);
         $list_id_devices = Hash::extract($users['devices'], '{n}.id');
         if (!empty($list_id_devices)) {
             $conditions['device_id IN'] = $list_id_devices;
@@ -397,22 +440,30 @@ class ServiceGroupsController extends AppController
             $count_old_partner[] = count($old_partner);
             $count_new_partner[] = count($new_partner);
         }
-        $sum_old_partner = array_sum($count_old_partner);
-        $sum_new_partner = array_sum($count_new_partner);
-        $sum_phone_partner = array_sum($count_phone_partner);
-        $chart_number_partner = json_encode($chart_number_partner);
-        $count_old_partner = json_encode($count_old_partner);
-        $count_new_partner = json_encode($count_new_partner);
-        $count_phone_partner = json_encode($count_phone_partner);
-
-        $conditions = $this->request->session()->read('services');
+        $sum_old_partner        = array_sum($count_old_partner);
+        $sum_new_partner        = array_sum($count_new_partner);
+        $sum_phone_partner      = array_sum($count_phone_partner);
+        $chart_number_partner   = json_encode($chart_number_partner);
+        $count_old_partner      = json_encode($count_old_partner);
+        $count_new_partner      = json_encode($count_new_partner);
+        $count_phone_partner    = json_encode($count_phone_partner);
+        //$conditions = $this->request->session()->read('services');
         $partners = $this->paginate($query, ['limit' => $limit_value])->toArray();
         $this->set(compact(
-            'partners', 'conditions',
-            'list_day', 'chart_number_partner',
-            'count_old_partner', 'sum_phone_partner',
-            'total_partner', 'count_new_partner',
-            'count_phone_partner', 'sum_old_partner', 'sum_new_partner', 'list_id_partner'
+            'partners',
+            'conditions',
+            'list_day',
+            'data_get',
+            'get_date',
+            'total_partner',
+            'sum_old_partner',
+            'sum_new_partner',
+            'list_id_partner',
+            'count_old_partner',
+            'sum_phone_partner',
+            'count_new_partner',
+            'count_phone_partner',
+            'chart_number_partner'
         ));
         $this->set('_serialize', ['partners']);
     }
@@ -424,10 +475,25 @@ class ServiceGroupsController extends AppController
         return $fields_member_histoty;
     }
 
+    /**
+     * **********************************************
+     * @param array $date
+     * @return string
+     *
+     * **************************************
+     */
     public function get_label ($date = array())
     {
-        $begin = Datetime::createFromFormat('d-m-Y', $date[0])->format('Y-m-d');
-        $end = Datetime::createFromFormat('d-m-Y', $date[1])->format('Y-m-d');
+        if ($this->verifyDate($date[0])) {
+            $begin = Datetime::createFromFormat('Y-m-d', $date[0])->format('Y-m-d');
+        } else {
+            $begin = date('Y-m-d', strtotime('-10 days'));
+        }
+        if ($this->verifyDate($date[1])) {
+            $end = Datetime::createFromFormat('Y-m-d', $date[1])->format('Y-m-d');
+        } else {
+            $end = date('Y-m-d');
+        }
         $begin = new DateTime( $begin );
         $end   = new DateTime( $end );
         for($i = $begin; $i <= $end; $i->modify('+1 day')){

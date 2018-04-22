@@ -2,6 +2,13 @@
 /**
  * @var \App\View\AppView $this
  * @var $userData
+ * @var $data_get
+ * @var $get_date
+ * @var $list_day
+ * @var $chart_number_partner
+ * @var $count_old_partner
+ * @var $count_new_partner
+ * @var $count_phone_partner
  * @var \App\Model\Entity\Users[]|\Cake\Collection\CollectionInterface $users
  */
 ?>
@@ -38,18 +45,12 @@
                                             <?php
                                             echo $this->Form->create('Partners', array(
                                                 'id' => 'form_advanced_validation_x',
-                                                'type' => 'post',
-//                                                'url' => array('controller' => 'Partners', 'action' => 'index'),
-                                                'inputDefaults' => array(
-                                                    'label' => false,
-                                                    'div' => false,
-                                                ),
-                                                'autocomplete' => "off"
+                                                'type' => 'get'
                                             ));
                                             ?>
                                             <div class="form-line">
                                                 <?php
-                                                $name = isset($conditions['name']) ? ($conditions['name']):'';
+                                                $name = isset($data_get['name']) ? ($data_get['name']):'';
                                                 echo $this->Form->control('name', array(
                                                     'label' => false,
                                                     'class' => 'form-control',
@@ -69,7 +70,7 @@
                                             </span>
                                             <div class="form-line">
                                                 <?php
-                                                $phone = isset($conditions['phone']) ? ($conditions['phone']):'';
+                                                $phone = isset($data_get['phone']) ? ($data_get['phone']):'';
                                                 echo $this->Form->control('phone', array(
                                                     'label' => false,
                                                     'class' => 'form-control mobile-phone-number',
@@ -89,7 +90,7 @@
                                             </span>
                                             <div class="form-line">
                                                 <?php
-                                                $device_name = isset($conditions['device_name']) ? ($conditions['device_name']):'';
+                                                $device_name = isset($data_get['device_name']) ? ($data_get['device_name']):'';
                                                 echo $this->Form->control('device_name', array(
                                                     'label' => false,
                                                     'class' => 'form-control',
@@ -108,7 +109,7 @@
                                             </span>
                                             <div class="form-line">
                                                 <?php
-                                                $client_mac = isset($conditions['client_mac']) ? ($conditions['client_mac']):'';
+                                                $client_mac = isset($data_get['client_mac']) ? ($data_get['client_mac']):'';
                                                 echo $this->Form->control('client_mac', array(
                                                     'label' => false,
                                                     'class' => 'form-control',
@@ -127,7 +128,7 @@
                                             </span>
                                             <div class="form-line">
                                                 <?php
-                                                $birthday = isset($conditions['date']) ? ($conditions['date']):'';
+                                                $birthday = (isset($data_get['date']) && $data_get['date'] != '') ? ($data_get['date']): $get_date;
                                                 echo $this->Form->control('date', array(
                                                     'label' => false,
                                                     'class' => 'form-control datetime',
@@ -198,43 +199,15 @@
                                 <table class="table table-bordered table-striped table-hover dataTable">
                                     <thead>
                                     <tr class="bg-blue-grey">
-                                        <th scope="col" class="text-center">
-                                            ID
-                                            <?= $this->Paginator->sort('Partners.id', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.id', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Tên khách hàng
-                                            <?= $this->Paginator->sort('Partners.name', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.name', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Địa chỉ mac
-                                            <?= $this->Paginator->sort('Partners.client_mac', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.client_mac', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Số điện thoại
-                                            <?= $this->Paginator->sort('Partners.phone', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.phone', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Ngày sinh
-                                            <?= $this->Paginator->sort('Partners.birthday', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.birthday', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Địa chỉ
-                                            <?= $this->Paginator->sort('Partners.address', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.address', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Thời gian truy cập
-                                            <?= $this->Paginator->sort('Partners.modified', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.modified', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Số lần ghé thăm
-                                            <?= $this->Paginator->sort('Partners.num_clients_connect', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.num_clients_connect', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Thiết bị quản lý
-                                            <?= $this->Paginator->sort('Devices.name', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Devices.name', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
+                                        <th scope="col" class="text-center">ID</th>
+                                        <th scope="col">Tên khách hàng</th>
+                                        <th scope="col">Địa chỉ mac</th>
+                                        <th scope="col">Số điện thoại</th>
+                                        <th scope="col">Ngày sinh</th>
+                                        <th scope="col">Địa chỉ</th>
+                                        <th scope="col">Thời gian truy cập</th>
+                                        <th scope="col">Số lần ghé thăm</th>
+                                        <th scope="col">Thiết bị quản lý</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -320,15 +293,15 @@ echo $this->Html->script([
                 'next-days': [3, 5, 7],
                 'next': ['week','month','year']
             },
-        format: 'DD-MM-YYYY',
+        format: 'YYYY-MM-DD',
         separator: ' to '
     });
     //Line chart with tooltips
-    var list_day = jQuery.parseJSON('<?= $list_day;?>');
-    var chart_number_partner = jQuery.parseJSON('<?= $chart_number_partner;?>');
-    var count_old_partner = jQuery.parseJSON('<?= $count_old_partner;?>');
-    var count_new_partner = jQuery.parseJSON('<?= $count_new_partner;?>');
-    var count_phone_partner = jQuery.parseJSON('<?= $count_phone_partner;?>');
+    var list_day                = jQuery.parseJSON('<?= $list_day;?>');
+    var chart_number_partner    = jQuery.parseJSON('<?= $chart_number_partner;?>');
+    var count_old_partner       = jQuery.parseJSON('<?= $count_old_partner;?>');
+    var count_new_partner       = jQuery.parseJSON('<?= $count_new_partner;?>');
+    var count_phone_partner     = jQuery.parseJSON('<?= $count_phone_partner;?>');
     new Chartist.Line('#line-chart-tooltips', {
             labels: list_day,
             series: [

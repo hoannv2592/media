@@ -57,7 +57,7 @@ class DevicesController extends AppController
         $this->loadComponent('Flash');
         $this->loadModel('Advs');
         $this->loadModel('Logs');
-        $this->loadModel('Adgroup');
+        $this->loadModel('Adgroups');
         $this->loadModel('Partners');
         $this->loadModel('LogAuths');
         $this->loadComponent('UploadImage');
@@ -76,25 +76,13 @@ class DevicesController extends AppController
     {
         $login = $this->Auth->user();
         $limit_value = 10;
-        if ($this->request->is('get')) {
-            $conditions = $this->request->session()->check('data_search_device');
-            if (!$conditions) {
-                $data_post['name'] = '';
-            } else {
-                $conditions = $this->request->session()->read('data_search_device');
-                $data_post = $this->request->session()->read('devive_name');
+        $conditions = [];
+        if (isset($_GET) && $_GET != '') {
+            if (isset($_GET['name']) && $_GET['name'] != '') {
+                $conditions['Devices.name LIKE'] = "%".trim($_GET['name'])."%";
             }
+            $name =  $_GET['name'];
         }
-        if ($this->request->is('post')) {
-            $data_post = $this->request->getData();
-            $conditions = array();
-            if (isset($data_post['name']) && $data_post['name'] != '') {
-                $conditions['Devices.name LIKE'] = "%".trim($data_post['name'])."%";
-
-            }
-            $this->request->session()->write('data_search_device', $conditions);
-        }
-        $this->request->session()->write('devive_name', $data_post);
         $conditions['Devices.delete_flag !='] = DELETED;
         if ($login['role'] == User::ROLE_ONE) {
             $devices = $this->Devices->find('all', [
@@ -133,18 +121,8 @@ class DevicesController extends AppController
                 'order' => ['Devices.modified' => 'DESC']
             ]);
         }
-//        $devices = $this->Devices->find()->where(['auth_target !=' => ''])->combine('id', 'auth_target')->toArray();
-//        $url_buil = URL_LOCAL.'Devices/adv';
-//        $this->getAuth('http://172.16.99.1:2050/nodogsplash_auth/?redir=http%3A%2F%2Fgoogle.com.vn&tok=58535c26', $url_buil);
-//        $result = Hash::combine($devices, '{n}.id', '{n}.adgroup_id');
-//        $Adgroups = array();
-//        if (!empty($result)) {
-//            $Adgroups = $this->Adgroups->find()->where(['id IN' => array_unique($result)])->combine('id', 'name')->toArray();
-//        }
-        $this->set(compact('Adgroups', 'devices'));
-        $conditions = $this->request->session()->read('devive_name');
         $devices = $this->paginate($devices, ['limit' => $limit_value])->toArray();
-        $this->set(compact('Adgroups', 'devices', 'conditions'));
+        $this->set(compact('Adgroups', 'devices', 'conditions','name'));
     }
 
     /**
