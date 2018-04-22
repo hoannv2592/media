@@ -1,6 +1,7 @@
 <?php
 /**
  * @var \App\View\AppView $this
+ * @var \App\View\AppView $name
  * @var \App\View\AppView $Adgroups
  * @var \App\View\AppView $conditions
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $devices
@@ -21,7 +22,7 @@ $this->assign('title', 'Quản lý thiết bị');
                         <div class="col-md-6" style="margin-bottom: 0 !important; padding-left:0">
                             <?php echo $this->Form->create('Devices', array(
                                 'id' => 'form_advanced_validation_x',
-                                'type' => 'post'
+                                'type' => 'get'
                             ));
                             ?>
                             <div class="col-md-6" style="padding-left:0">
@@ -29,7 +30,7 @@ $this->assign('title', 'Quản lý thiết bị');
                                 <div class="input-group" style="margin-bottom: 0px !important;">
                                     <div class="form-line">
                                         <?php
-                                        $name = isset($conditions['name']) ? ($conditions['name']):'';
+                                        $name = isset($name) ? ($name):'';
                                         echo $this->Form->control('name', array(
                                             'label' => false,
                                             'class' => 'form-control',

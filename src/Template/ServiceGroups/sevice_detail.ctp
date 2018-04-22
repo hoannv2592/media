@@ -1,6 +1,13 @@
 <?php
 /**
- * $partners
+ * @var $partners
+ * @var $list_day
+ * @var $data_get
+ * @var $get_date
+ * @var $chart_number_partner
+ * @var $count_old_partner
+ * @var $count_new_partner
+ * @var $count_phone_partner
  * @var \App\View\AppView $partners
  */
 ?>
@@ -30,13 +37,7 @@
                                 <div class="col-md-6" style="margin-bottom: 0 !important;">
                                 <?php echo $this->Form->create('ServiceGroups', array(
                                     'id' => 'form_advanced_validation_x',
-                                    'type' => 'post',
-//                                                'url' => array('controller' => 'Partners', 'action' => 'index'),
-                                    'inputDefaults' => array(
-                                        'label' => false,
-                                        'div' => false,
-                                    ),
-                                    'autocomplete' => "off"
+                                    'type' => 'get'
                                 ));
                                 ?>
                                     <div class="col-md-12">
@@ -47,7 +48,7 @@
                                             </span>
                                             <div class="form-line">
                                                 <?php
-                                                $name = isset($conditions['name']) ? ($conditions['name']):'';
+                                                $name = isset($data_get['name']) ? ($data_get['name']):'';
                                                 echo $this->Form->control('name', array(
                                                     'label' => false,
                                                     'class' => 'form-control',
@@ -67,7 +68,7 @@
                                             </span>
                                             <div class="form-line">
                                                 <?php
-                                                $phone = isset($conditions['phone']) ? ($conditions['phone']):'';
+                                                $phone = isset($data_get['phone']) ? ($data_get['phone']):'';
                                                 echo $this->Form->control('phone', array(
                                                     'label' => false,
                                                     'class' => 'form-control mobile-phone-number',
@@ -87,7 +88,7 @@
                                             </span>
                                             <div class="form-line">
                                                 <?php
-                                                $device_name = isset($conditions['device_name']) ? ($conditions['device_name']):'';
+                                                $device_name = isset($data_get['device_name']) ? ($data_get['device_name']):'';
                                                 echo $this->Form->control('device_name', array(
                                                     'label' => false,
                                                     'class' => 'form-control',
@@ -106,7 +107,7 @@
                                             </span>
                                             <div class="form-line">
                                                 <?php
-                                                $client_mac = isset($conditions['client_mac']) ? ($conditions['client_mac']):'';
+                                                $client_mac = isset($data_get['client_mac']) ? ($data_get['client_mac']):'';
                                                 echo $this->Form->control('client_mac', array(
                                                     'label' => false,
                                                     'class' => 'form-control',
@@ -125,7 +126,7 @@
                                             </span>
                                             <div class="form-line">
                                                 <?php
-                                                $birthday = isset($conditions['date']) ? ($conditions['date']):'';
+                                                $birthday = (isset($data_get['date']) && $data_get['date'] != '') ? ($data_get['date']):$get_date;
                                                 echo $this->Form->control('date', array(
                                                     'label' => false,
                                                     'class' => 'form-control datetime',
@@ -177,7 +178,11 @@
                                             <div id="line-chart-tooltips" class="ct-chart ct-golden-section"></div>
                                         </div>
                                     </div>
-                                    <?php $list_id_partner = json_decode($list_id_partner);
+                                    <?php
+                                    $list_id_partner = array();
+                                    if (!empty($list_id_partner)) {
+                                        $list_id_partner = json_decode($list_id_partner);
+                                    }
                                     if (!empty($list_id_partner)) {
                                         $list_id_partner = json_encode($list_id_partner);
                                         ?>
@@ -294,15 +299,15 @@ echo $this->Html->script([
                 'next-days': [3, 5, 7],
                 'next': ['week','month','year']
             },
-        format: 'DD-MM-YYYY',
+        format: 'YYYY-MM-DD',
         separator: ' to '
     });
     //Line chart with tooltips
-    var list_day = jQuery.parseJSON('<?= isset($list_day) ? $list_day:"";?>');
-    var chart_number_partner = jQuery.parseJSON('<?= isset($chart_number_partner) ? $chart_number_partner:[];?>');
-    var count_old_partner = jQuery.parseJSON('<?= isset($count_old_partner)?$count_old_partner:[];?>');
-    var count_new_partner = jQuery.parseJSON('<?= isset($count_new_partner)?$count_new_partner:[];?>');
-    var count_phone_partner = jQuery.parseJSON('<?= isset($count_phone_partner)?$count_phone_partner:[];?>');
+    var list_day                = jQuery.parseJSON('<?= isset($list_day) ? $list_day:"";?>');
+    var chart_number_partner    = jQuery.parseJSON('<?= isset($chart_number_partner) ? $chart_number_partner:[];?>');
+    var count_old_partner       = jQuery.parseJSON('<?= isset($count_old_partner) ? $count_old_partner:[];?>');
+    var count_new_partner       = jQuery.parseJSON('<?= isset($count_new_partner) ? $count_new_partner:[];?>');
+    var count_phone_partner     = jQuery.parseJSON('<?= isset($count_phone_partner) ? $count_phone_partner:[];?>');
     new Chartist.Line('#line-chart-tooltips', {
             labels: list_day,
             series: [
