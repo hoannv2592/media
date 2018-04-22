@@ -1,0 +1,1 @@
+ALTER TABLE partners ADD flag_face int(1) DEFAULT '0';

@@ -28,6 +28,7 @@ class PartnersController extends AppController
             'Partners.birthday',
             'Partners.address',
             'Partners.modified',
+            'Partners.email',
             'Partners.num_clients_connect',
             'Devices.name'
         ],
