@@ -17,7 +17,6 @@ $this->assign('title', 'Chỉnh sửa thiết bị');
                             <i class="material-icons">home</i> Trang chủ
                         </a>
                     </li>
-<!--                    <li class="active"><a href="--><?php //echo $this->Url->build(['controller' => 'Devices', 'action' => 'detail-device/'.UrlUtil::_encodeUrl($device['id'])])?><!--">Thông tin</a></li>-->
                     <li class="active"><a href="javascript:void(0)">Chỉnh sửa thông tin</a></li>
                 </ol>
                 <div class="card">
@@ -43,26 +42,54 @@ $this->assign('title', 'Chỉnh sửa thiết bị');
                         ));
                         ?>
                         <input id="backup_name_dev" type="hidden" value="<?php echo isset($device['name']) ? $device['name'] :''?>">
-                        <label for="name">Tên thiết bị</label>
+                        <label for="name">Name</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <input type="text" class="form-control" name="name" id="name" placeholder="Điền tên thiết bị" value="<?php echo isset($device['name']) ? $device['name'] :''?>" required>
                             </div>
-                            <div class="help-info">Tên thiết bị</div>
+                            <div class="help-info">Name</div>
                         </div>
-                        <label for="name">Mã thiết bị</label>
+                        <label for="name">Code</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <input disabled="disabled" type="text" class="form-control" name="apt_key" id="apt_key" value="<?php echo isset($device['apt_key']) ? $device['apt_key']:''?>" required>
                             </div>
-                            <div class="help-info">Mã thiết bị</div>
+                            <div class="help-info">Code</div>
                         </div>
-                        <label for="name">Địa chỉ đặt thiết bị</label>
+                        <label for="name">Up time</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="" placeholder="" id="uptime" readonly="readonly" value="<?php echo isset($device['uptime']) ? $device['uptime']:''?>" >
+                            </div>
+                            <div class="help-info">uptime</div>
+                        </div>
+                        <label for="name">Address</label>
                         <div class="form-group form-float">
                             <div class="form-line">
                                 <input type="text" class="form-control" name="address" placeholder="Địa chỉ đặt thiết bị" id="address" value="<?php echo isset($device['address']) ? $device['address']:''?>" required>
                             </div>
-                            <div class="help-info">Địa chỉ đặt thiết bị</div>
+                            <div class="help-info">Address</div>
+                        </div>
+                        <label for="name">Adgroup</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="" placeholder="" id="adgroup_id" readonly="readonly" value="<?php echo isset($Adgroups[$device['adgroup_id']]) ? $Adgroups[$device['adgroup_id']]:''?>" >
+                            </div>
+                            <div class="help-info">Adgroup</div>
+                        </div>
+                        <label for="name">Num_clients</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="" placeholder="" id="num_clients" readonly="readonly" value="<?php echo isset($device['num_clients']) ? $device['num_clients']:''?>" >
+                            </div>
+                            <div class="help-info">num_clients</div>
+                        </div>
+                        <label for="name">Campaign_group</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="" placeholder="" id="adgroup_id" readonly="readonly" value="<?php echo isset($campaign_name) ? $campaign_name:''?>" >
+                            </div>
+                            <div class="help-info">Campaign_group</div>
                         </div>
                         <label for="user_id">Chọn tài khoản</label>
                         <div class="form-group form-float">

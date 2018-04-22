@@ -58,17 +58,17 @@ $cakeDescription = 'Media ';
 </div>
 </body>
 <script type="text/javascript">
-    $(document).ready(function() {
-        $('#fullpage').fullpage({
-            verticalCentered: false,
-            loopBottom: false,
-            afterRender: function () {
-                setInterval(function () {
-                    $.fn.fullpage.moveSlideRight();
-                }, 10000);
-            }
-        });
-    });
+    // $(document).ready(function() {
+    //     $('#fullpage').fullpage({
+    //         verticalCentered: false,
+    //         loopBottom: false,
+    //         afterRender: function () {
+    //             setInterval(function () {
+    //                 $.fn.fullpage.moveSlideRight();
+    //             }, 10000);
+    //         }
+    //     });
+    // });
 </script>
 
 </html>

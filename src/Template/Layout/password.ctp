@@ -37,14 +37,42 @@ $cakeDescription = 'Media ';
 <?php
 $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
 $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
-$path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
+$path = isset($infor_devices->path) ? $infor_devices->path : '/images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
 $title_connect = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Nhận voucher';
 $title_connect_normal = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Đăng ký nhận voucher';
 $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_isexit_partner : '2';
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
-$list_path = explode(',', $infor_devices->path);
+if (isset($infor_devices->tile_congratulations_return)) {
+    function isJSON($string){
+        return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
+    }
+    if (!empty($infor_devices->tile_congratulations_return)) {
+        $isJson = isJSON($infor_devices->tile_congratulations_return);
+        if ($isJson) {
+            $isJson = isJSON($infor_devices->tile_congratulations_return);
+            if ($isJson) {
+                $tile_congratulations = json_decode($infor_devices->tile_congratulations_return);
+                $tile_congratulations_return = $tile_congratulations[array_rand($tile_congratulations, 1)];
+            } else {
+                $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+            }
+        } else {
+            $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+        }
+    } else {
+        $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+    }
+} else {
+    $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+}
+$list_path_old = explode(',', $infor_devices->path);
+foreach ($list_path_old as $k =>  $item) {
+    if ($item != '') {
+        $list_path[] = $item;
+    }
+}
 $auth_target = isset($infor_devices->auth_target) ? $infor_devices->auth_target :'';
 $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->apt_device_number :'';
 ?>
@@ -53,29 +81,32 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
 <div class="carousel slide carousel-fade" data-ride="carousel">
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
-        <?php foreach ($list_path as $k => $vl) {
-            if ($k == 0) { ?>
-                <div class="item active"
-                     style="
-                        background: url('/<?php echo $vl; ?>');
-                        -webkit-background-size: cover;
-                        -moz-background-size: cover;
-                        -o-background-size: cover;
-                        background-size: cover;
-                     ">
+        <?php
+        foreach ($list_path as $k => $vl) {
+//            if ($vl != '') {
+                if ($k == 0) { ?>
+                    <div class="item active"
+                         style="
+                            background: url('/<?php echo $vl; ?>');
+                            -webkit-background-size: cover;
+                            -moz-background-size: cover;
+                            -o-background-size: cover;
+                            background-size: cover;
+                         ">
 
-                </div>
-            <?php } else { ?>
-                <div class="item" style="
-                        background: url('/<?php echo $vl; ?>');
-                        -webkit-background-size: cover;
-                        -moz-background-size: cover;
-                        -o-background-size: cover;
-                        background-size: cover;
-                        ">
+                    </div>
+                <?php } else { ?>
+                    <div class="item" style="
+                            background: url('/<?php echo $vl; ?>');
+                            -webkit-background-size: cover;
+                            -moz-background-size: cover;
+                            -o-background-size: cover;
+                            background-size: cover;
+                            ">
 
-                </div>
-            <?php }
+                    </div>
+                <?php }
+//            }
         }?>
     </div>
 </div>
@@ -83,7 +114,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     <header id="header">
         <h1>
             <div class="logo__inner">
-                <?php if (isset($infor_devices->path_logo)) { ?>
+                <?php if (isset($infor_devices->path_logo) && $infor_devices->path_logo != '') { ?>
                         <img src="<?php echo '/' . $infor_devices->path_logo; ?>" alt="logo_image" style="height: 100px;">
                 <?php } else { ?>
                         <img src="/webroot/images/logo.png" alt="logo image">

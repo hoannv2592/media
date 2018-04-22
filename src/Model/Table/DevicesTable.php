@@ -47,8 +47,17 @@ class DevicesTable extends Table
         $this->hasMany('Partners', [
             'foreignKey' => 'device_id'
         ]);
+
+        $this->hasMany('DeviceFiles', [
+            'foreignKey' => 'device_id'
+        ]);
     }
 
+
+    public function getDataDevice($condition = array(), $data = array())
+    {
+
+    }
     /**
      * Default validation rules.
      *
@@ -82,4 +91,6 @@ class DevicesTable extends Table
 //
 //        return $rules;
 //    }
+
+
 }

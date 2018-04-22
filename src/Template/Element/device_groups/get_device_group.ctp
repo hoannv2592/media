@@ -10,64 +10,6 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <div class="card">
                     <div class="header bg-light-blue">
-                        <h2>THÊM MỚI THIẾT BỊ</h2>
-                        <ul class="header-dropdown m-r--5">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
-                                   role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="material-icons">more_vert</i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="body">
-                        <?php echo $this->Form->create('Devices', array(
-                            'id' => 'form_advanced_validation',
-                            'type' => 'post',
-                            'url' => array('controller' => 'Devices', 'action' => 'add'),
-                            'inputDefaults' => array(
-                                'label' => false,
-                                'div' => false
-                            ),
-                        ));
-                        ?>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" class="form-control" name="name" id="name_device" required>
-                                <label class="form-label">Tên thiết bị</label>
-                            </div>
-                            <div class="help-info">Tên thiết bị</div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" class="form-control" name="apt_key" required>
-                                <label class="form-label">Mã apt_key</label>
-                            </div>
-                            <div class="help-info">Mã apt_key</div>
-                        </div>
-                        <div class="form-group form-float">
-                            <div class="form-line">
-                                <input type="text" class="form-control" name="pass_apt_key" required>
-                                <label class="form-label">Mật khẩu thiết bị </label>
-                            </div>
-                            <div class="help-info">Mật khẩu thiết bị</div>
-                        </div>
-                        <button class="btn btn-primary waves-effect" id="submit_add" type="submit">THÊM MỚI</button>
-                        <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
-                        <?php echo $this->Form->end(); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="modal-02" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="row clearfix">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
-                    <div class="header bg-light-blue">
                         <h2>THÔNG TIN THIẾT BỊ</h2>
                         <ul class="header-dropdown m-r--5">
                             <li class="dropdown">
@@ -80,37 +22,87 @@
                     </div>
                     <div class="body">
                         <?php echo $this->Form->create('Devices', array(
-                            'id' => 'form_validation_apt',
+                            'id' => 'form_edit_validation',
                             'type' => 'post',
-                            'url' => array('controller' => 'Devices', 'action' => 'edit'),
+                            'url' => array('controller' => 'Devices', 'action' => 'edit'.'/'. UrlUtil::_encodeUrl($device['id'])),
                             'inputDefaults' => array(
                                 'label' => false,
                                 'div' => false
                             ),
                         ));
                         ?>
-                        <input id="cname" name="id" type="hidden">
-                        <input id="id" type="hidden">
+                        <input id="backup_name_dev" type="hidden" value="<?php echo isset($device['name']) ? $device['name'] :''?>">
+                        <label for="name">Name</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="name" id="name" required>
+                                <input type="text" class="form-control" name="name" id="name" placeholder="Điền tên thiết bị" value="<?php echo isset($device['name']) ? $device['name'] :''?>" required>
                             </div>
-                            <div class="help-info">Tên thiết bị</div>
+                            <div class="help-info">Name</div>
                         </div>
+                        <label for="name">Code</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="apt_key" id="apt_key" required>
+                                <input disabled="disabled" type="text" class="form-control" name="apt_key" id="apt_key" value="<?php echo isset($device['apt_key']) ? $device['apt_key']:''?>" required>
                             </div>
-                            <div class="help-info">Mã apt_key</div>
+                            <div class="help-info">Code</div>
                         </div>
+                        <label for="name">Up time</label>
                         <div class="form-group form-float">
                             <div class="form-line">
-                                <input type="text" class="form-control" name="pass_apt_key" id="pass_apt_key" required>
+                                <input type="text" class="form-control" name="" placeholder="" id="uptime" readonly="readonly" value="<?php echo isset($device['uptime']) ? $device['uptime']:''?>" >
                             </div>
-                            <div class="help-info">Mật khẩu thiết bị</div>
+                            <div class="help-info">uptime</div>
                         </div>
-                        <button class="btn btn-primary waves-effect" id="submit" type="submit">CHỈNH SỬA</button>
-                        <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
+                        <label for="name">Address</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="address" placeholder="Địa chỉ đặt thiết bị" id="address" value="<?php echo isset($device['address']) ? $device['address']:''?>" required>
+                            </div>
+                            <div class="help-info">Address</div>
+                        </div>
+                        <label for="name">Adgroup</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="" placeholder="" id="adgroup_id" readonly="readonly" value="<?php echo isset($Adgroups[$device['adgroup_id']]) ? $Adgroups[$device['adgroup_id']]:''?>" >
+                            </div>
+                            <div class="help-info">Adgroup</div>
+                        </div>
+                        <label for="name">Num_clients</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="" placeholder="" id="num_clients" readonly="readonly" value="<?php echo isset($device['num_clients']) ? $device['num_clients']:''?>" >
+                            </div>
+                            <div class="help-info">num_clients</div>
+                        </div>
+                        <label for="name">Campaign_group</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <input type="text" class="form-control" name="" placeholder="" id="adgroup_id" readonly="readonly" value="<?php echo isset($campaign_name) ? $campaign_name:''?>" >
+                            </div>
+                            <div class="help-info">Campaign_group</div>
+                        </div>
+                        <label for="user_id">Chọn tài khoản</label>
+                        <div class="form-group form-float">
+                            <div class="form-line">
+                                <?php
+                                if ($userData['role'] == \App\Model\Entity\User::ROLE_TOW) {
+                                    echo isset($users[$device['user_id']]) ? $users[$device['user_id']]: '';
+                                } else { ?>
+                                    <select class="form-control required" name="user_id" id="user_id">
+                                        <option disabled selected value> -- Chọn tài khoản --</option>
+                                        <?php foreach ($users as $key => $user) {
+                                            if ($device['user_id'] == $key) { ?>
+                                                <option selected="selected" value="<?php echo $key;?>"><?php echo $user ?></option>
+                                            <?php } else { ?>
+                                                <option value="<?php echo $key;?>"><?php echo $user ?></option>
+                                            <?php } ?>
+                                        <?php } ?>
+                                    </select>
+                                <?php } ?>
+                            </div>
+                            <div class="help-info">Chọn người dùng</div>
+                        </div>
+                        <button class="btn btn-primary waves-effect" id = "submit" type="submit">CẬP NHẬT</button>
                         <?php echo $this->Form->end(); ?>
                     </div>
                 </div>
@@ -118,69 +110,3 @@
         </div>
     </div>
 </div>
-<div class="modal fade" id="modal-03" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
-        <div class="row clearfix">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="card">
-                    <div class="header bg-light-blue">
-                        <h2>XÁC NHẬN</h2>
-                        <ul class="header-dropdown m-r--5">
-                            <li class="dropdown">
-                                <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
-                                   role="button" aria-haspopup="true" aria-expanded="false">
-                                    <i class="material-icons">more_vert</i>
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="body">
-                        <?php echo $this->Form->create('Devices', array(
-                            'id' => 'form_validation',
-                            'type' => 'post',
-                            'url' => array('controller' => 'Devices', 'action' => 'delete'),
-                            'inputDefaults' => array(
-                                'label' => false,
-                                'div' => false
-                            ),
-                            'onsubmit' => "event.returnValue = false; return false;",
-                        ));
-                        ?>
-                        <p>Bạn có chắc chắn muốn xóa thiết bị này không? </p>
-                        <div class="modal-footer">
-                            <button class="btn btn-primary waves-effect" id="submit_delete" type="submit">XÓA THIẾT BỊ
-                            </button>
-                            <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
-                        </div>
-                        <?php echo $this->Form->end(); ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<script type="application/javascript">
-    var id;
-    $('.delete_advertise').click(function () {
-        id = $(this).attr('value');
-        $('#submit_delete').click(function () {
-            var url = "<?php echo URL_DELETE_APT; ?>";
-            $.ajax({
-                url: url,
-                type: 'POST',
-                dataType: 'json',
-                data: {id: id},
-                success: function (response) {
-                    if (response) {
-                        window.location.reload();
-                    } else {
-                        alert_message('Đã có lỗi xảy ra.vui lòng thử lại');
-                        return false;
-                    }
-                }
-            });
-        });
-    });
-</script>

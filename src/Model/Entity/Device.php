@@ -48,15 +48,18 @@ class Device extends Entity
     const LANDING_THREE = 3;
 
     public static $langding_page = array(
-        Device::LANDING_ONE => 'Quảng cáo với password',
-        Device::LANDING_TOW => 'Quảng cáo Facebook-Login',
-        Device::LANDING_THREE => 'Quảng cáo lấy thông tin khách hàng',
+        Device::LANDING_ONE => 'Password',
+        Device::LANDING_TOW => 'Facebook-Login, Google',
+        Device::LANDING_THREE => 'Thông tin khách hàng',
     );
 
     const TB_NORMAR = 1;
     const TB_MIRKOTIC = 2;
     public static $category = array(
-        Device::TB_NORMAR => 'Thiết bị thường',
-        Device::TB_MIRKOTIC => 'Thiết bị Mirkotic',
+        Device::TB_NORMAR => 'TP Link',
+        Device::TB_MIRKOTIC => 'Mirkotic',
     );
+
+    const HAS_RETURN = 1;
+    const NO_RETURN = 2;
 }

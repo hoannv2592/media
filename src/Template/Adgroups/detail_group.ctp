@@ -23,20 +23,9 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                 <div class="card">
                     <div class="header bg-blue">
                         <h2>
-                            Thông tin nhóm thiết bị quảng cáo <small>Description text here...</small>
+                            Thông tin nhóm thiết bị quảng cáo
                         </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
+
                     </div>
                     <div class="body">
                         <?php
@@ -114,6 +103,33 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 </div>
                             </div>
                         </div>
+                        <div class="hiddenccc">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php
+                                    $packages = isset($adgroup->packages) ? json_decode($adgroup->packages):'';
+                                    echo $this->Form->control('packages', [
+                                        'type' => 'select',
+                                        'multiple' => 'checkbox',
+                                        'label' => false,
+                                        'options' => [
+                                            ['value' => 1, 'text' => __('Họ và tên')],
+                                            ['value' => 2, 'text' => __('Ngày sinh')],
+                                            ['value' => 3, 'text' => __('Số điện thoại')],
+                                            ['value' => 4, 'text' => __('Địa chỉ')],
+                                            ['value' => 5, 'text' => __('Địa chỉ email')]
+                                        ],
+                                        'templates' => [
+                                            'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                            'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                        ],
+                                        'value' => $packages
+                                    ]);
+                                    ?>
+                                    <div id="check_error"></div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
                                 <?php $tile_name = isset($adgroup->tile_name) ? ($adgroup->tile_name):'' ?>
@@ -158,19 +174,59 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <div class="form-line">
-                                <?php $tile_congratulations_return = isset($adgroup->tile_congratulations_return) ? ($adgroup->tile_congratulations_return):'' ?>
-                                <?php echo $this->Form->control('tile_congratulations_return', array(
-                                    'label' => 'Tile congratulations return',
-                                    'class' => 'form-control',
-                                    'value' => $tile_congratulations_return,
-                                    'placeholder' => 'Tile congratulations return..'
-                                ));
-                                ?>
-                                <div class="help-info">Tile congratulations return</div>
-                            </div>
+                        <div class="show_tite">
+                            <?php
+                            if (isset($adgroup->tile_congratulations_return) && $adgroup->tile_congratulations_return != '') {
+                                $tile_congratulations_return = json_decode($adgroup->tile_congratulations_return) ;
+                                $count = count($tile_congratulations_return);
+                                if ($count > 0) {
+                                    foreach ($tile_congratulations_return as $k => $item) {
+                                        if ($k == 0) {?>
+                                            <div class="form-group" style="margin-bottom: 10px !important;;">
+                                                <div class="form-line">
+                                                    <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                                    <input name="tile_congratulations_return[]"
+                                                           class="form-control valid" id="tile-congratulations-return"
+                                                           value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                </div>
+                                                <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                            </div>
+                                        <?php } else {?>
+                                            <div class="form-group" id="title_<?= $k?>" style="margin-bottom: 10px !important;">
+                                                <div class="form-line">
+                                                    <input name="tile_congratulations_return[]"
+                                                           class="form-control valid" id="tile-congratulations-return"
+                                                           value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                </div>
+                                                <a href="javascript:void(0);" id="delete_" onclick="delete_title(<?= $k?>)" class="btn btn-danger waves-effect" style="margin-top: 10px">Xóa</a>
+                                            </div>
+                                        <?php }
+
+                                    }
+                                } else { ?>
+                                    <div class="form-group" style="margin-bottom: 10px !important;">
+                                        <div class="form-line">
+                                            <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                            <input name="tile_congratulations_return[]"
+                                                   class="form-control valid" id="tile-congratulations-return"
+                                                   value="<?= $adgroup->tile_congratulations_return ?>" aria-invalid="false" type="text" />
+                                        </div>
+                                        <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                    </div>
+                                <?php }
+                            } else { ?>
+                                <div class="form-group" style="margin-bottom: 10px !important;">
+                                    <div class="form-line">
+                                        <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                        <input name="tile_congratulations_return[]"
+                                               class="form-control valid" id="tile-congratulations-return" aria-invalid="false" type="text" />
+                                    </div>
+                                    <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                </div>
+                            <?php }
+                            ?>
                         </div>
+                        <div class="add"></div>
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $title_connect = isset($adgroup->title_connect) ? ($adgroup->title_connect):'' ?>
@@ -181,6 +237,20 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 ));
                                 ?>
                                 <div class="help-info">Title_connect</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
+                                $title_campaign = isset($adgroup->title_campaign) ? ($adgroup->title_campaign):'' ?>
+                                <?php echo $this->Form->control('title_campaign', array(
+                                    'label' => 'Title campaign ',
+                                    'class' => 'form-control',
+                                    'value' => $title_campaign,
+                                    'placeholder' => 'title_campaign..'
+                                ));
+                                ?>
+                                <div class="help-info">Title_campaign</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -279,6 +349,36 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
     </div>
 </section>
 <script type="application/javascript">
+    function delete_title(id) {
+        $('#title_'+id).remove();
+    }
+    var y = 1; //initlal text box count
+    var max_fields = 10; //maximum input boxes allowed
+    var wrapper_title = $("div.add"); //Fields wrapper
+    var add_button_title = $("#add_title"); //Add button class
+    $(add_button_title).click(function (e) { //on add file button click
+        e.preventDefault();
+        if (y < max_fields) { //max input file allowed
+            $(wrapper_title).append('<div class="border_add">'+
+                '<div class="form-group" style="margin-bottom: 5px !important;">\n' +
+                '<div class="form-line">\n' +
+                '<div class="input text">' +
+                '<input name="tile_congratulations_return[]" class="form-control valid" aria-invalid="false" type="text"></div>' +
+                '</div>' +
+                '</div>\n' +
+                '<a href="javascript:void(0);" id="delete_bak" class="btn btn-danger waves-effect remove_field_title" style="margin-top: 0;margin-bottom: 10px">Xóa</a>\n' +
+                '</div>'
+
+            );
+            y++; //input file increment
+        }
+    }); //add input box
+    $(wrapper_title).on("click", ".remove_field_title", function (e) { //user click on remove
+        e.preventDefault();
+        $(this).parent('div').remove();
+        $(this).parent('div').remove();
+        y--;
+    });
     $(document).ready(function () {
         var role = "<?php echo $user_login['role'];?>";
         var user_id_group = '<?php echo $adgroup->user_id_group;?>';
@@ -358,20 +458,26 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         var langding = "<?php echo $adgroup->langdingpage_id; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
         if ($(this).is(':checked')){
             $(this).prop('checked', true).attr('checked', 'checked');
@@ -399,6 +505,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             'langdingpage_id': { required: true },
             'apt_device_number': { required: true },
             'device_id[]': { required: true },
+            // 'packages[]': { required: true }
         },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');

@@ -7,6 +7,7 @@ use Cake\Datasource\ConnectionManager;
 use App\Model\Entity\User;
 use Cake\Event\Event;
 use Cake\Utility\Hash;
+use DateTime;
 /**
  * Reports Controller
  *
@@ -44,13 +45,22 @@ class ReportsController extends AppController
      */
     public function index()
     {
-        $list_campaign = $this->CampaignGroups->find('all', [
-            'contain'  => ['PartnerVouchers' => function ($q) {
-                return $q ;
-            }],
-            'conditions' => [
+        $login = $this->Auth->user();
+        if ($login['role'] == User::ROLE_ONE) {
+            $conditions = array(
                 'CampaignGroups.delete_flag !=' => 1
-            ]
+            );
+        } else {
+            $conditions = array(
+                'CampaignGroups.delete_flag !=' => 1,
+                'user_id_campaign_group' => $login['id']
+            );
+        }
+        $list_campaign = $this->CampaignGroups->find('all', [
+//            'contain'  => ['PartnerVouchers' => function ($q) {
+//                return $q ;
+//            }],
+            'conditions' => $conditions
         ]) ->toArray();
         $this->set(compact('list_campaign'));
     }
@@ -75,7 +85,7 @@ class ReportsController extends AppController
     /**
      * Add method
      *
-     * @return \Cake\Network\Response|null Redirects on successful add, renders view otherwise.
+     * @return \Cake\Http\Response
      */
     public function add()
     {
@@ -84,7 +94,6 @@ class ReportsController extends AppController
             $report = $this->Reports->patchEntity($report, $this->request->getData());
             if ($this->Reports->save($report)) {
                 $this->Flash->success(__('The report has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The report could not be saved. Please, try again.'));
@@ -99,7 +108,7 @@ class ReportsController extends AppController
      * Edit method
      *
      * @param string|null $id Report id.
-     * @return \Cake\Network\Response|null Redirects on successful edit, renders view otherwise.
+     * @return \Cake\Http\Response
      * @throws \Cake\Network\Exception\NotFoundException When record not found.
      */
     public function edit($id = null)
@@ -111,7 +120,6 @@ class ReportsController extends AppController
             $report = $this->Reports->patchEntity($report, $this->request->getData());
             if ($this->Reports->save($report)) {
                 $this->Flash->success(__('The report has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The report could not be saved. Please, try again.'));
@@ -145,31 +153,102 @@ class ReportsController extends AppController
     public function reportDetail($campaign_id)
     {
         $campaign_id = \UrlUtil::_decodeUrl($campaign_id);
-        $campaigns = $this->CampaignGroups->find('all', [
-            'contain'  => ['PartnerVouchers' => function ($q) {
-                return $q ;
-            }],
-            'conditions' => [
-                'CampaignGroups.delete_flag !=' => 1,
-                'CampaignGroups.id' => $campaign_id
-            ]
-        ])->toArray();
+
         $campaignGroups_title = $this->CampaignGroups->find('all',[
-            'contain'  => ['PartnerVouchers' => function ($q) {
-                return $q
-                    ->where([
-                        'PartnerVouchers.confirm ' => 1,
-                    ])
-                    ->select([
-                        'campaign_group_id','id'
-                    ]);
-            }],
             'conditions' => [
                 'CampaignGroups.delete_flag !=' => 1,
                 'CampaignGroups.id' => $campaign_id
             ]
-        ])->toArray();
-        $this->set(compact('campaigns', 'campaign_id', 'campaignGroups_title'));
+        ])->first();
+        $list_day = array();
+        $date = array();
+        if (!empty($campaignGroups_title)) {
+            if ($campaignGroups_title['time'] != '') {
+                $date = explode(' - ', $campaignGroups_title['time']);
+                $list_day = $this->get_label($date);
+            }
+        }
+        if (!empty($date)) {
+            $date_to = Datetime::createFromFormat('d/m/Y', $date[1])->format('Y-m-d');
+            $date_form = Datetime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
+            $conditions['PartnerVouchers.created >='] = $date_form;
+            $conditions['PartnerVouchers.created <='] = $date_to;
+        }
+        $conditions['PartnerVouchers.campaign_group_id'] = $campaign_id;
+
+        $data = array();
+        $all_campaigns = $this->PartnerVouchers->find()->where($conditions)->toArray();
+        foreach ($all_campaigns as $k => $vl) {
+            $vl['created'] = date('Y-m-d', strtotime($vl['created']));
+            $data[$k] = $vl;
+        }
+        $partners = Hash::combine($data, '{n}.id', '{n}.confirm', '{n}.created');
+        $count_confirm_partner = array();
+        $count_no_confirm_partner = array();
+        $chart_number_partner = array();
+        foreach ($partners as  $k => $partner) {
+            $chart_number_partner[] = count($partner);
+            $old_partner = array();
+            $new_partner = array();
+            foreach ($partner as $key => $val) {
+                if ($val == 0) {
+                    $old_partner[] = $val;
+                } else {
+                    $new_partner[] = $val;
+                }
+            }
+            $count_no_confirm_partner[] = count($old_partner);
+            $count_confirm_partner[] = count($new_partner);
+        }
+        $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
+        $count_phone_partner = array();
+        $list_id_partner = array();
+        foreach ($partner_phone as  $k => $partner) {
+            $phone_partner = array();
+            $id_partner = array();
+            foreach ($partner as $key => $val) {
+                if ($val != '') {
+                    $phone_partner[] = $val;
+                    $id_partner[] = $key;
+                }
+            }
+            $count_phone_partner[] = count($phone_partner);
+            $list_id_partner[] = $id_partner;
+        }
+        if (!empty($list_id_partner)) {
+            $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
+        }
+        $sum_no_confirm_partner = array_sum($count_no_confirm_partner);
+        $sum_confirm_partner = array_sum($count_confirm_partner);
+        $sum_phone_partner = array_sum($count_phone_partner);
+        $chart_number_partner = json_encode($chart_number_partner);
+        $count_no_confirm_partner = json_encode($count_no_confirm_partner);
+        $count_confirm_partner = json_encode($count_confirm_partner);
+        $count_phone_partner = json_encode($count_phone_partner);
+        $list_id_partner = json_encode($list_id_partner);
+        $this->paginate = array('PartnerVouchers' => array(
+            'conditions' => $conditions,
+            'limit' => 10
+        ));
+
+
+        $campaigns = $this->paginate('PartnerVouchers', ['limit' => '10'])->toArray();
+
+        $this->set(compact(
+            'campaigns',
+            'campaign_id',
+            'campaignGroups_title',
+            'list_day',
+            'sum_confirm_partner',
+            'sum_no_confirm_partner',
+            'chart_number_partner',
+            'sum_phone_partner',
+            'list_id_partner',
+            'count_no_confirm_partner',
+            'count_confirm_partner',
+            'count_phone_partner'
+
+        ));
     }
 
     public function detailPartnerVoucher($partner_id, $campaign_id)
@@ -422,7 +501,6 @@ class ReportsController extends AppController
                     if ($data_device) {
                         $partner->device_id = $data_device->id;
                         if (empty($partner->errors())) {
-                        var_dump($this->Partners->save($partner)); die;
                             if ($this->Partners->save($partner)) {
                                 $conn->commit();
                                 $this->redirect(['plugin' => null, 'controller' => 'Devices', 'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id). '/' . \UrlUtil::_encodeUrl(2)]);
@@ -608,5 +686,31 @@ class ReportsController extends AppController
             'id_device' => $id_device
         );
         return $result;
+    }
+
+    public function get_label ($date = array())
+    {
+        $begin = Datetime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
+        $end = Datetime::createFromFormat('d/m/Y', $date[1])->format('Y-m-d');
+        $begin = new DateTime( $begin );
+        $end   = new DateTime( $end );
+        for($i = $begin; $i <= $end; $i->modify('+1 day')){
+            $list_day[] = $i->format("d/m/Y");
+        }
+        $count = count($list_day);
+        end($list_day);         // move the internal pointer to the end of the array
+        $last_key = key($list_day);  // fetches the key of the element pointed to by the internal pointer
+        reset($list_day);
+        $first_key = key($list_day);
+        $check_list = array($first_key, $last_key);
+        if ($count > 7) {
+            foreach ($list_day as $k => $vl) {
+                if (!in_array($k, $check_list)) {
+                    $vl = '';
+                }
+                $list_day[$k] = $vl;
+            }
+        }
+        return json_encode($list_day);
     }
 }

@@ -522,7 +522,6 @@ class DevicesController extends AppController
             $sum += $rdcheck;
         }
         // xử lý kí chọn số cuối cùng để đúng quy luat
-        pr($sum);
         $number_add = substr($sum, -1, 1);
         if($number_add == 0){
             $strRandom = $strRandom.$number_add;

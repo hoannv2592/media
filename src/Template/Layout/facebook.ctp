@@ -2,13 +2,9 @@
 /**
  * @var \App\View\AppView $apt_key_check
  * @var \App\View\AppView $this
- */
-$cakeDescription = 'Media ';
-?>
-<?php
-/**
- * @var \App\View\AppView $apt_key_check
- * @var \App\View\AppView $this
+ * @var $partner_id
+ * @var $infor_devices
+ * @var $list_path
  */
 $cakeDescription = 'Media ';
 ?>
@@ -28,7 +24,6 @@ $cakeDescription = 'Media ';
     <?php echo $this->Html->css(['back_end/font-awesome.min']); ?>
     <?php echo $this->Html->css([
             'password/bootstrap.min',
-//            'password/main',
             'back_end/my_style',
             'page3',
         ]
@@ -44,19 +39,41 @@ $cakeDescription = 'Media ';
     );
     echo $this->Html->css('back_end/page3');
     ?>
-
 </head>
 <?php
+$path = isset($infor_devices->path) ? $infor_devices->path : '/images/entry3.jpg';
+$type = isset($infor_devices->type) ? $infor_devices->type : '';
 $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
 $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
-$path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
-$langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
-$type = isset($infor_devices->type) ? $infor_devices->type : '';
 $title_connect = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Nhận voucher';
+$langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $title_connect_normal = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Đăng ký nhận voucher';
 $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_isexit_partner : '2';
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
-$list_path = explode(',', $infor_devices->path);
+if (isset($infor_devices->tile_congratulations_return)) {
+    function isJSON($string){
+        return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
+    }
+    if (!empty($infor_devices->tile_congratulations_return)) {
+        $isJson = isJSON($infor_devices->tile_congratulations_return);
+        if ($isJson) {
+            $tile_congratulations = json_decode($infor_devices->tile_congratulations_return);
+            $tile_congratulations_return = $tile_congratulations[array_rand($tile_congratulations, 1)];
+        } else {
+            $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+        }
+    } else {
+        $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+    }
+} else {
+    $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+}
+$list_path_old = explode(',', $infor_devices->path);
+foreach ($list_path_old as $k =>  $item) {
+    if ($item != '') {
+        $list_path[] = $item;
+    }
+}
 $auth_target = isset($infor_devices->auth_target) ? $infor_devices->auth_target :'';
 $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->apt_device_number :'';
 ?>
@@ -99,7 +116,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     <div class="landing__cover-content u-color-white">
                         <div class="logo" style="margin-bottom: 20px;">
                             <div class="logo__inner">
-                                <?php if (isset($infor_devices->path_logo)) { ?>
+                                <?php if (isset($infor_devices->path_logo) && $infor_devices->path_logo != '') { ?>
                                     <a class="" href="javascript:void(0)"><img src="<?php echo '/' . $infor_devices->path_logo; ?>" alt="logo_image" style="height: 100px;"></a>
                                 <?php } else { ?>
                                     <a class="" href="javascript:void(0);"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt=""></a>
@@ -112,7 +129,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
                             <div class="redirect">
-                                <a class="btn _face" href="<?php echo $infor_devices->auth_target; ?>"><i class="fa fa-facebook"></i>Login with Facebook</a>
+                                <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button>
                                 <div class="c-spacer"></div>
                                 <a class="btn _goog" href="<?php echo $infor_devices->auth_target; ?>"><i class="fa fa-google-plus"></i>Login with Google</a>
                                 <div class="c-spacer"></div>
@@ -121,26 +138,25 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <?php } else { ?>
                             <div class="redirect">
                                 <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
-                                    <input type="hidden" class="need_push_username" name="username"/>
-                                    <input type="hidden" name="password"/>
-                                    <input type="hidden" class="need_push_password" name="password"/>
+                                    <input type="hidden" value="wifimedia" name="username"/>
+                                    <input type="hidden" value="wifimedia" name="password"/>
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="false"/>
                                 </form>
                                 <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="true"/>
-                                    <input style="display: none;" name="username" type="text" value="wifimedia"/>
-                                    <input style="display: none;" name="password" type="password" value="wifimedia"/>
-                                    <button class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
+                                    <input name="username" type="hidden" value="wifimedia" />
+                                    <input name="password" type="hidden" value="wifimedia" />
+                                    <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
                                     <button class="btn btn-primary btn-success mb-10 br-2 _goog"><i class="fa fa-google-plus"></i>Login with Google </button>
                                     <div class="c-spacer"></div>
                                 </form>
                                 <form class="form-validation" style="width: 100%" name="login_slow" id="" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLoginSlow()">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="false"/>
-                                    <input style="display: none;" name="username" type="text" value="wifimediaslow"/>
-                                    <input style="display: none;" name="password" type="password" value="wifimediaslow"/>
+                                    <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                    <input style="display: none;" name="password" type="password" value="wifimedia"/>
                                     <button class="btn btn-primary btn-success mb-10 br-2 _wifi"><i class="fa fa-wifi"></i>Connect now - Slow </button>
                                 </form>
                             </div>
@@ -153,10 +169,96 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
 </body>
 </html>
 <script type="text/javascript">
+    function handleLoginStatus(response){
+        if (response.status === 'connected') {
+            //display user data
+            getFbUserData();
+        }
+    }
+
+    function getFbUserData(){
+        FB.api('/me', {locale: 'en_US', fields: 'id,name,email,gender'}, function(response) {
+            var data = {
+                partner_id: "<?= $partner_id ?>",
+                device_id: "<?= $infor_devices->id ?>",
+                user_id: "<?= $infor_devices->user_id; ?>",
+                flag_face: "1",
+                name: response.name,
+                email: response.email};
+            $.ajax({
+                url: "/Devices/add_log_partner",
+                type: "POST",
+                data: data,
+                cache: false,
+                success: function (data) {
+                    checkin(data);
+                }
+            });
+        })
+    }
+
+        function checkin(data){
+        <?php if($infor_devices->fb_fanpage): ?>
+        <?php
+            $message = '';
+            if($infor_devices->fb_checkin_msg)
+                $messages = explode(';', $infor_devices->fb_checkin_msg);
+                $key = array_rand ($messages);
+                $message = $messages[$key];
+        ?>
+            var fanpage_id = '<?= $infor_devices->fb_fanpage ?>';
+            var coordinates = JSON.stringify({latitude: <?= $infor_devices->fb_latitude ?>, longitude: <?= $infor_devices->fb_longtitude ?>});
+            FB.api('/me/feed', 'post', { message: "<?= $message ?>", place: fanpage_id, coordinates: coordinates}, function(response){
+                        processAuth();
+                    // if (data == 'true') {
+                    //     processAuth();
+                    // }
+            });
+        <?php else: ?>
+                processAuth();
+            // if (data == 'true') {
+            // }
+        <?php endif; ?>
+        }
+
+    window.fbAsyncInit = function() {
+        // FB JavaScript SDK configuration and setup
+        FB.init({
+            appId      : '1410831272490928', // FB App ID
+            cookie     : true,  // enable cookies to allow the server to access the session
+            xfbml      : true,  // parse social plugins on this page
+            version    : 'v2.8' // use graph api version 2.8
+        });
+
+        // Check whether the user already logged in
+        FB.getLoginStatus(handleLoginStatus);
+    };
+
+    // Load the JavaScript SDK asynchronously
+    (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js";
+        fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    function FBLogin(){
+        FB.login(handleLoginStatus, {scope: 'public_profile,email,publish_actions'})
+    }
+
+    function processAuth(){
+        <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR): ?>
+        window.location.href = "<?= $infor_devices->auth_target ?>";
+        <?php else: ?>
+        doLogin();
+        <?php endif ?>
+    }
+
     function doLogin() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login.username.value;
-        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.password.value = hexMD5 ('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }
@@ -164,7 +266,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     function doLoginSlow() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
         document.sendin.username.value = document.login_slow.username.value;
-        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.password.value = hexMD5 ('<?php echo $infor_devices->chap_id; ?>' + document.login_slow.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
         document.sendin.submit();
         return false;
     }

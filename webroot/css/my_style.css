@@ -156,5 +156,95 @@ tr:last-child {
 }
 
 .demo-checkbox label, .demo-radio-button label {
-    min-width: 250px !important;
+    min-width: 130px !important;
+}
+
+.button-demo .btn {
+    margin-right: 0px !important;
+    margin-bottom: 0px !important;
+    min-width: 80px !important;
+}
+
+.sidebar .menu .list a span {
+    margin: 0px 0 7px 7px;
+    color: #333;
+    font-weight: bold;
+    font-size: 14px;
+    overflow: hidden;
+}
+.sidebar .menu .list i.material-icons {
+    margin-top: -4px;
+}
+.sidebar {
+    -moz-transition: all .5s;
+    -o-transition: all .5s;
+    -webkit-transition: all .5s;
+    transition: all .5s;
+    font-family: "Roboto",sans-serif;
+    background: #fdfdfd;
+    width: 200px;
+    overflow: hidden;
+    display: inline-block;
+    height: calc(100vh - 70px);
+    position: fixed;
+    top: 70px;
+    left: 0;
+    -webkit-box-shadow: 2px 2px 5px rgba(0,0,0,.1);
+    -moz-box-shadow: 2px 2px 5px rgba(0,0,0,.1);
+    -ms-box-shadow: 2px 2px 5px rgba(0,0,0,.1);
+    box-shadow: 2px 2px 5px rgba(0,0,0,.1);
+    z-index: 11 !important;
+}
+section.content {
+    margin: 75px 15px 0 187px;
+    -moz-transition: .5s;
+    -o-transition: .5s;
+    -webkit-transition: .5s;
+    transition: .5s;
+}
+
+[type="radio"]:not(:checked)+label {
+    padding-left: 26px;
+    height: 29px !important;
+    line-height: 25px;
+    font-size: 13px;
+    font-weight: normal;
+}
+div.dataTables_wrapper div.dataTables_filter {
+    text-align: right !important;
+    margin-right: 10px;
+}
+
+.breadcrumb {
+    margin-bottom: 5px !important;
+}
+
+.pagination > .disabled > a, .pagination > .disabled > a:focus, .pagination > .disabled > a:hover, .pagination > .disabled > span, .pagination > .disabled > span:focus, .pagination > .disabled > span:hover {
+    color: #777;
+    cursor: not-allowed;
+    background-color: #fff !important;
+    border-color: #ddd;
+}
+
+.desc {
+    float: right;
+}
+th>a {
+    float: right;
+}
+.storke_1{
+    border: 2px solid #4489e4;
+}
+.storke_2{
+    border: 2px solid #f96a74;
+}
+.storke_3 {
+    border: 2px solid #ffa91c;
+}
+.storke_4{
+    border: 2px solid #32c861;
+}
+
+.ct-label.ct-horizontal.ct-end {
+    margin-left: -35px !important;
 }

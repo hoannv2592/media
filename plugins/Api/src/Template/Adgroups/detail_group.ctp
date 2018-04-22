@@ -12,7 +12,7 @@
                 <div class="card">
                     <div class="header bg-green">
                         <h2>
-                            Thông tin nhóm quảng cáo <small>Description text here...</small>
+                            Thông tin nhóm quảng cáo
                         </h2>
                         <ul class="header-dropdown m-r-0">
                             <li>

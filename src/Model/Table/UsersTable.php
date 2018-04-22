@@ -131,4 +131,34 @@ class UsersTable extends Table
                 'message' => 'Mật khẩu hiện tại không đúng' ]);
         return $validator;
     }
+
+    public function getOder($condition = array())
+    {
+        $fields = $this->getLableField();
+        $fields = array_merge($fields, ['Devices.name','Devices.user_id', 'Devices.id', 'Devices.name']);
+        $query = $this->find('all');
+        $result = $query->hydrate(false)
+            ->select($fields)
+            ->limit('10')
+            ->join([
+                'Devices' => [
+                    'table' => 'devices',
+                    'type' => 'LEFT',
+                    'conditions' => 'Devices.user_id = Users.id',
+                ]
+            ])
+        ;
+        if (!empty($conditions)) {
+            $result->where($conditions);
+        }
+        return $result;
+    }
+
+    public function getLableField()
+    {
+        $fields_member_histoty = $this->query()->aliasFields(
+            $this->schema()->columns(), $this->alias()
+        );
+        return $fields_member_histoty;
+    }
 }

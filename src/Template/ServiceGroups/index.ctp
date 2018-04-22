@@ -12,30 +12,19 @@
                 <div class="card">
                     <div class="header bg-green">
                         <h2>
-                            Chăm sóc khách hàng <small>Description text here...</small>
+                            Chăm sóc khách hàng
                         </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
                     <div class="body">
                         <div class="list-group">
-                            <?php foreach ($users as $k => $vl) { ?>
+                            <?php foreach ($users as $k => $vl) { if (!empty($vl['devices'])) { ?>
                                 <a href="<?php echo $this->Url->build(['controller' => 'ServiceGroups', 'action' => 'sevice_detail'.'/'. UrlUtil::_encodeUrl($vl->id)]) ?>" class="list-group-item"><?php echo isset($vl->username) ? $vl->username : ''; ?>
                                     <span class="badge bg-pink">
-                                        <?php $number_partner = count($vl->devices); echo $number_partner ;?>
+                                        <?php echo $vl['devices'][0]['total'] ;?>
                                     </span>
                                 </a>
-                            <?php } ?>
+                            <?php }
+                            } ?>
                         </div>
                     </div>
                 </div>

@@ -16,7 +16,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <ol class="breadcrumb breadcrumb-bg-blue-grey">
                     <li>
-                        <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'index']) ?>">
+                        <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'index']) ?>">
                             <i class="material-icons">home</i> Trang chủ
                         </a>
                     </li>
@@ -25,20 +25,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                 <div class="card">
                     <div class="header bg-blue">
                         <h2>
-                            Thông tin nhóm thiết bị quảng cáo <small>Description text here...</small>
+                            Thông tin nhóm thiết bị quảng cáo
                         </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
                     </div>
                     <div class="body">
                         <?php
@@ -97,7 +85,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                             </div>
                         </div>
                         <div class="form-group">
-                            <div class="form-line">
+                                    <div class="form-line">
                                 <?php $description = isset($campaign_group->description) ? ($campaign_group->description):'' ?>
                                 <?php echo $this->Form->control('description', array(
                                     'label' => 'Mô tả chiến dịch',
@@ -159,6 +147,31 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                         <div class="form-group">
                             <div class="form-line">
                                 <?php
+                                $packages = isset($campaign_group->packages) ? json_decode($campaign_group->packages):'';
+                                echo $this->Form->control('packages', [
+                                    'type' => 'select',
+                                    'multiple' => 'checkbox',
+                                    'label' => false,
+                                    'options' => [
+                                        ['value' => 1, 'text' => __('Họ và tên')],
+                                        ['value' => 2, 'text' => __('Ngày sinh')],
+                                        ['value' => 3, 'text' => __('Số điện thoại')],
+                                        ['value' => 4, 'text' => __('Địa chỉ')],
+                                        ['value' => 5, 'text' => __('Địa chỉ email')]
+                                    ],
+                                    'templates' => [
+                                        'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                        'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                    ],
+                                    'value' => $packages
+                                ]);
+                                ?>
+                                <div id="check_error"></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
                                 $random = isset($campaign_group->random) ? $campaign_group->random: '';
                                 echo  $this->Form->input('random', array(
                                     'type' => 'select',
@@ -215,29 +228,98 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                 <div class="help-info">Địa chỉ nhóm thiết bị</div>
                             </div>
                         </div>
+<!--                        <div class="form-group">-->
+<!--                            <div class="form-line">-->
+<!--                                --><?php //$tile_congratulations_return = isset($campaign_group->tile_congratulations_return) ? ($campaign_group->tile_congratulations_return):'' ?>
+<!--                                --><?php //echo $this->Form->control('tile_congratulations_return', array(
+//                                    'label' => 'Tile congratulations return',
+//                                    'class' => 'form-control',
+//                                    'value' => $tile_congratulations_return,
+//                                    'placeholder' => 'Tile congratulations return..'
+//                                ));
+//                                ?>
+<!--                                <div class="help-info">Tile congratulations return</div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+                        <div class="show_tite">
+                            <?php
+                            if (isset($campaign_group->tile_congratulations_return) && $campaign_group->tile_congratulations_return != '') {
+                                $tile_congratulations_return = json_decode($campaign_group->tile_congratulations_return) ;
+                                $count = count($tile_congratulations_return);
+                                if ($count > 0) {
+                                    foreach ($tile_congratulations_return as $k => $item) {
+                                        if ($k == 0) {?>
+                                            <div class="form-group" style="margin-bottom: 10px !important;;">
+                                                <div class="form-line">
+                                                    <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                                    <input name="tile_congratulations_return[]"
+                                                           class="form-control valid" id="tile-congratulations-return"
+                                                           value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                </div>
+                                                <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                            </div>
+                                        <?php } else {?>
+                                            <div class="form-group" id="title_<?= $k?>" style="margin-bottom: 10px !important;">
+                                                <div class="form-line">
+                                                    <input name="tile_congratulations_return[]"
+                                                           class="form-control valid" id="tile-congratulations-return"
+                                                           value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                </div>
+                                                <a href="javascript:void(0);" id="delete_" onclick="delete_title(<?= $k?>)" class="btn btn-danger waves-effect" style="margin-top: 10px">Xóa</a>
+                                            </div>
+                                        <?php }
+
+                                    }
+                                } else { ?>
+                                    <div class="form-group" style="margin-bottom: 10px !important;">
+                                        <div class="form-line">
+                                            <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                            <input name="tile_congratulations_return[]"
+                                                   class="form-control valid" id="tile-congratulations-return"
+                                                   value="<?= $campaign_group->tile_congratulations_return ?>" aria-invalid="false" type="text" />
+                                        </div>
+                                        <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                    </div>
+                                <?php }
+                            } else { ?>
+                                <div class="form-group" style="margin-bottom: 10px !important;">
+                                    <div class="form-line">
+                                        <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                        <input name="tile_congratulations_return[]"
+                                               class="form-control valid" id="tile-congratulations-return" aria-invalid="false" type="text" />
+                                    </div>
+                                    <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                </div>
+                            <?php }
+                            ?>
+                        </div>
+                        <div class="add"></div>
                         <div class="form-group">
                             <div class="form-line">
-                                <?php $tile_congratulations_return = isset($campaign_group->tile_congratulations_return) ? ($campaign_group->tile_congratulations_return):'' ?>
-                                <?php echo $this->Form->control('tile_congratulations_return', array(
-                                    'label' => 'Tile congratulations return',
+                                <?php
+                                $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
+                                <?php echo $this->Form->control('title_connect', array(
+                                    'label' => 'Title button connect',
                                     'class' => 'form-control',
-                                    'value' => $tile_congratulations_return,
-                                    'placeholder' => 'Tile congratulations return..'
+                                    'value' => $title_connect,
+                                    'placeholder' => 'Title conect..'
                                 ));
                                 ?>
-                                <div class="help-info">Tile congratulations return</div>
+                                <div class="help-info">Title_connect</div>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="form-line">
-                                <?php $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
-                                <?php echo $this->Form->control('title_connect', array(
-                                    'label' => 'Title button connect',
+                                <?php
+                                $title_campaign = isset($campaign_group->title_campaign) ? ($campaign_group->title_campaign):'' ?>
+                                <?php echo $this->Form->control('title_campaign', array(
+                                    'label' => 'Title campaign ',
                                     'class' => 'form-control',
-                                    'value' => $title_connect
+                                    'value' => $title_campaign,
+                                    'placeholder' => 'title_campaign..'
                                 ));
                                 ?>
-                                <div class="help-info">Title_connect</div>
+                                <div class="help-info">Title_campaign</div>
                             </div>
                         </div>
                         <div class="form-group">
@@ -335,6 +417,36 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
     </div>
 </section>
 <script type="application/javascript">
+    function delete_title(id) {
+        $('#title_'+id).remove();
+    }
+    var y = 1; //initlal text box count
+    var max_fields = 10; //maximum input boxes allowed
+    var wrapper_title = $("div.add"); //Fields wrapper
+    var add_button_title = $("#add_title"); //Add button class
+    $(add_button_title).click(function (e) { //on add file button click
+        e.preventDefault();
+        if (y < max_fields) { //max input file allowed
+            $(wrapper_title).append('<div class="border_add">'+
+                '<div class="form-group" style="margin-bottom: 5px !important;">\n' +
+                '<div class="form-line">\n' +
+                '<div class="input text">' +
+                '<input name="tile_congratulations_return[]" class="form-control valid" aria-invalid="false" type="text"></div>' +
+                '</div>' +
+                '</div>\n' +
+                '<a href="javascript:void(0);" id="delete_bak" class="btn btn-danger waves-effect remove_field_title" style="margin-top: 0;margin-bottom: 10px">Xóa</a>\n' +
+                '</div>'
+
+            );
+            y++; //input file increment
+        }
+    }); //add input box
+    $(wrapper_title).on("click", ".remove_field_title", function (e) { //user click on remove
+        e.preventDefault();
+        $(this).parent('div').remove();
+        $(this).parent('div').remove();
+        y--;
+    });
     $(document).ready(function () {
         var role = "<?php echo $user_login['role'];?>";
         var user_id_group = '<?php echo $campaign_group->user_id_campaign_group;?>';
@@ -432,7 +544,8 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             'apt_device_number': { required: true },
             'device_id[]': { required: true },
             'number_voucher': { required: true },
-            'random': { required: true }
+            'random': { required: true },
+            // 'packages[]': { required: true }
         },
         highlight: function (input) {
             $(input).parents('.form-line').addClass('error');
@@ -448,7 +561,19 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         //Multi-select
         $('#optgroup').multiSelect({ selectableOptgroup: true });
     });
-    $('#config-demo').daterangepicker({}, function(start, end, label) {});
+    $('#config-demo').dateRangePicker({
+        language:'vi',
+        showShortcuts: true,
+        shortcuts :
+            {
+                'next-days': [3,5,7],
+                'next': ['week','month','year'],
+            },
+
+        format: 'DD/MM/YYYY',
+        separator: ' - '
+    });
+    // $('#config-demo').daterangepicker({}, function(start, end, label) {});
 </script>
 <style>
     .chosen-container{

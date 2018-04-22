@@ -24,7 +24,7 @@ function initialize(){
 		   // var mw = $('.modal-dialog').outerWidth();
 		   // var mh = $('.modal-dialog').outerHeight();
 		   	// $('.landing__cover ').css({"left": ((w - cw) / 2) + "px", "top": ((h - ch) / 2) + "px","position":'absolute',"margin": ""});//センタリングを実行する
-			$('.modal-dialog').css({"left": ((w - mw) / 2) + "px", "top": ((h - mh) / 3) + "px","position":'absolute'});//センタリングを実行する
+			$('.modal-dialog').css({"left": ((w - mw) / 2) + "px", "top": ((h - mh) / 6) + "px","position":'absolute'});//センタリングを実行する
 
 
 

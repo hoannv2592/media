@@ -48,16 +48,41 @@ $cakeDescription = 'Media ';
 <?php
 $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
 $message = isset($infor_devices->message) ? $infor_devices->message : 'Vui lòng nhập số điện thoại để nhận được ưu đãi qua sms';
-$path = isset($infor_devices->path) ? $infor_devices->path : 'images/entry3.jpg';
+$path = isset($infor_devices->path) ? $infor_devices->path : '/images/entry3.jpg';
 $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->langdingpage_id : '';
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
 $title_connect = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Nhận voucher';
 $title_connect_normal = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Đăng ký nhận voucher';
 $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_isexit_partner : '2';
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
-$list_path = explode(',', $infor_devices->path);
+if (isset($infor_devices->tile_congratulations_return)) {
+    if (!empty($infor_devices->tile_congratulations_return)) {
+        function isJSON($string){
+            return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
+        }
+        $isJson = isJSON($infor_devices->tile_congratulations_return);
+        if ($isJson) {
+            $tile_congratulations = json_decode($infor_devices->tile_congratulations_return);
+            $tile_congratulations_return = $tile_congratulations[array_rand($tile_congratulations, 1)];
+        } else {
+            $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+        }
+    } else {
+        $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+    }
+} else {
+    $tile_congratulations_return = 'Cảm ơn quý khách đã quay lại.!';
+}
+$list_path_old = explode(',', $infor_devices->path);
+foreach ($list_path_old as $k =>  $item) {
+    if ($item != '') {
+        $list_path[] = $item;
+    }
+}
 $auth_target = isset($infor_devices->auth_target) ? $infor_devices->auth_target :'';
 $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->apt_device_number :'';
+$title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_campaign: 'Vui lòng điền thông tin khảo sát';
+$packages = isset($infor_devices->packages) ? json_decode($infor_devices->packages): array();
 ?>
 <body>
 <!-- Inspired by https://codepen.io/transportedman/pen/NPWRGq -->
@@ -102,7 +127,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="logo">
                             <div class="logo__inner">
-                                <?php if (isset($infor_devices->path_logo)) { ?>
+                                <?php if (isset($infor_devices->path_logo) && $infor_devices->path_logo != '') { ?>
                                     <a class="" href="javascript:void(0)"><img src="<?php echo '/' . $infor_devices->path_logo; ?>" alt="logo_image" style="height: 100px;"></a>
                                 <?php } else { ?>
                                     <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>
@@ -114,9 +139,24 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="discount">
                             <div class="c-spacer--x-large c-spacer"></div>
+                            <?php
+                            if (empty($packages)) { ?>
+                                <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
+                                    <a class="redirect__discount" href="<?php echo $infor_devices->auth_target; ?>">Connect now - Fast</a>
+                                <?php } else { ?>
+                                    <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                                        <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                        <input type="hidden" name="popup" value="false"/>
+                                        <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                        <input style="display: none;" name="password" type="password" value="wifimedia"/>
+                                        <button class="redirect__discount">Connect now - Fast</button>
+                                    </form>
+                                <?php } ?>
+                            <?php } else {?>
                             <a class="redirect__discount" href="#modal_discount" data-toggle="modal"><?php
                                 if ($title_connect != '') { echo $title_connect; } else { echo 'Nhận voucher'; } ?>
                             </a>
+                            <?php } ?>
                         </div>
                         <div class="c-spacer--x-large c-spacer"></div>
                         <div class="redirect">
@@ -129,8 +169,8 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                     <form class="form-validation" style="width: 100%" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                                         <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                         <input type="hidden" name="popup" value="true"/>
-                                        <input style="display: none;" name="username" type="text" value="wifimediaslow"/>
-                                        <input style="display: none;" name="password" type="password" value="wifimediaslow"/>
+                                        <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                        <input style="display: none;" name="password" type="password" value="wifimedia"/>
                                         <button class="redirect__normal" type="submit">Connect now - Slow</button>
                                     </form>
                                 <?php } ?>
@@ -162,16 +202,33 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                             &times;
                         </button>
-                        <h4 class="modal-title">Vui lòng điền thông tin khảo sát</h4>
+                        <h4 class="modal-title"><?php echo $title_campaign; ?></h4>
                     </div>
                     <div class="modal-body">
                         <div class="c-spacer--x-large c-spacer"></div>
                         <form action="#" name="register_form" class="register_form" id="register_form" method="post">
-                            <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
-                            <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign : ''; ?>"/>
-                            <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
-                            <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
-                            <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                            <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($campaign_id) ? $campaign_id : ''; ?>"/>
+                            <?php if (!empty($packages)) {
+                                foreach ($packages as $k => $vl) {
+                                    if ($vl == 1) { ?>
+                                        <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                    <?php } elseif ($vl == 2) { ?>
+                                        <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                    <?php } elseif($vl == 3) { ?>
+                                        <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
+                                    <?php } else if ($vl== 4) {?>
+                                        <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                    <?php } else { ?>
+                                        <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
+                                    <?php }
+                                }
+                            } else { ?>
+                                <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
+                                <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
+                            <?php }?>
                             <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                             <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
                             <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>">
@@ -187,7 +244,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title">Vui lòng điền thông tin khảo sát</h4>
+                            <h4 class="modal-title"><?php echo  $title_campaign; ?></h4>
                         </div>
                         <div class="modal-body">
                             <div class="c-spacer--x-large c-spacer"></div>
@@ -196,14 +253,31 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                 <input type="hidden" name="popup" value="true"/>
                                 <input style="display: none;" name="username" type="text" value="wifimedia"/>
                                 <input style="display: none;" name="password" type="password" value="wifimedia"/>
-                                <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($id_campaign) ? $id_campaign : ''; ?>"/>
-                                <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
-                                <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
-                                <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
-                                <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                <?php if (!empty($packages)) {
+                                    foreach ($packages as $k => $vl) {
+                                        if ($vl == 1) { ?>
+                                            <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                        <?php } elseif ($vl == 2) { ?>
+                                            <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                        <?php } elseif($vl == 3) { ?>
+                                            <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh nhật"></p>
+                                        <?php } elseif ($vl == 4) { ?>
+                                            <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                        <?php } else { ?>
+                                            <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
+                                        <?php }
+                                    }
+                                } else {?>
+                                    <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                    <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                    <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
+                                    <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                    <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
+                                <?php } ?>
                                 <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
                                 <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
                                 <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>">
+                                <input style="display: none;" name="campaign_group_id" type="text" value="<?php echo isset($campaign_id) ? $campaign_id : ''; ?>"/>
                                 <p><input type="submit" class="_btn" value="Đăng ký"></p>
                             </form>
                         </div>
@@ -243,6 +317,9 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
             'phone': {
                 required: true,
                 number: true
+            },
+            'email': {
+                email: true
             }
         },
         messages: {
@@ -251,7 +328,10 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
             },
             'phone': {
                 required: 'Hãy nhập',
-                number: 'Hãy nhập đúng định dạng',
+                number: 'Hãy nhập đúng định dạng'
+            },
+            'email': {
+                email: 'Hãy nhập đúng định dạng email'
             }
 
         },
@@ -263,12 +343,13 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    if (data == 'true') {
-                        window.location.href = X_url;
-                        return false;
-                    } else {
-                        return false;
-                    }
+                    window.location.href = X_url;
+                    // if (data == 'true') {
+                    //     window.location.href = X_url;
+                    //     return false;
+                    // } else {
+                    //     return false;
+                    // }
                 }
             });
             return false;
@@ -283,6 +364,9 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
             'phone': {
                 required: true,
                 number: true
+            },
+            'email': {
+                email: true
             }
         },
         messages: {
@@ -292,6 +376,9 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
             'phone': {
                 required: 'Hãy nhập',
                 number: 'Hãy nhập đúng định dạng'
+            },
+            'email': {
+                email: 'Hãy nhập đúng định dạng email'
             }
         },
         submitHandler: function (form) {
@@ -302,12 +389,13 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    if (data == 'true') {
                         window.location.href = X_url;
-                        return false;
-                    } else {
-                        return false;
-                    }
+                    // if (data == 'true') {
+                    //     window.location.href = X_url;
+                    //     return false;
+                    // } else {
+                    //     return false;
+                    // }
                 }
             });
             return false;

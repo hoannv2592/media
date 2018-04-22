@@ -71,18 +71,13 @@ $(function () {
         "scrollX": false,
         responsive: true,
         "columns": [
+            { "width": "0.1%" },
+            { "width": "3%" },
+            { "width": "2%" },
             { "width": "1%" },
-            { "width": "8%" },
-            { "width": "8%" },
-            { "width": "8%" },
-            { "width": "8%" },
-            { "width": "8%"},
-            { "width": "8%"},
-            { "width": "8%"},
-            { "width": "8%"},
-            { "width": "8%"},
-            { "width": "8%"},
-            { "width": "10%" }
+            { "width": "3%" },
+            { "width": "1%"},
+            { "width": "10%"}
         ],
         "language": {
             "lengthMenu": "Display _MENU_ records per page",

@@ -21,108 +21,108 @@ $title_connect_normal = isset($infor_devices->title_connect) ? $infor_devices->t
 $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_isexit_partner : '2';
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
     if ($voucher_flag == 1) {
-        if ($flag_check_isexit_partner == 1) {
+        $this->layout = 'voucher_tow';
+    } else {
+        if ($flag_client_mac == 1) {
             $this->layout = 'voucher_one';
         } else {
-            $this->layout = 'voucher_tow';
-        } ?>
-    <?php } else {
-        if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) {
-            if ($langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
-                if ($flag_check_isexit_partner == 1) {
-                    $this->layout = 'popup_one';
-                } else {
-                    $this->layout = 'popup_tow';
-                }
-            } else if ($langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
-                $this->layout = 'password';
-            } else if ($langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
-                $this->layout = 'facebook';
-            } else { ?>
+            if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) {
+                if ($langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
+                    if ($flag_check_isexit_partner == 1) {
+                        $this->layout = 'popup_one';
+                    } else {
+                        $this->layout = 'popup_tow';
+                    }
+                } else if ($langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
+                    $this->layout = 'password';
+                } else if ($langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
+                    $this->layout = 'facebook';
+                } else { ?>
+                    <?php $this->layout = 'demo'; ?>
+                    <body class="login-page">
+                    <div class="login-box">
+                        <div class="logo">
+                            <a href="javascript:void(0);"><b>WIFI</b></a>
+                            <small>Demo by wifi - media</small>
+                        </div>
+                        <div class="card">
+                            <div class="body">
+                                <div class="msg"></div>
+                                <div class="">
+                                    <div class="form-line"></div>
+                                </div>
+                                <div class="">
+                                    <div class="form-line"></div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-xs-6 col-xs-offset-3">
+                                        <a href="<?php echo $infor_devices->auth_target; ?>"
+                                           class="btn btn-lg btn-block bg-pink waves-effect">Connect to wifi</a>
+                                    </div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-xs-6 col-xs-offset-3">
+                                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($infor_devices->id) . '/' . UrlUtil::_encodeUrl($infor_devices->user_id)]); ?>"
+                                           class="btn btn-lg btn-block bg-purple waves-effect">Setting quảng cáo</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </body>
+                <?php }
+            } else {
+                if ($langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
+                    $this->layout = 'password';
+                } elseif ($langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
+                    $this->layout = 'facebook';
+                } elseif ($langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
+                    if ($flag_check_isexit_partner == 1) {
+                        $this->layout = 'popup_one';
+                    } else {
+                        $this->layout = 'popup_tow';
+                    }
+                } else { ?>
                 <?php $this->layout = 'demo'; ?>
-                <body class="login-page">
-                <div class="login-box">
-                    <div class="logo">
-                        <a href="javascript:void(0);"><b>WIFI</b></a>
-                        <small>Demo by wifi - media</small>
-                    </div>
-                    <div class="card">
-                        <div class="body">
-                            <div class="msg"></div>
-                            <div class="">
-                                <div class="form-line"></div>
-                            </div>
-                            <div class="">
-                                <div class="form-line"></div>
-                            </div>
-                            <div class="row ">
-                                <div class="col-xs-6 col-xs-offset-3">
-                                    <a href="<?php echo $infor_devices->auth_target; ?>"
-                                       class="btn btn-lg btn-block bg-pink waves-effect">Connect to wifi</a>
-                                </div>
-                            </div>
-                            <div class="row ">
-                                <div class="col-xs-6 col-xs-offset-3">
-                                    <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($infor_devices->id) . '/' . UrlUtil::_encodeUrl($infor_devices->user_id)]); ?>"
-                                       class="btn btn-lg btn-block bg-purple waves-effect">Setting quảng cáo</a>
-                                </div>
-                            </div>
+                    <body class="login-page">
+                    <div class="login-box">
+                        <div class="logo">
+                            <a href="javascript:void(0);"><b>WIFI</b></a>
+                            <small>Demo by wifi - media</small>
                         </div>
-                    </div>
-                </div>
-                </body>
-            <?php }
-        } else {
-            if ($langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
-                $this->layout = 'password';
-            } elseif ($langdingpage_id == \App\Model\Entity\Device::LANDING_TOW) {
-                $this->layout = 'facebook';
-            } elseif ($langdingpage_id == \App\Model\Entity\Device::LANDING_THREE) {
-                if ($flag_check_isexit_partner == 1) {
-                    $this->layout = 'popup_one';
-                } else {
-                    $this->layout = 'popup_tow';
-                }
-            } else { ?>
-            <?php $this->layout = 'demo'; ?>
-                <body class="login-page">
-                <div class="login-box">
-                    <div class="logo">
-                        <a href="javascript:void(0);"><b>WIFI</b></a>
-                        <small>Demo by wifi - media</small>
-                    </div>
-                    <div class="card">
-                        <div class="body">
-                            <div class="msg"></div>
-                            <div class="">
-                                <div class="form-line"></div>
-                            </div>
-                            <div class="">
-                                <div class="form-line"></div>
-                            </div>
-                            <div class="row ">
-                                <div class="col-xs-6 col-xs-offset-3">
+                        <div class="card">
+                            <div class="body">
+                                <div class="msg"></div>
+                                <div class="">
+                                    <div class="form-line"></div>
+                                </div>
+                                <div class="">
+                                    <div class="form-line"></div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-xs-6 col-xs-offset-3">
 
-                                    <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
-                                        <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                        <input type="hidden" name="popup" value="true"/>
-                                        <input style="display: none;" name="username" type="text" value="wifimedia"/>
-                                        <input style="display: none;" name="password" type="password" value="wifimedia"/>
-                                        <input style="width: 100%" type="submit" value="Connect to wifi" class="btn btn-lg btn-block bg-pink waves-effect">
-                                    </form>
+                                        <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                                            <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                            <input type="hidden" name="popup" value="true"/>
+                                            <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                            <input style="display: none;" name="password" type="password" value="wifimedia"/>
+                                            <input style="width: 100%" type="submit" value="Connect to wifi" class="btn btn-lg btn-block bg-pink waves-effect">
+                                        </form>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="row ">
-                                <div class="col-xs-6 col-xs-offset-3">
-                                    <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc_mirkotic' . '/' . UrlUtil::_encodeUrl($infor_devices->id) . '/' . UrlUtil::_encodeUrl($infor_devices->user_id)]); ?>"
-                                       class="btn btn-lg btn-block bg-purple waves-effect">Setting quảng cáo</a>
+                                <div class="row ">
+                                    <div class="col-xs-6 col-xs-offset-3">
+                                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc_mirkotic' . '/' . UrlUtil::_encodeUrl($infor_devices->id) . '/' . UrlUtil::_encodeUrl($infor_devices->user_id)]); ?>"
+                                           class="btn btn-lg btn-block bg-purple waves-effect">Setting quảng cáo</a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                </body>
-            <?php }
+                    </body>
+                <?php }
+            }
         }
     }
     ?>

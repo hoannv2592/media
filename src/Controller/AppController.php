@@ -24,6 +24,7 @@ use Cake\Test\TestCase\I18n\PluralRulesTest;
 use Cake\Utility\Inflector;
 use Cake\Routing\Exception\MissingControllerException;
 use Cake\Datasource\ConnectionManager;
+use Datetime;
 
 /**
  * Application Controller
@@ -67,7 +68,7 @@ class AppController extends Controller
                 ]
             ],
             'loginRedirect' => [
-                'controller' => 'Users',
+                'controller' => 'Devices',
                 'action' => 'index'
             ],
             'logoutRedirect' => [
@@ -176,11 +177,21 @@ class AppController extends Controller
         if ($this->Auth->user()) {
             $this->set('userData', $this->Auth->user());
         }
+        if ($controller != 'Partners') {
+            $this->request->session()->delete('conditions');
+            $this->request->session()->delete('data_search');
+        }
+        if ($param['action'] != 'seviceDetail') {
+            $this->request->session()->delete('services');
+            $this->request->session()->delete('data_search_service_group');
+        }
+        if ($controller != 'Devices') {
+            $this->request->session()->delete('devive_name');
+            $this->request->session()->delete('data_search_device');
+        }
         if (!$this->Auth->user()) {
             $this->Auth->config('authError', false);
         }
-
-
         switch ($this->name) {
             case 'Devices':
                 $this->Auth->allow([
@@ -190,7 +201,8 @@ class AppController extends Controller
                     'viewQcVoucher',
                     'detailCampaig',
                     'addLogVoucher',
-                    'addLogPartner'
+                    'addLogPartner',
+                    'adv'
                 ]);
                 break;
         }
@@ -333,5 +345,37 @@ class AppController extends Controller
         }
 
         return $flag_voucher;
+    }
+
+    public function getAuth($auth_taget = null, $link = null)
+    {
+        $split = explode('?redir=', $auth_taget);
+        $all_info = $split[1];
+        $link_split = explode('&tok=', $all_info);
+        $link_split[0] = $link;
+        $url_buil = implode('&tok=', $link_split);
+        return $split[0].'?redir='.$url_buil;
+    }
+
+    public function array_random_assoc($arr, $num = 1) {
+        $keys = array_keys($arr);
+        shuffle($keys);
+        $r = array();
+        for ($i = 0; $i < $num; $i++) {
+            $r[$keys[$i]] = $arr[$keys[$i]];
+        }
+        return $r;
+    }
+    /**
+     * **************************************
+     *
+     * @param $date
+     * @return bool
+     *
+     * * **************************************
+     */
+    static public function verifyDate($date)
+    {
+        return (DateTime::createFromFormat('Y-m-d', $date) !== false);
     }
 }

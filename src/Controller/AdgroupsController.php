@@ -99,7 +99,6 @@ class AdgroupsController extends AppController
                 $flag = true;
             }
         }
-
         $this->getAllData();
         $this->set(compact('adgroups', 'flag'));
         $this->set('_serialize', ['adgroups']);
@@ -179,6 +178,15 @@ class AdgroupsController extends AppController
         }
         $adgroup = $this->Adgroups->newEntity();
         if ($this->request->is('post')) {
+            if ($this->request->data['tile_congratulations_return'] != '') {
+                $packages = array_values($this->request->data['tile_congratulations_return']);
+                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+            }
+
+            if ($this->request->data['packages'] != '') {
+                $packages = array_values($this->request->data['packages']);
+                $this->request->data['packages'] = json_encode($packages);
+            }
             $listNameDevice = ($this->getNameDevice($this->request->getData()['device_id']));
             $devices = $this->Devices->find()
                 ->where(['id IN' => $this->request->getData()['device_id']])->select(['id'])
@@ -246,6 +254,8 @@ class AdgroupsController extends AppController
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
+                'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
+                'type_adv' => 1
             );
 
             $device_group = $this->DeviceGroups->newEntity();
@@ -267,6 +277,8 @@ class AdgroupsController extends AppController
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
+                'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
+                'type_adv' => 1
             );
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             $adgroup->delete_flag = UN_DELETED;
@@ -277,7 +289,7 @@ class AdgroupsController extends AppController
                     //todo update data devices add to group
                     $device_adgroup = array(
                         'adgroup_id' => $group_id,
-                        'user_id' => $data_group['user_id_group']
+//                        'user_id' => $data_group['user_id_group']
                     );
                     $this->publishall($result_id_devices, $device_adgroup);
                     $device_group->adgroup_id = $group_id;
@@ -515,7 +527,6 @@ class AdgroupsController extends AppController
         $user = $this->Auth->user();
         $this->getAllData();
         $adgroup = $this->Adgroups->get($id);
-
         $groups = $this->Adgroups->find()
             ->select(['id', 'device_id'])
             ->where(['delete_flag !=' => DELETED])
@@ -533,6 +544,7 @@ class AdgroupsController extends AppController
             foreach ($list_device_id as $k => $vl) {
                 $device_id[] = json_decode($vl);
             }
+            $device_list_id = json_decode($adgroup['device_id']);
             if (!empty($device_id)) {
                 $merged = call_user_func_array('array_merge', $device_id);
                 if ($user['role'] == User::ROLE_ONE) {
@@ -542,9 +554,9 @@ class AdgroupsController extends AppController
                     );
                 } else {
                     $conditions = array(
-                        'id NOT IN' => $merged,
+//                        'id NOT IN' => $merged,
                         'delete_flag !=' => DELETED,
-                        'user_id' => $user['id']
+                        'id IN' => $device_list_id
                     );
                 }
                 $devices = $this->Devices->find('all')
@@ -559,7 +571,7 @@ class AdgroupsController extends AppController
                 } else {
                     $conditions = array(
                         'Devices.delete_flag !=' => DELETED,
-                        'user_id' => $user['id']
+                        'id IN' => $device_list_id
                     );
                 }
                 $devices = $this->Devices->find()
@@ -593,6 +605,14 @@ class AdgroupsController extends AppController
             ->select(['id'])->first()->toArray();
         $before_device = json_decode($adgroup->device_id);
         if ($this->request->is('post')) {
+            if ($this->request->data['tile_congratulations_return'] != '') {
+                $packages = array_values($this->request->data['tile_congratulations_return']);
+                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+            }
+            if ($this->request->data['packages'] != '') {
+                $packages = array_values($this->request->data['packages']);
+                $this->request->data['packages'] = json_encode($packages);
+            }
             $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
             $data_group = array(
                 'device_name' => $listUserid,
@@ -604,8 +624,11 @@ class AdgroupsController extends AppController
                 'apt_device_number' => $this->request->getData()['apt_device_number'],
                 'address' => $this->request->getData()['address'],
                 'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
+                'title_campaign' => isset($this->request->data['title_campaign']) ? $this->request->data['title_campaign']:'',
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
+                'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
+                'type_adv' => 1
             );
 
             if (!empty($this->request->data['logo_image']['error'] != 4)) {
@@ -665,7 +688,10 @@ class AdgroupsController extends AppController
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'path_logo' => isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'',
                 'image_logo' => isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:'',
+                'title_campaign' => isset($this->request->data['title_campaign']) ? $this->request->data['title_campaign']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
+                'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
+                'type_adv' => 1
             );
             if ($user['role'] == User::ROLE_ONE) {
                 $data_group['user_id_group'] = isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'';
@@ -684,7 +710,7 @@ class AdgroupsController extends AppController
             $result_id_devices = $this->request->getData()['device_id'];
             $device_adgroup = array(
                 'adgroup_id' => $id,
-                'user_id' => $device_group['user_id_group']
+                //'user_id' => $device_group['user_id_group']
             );
             $this->publishall($result_id_devices, $device_adgroup);
             $this->removeAdgroupIdDevice($list_remove_device_id);
@@ -728,15 +754,15 @@ class AdgroupsController extends AppController
                         return $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
+                        return $this->redirect(['action' => 'detailGroup'.'/'.\UrlUtil::_encodeUrl($id)]);
                     }
                 } else {
                     $conn->rollback();
-                    return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
+                    return $this->redirect(['action' => 'detailGroup'.'/'.\UrlUtil::_encodeUrl($id)]);
                 }
             } else {
                 $conn->rollback();
-                return $this->redirect(['action' => 'edit'.'/'.\UrlUtil::_encodeUrl($id)]);
+                return $this->redirect(['action' => 'detailGroup'.'/'.\UrlUtil::_encodeUrl($id)]);
             }
         }
         $apt_device_number = $this->radompassWord();

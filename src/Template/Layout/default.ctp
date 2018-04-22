@@ -51,7 +51,13 @@ $cakeDescription = 'Media ';
         'chosen',
         'bootstrap-datetimepicker',
         'daterangepicker',
-
+        'daterangepicker.min',
+        'font-awesome.min',
+        'fileinput/fileinput',
+        'chartist/css/chartist.min',
+        'chartist/css/components',
+        'core.css',
+        'simplePagination',
     )) ?>
     <?= $this->Html->script(array(
         'jquery.min',
@@ -73,7 +79,18 @@ $cakeDescription = 'Media ';
         'jquery.multi-select',
         'bootstrap-datetimepicker',
         'moment',
-        'daterangepicker'
+        'daterangepicker',
+        'jquery.daterangepicker',
+        'fileinput/fileinput',
+        'fileinput/themes/explorer-fa/theme',
+        'fileinput/popper.min',
+        'fileinput/sortable',
+        'fileinput/locales/fr',
+        'fileinput/locales/es',
+        'fileinput/themes/explorer-fa/theme',
+        'fileinput/themes/fa/theme',
+        'jquery.simplePagination',
+
     )) ?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
@@ -114,14 +131,15 @@ $cakeDescription = 'Media ';
                 <li class="dropdown">
                     <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown" role="button"
                        aria-haspopup="true" aria-expanded="false">
-                        <?php echo $userData['email']; ?>
+                        <?php echo isset($userData['email']) ? $userData['email']: 'Demo'; ?>
                     </a>
+                    <?php $id = isset($userData['id']) ? $userData['id'] :'1'?>
                     <ul class="dropdown-menu pull-right">
                         <li>
-                            <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "change_password" . "/" . UrlUtil::_encodeUrl($userData['id'])]); ?>">Đổi
+                            <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "change_password" . "/" . UrlUtil::_encodeUrl($id)]); ?>">Đổi
                                 mật khẩu</a></li>
                         <li>
-                            <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user" . "/" . UrlUtil::_encodeUrl($userData['id'])]); ?>">Thông
+                            <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "profile_user" . "/" . UrlUtil::_encodeUrl($id)]); ?>">Thông
                                 tin acount</a></li>
                     </ul>
                 </li>
@@ -140,17 +158,7 @@ $cakeDescription = 'Media ';
     <aside id="leftsidebar" class="sidebar">
         <!-- Menu -->
         <div class="menu">
-            <ul class="list">
-                <?php if ($controller == 'Users') { ?>
-            <li class="left_menu active ac">
-            <?php } else { ?>
-                <li class="left_menu ac">
-                    <?php } ?>
-                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>">
-                        <i class="material-icons">supervisor_account</i>
-                        <span>Quản lý người dùng</span>
-                    </a>
-                </li>
+            <ul class="list" style="margin-top: 10px">
                 <?php if ($controller == 'Devices') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
@@ -162,6 +170,17 @@ $cakeDescription = 'Media ';
                         <span>Quản lý thiết bị</span>
                     </a>
                 </li>
+                <?php if ($controller == 'Users') { ?>
+            <li class="left_menu active ac">
+            <?php } else { ?>
+                <li class="left_menu ac">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "users", "action" => "index"]); ?>">
+                        <i class="material-icons">supervisor_account</i>
+                        <span>Quản lý người dùng</span>
+                    </a>
+                </li>
+
                 <?php if ($controller == 'Adgroups') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
@@ -178,7 +197,7 @@ $cakeDescription = 'Media ';
                 <li class="left_menu">
                     <?php } ?>
                     <a href="<?php echo $this->Url->build(["controller" => "CampaignGroups", "action" => "index"]); ?>">
-                        <i class="material-icons">trending_up</i>
+                        <i class="material-icons">adjust</i>
                         <span>Nhóm chiến dịch</span>
                     </a>
                 </li>
@@ -202,6 +221,16 @@ $cakeDescription = 'Media ';
                         <span>Danh sách khách hàng</span>
                     </a>
                 </li>
+                <?php if ($controller == 'Partners') { ?>
+            <li class="left_menu active ">
+            <?php } else { ?>
+                <li class="left_menu">
+                    <?php } ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "Facebooks", "action" => "index"]); ?>">
+                        <i class="material-icons">account_box</i>
+                        <span>Báo cáo facebook</span>
+                    </a>
+                </li>
                 <?php if ($controller == 'ServiceGroups') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
@@ -212,16 +241,16 @@ $cakeDescription = 'Media ';
                         <span>Chăm sóc khách hàng</span>
                     </a>
                 </li>
-                <?php if ($controller == 'AdgroupChangeHistories') { ?>
-            <li class="left_menu active ">
-            <?php } else { ?>
-                <li class="left_menu">
-                    <?php } ?>
-                    <a href="<?php echo $this->Url->build(["controller" => "AdgroupChangeHistories", "action" => "index"]); ?>">
-                        <i class="material-icons">history</i>
-                        <span>History nhóm thiết bị</span>
-                    </a>
-                </li>
+<!--                --><?php //if ($controller == 'AdgroupChangeHistories') { ?>
+<!--            <li class="left_menu active ">-->
+<!--            --><?php //} else { ?>
+<!--                <li class="left_menu">-->
+<!--                    --><?php //} ?>
+<!--                    <a href="--><?php //echo $this->Url->build(["controller" => "AdgroupChangeHistories", "action" => "index"]); ?><!--">-->
+<!--                        <i class="material-icons">history</i>-->
+<!--                        <span>History nhóm thiết bị</span>-->
+<!--                    </a>-->
+<!--                </li>-->
                 <?php if ($controller == 'Landingpages') { ?>
             <li class="left_menu active ">
             <?php } else { ?>

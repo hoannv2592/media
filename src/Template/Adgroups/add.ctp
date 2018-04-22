@@ -107,6 +107,33 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                             </div>
                             </div>
                         </div>
+                        <div class="hiddenccc">
+                            <div class="form-group">
+                                <div class="form-line">
+                                    <?php
+                                    $packages = isset($device->packages) ? json_decode($device->packages):'';
+                                    echo $this->Form->control('packages', [
+                                        'type' => 'select',
+                                        'multiple' => 'checkbox',
+                                        'label' => false,
+                                        'options' => [
+                                            ['value' => 1, 'text' => __('Họ và tên')],
+                                            ['value' => 2, 'text' => __('Ngày sinh')],
+                                            ['value' => 3, 'text' => __('Số điện thoại')],
+                                            ['value' => 4, 'text' => __('Địa chỉ')],
+                                            ['value' => 5, 'text' => __('Địa chỉ email')]
+                                        ],
+                                        'templates' => [
+                                            'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                            'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                        ],
+                                        'value' => $packages
+                                    ]);
+                                    ?>
+                                    <div id="check_error"></div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="form-group" id="end_show">
                             <div class="form-line">
                                 <?php $tile_name = isset($adgroup->tile_name) ? ($adgroup->tile_name):'' ?>
@@ -128,35 +155,53 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                     'class' => 'form-control',
                                     'id' => 'slogan',
                                     'value' => $address,
-                                    'placeholder' => "Điền địa chỉ nhóm thiết bị.."
                                 ));
                                 ?>
                             </div>
                         </div>
-                        <div class="form-group">
+
+<!--                        <div class="form-group">-->
+<!--                            <div class="form-line">-->
+<!--                                --><?php //echo $this->Form->control('tile_congratulations_return', array(
+//                                    'label' => 'Tiêu đề chúc mừng kết nối lại',
+//                                    'class' => 'form-control',
+//                                    'value' => $tile_congratulations_return,
+//                                ));
+//                                ?>
+<!--                            </div>-->
+<!--                        </div>-->
+                        <?php $tile_congratulations_return = isset($adgroup->tile_congratulations_return) ? ($adgroup->tile_congratulations_return):'' ?>
+                        <div class="form-group" style="margin-bottom: 10px !important;">
                             <div class="form-line">
-                                <?php $tile_congratulations_return = isset($adgroup->tile_congratulations_return) ? ($adgroup->tile_congratulations_return):'' ?>
-                                <?php echo $this->Form->control('tile_congratulations_return', array(
-                                    'label' => 'Tile congratulations return',
-                                    'class' => 'form-control',
-                                    'value' => $tile_congratulations_return,
-                                    'placeholder' => 'Tile congratulations return..'
-                                ));
-                                ?>
-                                <div class="help-info">Tile congratulations return</div>
+                                <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                <input name="tile_congratulations_return[]"
+                                       class="form-control valid" id="tile-congratulations-return"
+                                       value="<?= $tile_congratulations_return ?>" aria-invalid="false" type="text" />
                             </div>
+                            <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
                         </div>
+                        <div class="add"></div>
                         <div class="form-group">
                             <div class="form-line">
                                 <?php $title_connect = isset($adgroup->title_connect) ? ($adgroup->title_connect):'' ?>
                                 <?php echo $this->Form->control('title_connect', array(
-                                    'label' => 'Title button connect',
+                                    'label' => 'Tiêu đề button kết nối',
                                     'class' => 'form-control',
                                     'value' => $title_connect,
-                                    'placeholder' => 'Title button connect..'
                                 ));
                                 ?>
-                                <div class="help-info">Title_connect</div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="form-line">
+                                <?php
+                                $title_campaign = isset($adgroup->title_campaign) ? ($adgroup->title_campaign):'' ?>
+                                <?php echo $this->Form->control('title_campaign', array(
+                                    'label' => 'Tiêu đề button khảo sát',
+                                    'class' => 'form-control',
+                                    'value' => $title_campaign,
+                                ));
+                                ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -170,7 +215,7 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                         '2' => 'Không hiển thị'
                                     ],
                                     'empty' => '--- Chọn hiển thị ---',
-                                    'label'=> 'Setting hidden button connect-snow',
+                                    'label'=> 'Cài đặt hiển thị button connect-snow',
                                     'value' => $hidden_connect,
                                     'escape' => false,
                                     'error' => false,
@@ -183,7 +228,6 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                             <label> Logo Image </label>
                             <div class="form-line">
                                 <input type="file" name="logo_image" id="file" value="" class="form-control"/>
-                                <div class="help-info">logo_image</div>
                             </div>
                         </div>
                         <div class="check_pass_device m-t-15">
@@ -212,7 +256,33 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
 </section>
 
 <script type="application/javascript">
+    var y = 1; //initlal text box count
+    var max_fields = 10; //maximum input boxes allowed
+    var wrapper_title = $("div.add"); //Fields wrapper
+    var add_button_title = $("#add_title"); //Add button class
+    $(add_button_title).click(function (e) { //on add file button click
+        e.preventDefault();
+        if (y < max_fields) { //max input file allowed
+            $(wrapper_title).append('<div class="border_add">'+
+                '<div class="form-group" style="margin-bottom: 5px !important;">\n' +
+                '<div class="form-line">\n' +
+                '<div class="input text">' +
+                '<input name="tile_congratulations_return[]" class="form-control valid" aria-invalid="false" type="text"></div>' +
+                '</div>' +
+                '</div>\n' +
+                '<a href="javascript:void(0);" id="delete_bak" class="btn btn-danger waves-effect remove_field_title" style="margin-top: 0;margin-bottom: 10px">Xóa</a>\n' +
+                '</div>'
 
+            );
+            y++; //input file increment
+        }
+    }); //add input box
+    $(wrapper_title).on("click", ".remove_field_title", function (e) { //user click on remove
+        e.preventDefault();
+        $(this).parent('div').remove();
+        $(this).parent('div').remove();
+        y--;
+    });
     $('#select_device').change(function () {
         var val = $(this).val();
         var role = "<?php echo $user_login['role'];?>";
@@ -260,7 +330,8 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                 'apt_device_number': {required: true},
                 'slogan': {required: true},
                 'message': {required: true},
-                "device_id[]": "required"
+                "device_id[]": "required",
+                // 'packages[]': { required: true }
 
             },
             highlight: function (input) {
@@ -284,20 +355,26 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
         var langding = "<?php echo isset($device->langdingpage_id) ? $device->langdingpage_id:'1'; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
     });
     $('.radio-col-grey').change(function () {
         var __val = $(this).val();
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
         } else {
             $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
         }
     });
 </script>

@@ -16,7 +16,14 @@ $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->lang
 $type = isset($infor_devices->type) ? $infor_devices->type : '';
 $tile_congratulations = isset($infor_devices->tile_congratulations) ? $infor_devices->tile_congratulations : 'Chúc mừng bạn đã nhận được voucher Bạn hãy đem hình ảnh này đến quầy thu ngân để được nhận khuyến mại.!';
 echo $this->Html->css('back_end/page2');
-$list_path = explode(',', $infor_devices->path);?>
+$list_path_old = explode(',', $infor_devices->path);
+foreach ($list_path_old as $k =>  $item) {
+    if ($item != '') {
+        $list_path[] = $item;
+    }
+}
+?>
+
 <div class="carousel slide carousel-fade" data-ride="carousel">
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
@@ -50,7 +57,7 @@ $list_path = explode(',', $infor_devices->path);?>
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="logo">
                         <div class="logo__inner">
-                            <?php if (isset($infor_devices->path_logo)) { ?>
+                            <?php if (isset($infor_devices->path_logo) && $infor_devices->path_logo != '') { ?>
                                 <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" alt="logo_image" style="height: 100px;"></a>
                             <?php } else { ?>
                                 <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>
@@ -104,7 +111,7 @@ $list_path = explode(',', $infor_devices->path);?>
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="logo">
                         <div class="logo__inner">
-                            <?php if (isset($infor_devices->path_logo)) { ?>
+                            <?php if (isset($infor_devices->path_logo) && $infor_devices->path_logo != '') { ?>
                                 <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" alt="logo_image" style="height: 100px;"></a>
                             <?php } else { ?>
                                 <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>

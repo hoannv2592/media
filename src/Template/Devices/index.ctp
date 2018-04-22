@@ -2,6 +2,7 @@
 /**
  * @var \App\View\AppView $this
  * @var \App\View\AppView $Adgroups
+ * @var \App\View\AppView $conditions
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $devices
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $userData
  * @var \App\Model\Entity\Device[]|\Cake\Collection\CollectionInterface $action
@@ -14,52 +15,50 @@ $this->assign('title', 'Quản lý thiết bị');
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <div class="card">
                     <div class="header bg-green">
-                        <h2>
-                            Quản lý thiết bị
-                            <small>Description text here...</small>
-                        </h2>
-                        <ul class="header-dropdown m-r-0">
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">info_outline</i>
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:void(0);">
-                                    <i class="material-icons">help_outline</i>
-                                </a>
-                            </li>
-                        </ul>
+                        <h2>Quản lý thiết bị</h2>
                     </div>
                     <div class="body">
-                        <?php if ($userData['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
-                            <div class="button-demo">
-                                <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'add']) ?>"
-                                   class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
+                        <div class="col-md-6" style="margin-bottom: 0 !important; padding-left:0">
+                            <?php echo $this->Form->create('Devices', array(
+                                'id' => 'form_advanced_validation_x',
+                                'type' => 'post'
+                            ));
+                            ?>
+                            <div class="col-md-6" style="padding-left:0">
+                                <b>Tên thiết bị</b>
+                                <div class="input-group" style="margin-bottom: 0px !important;">
+                                    <div class="form-line">
+                                        <?php
+                                        $name = isset($conditions['name']) ? ($conditions['name']):'';
+                                        echo $this->Form->control('name', array(
+                                            'label' => false,
+                                            'class' => 'form-control',
+                                            'value' => $name,
+                                            'required' => false,
+                                            'id' => 'name'
+                                        ));
+                                        ?>
+                                    </div>
+                                </div>
+                                <button class="btn btn-primary waves-effect" id="submit" type="submit">Tìm kiếm</button>
                             </div>
-                        <?php } else { ?>
-                            <a disabled="disabled" href="javascript:void(0);"
-                               class="btn btn-primary waves-effect m-r-20">THÊM MỚI THIẾT BỊ</a>
-                        <?php } ?>
+                            <?= $this->Form->end(); ?>
+                        </div>
+                        <div class="row"></div>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="home">
                                 <?php if (!empty($devices)) { ?>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover dataTable js-exportable_has">
+                                        <table class="table table-bordered table-striped table-hover ">
                                             <thead>
                                             <tr class="bg-blue-grey">
-                                                <th>STT</th>
-                                                <th>Tên thiết bị</th>
-                                                <th>Thời gian online</th>
-                                                <th>Số lượng thiết bị kết nối</th>
-                                                <th>User quản lý</th>
-                                                <th>Nhóm thiết bị</th>
-                                                <th>Mã thiết bị</th>
-                                                <th>Khách hàng sử dụng</th>
-                                                <th>Loại thiết bị</th>
-                                                <th>Loại quảng cáo</th>
-                                                <th>Ngày tạo</th>
-                                                <th>Điều hướng</th>
+                                                <th style="text-align: center">No</th>
+                                                <th>Name</th>
+                                                <th>Code</th>
+                                                <th>Type</th>
+                                                <th>Ad type</th>
+                                                <th>Create</th>
+                                                <th>Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -68,25 +67,12 @@ $this->assign('title', 'Quản lý thiết bị');
                                             foreach ($devices as $key => $device) {
                                                 $count++; ?>
                                                 <tr valign="middle">
-                                                    <td><?php echo $count; ?></td>
-                                                    <td class="advertise font-bold col-cyan">
-                                                        <a href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>"><?php echo h($device->name); ?></a>
-                                                    </td>
-                                                    <td><?php echo isset($device->uptime) ? $device->uptime :'';?></td>
-                                                    <td><?php echo isset($device->num_clients) ? $device->num_clients :'';?></td>
-                                                    <td class="font-bold col-cyan">
-                                                        <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>"><?php echo h($device->user->username); ?></a>
-                                                    </td>
-                                                    <td><?php
-                                                        echo isset($Adgroups[$device->adgroup_id]) ? $Adgroups[$device->adgroup_id]: '';
-                                                        ?></td>
+                                                    <td style="text-align: center"><?php echo $count; ?></td>
+                                                    <td class="advertise font-bold col-cyan"><a href="#" onclick="view_log_partner_histories(<?php echo $device->id; ?>)" data-toggle="modal" data-target="#defaultModal"><?php echo h($device->name); ?></a></td>
                                                     <td><?php echo nl2br($device->apt_key); ?></td>
-                                                    <td> <?php echo isset($device->partners) ? count($device->partners): 0; ?></td>
-                                                    <td> <?php
-                                                        echo isset($device->type) ? \App\Model\Entity\Device::$category[$device->type] : 'Thiết bị thường'; ?>
-                                                    </td>
-                                                    <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : ''; ?></td>
-                                                    <td><?php echo date('d/m/Y H:i', strtotime($device->created)); ?></td>
+                                                    <td><?php echo isset($device->type) ? \App\Model\Entity\Device::$category[$device->type] : 'Thiết bị thường'; ?></td>
+                                                    <td><?php echo isset(\App\Model\Entity\Device::$langding_page[$device->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$device->langdingpage_id] : 'Mặc định'; ?></td>
+                                                    <td><?php echo date('d/m/Y', strtotime($device->modified)); ?></td>
                                                     <td class="delete_advertise" value="<?php echo h($device->id); ?>">
                                                         <div class="button-demo">
                                                             <?php
@@ -101,12 +87,10 @@ $this->assign('title', 'Quản lý thiết bị');
                                                                         QC</a>
                                                                 <?php } else { ?>
                                                                     <a class="btn btn-primary waves-effect"
-                                                                       href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Tạo
-                                                                        QC</a>
+                                                                       href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'set_qc' . '/' . UrlUtil::_encodeUrl($device->id) . '/' . UrlUtil::_encodeUrl($device->user->id)]) ?>">Tạo QC</a>
                                                                 <?php }
-
                                                             } else {
-                                                                if ($device->path != '') { ?>
+                                                                if (!empty($device->device_files)) { ?>
                                                                     <a class="btn btn-success waves-effect"
                                                                        href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'view_qc' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>">Xem
                                                                         QC</a>
@@ -119,14 +103,23 @@ $this->assign('title', 'Quản lý thiết bị');
                                                                         QC</a>
                                                                 <?php } ?>
                                                             <?php } ?>
-                                                            <a class="btn btn-danger waves-effect" data-toggle="modal"
-                                                               data-target="#modal-03">Xóa TB</a>
+                                                            <a class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa TB</a>
                                                         </div>
                                                     </td>
                                                 </tr>
                                             <?php } ?>
                                             </tbody>
                                         </table>
+                                    </div>
+                                    <div class="paginator">
+                                        <ul class="pagination pull-right">
+                                            <?= $this->Paginator->first(__('First')) ?>
+                                            <?= $this->Paginator->prev(__('Previous')) ?>
+                                            <?= $this->Paginator->numbers() ?>
+                                            <?= $this->Paginator->next(__('Next')) ?>
+                                            <?= $this->Paginator->last(__('Last')) ?>
+                                        </ul>
+                                        <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
                                     </div>
                                 <?php } ?>
                             </div>
@@ -137,5 +130,105 @@ $this->assign('title', 'Quản lý thiết bị');
         </div>
     </div>
     </div>
-    <?php echo $this->element('device_groups/get_device_group'); ?>
+    <div class="modal fade" id="modal-03" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                        <div class="header bg-light-blue">
+                            <h2>XÁC NHẬN</h2>
+                            <ul class="header-dropdown m-r--5">
+                                <li class="dropdown">
+                                    <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown"
+                                       role="button" aria-haspopup="true" aria-expanded="false">
+                                        <i class="material-icons">more_vert</i>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="body">
+                            <?php echo $this->Form->create('Devices', array(
+                                'id' => 'form_validation',
+                                'type' => 'post',
+                                'url' => array('controller' => 'Devices', 'action' => 'delete'),
+                                'inputDefaults' => array(
+                                    'label' => false,
+                                    'div' => false
+                                ),
+                                'onsubmit' => "event.returnValue = false; return false;",
+                            ));
+                            ?>
+                            <p>Bạn có chắc chắn muốn xóa thiết bị này không? </p>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary waves-effect" id="submit_delete" type="submit">XÓA THIẾT BỊ
+                                </button>
+                                <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">CLOSE</button>
+                            </div>
+                            <?php echo $this->Form->end(); ?>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="application/javascript">
+        var id;
+        $('.delete_advertise').click(function () {
+            id = $(this).attr('value');
+            $('#submit_delete').click(function () {
+                var url = "<?php echo URL_DELETE_APT; ?>";
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {id: id},
+                    success: function (response) {
+                        if (response) {
+                            window.location.reload();
+                        } else {
+                            alert_message('Đã có lỗi xảy ra.vui lòng thử lại');
+                            return false;
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+    <div class="modal" id="defaultModal" tabindex="-1" role="dialog">
+        <?php echo $this->element('device_groups/modal-02'); ?>
+    </div>
 </section>
+<script type="application/javascript">
+    view_log_partner_histories = function (id) {
+        $.ajax({
+            url: '/devices/loadLogPartnerHistories',
+            type: 'POST',
+            dataType: 'html',
+            data: {
+                id: id
+            },
+            success: function (response) {
+                $('#defaultModal').html(response);
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+            }
+        });
+    };
+
+</script>
+<style>
+    .pagination > .disabled > a, .pagination > .disabled > a:focus, .pagination > .disabled > a:hover, .pagination > .disabled > span, .pagination > .disabled > span:focus, .pagination > .disabled > span:hover {
+        color: #777;
+        cursor: not-allowed;
+        background-color: #fff !important;
+        border-color: #ddd;
+    }
+    .desc {
+        float: right;
+    }
+    th>a {
+        float: right;
+    }
+</style>

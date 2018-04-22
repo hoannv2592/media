@@ -10,7 +10,7 @@
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                 <ol class="breadcrumb breadcrumb-bg-blue-grey">
                     <li>
-                        <a href="<?php echo $this->Url->build(['controller' => 'Reports', 'action' => 'index']);?>">
+                        <a href="<?php echo $this->Url->build(['controller' => 'Reports', 'action' => 'index']);?>" style="margin-left: 10px;">
                             <i class="material-icons">home</i> Trang chủ
                         </a>
                     </li>
@@ -41,8 +41,7 @@
                             <?php
                                 foreach ($list_campaign as $k => $vl) { ?>
                                     <a href="<?php echo $this->Url->build(['controller' => 'Reports', 'action' => 'report_detail'.'/'. UrlUtil::_encodeUrl($vl->id)]) ?>" class="list-group-item"><?php echo isset($vl->name) ? $vl->name : ''; ?><span class="badge bg-pink">
-                                            <?php $number_partner = count($vl->partner_vouchers);
-                                            echo $number_partner .'/'. $vl->number_voucher ;?> new
+                                            <?php echo $vl->number_voucher ;?>
                                         </span>
                                     </a>
                             <?php } ?>
