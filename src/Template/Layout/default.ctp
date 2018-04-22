@@ -221,7 +221,7 @@ $cakeDescription = 'Media ';
                         <span>Danh sách khách hàng</span>
                     </a>
                 </li>
-                <?php if ($controller == 'Partners') { ?>
+                <?php if ($controller == 'Facebooks') { ?>
             <li class="left_menu active ">
             <?php } else { ?>
                 <li class="left_menu">
