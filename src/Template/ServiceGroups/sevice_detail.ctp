@@ -253,39 +253,6 @@
         </div>
     </div>
 </section>
-<style>
-    .pagination > .disabled > a, .pagination > .disabled > a:focus, .pagination > .disabled > a:hover, .pagination > .disabled > span, .pagination > .disabled > span:focus, .pagination > .disabled > span:hover {
-        color: #777;
-        cursor: not-allowed;
-        background-color: #fff !important;
-        border-color: #ddd;
-    }
-    .desc {
-        float: right;
-    }
-    th>a {
-        float: right;
-    }
-    .label{
-        font-weight: normal !important;
-    }
-    #select{
-        margin-bottom: 0px !important;
-        margin-left: -10px !important;
-    }
-    .storke_1{
-        border: 2px solid #4489e4;
-    }
-    .storke_2{
-        border: 2px solid #f96a74;
-    }
-    .storke_3 {
-        border: 2px solid #ffa91c;
-    }
-    .storke_4{
-        border: 2px solid #32c861;
-    }
-</style>
 <?php
 echo $this->Html->script([
     'chartist/js/chartist.min',
@@ -332,6 +299,10 @@ echo $this->Html->script([
             ]
         },
         {
+            fullWidth: true,
+            chartPadding: {
+                right: 40
+            },
             low: 0,
             showArea: false,
             plugins: [

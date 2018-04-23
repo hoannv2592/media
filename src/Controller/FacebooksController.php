@@ -35,39 +35,47 @@ class FacebooksController extends AppController
         $current = date('Y-m-d');
         $get_date = $day_before_ten_day.' to '. $current;
         $list_day = $this->get_label(array($day_before_ten_day, $current));
-        $data_get = array();
+        $list_date = $this->getListDay(array($day_before_ten_day, $current));
         $conditions = array();
         if (isset($_GET) && $_GET != '') {
-            $data_get = $_GET;
-        }
-        if (isset($data_get['date']) && $data_get['date'] != '') {
-            $date = explode(' to ', $data_get['date']);
-            $date_form = $date[0];
-            $date_to = $date[1];
-            $flag_date_to = $this->verifyDate($date_to);
-            $flag_date_form = $this->verifyDate($date_form);
-            if ($flag_date_to) {
-                $date_to = Datetime::createFromFormat('Y-m-d', $date_to)->format('Y-m-d');
-                $conditions['Partners.created <='] = $date_to;
-            }
-            if ($flag_date_form) {
-                $date_form = Datetime::createFromFormat('Y-m-d', $date_form)->format('Y-m-d');
-                $conditions['Partners.created >='] = $date_form;
-            }
-            $list_day = $this->get_label($date);
+            $date_full_current = date('Y-m-d');
+            $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
+            $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('Y-m-d');
+            $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('Y-m-d');
+            $conditions['Partners.created >='] = $date_full_before_ten_day;
+            $conditions['Partners.created <='] = $date_to;
             $data_get['date'] = $date_form.' to '. $date_to;
-        }
-        if (isset($data_get['name']) && $data_get['name'] != '') {
-            $conditions['Partners.name LIKE'] = "%".trim($data_get['name'])."%";
-        }
-        if (isset($data_get['phone']) && $data_get['phone'] != '') {
-            $conditions['Partners.phone'] = trim($data_get['phone']);
-        }
-        if (isset($data_get['device_name']) && $data_get['device_name'] != '') {
-            $conditions['Devices.name LIKE'] = "%".trim($data_get['device_name'])."%";
-        }
-        if (isset($data_get['client_mac']) && $data_get['client_mac'] != '') {
-            $conditions['Partners.client_mac LIKE'] = "%".trim($data_get['client_mac'])."%";
+            if (isset($_GET['date']) && $_GET['date'] != '') {
+                $date = explode(' to ', $_GET['date']);
+                $date_form = $date[0];
+                $date_to = $date[1];
+                $flag_date_to = $this->verifyDate($date_to);
+                $flag_date_form = $this->verifyDate($date_form);
+                if ($flag_date_to) {
+                    $date_to = Datetime::createFromFormat('Y-m-d', $date_to)->format('Y-m-d');
+                    $conditions['Partners.created <='] = $date_to;
+                }
+                if ($flag_date_form) {
+                    $date_form = Datetime::createFromFormat('Y-m-d', $date_form)->format('Y-m-d');
+                    $conditions['Partners.created >='] = $date_form;
+                }
+                $list_day = $this->get_label($date);
+                $list_date = $this->getListDay($date);
+                $data_get['date'] = $date_form.' to '. $date_to;
+            }
+            if (isset($_GET['name']) && $_GET['name'] != '') {
+                $conditions['Partners.name LIKE'] = "%".trim($_GET['name'])."%";
+            }
+            if (isset($_GET['phone']) && $_GET['phone'] != '') {
+                $conditions['Partners.phone'] = trim($_GET['phone']);
+            }
+            if (isset($_GET['device_name']) && $_GET['device_name'] != '') {
+                $conditions['Devices.name LIKE'] = "%".trim($_GET['device_name'])."%";
+            }
+            if (isset($_GET['client_mac']) && $_GET['client_mac'] != '') {
+                $conditions['Partners.client_mac LIKE'] = "%".trim($_GET['client_mac'])."%";
+            }
+            $data_get = $_GET;
         }
         $conditions['Partners.flag_face !='] = 0;
         $conditions['Devices.delete_flag !='] = DELETED;
@@ -93,6 +101,11 @@ class FacebooksController extends AppController
         $count_email_partner = array();
         $list_id_partner_email = array();
         $list_id_partner = array();
+        $old_p = array();
+        $new_p = array();
+        $phone_p = array();
+        $chart_n = array();
+        $email_n = array();
         if (!empty($data)) {
             $partner_email = Hash::combine($data, '{n}.id', '{n}.email', '{n}.created');
             foreach ($partner_email as  $k => $partner) {
@@ -104,10 +117,13 @@ class FacebooksController extends AppController
                         $id_partner[] = $key;
                     }
                 }
-                $count_email_partner[] = count($phone_email);
+                $count_email_partner[$k] = count($phone_email);
                 $list_id_partner_email[] = $id_partner;
             }
-            $list_id_partner_email = call_user_func_array('array_merge', $list_id_partner_email);
+            if (!empty($list_id_partner_email)) {
+                $list_id_partner_email = call_user_func_array('array_merge', $list_id_partner_email);
+                $list_id_partner_email = json_encode($list_id_partner_email);
+            }
             $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
             foreach ($partner_phone as  $k => $partner) {
                 $phone_partner = array();
@@ -118,14 +134,17 @@ class FacebooksController extends AppController
                         $id_partner[] = $key;
                     }
                 }
-                $count_phone_partner[] = count($phone_partner);
+                $count_phone_partner[$k] = count($phone_partner);
                 $list_id_partner[] = $id_partner;
             }
-            $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
+            if (!empty($list_id_partner)) {
+                $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
+                $list_id_partner = json_encode($list_id_partner);
+            }
             $partners = Hash::combine($data, '{n}.id', '{n}.num_clients_connect', '{n}.created');
 
             foreach ($partners as  $k => $partner) {
-                $chart_number_partner[] = count($partner);
+                $chart_number_partner[$k] = count($partner);
                 $old_partner = array();
                 $new_partner = array();
                 foreach ($partner as $key => $val) {
@@ -135,21 +154,47 @@ class FacebooksController extends AppController
                         $new_partner[] = $val;
                     }
                 }
-                $count_old_partner[] = count($old_partner);
-                $count_new_partner[] = count($new_partner);
+                $count_old_partner[$k] = count($old_partner);
+                $count_new_partner[$k] = count($new_partner);
+            }
+
+            foreach ($list_date as $index => $item) {
+                if (!isset($count_old_partner[$item])) {
+                    $old_p[$index] = 0;
+                } else {
+                    $old_p[$index] = $count_old_partner[$item];
+                }
+                if (!isset($count_new_partner[$item])) {
+                    $new_p[$index] = 0;
+                } else {
+                    $new_p[$index] = $count_new_partner[$item];
+                }
+                if (!isset($count_phone_partner[$item])) {
+                    $phone_p[$index] = 0;
+                } else {
+                    $phone_p[$index] = $count_phone_partner[$item];
+                }
+                if (!isset($chart_number_partner[$item])) {
+                    $chart_n[$index] = 0;
+                } else {
+                    $chart_n[$index] = $chart_number_partner[$item];
+                }
+                if (!isset($count_email_partner[$item])) {
+                    $email_n[$index] = 0;
+                } else {
+                    $email_n[$index] = $count_email_partner[$item];
+                }
             }
         }
-        $sum_old_partner        = array_sum($count_old_partner);
-        $sum_new_partner        = array_sum($count_new_partner);
-        $sum_phone_partner      = array_sum($count_phone_partner);
-        $sum_email_partner      = array_sum($count_email_partner);
-        $count_old_partner      = json_encode($count_old_partner);
-        $list_id_partner        = json_encode($list_id_partner);
-        $list_id_partner_email  = json_encode($list_id_partner_email);
-        $count_new_partner      = json_encode($count_new_partner);
-        $count_phone_partner    = json_encode($count_phone_partner);
-        $count_email_partner    = json_encode($count_email_partner);
-        $chart_number_partner   = json_encode($chart_number_partner);
+        $sum_old_partner        = array_sum($old_p);
+        $sum_new_partner        = array_sum($new_p);
+        $sum_phone_partner      = array_sum($phone_p);
+        $sum_email_partner      = array_sum($email_n);
+        $count_old_partner      = json_encode($old_p);
+        $count_new_partner      = json_encode($new_p);
+        $chart_number_partner   = json_encode($chart_n);
+        $count_email_partner    = json_encode($email_n);
+        $count_phone_partner    = json_encode($phone_p);
         $partners = $this->paginate($query, ['limit' => $limit_value])->toArray();
         $this->set(compact(
             'partners',

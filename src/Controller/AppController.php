@@ -379,4 +379,34 @@ class AppController extends Controller
     {
         return (DateTime::createFromFormat('Y-m-d', $date) !== false);
     }
+
+    /**
+     * * **************************************
+     * getListDay method
+     * @param array $date
+     *
+     * @return array
+     *
+     * * **************************************
+     */
+    public function getListDay($date = array())
+    {
+        if ($this->verifyDate($date[0])) {
+            $begin = Datetime::createFromFormat('Y-m-d', $date[0])->format('Y-m-d');
+        } else {
+            $begin = date('Y-m-d', strtotime('-10 days'));
+        }
+        if ($this->verifyDate($date[1])) {
+            $end = Datetime::createFromFormat('Y-m-d', $date[1])->format('Y-m-d');
+        } else {
+            $end = date('Y-m-d');
+        }
+        $begin = new DateTime( $begin );
+        $end   = new DateTime( $end );
+        $list_day = array();
+        for($i = $begin; $i <= $end; $i->modify('+1 day')){
+            $list_day[] = $i->format("Y-m-d");
+        }
+        return $list_day;
+    }
 }

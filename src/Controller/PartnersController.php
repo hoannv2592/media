@@ -50,14 +50,15 @@ class PartnersController extends AppController
         $current = date('Y-m-d');
         $get_date = $day_before_ten_day.' to '. $current;
         $list_day = $this->get_label(array($day_before_ten_day, $current));
+        $list_date = $this->getListDay(array($day_before_ten_day, $current));
         $conditions = array();
         if (isset($_GET) && $_GET != '') {
             $date_full_current = date('Y-m-d');
             $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
+            $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('Y-m-d');
+            $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('Y-m-d');
             $conditions['Partners.created >='] = $date_full_before_ten_day;
-            $conditions['Partners.created <='] = $date_full_current;
-            $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('d-m-Y');
-            $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('d-m-Y');
+            $conditions['Partners.created <='] = $date_to;
             $data_get['date'] = $date_form.' to '. $date_to;
 
             if (isset($_GET['date']) && $_GET['date'] != '') {
@@ -75,6 +76,7 @@ class PartnersController extends AppController
                     $conditions['Partners.created >='] = $date_form;
                 }
                 $list_day = $this->get_label($date);
+                $list_date = $this->getListDay($date);
             }
             if (isset($_GET['name']) && $_GET['name'] != '') {
                 $conditions['Partners.name LIKE'] = "%".trim($_GET['name'])."%";
@@ -106,48 +108,80 @@ class PartnersController extends AppController
             $vl['created'] = date('Y-m-d', strtotime($vl['created']));
             $data[$k] = $vl;
         }
-        $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
-        $count_phone_partner = array();
-        $list_id_partner = array();
-        foreach ($partner_phone as  $k => $partner) {
-            $phone_partner = array();
-            $id_partner = array();
-            foreach ($partner as $key => $val) {
-                if ($val != '') {
-                    $phone_partner[] = $val;
-                    $id_partner[] = $key;
-                }
-            }
-            $count_phone_partner[] = count($phone_partner);
-            $list_id_partner[] = $id_partner;
-        }
-        $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
-        $partners = Hash::combine($data, '{n}.id', '{n}.num_clients_connect', '{n}.created');
+        $old_p = array();
+        $new_p = array();
+        $phone_p = array();
+        $chart_n = array();
         $count_old_partner = array();
         $count_new_partner = array();
         $chart_number_partner = array();
-        foreach ($partners as  $k => $partner) {
-            $chart_number_partner[] = count($partner);
-            $old_partner = array();
-            $new_partner = array();
-            foreach ($partner as $key => $val) {
-                if ($val > 1) {
-                    $old_partner[] = $val;
+        $count_phone_partner = array();
+        $list_id_partner = array();
+        if (!empty($data)) {
+            $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
+            foreach ($partner_phone as  $k => $partner) {
+                $phone_partner = array();
+                $id_partner = array();
+                foreach ($partner as $key => $val) {
+                    if ($val != '') {
+                        $phone_partner[] = $val;
+                        $id_partner[] = $key;
+                    }
+                }
+                $count_phone_partner[$k] = count($phone_partner);
+                $list_id_partner[] = $id_partner;
+            }
+            if (!empty($list_id_partner)) {
+                $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
+                $list_id_partner = json_encode($list_id_partner);
+            }
+            $partners = Hash::combine($data, '{n}.id', '{n}.num_clients_connect', '{n}.created');
+
+            foreach ($partners as  $k => $partner) {
+                $chart_number_partner[$k] = count($partner);
+                $old_partner = array();
+                $new_partner = array();
+                foreach ($partner as $key => $val) {
+                    if ($val > 1) {
+                        $old_partner[] = $val;
+                    } else {
+                        $new_partner[] = $val;
+                    }
+                }
+                $count_old_partner[$k] = count($old_partner);
+                $count_new_partner[$k] = count($new_partner);
+            }
+
+            foreach ($list_date as $index => $item) {
+                if (!isset($count_old_partner[$item])) {
+                    $old_p[$index] = 0;
                 } else {
-                    $new_partner[] = $val;
+                    $old_p[$index] = $count_old_partner[$item];
+                }
+                if (!isset($count_new_partner[$item])) {
+                    $new_p[$index] = 0;
+                } else {
+                    $new_p[$index] = $count_new_partner[$item];
+                }
+                if (!isset($count_phone_partner[$item])) {
+                    $phone_p[$index] = 0;
+                } else {
+                    $phone_p[$index] = $count_phone_partner[$item];
+                }
+                if (!isset($chart_number_partner[$item])) {
+                    $chart_n[$index] = 0;
+                } else {
+                    $chart_n[$index] = $chart_number_partner[$item];
                 }
             }
-            $count_old_partner[] = count($old_partner);
-            $count_new_partner[] = count($new_partner);
         }
-        $sum_old_partner        = array_sum($count_old_partner);
-        $sum_new_partner        = array_sum($count_new_partner);
-        $sum_phone_partner      = array_sum($count_phone_partner);
-        $count_old_partner      = json_encode($count_old_partner);
-        $count_new_partner      = json_encode($count_new_partner);
-        $count_phone_partner    = json_encode($count_phone_partner);
-        $list_id_partner        = json_encode($list_id_partner);
-        $chart_number_partner   = json_encode($chart_number_partner);
+        $sum_old_partner        = array_sum($old_p);
+        $sum_new_partner        = array_sum($new_p);
+        $sum_phone_partner      = array_sum($phone_p);
+        $count_old_partner      = json_encode($old_p);
+        $count_new_partner      = json_encode($new_p);
+        $count_phone_partner    = json_encode($phone_p);
+        $chart_number_partner   = json_encode($chart_n);
         $partners = $this->paginate($query, ['limit' => $limit_value])->toArray();
         $this->set(compact(
             'partners',
