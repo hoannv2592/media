@@ -450,22 +450,23 @@ class CampaignGroupsController extends AppController
             $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
             $this->request->data['device_name'] = $listUserid;
             $this->request->data['device_id'] = json_encode($this->request->getData()['device_id']);
+            $image_logo = '';
+            $path_logo = '';
             if (!empty($this->request->data['logo_image']['error'] != 4)) {
                 $list_file['file'] = $this->request->getData('logo_image');
                 $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
                 $path = $fileOK['urls'][0];
                 $image_up_load = $list_file['file']['name'];
                 if ($path != '') {
-                    $this->request->data['path_logo'] = $path;
+                    $path_logo = $path;
                 }
                 if ($image_up_load != '') {
-                    $this->request->data['image_logo'] = $image_up_load;
+                    $image_logo = $image_up_load;
                 }
                 unset($this->request->data['logo_image']);
             } else {
                 unset($this->request->data['logo_image']);
             }
-
             if (!empty($this->request->data['file'][0]['error'] != 4)) {
                 $new_arr = array();
                 $list_file = $this->request->getData('file');
@@ -491,6 +492,27 @@ class CampaignGroupsController extends AppController
                 unset($this->request->data['file']);
             }
 
+            if (isset($this->request->data['path']) && $this->request->data['path'] != '') {
+                $this->request->data['path'] = $this->request->data['path'].','.$campaign_group->path;
+            } else {
+                $this->request->data['path'] = $campaign_group->path;
+            }
+            if (isset($this->request->data['image_backgroup']) && $this->request->data['image_backgroup'] != '') {
+                $this->request->data['image_backgroup'] = $this->request->data['image_backgroup'].','.$campaign_group->image_backgroup;
+            } else {
+                $this->request->data['image_backgroup'] = $campaign_group->image_backgroup;
+            }
+
+            if (isset($path_logo) && $path_logo != '') {
+                $this->request->data['path_logo'] = $path_logo;
+            } else {
+                $this->request->data['path_logo'] = $campaign_group->path_logo;
+            }
+            if (isset($image_logo) && $image_logo != '') {
+                $this->request->data['logo_image'] = $image_logo.','.$campaign_group->logo_image;
+            } else {
+                $this->request->data['logo_image'] = $campaign_group->logo_image;
+            }
             $list_remove_device_id = array();
             foreach ($before_device as $k => $vl) {
                 if (!in_array($vl, $new_device)) {
@@ -552,4 +574,30 @@ class CampaignGroupsController extends AppController
             return false;
         }
     }
+
+    public function deleteBackgroud()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('Post')) {
+            $post_data = $this->request->getData();
+            $cam = $this->CampaignGroups->find()->where(['id' => $post_data['cp_id'], 'delete_flag !=' => DELETED])->first();
+            $path = $cam['path'];
+            $image_bak = $cam['image_backgroup'];
+            $image_bak = explode(',', $image_bak);
+            $path = explode(',', $path);
+            unset($path[$post_data['id']]);
+            $list = array_values($path);
+            $list_cp_path['path'] = implode(',', $list);
+            $list_cp_path['image_backgroup'] = implode(',', $image_bak);
+            $cam = $this->CampaignGroups->patchEntity($cam, $list_cp_path);
+            if ($this->CampaignGroups->save($cam)) {
+                die(json_encode(true));
+            } else {
+                die(json_encode(false));
+            }
+        } else {
+            die(json_encode(false));
+        }
+    }
 }
+

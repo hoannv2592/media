@@ -89,6 +89,16 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
 <div class="carousel slide carousel-fade" data-ride="carousel">
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
+        <?php
+        if (empty($list_path)) {?>
+            <div class="item active" style="
+                    background: url('/images/bg4.jpg');
+                    -webkit-background-size: cover;
+                    -moz-background-size: cover;
+                    -o-background-size: cover;
+                    background-size: cover;
+                    "></div>
+       <?php  } else { ?>
         <?php foreach ($list_path as $k => $vl) {
             if ($k == 0) { ?>
                 <div class="item active"style="
@@ -107,7 +117,7 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                     background-size: cover;
                     "></div>
             <?php }
-        } ?>
+        } }?>
     </div>
 </div>
 <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">

@@ -82,6 +82,15 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
         <?php
+        if (empty($list_path)) { ?>
+            <div class="item active"style="
+                    background: url('/images/bg4.jpg');
+                    -webkit-background-size: cover;
+                    -moz-background-size: cover;
+                    -o-background-size: cover;
+                    background-size: cover;
+                    "></div>
+        <?php } else {
         foreach ($list_path as $k => $vl) {
 //            if ($vl != '') {
                 if ($k == 0) { ?>
@@ -107,6 +116,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     </div>
                 <?php }
 //            }
+        }
         }?>
     </div>
 </div>

@@ -156,7 +156,7 @@ tr:last-child {
 }
 
 .demo-checkbox label, .demo-radio-button label {
-    min-width: 130px !important;
+    /*min-width: 130px !important;*/
 }
 
 .button-demo .btn {
@@ -247,4 +247,24 @@ th>a {
 
 .ct-label.ct-horizontal.ct-end {
     margin-left: -35px !important;
+}
+
+.file-upload-indicator {
+    display: none;
+}
+
+button.btn.btn-default.btn-secondary.fileinput-upload.fileinput-upload-button {
+    display: none;
+}
+.file-caption.form-control.kv-fileinput-caption {
+    padding: 0.99rem .75rem;
+    line-height: 1.25;
+    height: 37px;
+    color: #495057;
+    background-color: #fff;
+    background-image: none;
+    background-clip: padding-box;
+    border: 1px solid rgba(0,0,0,.15);
+    border-radius: .25rem;
+    transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
 }

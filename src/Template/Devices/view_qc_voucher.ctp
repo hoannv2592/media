@@ -27,25 +27,38 @@ foreach ($list_path_old as $k =>  $item) {
 <div class="carousel slide carousel-fade" data-ride="carousel">
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox">
-        <?php foreach ($list_path as $k => $vl) {
-            if ($k == 0) { ?>
-                <div class="item active"style="
-                        background: url('/<?php echo $vl; ?>');
-                        -webkit-background-size: cover;
-                        -moz-background-size: cover;
-                        -o-background-size: cover;
-                        background-size: cover;
-                        "></div>
-            <?php } else { ?>
-                <div class="item" style="
-                        background: url('/<?php echo $vl; ?>');
-                        -webkit-background-size: cover;
-                        -moz-background-size: cover;
-                        -o-background-size: cover;
-                        background-size: cover;
-                        "></div>
-            <?php }
-        } ?>
+        <?php
+        if (empty($list_path)) { ?>
+            <div class="item active"style="
+                    background: url('/images/bg4.jpg');
+                    -webkit-background-size: cover;
+                    -moz-background-size: cover;
+                    -o-background-size: cover;
+                    background-size: cover;
+                    "></div>
+        <?php } else {
+            foreach ($list_path as $k => $vl) {
+                if ($k == 0) { ?>
+                    <div class="item active"style="
+                            background: url('/<?php echo $vl; ?>');
+                            -webkit-background-size: cover;
+                            -moz-background-size: cover;
+                            -o-background-size: cover;
+                            background-size: cover;
+                            "></div>
+                <?php } else { ?>
+                    <div class="item" style="
+                            background: url('/<?php echo $vl; ?>');
+                            -webkit-background-size: cover;
+                            -moz-background-size: cover;
+                            -o-background-size: cover;
+                            background-size: cover;
+                            "></div>
+                <?php }
+            }
+        }
+
+         ?>
     </div>
 </div>
 <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
