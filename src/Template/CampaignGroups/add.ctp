@@ -136,8 +136,8 @@
                                             'label' => false,
                                             'options' => [
                                                 ['value' => 1, 'text' => __('Họ và tên')],
-                                                ['value' => 2, 'text' => __('Ngày sinh')],
-                                                ['value' => 3, 'text' => __('Số điện thoại')],
+                                                ['value' => 2, 'text' => __('Số điện thoại')],
+                                                ['value' => 3, 'text' => __('Ngày sinh')],
                                                 ['value' => 4, 'text' => __('Địa chỉ')],
                                                 ['value' => 5, 'text' => __('Địa chỉ email')]
                                             ],
