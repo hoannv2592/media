@@ -179,7 +179,6 @@
                                         </div>
                                     </div>
                                     <?php
-                                    $list_id_partner = array();
                                     if (!empty($list_id_partner)) {
                                         $list_id_partner = json_decode($list_id_partner);
                                     }
@@ -201,7 +200,7 @@
                             <table class="table table-bordered table-striped table-hover ">
                                 <thead>
                                 <tr class="bg-blue-grey">
-                                    <th>STT</th>
+                                    <th style="text-align: center">No</th>
                                     <th>Tên khách hàng</th>
                                     <th>Địa chỉ mac</th>
                                     <th>Số điện thoại</th>
@@ -214,10 +213,13 @@
                                 </thead>
                                 <tbody>
                                 <?php
-                                foreach ($partners as $key => $partner) {
+                                $page = $this->Paginator->counter(['format' => __('{{page}}')]);
+                                $count = 0;
+                                $count = ($page - 1) * 10;
+                                foreach ($partners as $key => $partner) { $count++;
                                      ?>
                                         <tr>
-                                            <td><?php echo h($partner['id']); ?></td>
+                                            <td style="text-align: center"><?php echo h($count); ?></td>
                                             <td class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($partner['id'])]) ?>">
                                                     <?php echo h($partner['name']); ?>

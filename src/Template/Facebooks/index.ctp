@@ -177,7 +177,10 @@
                                     </div>
                                     <div class="col-md-12 pull-right">
                                         <div class="">
-                                            <?php $list_id_partner_email = json_decode($list_id_partner_email);
+                                            <?php
+                                            if (!empty($list_id_partner_email)) {
+                                                $list_id_partner_email = json_decode($list_id_partner_email);
+                                            }
                                             if (!empty($list_id_partner)) {
                                                 $list_id_partner_email = json_encode($list_id_partner_email); ?>
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'downloadExcelFace/'.$list_id_partner_email]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có email</a>
@@ -194,55 +197,27 @@
                                 <table class="table table-bordered table-striped table-hover dataTable">
                                     <thead>
                                     <tr class="bg-blue-grey">
-                                        <th scope="col" class="text-center">
-                                            ID
-                                            <?= $this->Paginator->sort('Partners.id', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.id', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Tên khách hàng
-                                            <?= $this->Paginator->sort('Partners.name', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.name', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Địa chỉ mac
-                                            <?= $this->Paginator->sort('Partners.client_mac', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.client_mac', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Số điện thoại
-                                            <?= $this->Paginator->sort('Partners.phone', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.phone', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Ngày sinh
-                                            <?= $this->Paginator->sort('Partners.birthday', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.birthday', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Địa chỉ
-                                            <?= $this->Paginator->sort('Partners.address', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.address', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Email
-                                            <?= $this->Paginator->sort('Partners.address', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.address', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
+                                        <th scope="col" style="text-align: center">No</th>
+                                        <th scope="col">Tên khách hàng</th>
+                                        <th scope="col">Địa chỉ mac</th>
+                                        <th scope="col">Số điện thoại</th>
+                                        <th scope="col">Ngày sinh</th>
+                                        <th scope="col">Địa chỉ</th>
+                                        <th scope="col">Email</th>
                                         <th scope="col">Thời gian truy cập
-                                            <?= $this->Paginator->sort('Partners.modified', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.modified', '▲', ['direction' => 'asc', 'escape' => false]); ?>
+                                        </th><th scope="col">Số lần ghé thăm
                                         </th>
-                                        <th scope="col">Số lần ghé thăm
-                                            <?= $this->Paginator->sort('Partners.num_clients_connect', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Partners.num_clients_connect', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
-                                        <th scope="col">Thiết bị quản lý
-                                            <?= $this->Paginator->sort('Devices.name', '▼', ['direction' => 'desc', 'escape' => false]) ?>
-                                            <?= $this->Paginator->sort('Devices.name', '▲', ['direction' => 'asc', 'escape' => false]); ?>
-                                        </th>
+                                        <th scope="col">Thiết bị quản lý</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <?php
+                                    $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                     $count = 0;
-                                    foreach ($partners as $k => $vl) { ?>
+                                    $count = ($page - 1) * 10;
+                                    foreach ($partners as $k => $vl) { $count++;?>
                                         <tr>
-                                            <td><?php echo h($vl['id']); ?></td>
+                                            <td style="text-align: center"><?php echo h($count); ?></td>
                                             <td class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($vl['id'])]) ?>">
                                                     <?php echo h($vl['name']); ?>
@@ -361,7 +336,11 @@ echo $this->Html->script([
             showArea: false,
             plugins: [
                 Chartist.plugins.tooltip()
-            ]
+            ],
+            fullWidth: true,
+            chartPadding: {
+                right: 40
+            }
         }
     );
     var $chart = $('#line-chart-tooltips');

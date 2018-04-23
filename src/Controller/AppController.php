@@ -196,7 +196,7 @@ class AppController extends Controller
         switch ($this->name) {
             case 'Devices':
                 $this->Auth->allow([
-                    'add', 'viewQc', 'setQc',
+                    'add', 'viewQc',
                     'addNewDevice',
                     'detailGroup',
                     'viewQcVoucher',

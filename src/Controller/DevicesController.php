@@ -83,7 +83,7 @@ class DevicesController extends AppController
             if (isset($_GET['name']) && $_GET['name'] != '') {
                 $conditions['Devices.name LIKE'] = "%".trim($_GET['name'])."%";
             }
-            $name =  $_GET['name'];
+            $name =  isset($_GET['name']) ? $_GET['name'] : '';
         }
         $conditions['Devices.delete_flag !='] = DELETED;
         if ($login['role'] == User::ROLE_ONE) {

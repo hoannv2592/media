@@ -50,6 +50,7 @@ class PartnersController extends AppController
         $current = date('Y-m-d');
         $get_date = $day_before_ten_day.' to '. $current;
         $list_day = $this->get_label(array($day_before_ten_day, $current));
+        $conditions = array();
         if (isset($_GET) && $_GET != '') {
             $date_full_current = date('Y-m-d');
             $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
@@ -89,52 +90,13 @@ class PartnersController extends AppController
             }
             $data_get = $_GET;
         }
-
-//        if ($this->request->is('get')) {
-//            $date_full_current = date('Y-m-d');
-//            $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
-//            $conditions['Partners.created >='] = $date_full_before_ten_day;
-//            $conditions['Partners.created <='] = $date_full_current;
-//            $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('d-m-Y');
-//            $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('d-m-Y');
-//            $data_post['date'] = $date_form.' to '. $date_to;
-//        }
-//        if ($this->request->is('post')) {
-//            $data_post = $this->request->getData();
-//            $conditions = array();
-//            if (isset($data_post['date']) && $data_post['date'] != '') {
-//                $date = explode(' to ', $data_post['date']);
-//                $date_form = $date[0];
-//                $date_to = $date[1];
-//                $date_to = Datetime::createFromFormat('d-m-Y', $date_to)->format('Y-m-d');
-//                $date_form = Datetime::createFromFormat('d-m-Y', $date_form)->format('Y-m-d');
-//                $conditions['Partners.created >='] = $date_form;
-//                $conditions['Partners.created <='] = $date_to;
-//                $list_day = $this->get_label($date);
-//            }
-//            if (isset($data_post['name']) && $data_post['name'] != '') {
-//                $conditions['Partners.name LIKE'] = "%".trim($data_post['name'])."%";
-//            }
-//            if (isset($data_post['phone']) && $data_post['phone'] != '') {
-//                $conditions['Partners.phone'] = trim($data_post['phone']);
-//            }
-//            if (isset($data_post['device_name']) && $data_post['device_name'] != '') {
-//                $conditions['Devices.name LIKE'] = "%".trim($data_post['device_name'])."%";
-//            }
-//            if (isset($data_post['client_mac']) && $data_post['client_mac'] != '') {
-//                $conditions['Partners.client_mac LIKE'] = "%".trim($data_post['client_mac'])."%";
-//            }
-//            $this->request->session()->write('data_search', $conditions);
-//            $conditions = $this->request->session()->read('data_search');
-//        }
-//        $this->request->session()->write('conditions', $data_post);
+        $conditions['Devices.delete_flag !='] = DELETED;
         if ($user['role'] == User::ROLE_ONE) {
-            $conditions['Devices.delete_flag !='] = DELETED;
             $query = $this->Partners->getOders($conditions);
         } else {
-            $device = $this->Devices->find()->where(['user_id' => $user['id']])->select(['id'])->combine('id', 'id')->toArray();
+            $device = $this->Devices->find()->where(['user_id' => $user['id'], 'Devices.delete_flag !=' => 1])->select(['id'])->combine('id', 'id')->toArray();
             if (!empty($device)) {
-                $conditions = array('device_id IN' => $device, 'Devices.delete_flag !=' => 1);
+                $conditions['device_id IN'] = $device;
                 $query = $this->Partners->getOders($conditions);
             }
         }

@@ -36,10 +36,10 @@ class FacebooksController extends AppController
         $get_date = $day_before_ten_day.' to '. $current;
         $list_day = $this->get_label(array($day_before_ten_day, $current));
         $data_get = array();
+        $conditions = array();
         if (isset($_GET) && $_GET != '') {
             $data_get = $_GET;
         }
-        $conditions = array();
         if (isset($data_get['date']) && $data_get['date'] != '') {
             $date = explode(' to ', $data_get['date']);
             $date_form = $date[0];
@@ -70,13 +70,13 @@ class FacebooksController extends AppController
             $conditions['Partners.client_mac LIKE'] = "%".trim($data_get['client_mac'])."%";
         }
         $conditions['Partners.flag_face !='] = 0;
+        $conditions['Devices.delete_flag !='] = DELETED;
         if ($user['role'] == User::ROLE_ONE) {
-            $conditions['Devices.delete_flag !='] = DELETED;
             $query = $this->Partners->getOders($conditions);
         } else {
-            $device = $this->Devices->find()->where(['user_id' => $user['id']])->select(['id'])->combine('id', 'id')->toArray();
+            $device = $this->Devices->find()->where(['user_id' => $user['id'], 'Devices.delete_flag !=' => 1])->select(['id'])->combine('id', 'id')->toArray();
             if (!empty($device)) {
-                $conditions = array('device_id IN' => $device, 'Devices.delete_flag !=' => 1);
+                $conditions['device_id IN'] = $device;
                 $query = $this->Partners->getOders($conditions);
             }
         }

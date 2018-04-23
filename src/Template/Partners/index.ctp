@@ -182,7 +182,11 @@
                                     </div>
                                     <div class="col-md-12 pull-right">
                                         <div class="">
-                                            <?php $list_id_partner = json_decode($list_id_partner);
+
+                                            <?php
+                                            if (!empty($list_id_partner)) {
+                                                $list_id_partner = json_decode($list_id_partner);
+                                            }
                                             if (!empty($list_id_partner)) {
                                                 $list_id_partner = json_encode($list_id_partner); ?>
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'download_excel/'.$list_id_partner]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có số điện thoại</a>
@@ -199,7 +203,7 @@
                                 <table class="table table-bordered table-striped table-hover dataTable">
                                     <thead>
                                     <tr class="bg-blue-grey">
-                                        <th scope="col" class="text-center">ID</th>
+                                        <th scope="col" class="text-center">No</th>
                                         <th scope="col">Tên khách hàng</th>
                                         <th scope="col">Địa chỉ mac</th>
                                         <th scope="col">Số điện thoại</th>
@@ -212,10 +216,12 @@
                                     </thead>
                                     <tbody>
                                     <?php
+                                    $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                     $count = 0;
-                                    foreach ($partners as $k => $vl) { ?>
+                                    $count = ($page - 1) * 10;
+                                    foreach ($partners as $k => $vl) { $count++;?>
                                         <tr>
-                                            <td><?php echo h($vl['id']); ?></td>
+                                            <td style="text-align: center"><?php echo h($count); ?></td>
                                             <td class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($vl['id'])]) ?>">
                                                     <?php echo h($vl['name']); ?>
@@ -328,7 +334,11 @@ echo $this->Html->script([
             showArea: false,
             plugins: [
                 Chartist.plugins.tooltip()
-            ]
+            ],
+            fullWidth: true,
+            chartPadding: {
+                right: 40
+            }
         }
     );
     var $chart = $('#line-chart-tooltips');
