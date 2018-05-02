@@ -55,12 +55,14 @@ class PartnersController extends AppController
         if (isset($_GET) && $_GET != '') {
             $date_full_current = date('Y-m-d');
             $date_full_before_ten_day = date('Y-m-d', strtotime('-10 days'));
-            $date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('Y-m-d');
+            //$date_to = Datetime::createFromFormat('Y-m-d', $date_full_current)->format('Y-m-d');
+            // todo get data search created one day vd: 02/03 ---> 03/03
+            $date_to = strtotime(date("Y-m-d", strtotime($date_full_current))." +1 days ");
+            $date_to = strftime("%Y-%m-%d", $date_to);
             $date_form = Datetime::createFromFormat('Y-m-d', $date_full_before_ten_day)->format('Y-m-d');
             $conditions['Partners.created >='] = $date_full_before_ten_day;
             $conditions['Partners.created <='] = $date_to;
             $data_get['date'] = $date_form.' to '. $date_to;
-
             if (isset($_GET['date']) && $_GET['date'] != '') {
                 $date = explode(' to ', $_GET['date']);
                 $date_form = $date[0];
