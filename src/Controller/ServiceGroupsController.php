@@ -351,6 +351,7 @@ class ServiceGroupsController extends AppController
         }
 
         $list_id_devices = Hash::extract($users['devices'], '{n}.id');
+        $list_devices = Hash::combine($users['devices'], '{n}.id', '{n}.name');
         if (!empty($list_id_devices)) {
             $conditions['device_id IN'] = $list_id_devices;
             $query = $this->Partners->getOders($conditions);
@@ -450,7 +451,8 @@ class ServiceGroupsController extends AppController
             'sum_phone_partner',
             'count_new_partner',
             'count_phone_partner',
-            'chart_number_partner'
+            'chart_number_partner',
+            'list_devices'
         ));
         $this->set('_serialize', ['partners']);
     }

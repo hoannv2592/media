@@ -1,6 +1,5 @@
 <?php
 /**
- * @var $partners
  * @var $list_day
  * @var $data_get
  * @var $get_date
@@ -9,6 +8,7 @@
  * @var $count_new_partner
  * @var $count_phone_partner
  * @var \App\View\AppView $partners
+ * @var $list_devices
  */
 ?>
 <section class="content" xmlns="">
@@ -27,9 +27,7 @@
                 </ol>
                 <div class="card">
                     <div class="header bg-green">
-                        <h2>
-                            Chăm sóc khách hàng
-                        </h2>
+                        <h2>Chăm sóc khách hàng</h2>
                     </div>
                     <div class="body">
                         <div class="demo-masked-input">
@@ -119,6 +117,43 @@
                                         </div>
                                     </div>
                                     <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="sel1">Chọn thiết bị</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="material-icons">devices</i>
+                                                </span>
+                                                <div class="form-line">
+                                                    <select class="form-control" id="sel1" name="device" style="cursor: pointer">
+                                                        <option value="">----</option>
+                                                        <?php foreach ($list_devices as $index => $list_device) { ?>
+                                                            <option value="<?php echo $index; ?>"><?php echo $list_device?></option>
+                                                        <?php } ?>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="sel1">Số lần kết nối</label>
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="material-icons">confirmation_number</i>
+                                                </span>
+                                                <div class="form-line">
+                                                    <select class="form-control" id="sel1" name="number_connect" style="cursor: pointer">
+                                                        <option value="">----</option>
+                                                        <option value="1">Từ 1 đến 5</option>
+                                                        <option value="2">Từ 6 đến 10</option>
+                                                        <option value="3">Từ 11 đến 15</option>
+                                                        <option value="4">Lớn hơn 15</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
                                         <b>Khoảng thời gian</b>
                                         <div class="input-group">
                                             <span class="input-group-addon">
@@ -138,6 +173,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="col-md-12">
                                         <div class=""><button class="btn btn-primary waves-effect" id="submit" type="submit">Tìm kiếm</button> </div>
                                     </div>
