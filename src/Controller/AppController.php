@@ -12,6 +12,7 @@
  * @since     0.2.9
  * @license   https://opensource.org/licenses/mit-license.php MIT License
  */
+
 namespace App\Controller;
 
 use Cake\Controller\Controller;
@@ -55,15 +56,16 @@ class AppController extends Controller
      */
     public function initialize()
     {
+        date_default_timezone_set('Asia/Ho_Chi_Minh');
         parent::initialize();
         $this->loadComponent('RequestHandler');
         $this->loadComponent('Flash');
         $this->loadComponent('PhpExcel');
-		$this->loadComponent('Auth', [
-            'authenticate' =>[
+        $this->loadComponent('Auth', [
+            'authenticate' => [
                 'Form' => [
                     'fields' => [
-                        'username' =>'email',
+                        'username' => 'email',
                         'password' => 'password'
                     ],
                 ]
@@ -118,7 +120,8 @@ class AppController extends Controller
      *
      * @return bool
      */
-    public function checkPerms() {
+    public function checkPerms()
+    {
 
         $action = Inflector::underscore($this->request->getParam('action'));
         $aryAcoAro = Configure::read('acl.aco.aro');
@@ -131,18 +134,18 @@ class AppController extends Controller
             throw new MissingControllerException('Controller not found');
         }
 
-        if(!empty($this->Auth->user())){
+        if (!empty($this->Auth->user())) {
             $user_type = $this->Auth->user()['role'];
-            if(!empty($user_type)){
+            if (!empty($user_type)) {
                 $userType = [$user_type];
-            }else{
+            } else {
                 $userType = [];
             }
-        }else{
+        } else {
             $userType = [];
         }
         $row = array();
-        foreach ($userType as $value){
+        foreach ($userType as $value) {
             if (!empty($aryAcoAro[$controller]['-' . $action]) && in_array($value, $aryAcoAro[$controller]['-' . $action])) {
                 $row[] = false;
             }
@@ -153,14 +156,23 @@ class AppController extends Controller
                 $row[] = true;
             }
         }
-        if(in_array(true, $row)){
+        if (in_array(true, $row)) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
 
-    public function isAuthorized($user) {
+    /**
+     * *************************************************
+     *
+     * @param $user
+     * @return bool
+     *
+     * *************************************************
+     */
+    public function isAuthorized($user)
+    {
 
         if ($user['delete_flag'] == DELETED) {
             $this->Session->setFlash('You need to verify your Account first.');
@@ -169,6 +181,13 @@ class AppController extends Controller
         return false;
     }
 
+    /**
+     * *************************************************
+     * @param Event $event
+     * @return \Cake\Http\Response|null
+     *
+     * *************************************************
+     */
     public function beforeFilter(Event $event)
     {
         $param = (Router::parse($this->request->here));
@@ -212,28 +231,32 @@ class AppController extends Controller
 
 
     /**
+     * *************************************************
+     *
      * getAllData method
      *
      * @return void
+     *
+     * *************************************************
      */
     public function getAllData()
     {
         $devices = $this->Devices->find()
             ->where(['Devices.delete_flag !=' => DELETED])
             ->select(['Devices.id', 'Devices.name'])
-            ->order(['Devices.id'=> 'DESC'])
+            ->order(['Devices.id' => 'DESC'])
             ->combine('id', 'name')
             ->toArray();
         $landingpages = $this->Landingpages->find()
             ->where(['Landingpages.delete_flag !=' => DELETED])
             ->select(['Landingpages.id', 'Landingpages.name'])
-            ->order(['Landingpages.id'=> 'DESC'])
+            ->order(['Landingpages.id' => 'DESC'])
             ->combine('id', 'name')
             ->toArray();
         $users = $this->Users->find()
             ->where(['Users.delete_flag !=' => DELETED])
             ->select(['Users.id', 'Users.username'])
-            ->order(['Users.id'=> 'ASC'])
+            ->order(['Users.id' => 'ASC'])
             ->combine('id', 'username')
             ->toArray();
         $role = User::$role;
@@ -242,9 +265,12 @@ class AppController extends Controller
     }
 
     /**
+     * *************************************************
      * radompassWord mehod
      * Dispaly ren 8 number....
      * @return string
+     *
+     * *************************************************
      */
     public function radompassWord()
     {
@@ -259,26 +285,39 @@ class AppController extends Controller
             $sum += $rdcheck;
         }
         $number_add = substr($sum, -1, 1);
-        if($number_add == 0){
-            $strRandom = $strRandom.$number_add;
-        }else{
+        if ($number_add == 0) {
+            $strRandom = $strRandom . $number_add;
+        } else {
             $number_add = 10 - substr($sum, -1, 1);
-            $strRandom = $strRandom.$number_add;
+            $strRandom = $strRandom . $number_add;
         }
         return $strRandom;
     }
 
+    /**
+     * *************************************************
+     *
+     * Presty parmam
+     * @param $string
+     *
+     * @return string
+     *
+     * *************************************************
+     */
     public function slug($string)
     {
         return strtolower(trim(preg_replace('~[^0-9a-z]+~i', '-', html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|th|tilde|uml);~i', '$1', htmlentities($string, ENT_QUOTES, 'UTF-8')), ENT_QUOTES, 'UTF-8')), '-'));
     }
 
     /**
+     * *************************************************
      * Update langding group_id_ for devices
      *
      * @param $list_id
      * @param $lan
      * @return bool
+     *
+     * *************************************************
      */
     public function publishall($list_id, $lan)
     {
@@ -303,6 +342,14 @@ class AppController extends Controller
         }
     }
 
+    /**
+     *************************************************
+     *
+     * @param $client_mac
+     * @return bool
+     *
+     * *************************************************
+     */
     public function getVoucher($client_mac)
     {
         $rest = substr($client_mac, 0, 1);
@@ -310,8 +357,8 @@ class AppController extends Controller
         if (in_array($rest, $arr_number)) {
             $result_string_1 = intval($rest);
         } else {
-            $string1 ='ABCDEFGHIJKLMOPQRSTUVXYZ';
-            $string2 ='abcdefghijklmnopqrstuvxyz';
+            $string1 = 'ABCDEFGHIJKLMOPQRSTUVXYZ';
+            $string2 = 'abcdefghijklmnopqrstuvxyz';
             if (strpos($string1, $rest) !== false) {
                 $result_string_1 = 1;
             } elseif (strpos($string2, $rest) !== false) {
@@ -324,8 +371,8 @@ class AppController extends Controller
         if (in_array($rest_2, $arr_number)) {
             $result_string_2 = intval($rest_2);
         } else {
-            $string1 ='ABCDEFGHIJKLMOPQRSTUVXYZ';
-            $string2 ='abcdefghijklmnopqrstuvxyz';
+            $string1 = 'ABCDEFGHIJKLMOPQRSTUVXYZ';
+            $string2 = 'abcdefghijklmnopqrstuvxyz';
             if (strpos($string1, $rest_2) !== false) {
                 $result_string_2 = 1;
             } elseif (strpos($string2, $rest_2) !== false) {
@@ -334,10 +381,10 @@ class AppController extends Controller
                 $result_string_2 = 3;
             }
         }
-        if ($result_string_1 == '0' && $result_string_2 !== '0' ) {
-            $number_check = intval($result_string_2.$result_string_1);
+        if ($result_string_1 == '0' && $result_string_2 !== '0') {
+            $number_check = intval($result_string_2 . $result_string_1);
         } else {
-            $number_check = intval($result_string_1.$result_string_2);
+            $number_check = intval($result_string_1 . $result_string_2);
         }
         $rand_check = rand(10, 15);
         $flag_voucher = false;
@@ -348,6 +395,15 @@ class AppController extends Controller
         return $flag_voucher;
     }
 
+    /**
+     * *************************************************
+     *
+     * @param null $auth_taget
+     * @param null $link
+     * @return string
+     *
+     * *************************************************
+     */
     public function getAuth($auth_taget = null, $link = null)
     {
         $split = explode('?redir=', $auth_taget);
@@ -355,10 +411,20 @@ class AppController extends Controller
         $link_split = explode('&tok=', $all_info);
         $link_split[0] = $link;
         $url_buil = implode('&tok=', $link_split);
-        return $split[0].'?redir='.$url_buil;
+        return $split[0] . '?redir=' . $url_buil;
     }
 
-    public function array_random_assoc($arr, $num = 1) {
+    /**
+     *
+     * *************************************************
+     * @param $arr
+     * @param int $num
+     * @return array
+     *
+     * *************************************************
+     */
+    public function array_random_assoc($arr, $num = 1)
+    {
         $keys = array_keys($arr);
         shuffle($keys);
         $r = array();
@@ -367,6 +433,7 @@ class AppController extends Controller
         }
         return $r;
     }
+
     /**
      * **************************************
      *
@@ -401,12 +468,54 @@ class AppController extends Controller
         } else {
             $end = date('Y-m-d');
         }
-        $begin = new DateTime( $begin );
-        $end   = new DateTime( $end );
+        $begin = new DateTime($begin);
+        $end = new DateTime($end);
         $list_day = array();
-        for($i = $begin; $i <= $end; $i->modify('+1 day')){
+        for ($i = $begin; $i <= $end; $i->modify('+1 day')) {
             $list_day[] = $i->format("Y-m-d");
         }
         return $list_day;
+    }
+
+    /**
+     * *******************************************
+     * @param array $date
+     * @return string
+     *
+     * * *******************************************
+     */
+    public function get_label ($date = array())
+    {
+        if ($this->verifyDate($date[0])) {
+            $begin = Datetime::createFromFormat('Y-m-d', $date[0])->format('Y-m-d');
+        } else {
+            $begin = date('Y-m-d', strtotime('-10 days'));
+        }
+        if ($this->verifyDate($date[1])) {
+            $end = Datetime::createFromFormat('Y-m-d', $date[1])->format('Y-m-d');
+        } else {
+            $end = date('Y-m-d');
+        }
+        $begin = new DateTime( $begin );
+        $end   = new DateTime( $end );
+        $list_day = [];
+        for($i = $begin; $i <= $end; $i->modify('+1 day')){
+            $list_day[] = $i->format("d/m/Y");
+        }
+        $count = count($list_day);
+        end($list_day);         // move the internal pointer to the end of the array
+        $last_key = key($list_day);  // fetches the key of the element pointed to by the internal pointer
+        reset($list_day);
+        $first_key = key($list_day);
+        $check_list = array($first_key, $last_key);
+        if ($count > 7) {
+            foreach ($list_day as $k => $vl) {
+                if (!in_array($k, $check_list)) {
+                    $vl = '';
+                }
+                $list_day[$k] = $vl;
+            }
+        }
+        return json_encode($list_day);
     }
 }

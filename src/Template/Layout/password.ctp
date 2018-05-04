@@ -27,6 +27,7 @@ $cakeDescription = 'Media ';
     <?php echo $this->Html->script([
             'back_end/jquery-1.11.0.min',
             'back_end/md5',
+            'md5/md5',
             'jquery.validate',
             'bootstrap.min'
         ]

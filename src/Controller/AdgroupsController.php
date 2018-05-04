@@ -64,8 +64,7 @@ class AdgroupsController extends AppController
                 'conditions' => [
                     'Adgroups.delete_flag !=' => DELETED,
                 ]
-            ])->order(['Adgroups.id' => 'DESC'])
-                ->toArray();
+            ])->order(['Adgroups.id' => 'DESC']);
         } else {
             $adgroups = $this->Adgroups->find('all',[
                 'contain'  => [
@@ -80,9 +79,12 @@ class AdgroupsController extends AppController
                     'Adgroups.delete_flag !=' => DELETED,
                     'Adgroups.user_id_group' => $users['id']
                 ]
-            ])->order(['Adgroups.id' => 'DESC'])
-                ->toArray();
+            ])->order(['Adgroups.id' => 'DESC']);
         }
+        $adgroups = $this->paginate($adgroups, ['limit' => 10, 'order' => [
+            'Adgroups.created' => 'DESC']
+        ])
+            ->toArray();
         $flag = false;
         if (!empty($adgroups)) {
             $device_id = array();

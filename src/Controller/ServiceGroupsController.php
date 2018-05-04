@@ -306,6 +306,8 @@ class ServiceGroupsController extends AppController
         $get_date = $day_before_ten_day.' to '. $current;
         $list_day = $this->get_label(array($day_before_ten_day, $current));
         $list_date = $this->getListDay(array($day_before_ten_day, $current));
+        $list_id_devices = Hash::extract($users['devices'], '{n}.id');
+        $list_devices = Hash::combine($users['devices'], '{n}.id', '{n}.name');
         $conditions = array();
         if (isset($_GET) && $_GET != '') {
             $date_full_current = date('Y-m-d');
@@ -347,13 +349,45 @@ class ServiceGroupsController extends AppController
             if (isset($_GET['client_mac']) && $_GET['client_mac'] != '') {
                 $conditions['Partners.client_mac LIKE'] = "%".trim($_GET['client_mac'])."%";
             }
+            if (isset($_GET['number_connect']) && $_GET['number_connect'] != '') {
+                switch ($_GET['number_connect']) {
+                    case "1":
+                        $conditions['Partners.num_clients_connect >='] = $_GET['number_connect'];
+                        $conditions['Partners.num_clients_connect <='] = 5;
+                        break;
+                    case "2":
+                        $conditions['Partners.num_clients_connect >='] = 6;
+                        $conditions['Partners.num_clients_connect <='] = 10;
+                        break;
+                    case "3":
+                        $conditions['Partners.num_clients_connect >='] = 11;
+                        $conditions['Partners.num_clients_connect <='] = 15;
+                        break;
+                    default:
+                        $conditions['Partners.num_clients_connect >='] = 15;
+                }
+            }
+            if (isset($_GET['device']) && $_GET['device'] != '') {
+                $conditions['device_id'] = $_GET['device'];
+            } else {
+                $conditions['device_id IN'] = $list_id_devices;
+            }
             $data_get = $_GET;
         }
-
-        $list_id_devices = Hash::extract($users['devices'], '{n}.id');
-        if (!empty($list_id_devices)) {
-            $conditions['device_id IN'] = $list_id_devices;
-            $query = $this->Partners->getOders($conditions);
+        $list_id_devices = json_encode($list_id_devices);
+        $query = $this->Partners->getOders($conditions);
+        $new_condition = array();
+        foreach ($conditions as $index => $condition) {
+            if ($index == 'device_id IN') {
+                $index = 'deviceidlist';
+            } else if ($index == 'device_id') {
+                $index = 'deviceid';
+            } else if ($index == 'Partners.num_clients_connect >=') {
+                $index = 'Partners.numclientsconnect>=';
+            } else if ($index == 'Partners.num_clients_connect <=') {
+                $index = 'Partners.numclientsconnect<=';
+            }
+            $new_condition[$index] = $condition;
         }
         $data = array();
         $total_partner = count($query->toArray());
@@ -435,10 +469,13 @@ class ServiceGroupsController extends AppController
         $count_old_partner      = json_encode($old_p);
         $count_new_partner      = json_encode($new_p);
         $count_phone_partner    = json_encode($phone_p);
-        $partners = $this->paginate($query, ['limit' => $limit_value])->toArray();
+        $partners = $this->paginate($query, ['limit' => $limit_value, 'order' => [
+            'Partners.created' => 'DESC',
+            'Partners.num_clients_connect' => 'DESC']])->toArray();
         $this->set(compact(
             'partners',
             'conditions',
+            'new_condition',
             'list_day',
             'data_get',
             'get_date',
@@ -450,10 +487,21 @@ class ServiceGroupsController extends AppController
             'sum_phone_partner',
             'count_new_partner',
             'count_phone_partner',
-            'chart_number_partner'
+            'chart_number_partner',
+            'list_id_devices',
+            'list_devices'
         ));
         $this->set('_serialize', ['partners']);
     }
+
+    /**
+     * *********************************************************
+     *
+     * method getLableField
+     * @return array
+     *
+     * * *********************************************************
+     */
     public function getLableField()
     {
         $fields_member_histoty = $this->Partners->query()->aliasFields(

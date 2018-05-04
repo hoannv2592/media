@@ -1,6 +1,5 @@
 <?php
 /**
- * @var $partners
  * @var $list_day
  * @var $data_get
  * @var $get_date
@@ -9,6 +8,8 @@
  * @var $count_new_partner
  * @var $count_phone_partner
  * @var \App\View\AppView $partners
+ * @var $list_devices
+ * @var $new_condition
  */
 ?>
 <section class="content" xmlns="">
@@ -27,121 +28,147 @@
                 </ol>
                 <div class="card">
                     <div class="header bg-green">
-                        <h2>
-                            Chăm sóc khách hàng
-                        </h2>
+                        <h2>Chăm sóc khách hàng</h2>
                     </div>
                     <div class="body">
                         <div class="demo-masked-input">
                             <div class="row clearfix">
                                 <div class="col-md-6" style="margin-bottom: 0 !important;">
-                                <?php echo $this->Form->create('ServiceGroups', array(
-                                    'id' => 'form_advanced_validation_x',
-                                    'type' => 'get'
-                                ));
-                                ?>
-                                    <div class="col-md-12">
-                                        <b>Tên khách hàng</b>
-                                        <div class="input-group">
+                                    <div class="card-box">
+                                        <?php echo $this->Form->create('ServiceGroups', array(
+                                            'id' => 'form_advanced_validation_x',
+                                            'type' => 'get'
+                                        ));?>
+                                        <div class="row">
+                                            <b>Tên khách hàng</b>
+                                            <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">account_circle</i>
                                             </span>
-                                            <div class="form-line">
-                                                <?php
-                                                $name = isset($data_get['name']) ? ($data_get['name']):'';
-                                                echo $this->Form->control('name', array(
-                                                    'label' => false,
-                                                    'class' => 'form-control',
-                                                    'value' => $name,
-                                                    'required' => false,
-                                                    'id' => 'name'
-                                                ));
-                                                ?>
+                                                <div class="form-line">
+                                                    <?php
+                                                    $name = isset($data_get['name']) ? ($data_get['name']):'';
+                                                    echo $this->Form->control('name', array(
+                                                        'label' => false,
+                                                        'class' => 'form-control',
+                                                        'value' => $name,
+                                                        'required' => false,
+                                                        'id' => 'name'
+                                                    ));
+                                                    ?>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <b>Số điện thoại di động</b>
-                                        <div class="input-group">
+                                        <div class="row">
+                                            <b>Số điện thoại di động</b>
+                                            <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">phone_iphone</i>
                                             </span>
-                                            <div class="form-line">
-                                                <?php
-                                                $phone = isset($data_get['phone']) ? ($data_get['phone']):'';
-                                                echo $this->Form->control('phone', array(
-                                                    'label' => false,
-                                                    'class' => 'form-control mobile-phone-number',
-                                                    'value' => $phone,
-                                                    'required' => false,
-                                                ));
-                                                ?>
+                                                <div class="form-line">
+                                                    <?php
+                                                    $phone = isset($data_get['phone']) ? ($data_get['phone']):'';
+                                                    echo $this->Form->control('phone', array(
+                                                        'label' => false,
+                                                        'class' => 'form-control mobile-phone-number',
+                                                        'value' => $phone,
+                                                        'required' => false,
+                                                    ));
+                                                    ?>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="col-md-12">
-                                        <b>Thiết bị quản lý </b>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="material-icons">devices</i>
-                                            </span>
-                                            <div class="form-line">
-                                                <?php
-                                                $device_name = isset($data_get['device_name']) ? ($data_get['device_name']):'';
-                                                echo $this->Form->control('device_name', array(
-                                                    'label' => false,
-                                                    'class' => 'form-control',
-                                                    'value' => $device_name,
-                                                    'required' => false,
-                                                ));
-                                                ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <b>Địa chỉ mac </b>
-                                        <div class="input-group">
+                                        <div class="row">
+                                            <b>Địa chỉ mac </b>
+                                            <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">location_searching</i>
                                             </span>
-                                            <div class="form-line">
-                                                <?php
-                                                $client_mac = isset($data_get['client_mac']) ? ($data_get['client_mac']):'';
-                                                echo $this->Form->control('client_mac', array(
-                                                    'label' => false,
-                                                    'class' => 'form-control',
-                                                    'value' => $client_mac,
-                                                    'required' => false,
-                                                ));
-                                                ?>
+                                                <div class="form-line">
+                                                    <?php
+                                                    $client_mac = isset($data_get['client_mac']) ? ($data_get['client_mac']):'';
+                                                    echo $this->Form->control('client_mac', array(
+                                                        'label' => false,
+                                                        'class' => 'form-control',
+                                                        'value' => $client_mac,
+                                                        'required' => false,
+                                                    ));
+                                                    ?>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12">
-                                        <b>Khoảng thời gian</b>
-                                        <div class="input-group">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="sel1">Chọn thiết bị</label>
+                                                <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="material-icons">devices</i>
+                                                </span>
+                                                    <div class="form-line">
+                                                        <?php
+                                                        echo $this->Form->select('device',
+                                                            $list_devices, [
+                                                                'empty' => '-----',
+                                                                'value' => isset($data_get['device']) ? $data_get['device']: '',
+                                                                'class' => 'form-control sel1'
+                                                            ]
+                                                        );
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="sel1">Số lần kết nối</label>
+                                                <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="material-icons">confirmation_number</i>
+                                                </span>
+                                                    <div class="form-line">
+                                                        <?php
+                                                        echo $this->Form->select('number_connect',
+                                                            [
+                                                                1 => 'Từ 1 đến 5',
+                                                                2 => 'Từ 6 đến 10',
+                                                                3 => 'Từ 11 đến 15',
+                                                                4 => 'Lớn hơn 15'
+                                                            ], [
+                                                                'empty' => '-----',
+                                                                'value' => isset($data_get['number_connect']) ? $data_get['number_connect']: '',
+                                                                'class' => 'form-control sel1'
+                                                            ]
+                                                        );
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <b>Khoảng thời gian</b>
+                                            <div class="input-group">
                                             <span class="input-group-addon">
                                                 <i class="material-icons">date_range</i>
                                             </span>
-                                            <div class="form-line">
-                                                <?php
-                                                $birthday = (isset($data_get['date']) && $data_get['date'] != '') ? ($data_get['date']):$get_date;
-                                                echo $this->Form->control('date', array(
-                                                    'label' => false,
-                                                    'class' => 'form-control datetime',
-                                                    'value' => $birthday,
-                                                    'required' => false,
-                                                    'id' => 'config-demo',
-                                                ));
-                                                ?>
+                                                <div class="form-line">
+                                                    <?php
+                                                    $birthday = (isset($data_get['date']) && $data_get['date'] != '') ? ($data_get['date']):$get_date;
+                                                    echo $this->Form->control('date', array(
+                                                        'label' => false,
+                                                        'class' => 'form-control datetime',
+                                                        'value' => $birthday,
+                                                        'required' => false,
+                                                        'id' => 'config-demo',
+                                                    ));
+                                                    ?>
+                                                </div>
                                             </div>
                                         </div>
+                                        <div class="row">
+                                            <div class=""><button class="btn btn-primary waves-effect" id="submit" type="submit">Tìm kiếm</button> </div>
+                                        </div>
+                                        <?php echo $this->Form->end(); ?>
                                     </div>
-                                    <div class="col-md-12">
-                                        <div class=""><button class="btn btn-primary waves-effect" id="submit" type="submit">Tìm kiếm</button> </div>
-                                    </div>
-                                    <?php echo $this->Form->end(); ?>
                                 </div>
                                 <div class="col-md-6" style="margin-bottom: 0 !important;">
                                     <div class="card-box">
@@ -177,7 +204,7 @@
                                         <div class="m-t-10">
                                             <div id="line-chart-tooltips" class="ct-chart ct-golden-section"></div>
                                         </div>
-                                    </div>
+
                                     <?php
                                     if (!empty($list_id_partner)) {
                                         $list_id_partner = json_decode($list_id_partner);
@@ -185,18 +212,37 @@
                                     if (!empty($list_id_partner)) {
                                         $list_id_partner = json_encode($list_id_partner);
                                         ?>
-                                        <div class="col-md-12 pull-right">
+                                        <div class="row m-t-10">
                                             <div class="">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'download_excel/'.$list_id_partner]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có số điện thoại</a>
                                             </div>
                                         </div>
                                     <?php } ?>
+                                    </div>
                                 </div>
                             </div>
-
                             <div class="row"></div>
                         </div>
-                        <div class="table-responsive m-b-15 m-t-5">
+                        <?php if (!empty($partners)) { ?>
+                            <?php
+                                echo $this->Form->create('Users', array(
+                                    'id' => 'form_advanced_validation_x',
+                                    'type' => 'post',
+                                    'url' => array('controller' => 'Users', 'action' => 'download'),
+                                ));
+                            ?>
+                            <input type="hidden" name="name" value="<?= isset($data_get['name']) ? $data_get['name'] :'';?>" />
+                            <input type="hidden" name="phone" value="<?= isset($data_get['phone']) ? $data_get['phone'] :'';?>" />
+                            <input type="hidden" name="client_mac" value="<?= isset($data_get['client_mac']) ? $data_get['client_mac'] :'';?>" />
+                            <input type="hidden" name="device" value="<?= isset($data_get['device']) ? $data_get['device'] :'';?>" />
+                            <input type="hidden" name="number_connect" value="<?= isset($data_get['number_connect']) ? $data_get['number_connect'] :'';?>" />
+                            <input type="hidden" name="date" value="<?= isset($data_get['date']) ? $data_get['date'] :'';?>" />
+                            <input type="hidden" name="date_begin" value="<?= isset($get_date) ? $get_date :'';?>" />
+                            <input type="hidden" name="list_id_devices" value="<?= isset($list_id_devices) ? $list_id_devices :'';?>" />
+                            <button type="submit" class="btn bg-orange waves-effect">Tải về danh sách</button>
+                            <?php echo $this->Form->end(); ?>
+                        <?php } ?>
+                            <div class="table-responsive m-b-15 m-t-5">
                             <table class="table table-bordered table-striped table-hover ">
                                 <thead>
                                 <tr class="bg-blue-grey">
@@ -207,8 +253,8 @@
                                     <th>Ngày sinh</th>
                                     <th>Địa chỉ</th>
                                     <th>Thời gian truy cập</th>
-                                    <th>Số lần ghé thăm</th>
-                                    <th>Thiết bị quản lý</th>
+                                    <th>Số lần kết nối</th>
+                                    <th>Thiết bị</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -247,6 +293,7 @@
                                 <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>

@@ -16,7 +16,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
             <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
                 <ol class="breadcrumb breadcrumb-bg-blue-grey">
                     <li>
-                        <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'index']) ?>">
+                        <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'index']) ?>" style="margin-left: 10px;">
                             <i class="material-icons">home</i> Trang chủ
                         </a>
                     </li>
@@ -188,13 +188,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                         </tbody>
                                     </table>
                                 </div>
-<!--                                <div class="form-group">-->
-<!--                                    <label> Logo Image </label>-->
-<!--                                    <div class="form-line">-->
-<!--                                        <input type="file" name="logo_image" id="file" value="--><?php //echo $logo_image;?><!--" class="form-control"/>-->
-<!--                                        <div class="help-info">logo_image</div>-->
-<!--                                    </div>-->
-<!--                                </div>-->
                                 <?php $logo_image = isset($campaign_group->path_logo) ? ($campaign_group->path_logo):''; ?>
                                 <div class="form-group">
                                     <div class="file-loading">
@@ -333,8 +326,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                         <?php echo $this->Form->control('title_campaign', array(
                                             'label' => 'Title campaign ',
                                             'class' => 'form-control',
-                                            'value' => $title_campaign,
-                                            'placeholder' => 'title_campaign..'
+                                            'value' => $title_campaign
                                         ));
                                         ?>
                                     </div>
@@ -365,13 +357,14 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                     <table class="table table-bordered table-striped dataTable table-hover">
                                         <thead>
                                         <tr>
-                                            <th width="25%">Ảnh nền</th>
-                                            <th width="10%">Ngày tải lên</th>
+                                            <th width="20%">Ảnh nền</th>
+                                            <th width="10%"></th>
                                         </tr>
                                         </thead>
                                         <tbody>
                                             <?php if (isset($campaign_group->path) && $campaign_group->path != '') {
                                             $list_background = explode(',', $campaign_group->path);
+                                            $list_background = array_filter($list_background);
                                             foreach ($list_background as $k => $vl) { ?>
                                             <tr id="<?= $k;?>">
                                                 <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="200"></td>

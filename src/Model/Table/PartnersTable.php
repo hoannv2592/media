@@ -108,13 +108,55 @@ class PartnersTable extends Table
                     'type' => 'LEFT',
                     'conditions' => 'Devices.id = Partners.device_id',
                 ]
-            ])
+            ])->order([
+                'Partners.created' => 'DESC',
+                'Partners.num_clients_connect' => 'DESC'
+            ]);
         ;
         if (!empty($conditions)) {
             $result->where($conditions);
         }
         return $result;
     }
+
+    /**
+     * @param array $conditions
+     * @return $this|array
+     */
+    public function getOdersDownload($conditions = array())
+    {
+        $fields = [
+            'Devices.name',
+            'Partners.name',
+            'Partners.phone',
+            'Partners.email',
+            'Partners.birthday',
+            'Partners.address',
+            'Partners.num_clients_connect',
+            'Partners.client_mac',
+            'Partners.created',
+        ];
+        $query = $this->find('all');
+        $result = $query->hydrate(false)
+            ->select($fields)
+            ->join([
+                'Devices' => [
+                    'table' => 'devices',
+                    'type' => 'LEFT',
+                    'conditions' => 'Devices.id = Partners.device_id',
+                ]
+            ])->order([
+                'Partners.created' => 'DESC',
+                'Partners.num_clients_connect' => 'DESC'
+            ]);
+        ;
+        if (!empty($conditions)) {
+            $result->where($conditions);
+        }
+        return $result;
+    }
+
+
 
     /**
      * get Label of table member_history and t_member

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Controller\AppController;
@@ -7,6 +8,7 @@ use App\Model\Entity\User;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use DateTime;
 use function MongoDB\BSON\toJSON;
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -46,8 +48,8 @@ class UsersController extends AppController
     {
         $login = $this->Auth->user();
         if ($login['role'] == User::ROLE_ONE) {
-            $users = $this->Users->find('all',[
-                'contain'  => ['Devices' => function ($q) {
+            $users = $this->Users->find('all', [
+                'contain' => ['Devices' => function ($q) {
                     return $q
                         ->where([
                             'Devices.delete_flag !=' => 1
@@ -59,10 +61,10 @@ class UsersController extends AppController
                 'conditions' => [
                     'Users.delete_flag !=' => 1
                 ]
-            ])->toArray();
+            ]);
         } else {
-            $users = $this->Users->find('all',[
-                'contain'  => ['Devices' => function ($q) {
+            $users = $this->Users->find('all', [
+                'contain' => ['Devices' => function ($q) {
                     return $q
                         ->where([
                             'Devices.delete_flag !=' => 1,
@@ -75,8 +77,12 @@ class UsersController extends AppController
                     'Users.id' => $login['id'],
                     'Users.delete_flag !=' => 1,
                 ]
-            ])->toArray();
+            ]);
         }
+        $users = $this->paginate($users, ['limit' => 10, 'order' => [
+            'Users.created' => 'DESC']
+        ])
+            ->toArray();
         $this->set(compact('users'));
 
     }
@@ -187,12 +193,12 @@ class UsersController extends AppController
                 } else {
                     $conn->rollback();
                     $this->Flash->error(__('The user could not be saved. Please, try again.'));
-                    return $this->redirect(['action' => 'edit'.'/'. $id]);
+                    return $this->redirect(['action' => 'edit' . '/' . $id]);
                 }
             } else {
                 $conn->rollback();
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
-                return $this->redirect(['action' => 'edit'.'/'. $id]);
+                return $this->redirect(['action' => 'edit' . '/' . $id]);
             }
         }
         $this->set(compact('user'));
@@ -228,14 +234,14 @@ class UsersController extends AppController
             }
         }
     }
-	
-	/**
+
+    /**
      * Login method
      *
      * @return \Cake\Http\Response|null Redirects to index.
      * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
      */
-	public function login()
+    public function login()
     {
         $user = $this->Users->newEntity();
         $session = $this->request->session()->read('Users');
@@ -368,7 +374,7 @@ class UsersController extends AppController
                     $data[$i - 2][$j] = $sheet->getCellByColumnAndRow($j, $i)->getValue();
                 }
             }
-            
+
             die;
         }
     }
@@ -398,7 +404,7 @@ class UsersController extends AppController
             $k = 1;
             $lable[0]['label'] = 'No';
             foreach ($partners[0] as $key => $val) {
-                $lable[$k+1]['label'] = $key;
+                $lable[$k + 1]['label'] = $key;
                 $k++;
             }
 
@@ -426,7 +432,7 @@ class UsersController extends AppController
             foreach ($partners as $k => $row) {
                 $objPHPExcel->addTableRow($k, $row);
             }
-            $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
+            $fileName = 'data' . '_' . date('Ymd-His') . '.xlsx';
             $objPHPExcel->save($fileName, 'Excel2007');
             $objPHPExcel->output($fileName, 'Excel2007');
         } else {
@@ -435,10 +441,14 @@ class UsersController extends AppController
     }
 
     /**
+     *
+     * *********************************************
      * profileUser METHOD
      *
      *
      * @param null $id
+     *
+     * *********************************************
      */
     public function profileUser($id = null)
     {
@@ -448,12 +458,20 @@ class UsersController extends AppController
             $this->redirect(array('controller' => 'Users', 'action' => 'index'));
         }
 
-        $user = $this->Users->get($id,[
-            'contain' =>[]
+        $user = $this->Users->get($id, [
+            'contain' => []
         ]);
         $this->set(compact('user'));
     }
 
+    /**
+     * *********************************************
+     * @param null $id
+     *
+     * @return \Cake\Http\Response|null
+     *
+     * *********************************************
+     */
     public function updateProfile($id = null)
     {
         $id = \UrlUtil::_decodeUrl($id);
@@ -464,7 +482,7 @@ class UsersController extends AppController
         if (!$this->Users->exists(['id' => $id])) {
             $this->redirect(array('controller' => 'Users', 'action' => 'index'));
         }
-        $user = $this->Users->get($id,[
+        $user = $this->Users->get($id, [
             'contain' => []
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -477,12 +495,12 @@ class UsersController extends AppController
                 } else {
                     $conn->rollback();
                     $this->Flash->error(__('The user could not be saved. Please, try again.'));
-                    return $this->redirect(['action' => 'edit'.'/'. $id]);
+                    return $this->redirect(['action' => 'edit' . '/' . $id]);
                 }
             } else {
                 $conn->rollback();
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
-                return $this->redirect(['action' => 'edit'.'/'. $id]);
+                return $this->redirect(['action' => 'edit' . '/' . $id]);
             }
         }
         $this->set(compact('user'));
@@ -490,7 +508,16 @@ class UsersController extends AppController
 
     }
 
-    public function changePassword ()
+    /**
+     * *********************************************
+     *
+     * changePassword method
+     *
+     * @return \Cake\Http\Response|null
+     *
+     * *********************************************
+     */
+    public function changePassword()
     {
         $user = $this->Users->newEntity();
         if ($this->request->is(['patch', 'post', 'put'])) {
@@ -514,6 +541,17 @@ class UsersController extends AppController
         $this->set(compact('user'));
     }
 
+    /**
+     *
+     * *********************************************
+     * @param null $number
+     *
+     * @param array $device_id
+     * @throws \PHPExcel_Exception
+     *
+     * *********************************************
+     *
+     */
     public function exportExcel($number = null, $device_id = array())
     {
         $this->autoRender = false;
@@ -545,7 +583,7 @@ class UsersController extends AppController
             $k = 1;
             $lable[0]['label'] = 'No';
             foreach ($partners[0] as $key => $val) {
-                $lable[$k+1]['label'] = $key;
+                $lable[$k + 1]['label'] = $key;
                 $k++;
             }
             $headerStyle = array(
@@ -558,7 +596,7 @@ class UsersController extends AppController
             foreach ($partners as $k => $row) {
                 $objPHPExcel->addTableRow($k, $row);
             }
-            $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
+            $fileName = 'data' . '_' . date('Ymd-His') . '.xlsx';
             $objPHPExcel->save($fileName, 'Excel2007');
             $objPHPExcel->output($fileName, 'Excel2007');
         } else {
@@ -566,6 +604,15 @@ class UsersController extends AppController
         }
     }
 
+    /**
+     * *********************************************
+     * @param array $device_id
+     *
+     * @throws \PHPExcel_Exception
+     *
+     * *********************************************
+     *
+     */
     public function downloadExcel($device_id = array())
     {
         $this->autoRender = false;
@@ -581,7 +628,7 @@ class UsersController extends AppController
             $k = 1;
             $lable[0]['label'] = 'No';
             foreach ($partners[0] as $key => $val) {
-                $lable[$k+1]['label'] = $key;
+                $lable[$k + 1]['label'] = $key;
                 $k++;
             }
             $headerStyle = array(
@@ -608,7 +655,7 @@ class UsersController extends AppController
             foreach ($partners as $k => $row) {
                 $objPHPExcel->addTableRow($k, $row);
             }
-            $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
+            $fileName = 'data' . '_' . date('Ymd-His') . '.xlsx';
             $objPHPExcel->save($fileName, 'Excel2007');
             $objPHPExcel->output($fileName, 'Excel2007');
         } else {
@@ -639,7 +686,7 @@ class UsersController extends AppController
             $k = 1;
             $lable[0]['label'] = 'No';
             foreach ($partners[0] as $key => $val) {
-                $lable[$k+1]['label'] = $key;
+                $lable[$k + 1]['label'] = $key;
                 $k++;
             }
             $headerStyle = array(
@@ -664,7 +711,7 @@ class UsersController extends AppController
             foreach ($partners as $k => $row) {
                 $objPHPExcel->addTableRow($k, $row);
             }
-            $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
+            $fileName = 'data' . '_' . date('Ymd-His') . '.xlsx';
             $objPHPExcel->save($fileName, 'Excel2007');
             $objPHPExcel->output($fileName, 'Excel2007');
         } else {
@@ -672,53 +719,251 @@ class UsersController extends AppController
         }
     }
 
-    public function downloadExcelVoucher($device_id = array())
+    /**
+     * *****************************************************
+     * downloadExcelVoucher
+     * @throws \PHPExcel_Exception
+     *
+     * *****************************************************
+     */
+    public function downloadExcelVoucher()
     {
         $this->autoRender = false;
-        $device_id = json_decode($device_id);
-        $objPHPExcel = $this->PhpExcel->createWorksheet();
-        $objPHPExcel->setActiveSheet(0);
-        $partners = $this->PartnerVouchers->find()->where(['id IN ' => $device_id])
-            ->hydrate(false)
-            ->select(['name', 'phone', 'address'])
-            ->toList();
-        if (!empty($partners)) {
-            $lable = array();
-            $k = 1;
-            $lable[0]['label'] = 'No';
-            foreach ($partners[0] as $key => $val) {
-                $lable[$k+1]['label'] = $key;
-                $k++;
+        if ($this->request->is('post')) {
+            $_POST = $this->request->getData();
+            $conditions = array();
+            $date = explode(' - ', $_POST['date_begin']);
+            $date_from = Datetime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
+            $date_to = Datetime::createFromFormat('d/m/Y', $date[1])->format('Y-m-d');
+            $conditions['PartnerVouchers.created >='] = $date_from;
+            $conditions['PartnerVouchers.created <='] = $date_to;
+            if (isset($_POST['date']) && $_POST['date'] != '') {
+                $date = explode(' to ', $_POST['date']);
+                $flag_date_to = $this->verifyDate($date[1]);
+                $flag_date_form = $this->verifyDate($date[0]);
+                if ($flag_date_to) {
+                    $date_to = Datetime::createFromFormat('Y-m-d', $date[1])->format('Y-m-d');
+                    $conditions['PartnerVouchers.created <='] = $date_to;
+                }
+                if ($flag_date_form) {
+                    $date_form = Datetime::createFromFormat('Y-m-d', $date[0])->format('Y-m-d');
+                    $conditions['PartnerVouchers.created >='] = $date_form;
+                }
             }
+            if (isset($_POST['name']) && $_POST['name'] != '') {
+                $conditions['PartnerVouchers.name LIKE'] = "%".trim($_POST['name'])."%";
+            }
+            if (isset($_POST['phone']) && $_POST['phone'] != '') {
+                $conditions['PartnerVouchers.phone'] = trim($_POST['phone']);
+            }
+            if (isset($_POST['client_mac']) && $_POST['client_mac'] != '') {
+                $conditions['PartnerVouchers.client_mac LIKE'] = "%".trim($_POST['client_mac'])."%";
+            }
+            if (isset($_POST['number_connect']) && $_POST['number_connect'] != '') {
+                switch ($_POST['number_connect']) {
+                    case "1":
+                        $conditions['PartnerVouchers.num_clients_connect >='] = $_POST['number_connect'];
+                        $conditions['PartnerVouchers.num_clients_connect <='] = 5;
+                        break;
+                    case "2":
+                        $conditions['PartnerVouchers.num_clients_connect >='] = 6;
+                        $conditions['PartnerVouchers.num_clients_connect <='] = 10;
+                        break;
+                    case "3":
+                        $conditions['PartnerVouchers.num_clients_connect >='] = 11;
+                        $conditions['PartnerVouchers.num_clients_connect <='] = 15;
+                        break;
+                    default:
+                        $conditions['PartnerVouchers.num_clients_connect >='] = 15;
+                }
+            }
+            if (isset($_POST['device']) && $_POST['device'] != '') {
+                $conditions['device_id'] = $_POST['device'];
+            }
+            $conditions['PartnerVouchers.campaign_group_id'] = $_POST['campaign_group_id'];
+            $objPHPExcel = $this->PhpExcel->createWorksheet();
+            $objPHPExcel->setActiveSheet(0);
+            $label = [
+                1 => array('label' => 'No'),
+                2 => array('label' => 'Họ và Tên'),
+                3 => array('label' => 'Số điện thoại'),
+                4 => array('label' => 'Địa chỉ email'),
+                5 => array('label' => 'Ngày sinh'),
+                6 => array('label' => 'Địa chỉ'),
+                7 => array('label' => 'Số lần kết nối'),
+                8 => array('label' => 'Địa chỉ mac'),
+                9 => array('label' => 'Tên thiết bị'),
+                10 => array('label' => 'Ngày truy cập')
+            ];
             $headerStyle = array(
                 'font' => array(
                     'bold' => true
                 )
             );
-            $data_label = array();
-            foreach ($lable as $k => $vl) {
-                if ($k == 0) {
-                    $data_label[$k]['label'] = 'No';
-                } elseif ($k == 2) {
-                    $data_label[$k]['label'] = 'Họ và Tên';
-                } elseif ($k == 3) {
-                    $data_label[$k]['label'] = 'Số điện thoại';
-                } elseif ($k == 4) {
-                    $data_label[$k]['label'] = 'Địa chỉ';
-                } else {
-                    //unset($vl['label']);
-                }
-            }
-            $objPHPExcel->addTableHeader($data_label, array('bold' => true, 'headerStyle' => $headerStyle));
+            $objPHPExcel->addTableHeader($label, array('bold' => true, 'headerStyle' => $headerStyle));
             $objPHPExcel->addTableFooter();
-            foreach ($partners as $k => $row) {
-                $objPHPExcel->addTableRow($k, $row);
+            $fields = [
+                'Devices.name',
+                'PartnerVouchers.name',
+                'PartnerVouchers.phone',
+                'PartnerVouchers.email',
+                'PartnerVouchers.birthday',
+                'PartnerVouchers.address',
+                'PartnerVouchers.num_clients_connect',
+                'PartnerVouchers.client_mac',
+                'PartnerVouchers.created',
+            ];
+            $query = $this->PartnerVouchers->find('all');
+            $result = $query->hydrate(false)
+                ->select($fields)
+                ->join([
+                    'Devices' => [
+                        'table' => 'devices',
+                        'type' => 'LEFT',
+                        'conditions' => 'Devices.id = PartnerVouchers.device_id',
+                    ]
+                ])->order([
+                    'PartnerVouchers.created' => 'DESC',
+                    'PartnerVouchers.num_clients_connect' => 'DESC'
+                ]);
+            if (!empty($conditions)) {
+                $result->where($conditions);
             }
-            $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
+            $data = $result->toArray();
+            $new_data = array();
+            foreach ($data as $index => $datum) {
+                $new_data[$index] = $datum;
+                $new_data[$index]['device_name'] = $datum['Devices']['name'];
+                $new_data[$index]['create'] = date('d/m/Y', strtotime($datum['created']));
+                unset($new_data[$index]['Devices']);
+                unset($new_data[$index]['created']);
+            }
+
+            foreach ($new_data as $index => $new_datum) {
+                $objPHPExcel->addTableRow($index, $new_datum);
+            }
+            $fileName = 'data' . '_' . date('Ymd-His') . '.xlsx';
             $objPHPExcel->save($fileName, 'Excel2007');
             $objPHPExcel->output($fileName, 'Excel2007');
-        } else {
-            $this->redirect('partners/index');
+        }
+
+    }
+
+    /**
+     * *****************************************************
+     * download excel file
+     *
+     * @throws \PHPExcel_Exception
+     */
+    public function download()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('post')) {
+            $_POST = $this->request->getData();
+            $conditions = array();
+            $date = explode(' to ', $_POST['date_begin']);
+            $flag_date_to = $this->verifyDate($date[1]);
+            $flag_date_form = $this->verifyDate($date[0]);
+            if ($flag_date_to) {
+                $date_to = Datetime::createFromFormat('Y-m-d', $date[1])->format('Y-m-d');
+                $conditions['Partners.created <='] = $date_to;
+            }
+            if ($flag_date_form) {
+                $date_form = Datetime::createFromFormat('Y-m-d', $date[0])->format('Y-m-d');
+                $conditions['Partners.created >='] = $date_form;
+            }
+
+            if (isset($_POST['date']) && $_POST['date'] != '') {
+                $date = explode(' to ', $_POST['date']);
+                $flag_date_to = $this->verifyDate($date[1]);
+                $flag_date_form = $this->verifyDate($date[0]);
+                if ($flag_date_to) {
+                    $date_to = Datetime::createFromFormat('Y-m-d', $date[1])->format('Y-m-d');
+                    $conditions['Partners.created <='] = $date_to;
+                }
+                if ($flag_date_form) {
+                    $date_form = Datetime::createFromFormat('Y-m-d', $date[0])->format('Y-m-d');
+                    $conditions['Partners.created >='] = $date_form;
+                }
+            }
+            if (isset($_POST['name']) && $_POST['name'] != '') {
+                $conditions['Partners.name LIKE'] = "%".trim($_POST['name'])."%";
+            }
+            if (isset($_POST['phone']) && $_POST['phone'] != '') {
+                $conditions['Partners.phone'] = trim($_POST['phone']);
+            }
+            if (isset($_POST['client_mac']) && $_POST['client_mac'] != '') {
+                $conditions['Partners.client_mac LIKE'] = "%".trim($_POST['client_mac'])."%";
+            }
+            if (isset($_POST['number_connect']) && $_POST['number_connect'] != '') {
+                switch ($_POST['number_connect']) {
+                    case "1":
+                        $conditions['Partners.num_clients_connect >='] = $_POST['number_connect'];
+                        $conditions['Partners.num_clients_connect <='] = 5;
+                        break;
+                    case "2":
+                        $conditions['Partners.num_clients_connect >='] = 6;
+                        $conditions['Partners.num_clients_connect <='] = 10;
+                        break;
+                    case "3":
+                        $conditions['Partners.num_clients_connect >='] = 11;
+                        $conditions['Partners.num_clients_connect <='] = 15;
+                        break;
+                    default:
+                        $conditions['Partners.num_clients_connect >='] = 15;
+                }
+            }
+            if (isset($_POST['device']) && $_POST['device'] != '') {
+                $conditions['device_id'] = $_POST['device'];
+            } else {
+                if (isset($_POST['list_id_devices']) && $_POST['list_id_devices'] != '') {
+                    $conditions['device_id IN'] = json_decode($_POST['list_id_devices']);
+                }
+            }
+            if (isset($_POST['flag_face']) && $_POST['flag_face'] == 1) {
+                $conditions['Partners.flag_face !='] = 0;
+            }
+
+            if (isset($_POST['delete_flag']) && $_POST['delete_flag'] == 0) {
+                $conditions['Devices.delete_flag !='] = DELETED;
+            }
+
+            $objPHPExcel = $this->PhpExcel->createWorksheet();
+            $objPHPExcel->setActiveSheet(0);
+            $label = [
+                1 => array('label' => 'No'),
+                2 => array('label' => 'Họ và Tên'),
+                3 => array('label' => 'Số điện thoại'),
+                4 => array('label' => 'Địa chỉ email'),
+                5 => array('label' => 'Ngày sinh'),
+                6 => array('label' => 'Địa chỉ'),
+                7 => array('label' => 'Số lần kết nối'),
+                8 => array('label' => 'Địa chỉ mac'),
+                9 => array('label' => 'Tên thiết bị'),
+                10 => array('label' => 'Ngày truy cập')
+            ];
+            $headerStyle = array(
+                'font' => array(
+                    'bold' => true
+                )
+            );
+            $objPHPExcel->addTableHeader($label, array('bold' => true, 'headerStyle' => $headerStyle));
+            $objPHPExcel->addTableFooter();
+            $data = $this->Partners->getOdersDownload($conditions)->toArray();
+            $new_data = array();
+            foreach ($data as $index => $datum) {
+                $new_data[$index] = $datum;
+                $new_data[$index]['device_name'] = $datum['Devices']['name'];
+                $new_data[$index]['create'] = date('d/m/Y', strtotime($datum['created']));
+                unset($new_data[$index]['Devices']);
+                unset($new_data[$index]['created']);
+            }
+            foreach ($new_data as $index => $new_datum) {
+                $objPHPExcel->addTableRow($index, $new_datum);
+            }
+            $fileName = 'data' . '_' . date('Ymd-His') . '.xlsx';
+            $objPHPExcel->save($fileName, 'Excel2007');
+            $objPHPExcel->output($fileName, 'Excel2007');
         }
     }
 }

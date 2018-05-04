@@ -27,10 +27,10 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                         </div>
                         <?php if (!empty($adgroups)) { ?>
                             <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover js-basic-example_ad dataTable">
+                            <table class="table table-bordered table-striped table-hover m-t-10">
                                 <thead>
                                 <tr class="bg-blue-grey">
-                                    <th>STT</th>
+                                    <th class="text-center">STT</th>
                                     <th>Tên quảng cáo</th>
                                     <th>Số lượng thiết bị</th>
                                     <th>User quản lý</th>
@@ -38,16 +38,17 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                     <th>Loại quảng cáo</th>
                                     <th>Mô tả</th>
                                     <th>Ngày tạo</th>
-                                    <th>Điều hướng</th>
+                                    <th class="text-center">Điều hướng</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <?php
+                                $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                 $count = 0;
-
+                                $count = ($page - 1) * 10;
                                 foreach ($adgroups as $key => $adgroup) { $count++;?>
                                     <tr>
-                                        <td> <?php echo $count; ?></td>
+                                        <td class="text-center"> <?php echo $count; ?></td>
                                         <td class="advertise font-bold col-cyan">
                                             <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'detail_group' . '/' . UrlUtil::_encodeUrl($adgroup->id)]) ?>"><?php echo h($adgroup->name); ?></a>
                                         </td>
@@ -79,13 +80,23 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                         </td>
                                         <td><?php echo nl2br($adgroup->description); ?></td>
                                         <td><?php echo date('d/m/Y H:i', strtotime($adgroup->created));?></td>
-                                        <td class="delete_advertise" value="<?php echo h($adgroup->id); ?>">
+                                        <td class="delete_advertise text-center" value="<?php echo h($adgroup->id); ?>">
                                             <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa nhóm</button></td>
                                     </tr>
                                 <?php } ?>
                                 </tbody>
                             </table>
                         </div>
+                            <div class="paginator">
+                                <ul class="pagination pull-right">
+                                    <?= $this->Paginator->first(__('First')) ?>
+                                    <?= $this->Paginator->prev(__('Previous')) ?>
+                                    <?= $this->Paginator->numbers() ?>
+                                    <?= $this->Paginator->next(__('Next')) ?>
+                                    <?= $this->Paginator->last(__('Last')) ?>
+                                </ul>
+                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+                            </div>
                         <?php } ?>
                     </div>
                 </div>
