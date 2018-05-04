@@ -150,82 +150,262 @@ class ReportsController extends AppController
         return $this->redirect(['action' => 'index']);
     }
 
+    /**
+     * **************************************************
+     *
+     * @param $campaign_id
+     * @return void
+     *
+     * **************************************************
+     * **
+     */
     public function reportDetail($campaign_id)
     {
         $campaign_id = \UrlUtil::_decodeUrl($campaign_id);
-
         $campaignGroups_title = $this->CampaignGroups->find('all',[
             'conditions' => [
                 'CampaignGroups.delete_flag !=' => 1,
                 'CampaignGroups.id' => $campaign_id
             ]
         ])->first();
+        $list_id_device = Hash::extract($campaignGroups_title, 'device_id');
+        $device = array();
+        foreach ($list_id_device as $index => $item) {
+            $device = json_decode($item);
+        }
+        $device = $this->Devices->find()->where(['id IN' => $device, 'delete_flag !=' => DELETED])->combine('id', 'name')->toArray();
         $list_day = array();
-        $date = array();
+        $list_date = array();
         if (!empty($campaignGroups_title)) {
             if ($campaignGroups_title['time'] != '') {
                 $date = explode(' - ', $campaignGroups_title['time']);
-                $list_day = $this->get_label($date);
+                $date_from = Datetime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
+                $date_to = Datetime::createFromFormat('d/m/Y', $date[1])->format('Y-m-d');
+                $get_date = $date_from.' to '. $date_to;
+                $list_day = $this->get_label(array($date_from, $date_to));
+                $list_date = $this->getListDay(array($date_from, $date_to));
             }
         }
-        if (!empty($date)) {
-            $date_to = Datetime::createFromFormat('d/m/Y', $date[1])->format('Y-m-d');
-            $date_form = Datetime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
-            $conditions['PartnerVouchers.created >='] = $date_form;
-            $conditions['PartnerVouchers.created <='] = $date_to;
-        }
-        $conditions['PartnerVouchers.campaign_group_id'] = $campaign_id;
 
+        $conditions = array();
+        if (isset($_GET) && $_GET != '') {
+            $conditions['PartnerVouchers.created >='] = $date_from;
+            $conditions['PartnerVouchers.created <='] = $date_to;
+            $data_get['date'] = $date_to.' to '. $date_to;
+            if (isset($_GET['date']) && $_GET['date'] != '') {
+                $date = explode(' to ', $_GET['date']);
+                $date_form = $date[0];
+                $date_to = $date[1];
+                $flag_date_to = $this->verifyDate($date_to);
+                $flag_date_form = $this->verifyDate($date_form);
+                if ($flag_date_to) {
+                    $date_to = Datetime::createFromFormat('Y-m-d', $date_to)->format('Y-m-d');
+                    $conditions['PartnerVouchers.created <='] = $date_to;
+                }
+                if ($flag_date_form) {
+                    $date_form = Datetime::createFromFormat('Y-m-d', $date_form)->format('Y-m-d');
+                    $conditions['PartnerVouchers.created >='] = $date_form;
+                }
+                $list_day = $this->get_label($date);
+                $list_date = $this->getListDay($date);
+            }
+            if (isset($_GET['name']) && $_GET['name'] != '') {
+                $conditions['PartnerVouchers.name LIKE'] = "%".trim($_GET['name'])."%";
+            }
+            if (isset($_GET['phone']) && $_GET['phone'] != '') {
+                $conditions['PartnerVouchers.phone'] = trim($_GET['phone']);
+            }
+            if (isset($_GET['device_name']) && $_GET['device_name'] != '') {
+                $conditions['Devices.name LIKE'] = "%".trim($_GET['device_name'])."%";
+            }
+            if (isset($_GET['client_mac']) && $_GET['client_mac'] != '') {
+                $conditions['PartnerVouchers.client_mac LIKE'] = "%".trim($_GET['client_mac'])."%";
+            }
+            if (isset($_GET['number_connect']) && $_GET['number_connect'] != '') {
+                switch ($_GET['number_connect']) {
+                    case "1":
+                        $conditions['PartnerVouchers.num_clients_connect >='] = $_GET['number_connect'];
+                        $conditions['PartnerVouchers.num_clients_connect <='] = 5;
+                        break;
+                    case "2":
+                        $conditions['PartnerVouchers.num_clients_connect >='] = 6;
+                        $conditions['PartnerVouchers.num_clients_connect <='] = 10;
+                        break;
+                    case "3":
+                        $conditions['PartnerVouchers.num_clients_connect >='] = 11;
+                        $conditions['PartnerVouchers.num_clients_connect <='] = 15;
+                        break;
+                    default:
+                        $conditions['PartnerVouchers.num_clients_connect >='] = 15;
+                }
+            }
+            if (isset($_GET['device']) && $_GET['device'] != '') {
+                $conditions['device_id'] = $_GET['device'];
+            }
+
+            $data_get = $_GET;
+        }
+
+        $conditions['PartnerVouchers.campaign_group_id'] = $campaign_id;
+        $new_condition = array();
+        foreach ($conditions as $index => $condition) {
+            if ($index == 'device_id IN') {
+                $index = 'deviceidlist';
+            } else if ($index == 'device_id') {
+                $index = 'deviceid';
+            } else if ($index == 'Partners.num_clients_connect >=') {
+                $index = 'Partners.numclientsconnect>=';
+            } else if ($index == 'Partners.num_clients_connect <=') {
+                $index = 'Partners.numclientsconnect<=';
+            }
+            $new_condition[$index] = $condition;
+        }
         $data = array();
         $all_campaigns = $this->PartnerVouchers->find()->where($conditions)->toArray();
         foreach ($all_campaigns as $k => $vl) {
             $vl['created'] = date('Y-m-d', strtotime($vl['created']));
             $data[$k] = $vl;
         }
-        $partners = Hash::combine($data, '{n}.id', '{n}.confirm', '{n}.created');
-        $count_confirm_partner = array();
-        $count_no_confirm_partner = array();
+
+        $old_p = array();
+        $new_p = array();
+        $phone_p = array();
+        $chart_n = array();
+        $count_old_partner = array();
+        $count_new_partner = array();
         $chart_number_partner = array();
-        foreach ($partners as  $k => $partner) {
-            $chart_number_partner[] = count($partner);
-            $old_partner = array();
-            $new_partner = array();
-            foreach ($partner as $key => $val) {
-                if ($val == 0) {
-                    $old_partner[] = $val;
-                } else {
-                    $new_partner[] = $val;
-                }
-            }
-            $count_no_confirm_partner[] = count($old_partner);
-            $count_confirm_partner[] = count($new_partner);
-        }
-        $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
         $count_phone_partner = array();
         $list_id_partner = array();
-        foreach ($partner_phone as  $k => $partner) {
-            $phone_partner = array();
-            $id_partner = array();
-            foreach ($partner as $key => $val) {
-                if ($val != '') {
-                    $phone_partner[] = $val;
-                    $id_partner[] = $key;
+        if (!empty($data)) {
+            $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
+            foreach ($partner_phone as  $k => $partner) {
+                $phone_partner = array();
+                $id_partner = array();
+                foreach ($partner as $key => $val) {
+                    if ($val != '') {
+                        $phone_partner[] = $val;
+                        $id_partner[] = $key;
+                    }
+                }
+                $count_phone_partner[$k] = count($phone_partner);
+                $list_id_partner[] = $id_partner;
+            }
+            if (!empty($list_id_partner)) {
+                $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
+                $list_id_partner = json_encode($list_id_partner);
+            }
+            $partners = Hash::combine($data, '{n}.id', '{n}.confirm', '{n}.created');
+
+            foreach ($partners as  $k => $partner) {
+                $chart_number_partner[$k] = count($partner);
+                $old_partner = array();
+                $new_partner = array();
+                foreach ($partner as $key => $val) {
+                    if ($val == 0) {
+                        $old_partner[] = $val;
+                    } else {
+                        $new_partner[] = $val;
+                    }
+                }
+                $count_old_partner[$k] = count($old_partner);
+                $count_new_partner[$k] = count($new_partner);
+            }
+
+            foreach ($list_date as $index => $item) {
+                if (!isset($count_old_partner[$item])) {
+                    $old_p[$index] = 0;
+                } else {
+                    $old_p[$index] = $count_old_partner[$item];
+                }
+                if (!isset($count_new_partner[$item])) {
+                    $new_p[$index] = 0;
+                } else {
+                    $new_p[$index] = $count_new_partner[$item];
+                }
+                if (!isset($count_phone_partner[$item])) {
+                    $phone_p[$index] = 0;
+                } else {
+                    $phone_p[$index] = $count_phone_partner[$item];
+                }
+                if (!isset($chart_number_partner[$item])) {
+                    $chart_n[$index] = 0;
+                } else {
+                    $chart_n[$index] = $chart_number_partner[$item];
                 }
             }
-            $count_phone_partner[] = count($phone_partner);
-            $list_id_partner[] = $id_partner;
         }
-        if (!empty($list_id_partner)) {
-            $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
-        }
-        $sum_no_confirm_partner = array_sum($count_no_confirm_partner);
-        $sum_confirm_partner = array_sum($count_confirm_partner);
-        $sum_phone_partner = array_sum($count_phone_partner);
-        $chart_number_partner = json_encode($chart_number_partner);
-        $count_no_confirm_partner = json_encode($count_no_confirm_partner);
-        $count_confirm_partner = json_encode($count_confirm_partner);
-        $count_phone_partner = json_encode($count_phone_partner);
-        $list_id_partner = json_encode($list_id_partner);
+        $sum_old_partner        = array_sum($old_p);
+        $sum_new_partner        = array_sum($new_p);
+        $sum_phone_partner      = array_sum($phone_p);
+        $count_old_partner      = json_encode($old_p);
+        $count_new_partner      = json_encode($new_p);
+        $count_phone_partner    = json_encode($phone_p);
+        $chart_number_partner   = json_encode($chart_n);
+
+        $this->set(compact(
+            'partners',
+            'conditions',
+            'new_condition',
+            'device',
+            'list_day',
+            'get_date',
+            'data_get',
+            'total_partner',
+            'sum_old_partner',
+            'list_id_partner',
+            'sum_new_partner',
+            'count_old_partner',
+            'sum_phone_partner',
+            'count_new_partner',
+            'count_phone_partner',
+            'chart_number_partner'
+        ));
+
+
+//        $partners = Hash::combine($data, '{n}.id', '{n}.confirm', '{n}.created');
+//        $count_confirm_partner = array();
+//        $count_no_confirm_partner = array();
+//        $chart_number_partner = array();
+//        foreach ($partners as  $k => $partner) {
+//            $chart_number_partner[] = count($partner);
+//            $old_partner = array();
+//            $new_partner = array();
+//            foreach ($partner as $key => $val) {
+//                if ($val == 0) {
+//                    $old_partner[] = $val;
+//                } else {
+//                    $new_partner[] = $val;
+//                }
+//            }
+//            $count_no_confirm_partner[] = count($old_partner);
+//            $count_confirm_partner[] = count($new_partner);
+//        }
+//        $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
+//        $count_phone_partner = array();
+//        $list_id_partner = array();
+//        foreach ($partner_phone as  $k => $partner) {
+//            $phone_partner = array();
+//            $id_partner = array();
+//            foreach ($partner as $key => $val) {
+//                if ($val != '') {
+//                    $phone_partner[] = $val;
+//                    $id_partner[] = $key;
+//                }
+//            }
+//            $count_phone_partner[] = count($phone_partner);
+//            $list_id_partner[] = $id_partner;
+//        }
+//        if (!empty($list_id_partner)) {
+//            $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
+//        }
+//        $sum_no_confirm_partner     = array_sum($count_no_confirm_partner);
+//        $sum_confirm_partner        = array_sum($count_confirm_partner);
+//        $sum_phone_partner          = array_sum($count_phone_partner);
+//        $chart_number_partner       = json_encode($chart_number_partner);
+//        $count_no_confirm_partner   = json_encode($count_no_confirm_partner);
+//        $count_confirm_partner      = json_encode($count_confirm_partner);
+//        $count_phone_partner        = json_encode($count_phone_partner);
+//        $list_id_partner            = json_encode($list_id_partner);
         $this->paginate = array('PartnerVouchers' => array(
             'conditions' => $conditions,
             'limit' => 10
@@ -688,29 +868,29 @@ class ReportsController extends AppController
         return $result;
     }
 
-    public function get_label ($date = array())
-    {
-        $begin = Datetime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
-        $end = Datetime::createFromFormat('d/m/Y', $date[1])->format('Y-m-d');
-        $begin = new DateTime( $begin );
-        $end   = new DateTime( $end );
-        for($i = $begin; $i <= $end; $i->modify('+1 day')){
-            $list_day[] = $i->format("d/m/Y");
-        }
-        $count = count($list_day);
-        end($list_day);         // move the internal pointer to the end of the array
-        $last_key = key($list_day);  // fetches the key of the element pointed to by the internal pointer
-        reset($list_day);
-        $first_key = key($list_day);
-        $check_list = array($first_key, $last_key);
-        if ($count > 7) {
-            foreach ($list_day as $k => $vl) {
-                if (!in_array($k, $check_list)) {
-                    $vl = '';
-                }
-                $list_day[$k] = $vl;
-            }
-        }
-        return json_encode($list_day);
-    }
+//    public function get_label ($date = array())
+//    {
+//        $begin = Datetime::createFromFormat('d/m/Y', $date[0])->format('Y-m-d');
+//        $end = Datetime::createFromFormat('d/m/Y', $date[1])->format('Y-m-d');
+//        $begin = new DateTime( $begin );
+//        $end   = new DateTime( $end );
+//        for($i = $begin; $i <= $end; $i->modify('+1 day')){
+//            $list_day[] = $i->format("d/m/Y");
+//        }
+//        $count = count($list_day);
+//        end($list_day);         // move the internal pointer to the end of the array
+//        $last_key = key($list_day);  // fetches the key of the element pointed to by the internal pointer
+//        reset($list_day);
+//        $first_key = key($list_day);
+//        $check_list = array($first_key, $last_key);
+//        if ($count > 7) {
+//            foreach ($list_day as $k => $vl) {
+//                if (!in_array($k, $check_list)) {
+//                    $vl = '';
+//                }
+//                $list_day[$k] = $vl;
+//            }
+//        }
+//        return json_encode($list_day);
+//    }
 }

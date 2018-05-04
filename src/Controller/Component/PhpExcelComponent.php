@@ -19,6 +19,7 @@ use Cake\Controller\Component;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use PHPExcel_Cell;
+use PHPExcel_Style_Alignment;
 use PHPExcel_Worksheet;
 use PHPExcel_Style;
 
@@ -355,6 +356,12 @@ class PhpExcelComponent extends Component
     }
 
 
+    /**
+     * @param $data
+     * @param array $params
+     * @return $this
+     * @throws \PHPExcel_Exception
+     */
     public function addStyleTableHeader ($data, $params = array())
     {
         $offset = 0;
@@ -406,6 +413,7 @@ class PhpExcelComponent extends Component
         $this->_xls->getActiveSheet()->setCellValueByColumnAndRow($offset++, $this->_row, $k+1);
         foreach ($data as $d) {
             $this->_xls->getActiveSheet()->setCellValueByColumnAndRow($offset++, $this->_row, $d);
+            $this->_xls->getActiveSheet()->getStyle('G')->getAlignment()->setHorizontal(PHPExcel_Style_Alignment::HORIZONTAL_CENTER);
         }
         $this->_row++;
         $this->_tableParams['row_count']++;

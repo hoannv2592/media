@@ -2,13 +2,8 @@
 /**
  * @var \App\View\AppView $apt_key_check
  * @var \App\View\AppView $this
- */
-$cakeDescription = 'Media ';
-?>
-<?php
-/**
- * @var \App\View\AppView $apt_key_check
- * @var \App\View\AppView $this
+ * @var \App\View\AppView $infor_devices
+ * @var $partner_id
  */
 $cakeDescription = 'Media ';
 ?>
@@ -36,6 +31,7 @@ $cakeDescription = 'Media ';
     echo $this->Html->script([
             'back_end/jquery-1.11.0.min',
             'back_end/md5',
+            'md5/md5',
             'jquery.validate',
             'back_end/commom',
             'bootstrap.min'
@@ -193,13 +189,6 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                     <?php } else { ?>
                     <div class="u-ui-padding-x-large landing__cover-wrapper">
                         <?php } ?>
-                        <div class="c-text--social c-text--parent c-text--center c-text">Our social profiles</div>
-                        <ul class="icons mbl">
-                            <li class="facebook"><a href="" target="_blank"><i class="fa fa-facebook"></i></a></li>
-                            <li class="youtube"><a href="" target="_blank"><i class="fa fa-youtube"></i></a></li>
-                            <li class="googleplus"><a href="" target="_blank"><i class="fa fa-google-plus"></i></a></li>
-                            <li class="twitter"><a href="" target="_blank"><i class="fa fa-twitter"></i></a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
@@ -218,28 +207,28 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                                 <?php if (!empty($packages)) {
                                     foreach ($packages as $k => $vl) {
                                         if ($vl == 1) { ?>
-                                            <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                            <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên" /></p>
                                         <?php } elseif ($vl == 2) { ?>
-                                            <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                            <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại" /></p>
                                         <?php } elseif($vl == 3) { ?>
-                                            <p><input type="text" id="_reg_full_birthday" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
+                                            <p><input type="text" id="_reg_full_birthday" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh" /></p>
                                         <?php } else if ($vl== 4) {?>
-                                            <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                            <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ" /></p>
                                         <?php } else { ?>
-                                            <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
+                                            <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email" /></p>
                                         <?php }
                                     }
                                 } else { ?>
-                                    <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
-                                    <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
-                                    <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
-                                    <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
-                                    <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
+                                    <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên" /></p>
+                                    <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại" /></p>
+                                    <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh" /></p>
+                                    <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ" /></p>
+                                    <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email" /></p>
                                 <?php }?>
-                                <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>">
-                                <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>">
-                                <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>">
-                                <p><input type="submit" class="_btn" value="Đăng ký"></p>
+                                <input type="hidden" name="device_id" value="<?php echo $infor_devices->id; ?>" />
+                                <input type="hidden" name="user_id" value="<?php echo $infor_devices->user_id; ?>" />
+                                <input type="hidden" name="partner_id" value="<?php echo $partner_id; ?>" />
+                                <p><input type="submit" class="_btn" value="Đăng ký" /></p>
                             </form>
                         </div>
                     </div>
@@ -303,23 +292,23 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                             <?php if (!empty($packages)) {
                                 foreach ($packages as $k => $vl) {
                                     if ($vl == 1) { ?>
-                                        <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
+                                        <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên" /></p>
                                     <?php } elseif ($vl == 2) { ?>
-                                        <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
+                                        <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại" /></p>
                                     <?php } elseif($vl == 3) { ?>
-                                        <p><input type="text" id="_reg_full_birthday" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
+                                        <p><input type="text" id="_reg_full_birthday" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh" /></p>
                                     <?php } else if ($vl== 4) {?>
-                                        <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
+                                        <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ" /></p>
                                     <?php } else { ?>
-                                        <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
+                                        <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email" /></p>
                                     <?php }
                                 }
                             } else { ?>
-                                <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên"></p>
-                                <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại"></p>
-                                <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh"></p>
-                                <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ"></p>
-                                <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email"></p>
+                                <p><input type="text" id="_reg_full_name" name="name" value="" class="txt_input" placeholder="Họ và tên" /></p>
+                                <p><input type="text" id="_reg_telephone" name="phone" value="" class="txt_input" placeholder="Số điện thoại" /></p>
+                                <p><input type="text" id="_reg_full_" name="birthday" value="" class="txt_input datetime_birthday" placeholder="Ngày sinh" /></p>
+                                <p><input type="text" id="_reg_address" name="address" value="" class="txt_input" placeholder="Địa chỉ" /></p>
+                                <p><input type="text" id="_reg_email" name="email" value="" class="txt_input" placeholder="Địa chỉ email" /></p>
                             <?php } ?>
                             <?php
                             $device_id = isset($infor_devices->id) ? $infor_devices->id : '';

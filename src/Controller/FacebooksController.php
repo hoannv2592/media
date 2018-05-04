@@ -78,18 +78,59 @@ class FacebooksController extends AppController
             if (isset($_GET['client_mac']) && $_GET['client_mac'] != '') {
                 $conditions['Partners.client_mac LIKE'] = "%".trim($_GET['client_mac'])."%";
             }
+            if (isset($_GET['number_connect']) && $_GET['number_connect'] != '') {
+                switch ($_GET['number_connect']) {
+                    case "1":
+                        $conditions['Partners.num_clients_connect >='] = $_GET['number_connect'];
+                        $conditions['Partners.num_clients_connect <='] = 5;
+                        break;
+                    case "2":
+                        $conditions['Partners.num_clients_connect >='] = 6;
+                        $conditions['Partners.num_clients_connect <='] = 10;
+                        break;
+                    case "3":
+                        $conditions['Partners.num_clients_connect >='] = 11;
+                        $conditions['Partners.num_clients_connect <='] = 15;
+                        break;
+                    default:
+                        $conditions['Partners.num_clients_connect >='] = 15;
+                }
+            }
+            if (isset($_GET['device']) && $_GET['device'] != '') {
+                $conditions['device_id'] = $_GET['device'];
+            }
             $data_get = $_GET;
         }
         $conditions['Partners.flag_face !='] = 0;
         $conditions['Devices.delete_flag !='] = DELETED;
         if ($user['role'] == User::ROLE_ONE) {
             $query = $this->Partners->getOders($conditions);
+            $device = $this->Devices->find()->where(['Devices.delete_flag !=' => 1])->select(['id', 'name'])->combine('id', 'name')->toArray();
         } else {
             $device = $this->Devices->find()->where(['user_id' => $user['id'], 'Devices.delete_flag !=' => 1])->select(['id'])->combine('id', 'id')->toArray();
             if (!empty($device)) {
-                $conditions['device_id IN'] = $device;
+                if (!isset($conditions['device_id'])) {
+                    $conditions['device_id IN'] = array_keys($device);
+                }
                 $query = $this->Partners->getOders($conditions);
             }
+        }
+        $new_condition = array();
+        foreach ($conditions as $index => $condition) {
+            if ($index == 'device_id IN') {
+                $index = 'deviceidlist';
+            } else if ($index == 'device_id') {
+                $index = 'deviceid';
+            } else if ($index == 'Partners.num_clients_connect >=') {
+                $index = 'Partners.numclientsconnect>=';
+            } else if ($index == 'Partners.num_clients_connect <=') {
+                $index = 'Partners.numclientsconnect<=';
+            } else if ($index == 'Partners.flag_face !=') {
+                $index = 'Partners.flagface';
+            } else if ($index == 'Devices.delete_flag !=') {
+                $index = 'Devices.deleteflag';
+            }
+            $new_condition[$index] = $condition;
         }
         $data = array();
         $total_partner = count($query->toArray());
@@ -202,6 +243,8 @@ class FacebooksController extends AppController
         $this->set(compact(
             'partners',
             'get_date',
+            'device',
+            'new_condition',
             'list_day',
             'data_get',
             'total_partner',

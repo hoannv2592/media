@@ -7,6 +7,7 @@ use App\Model\Entity\User;
 use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use DateTime;
 use function MongoDB\BSON\toJSON;
 use PHPExcel;
 use PHPExcel_IOFactory;
@@ -603,14 +604,19 @@ class UsersController extends AppController
                     //unset($vl['label']);
                 }
             }
+            pr($data_label);
+            pr($lable);
             $objPHPExcel->addTableHeader($data_label, array('bold' => true, 'headerStyle' => $headerStyle));
             $objPHPExcel->addTableFooter();
+            pr($partners);
             foreach ($partners as $k => $row) {
+                pr($k);
                 $objPHPExcel->addTableRow($k, $row);
             }
-            $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
-            $objPHPExcel->save($fileName, 'Excel2007');
-            $objPHPExcel->output($fileName, 'Excel2007');
+            die;
+//            $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
+//            $objPHPExcel->save($fileName, 'Excel2007');
+//            $objPHPExcel->output($fileName, 'Excel2007');
         } else {
             $this->redirect('partners/index');
         }
@@ -720,5 +726,99 @@ class UsersController extends AppController
         } else {
             $this->redirect('partners/index');
         }
+    }
+
+    /**
+     * *****************************************************
+     * download excel file
+     *
+     * @param $arr
+     *
+     * *****************************************************
+     *
+     * @throws \PHPExcel_Exception
+     */
+    public function download($arr)
+    {
+        $objPHPExcel = $this->PhpExcel->createWorksheet();
+        $objPHPExcel->setActiveSheet(0);
+        $this->autoRender = false;
+        $_GET = json_decode($arr);
+        $_GET = (array) $_GET;
+        pr($_GET);
+        $conditions = array();
+        if (isset($_GET) && $_GET != '') {
+            if (isset($_GET['partners.created >=']) && $_GET['partners.created >='] != '') {
+                $conditions['Partners.created >='] = $_GET['partners.created >='];
+            }
+            if (isset($_GET['partners.created <=']) && $_GET['partners.created <='] != '') {
+                $conditions['partners.created <='] = $_GET['partners.created <='];
+            }
+            if (isset($_GET['name']) && $_GET['name'] != '') {
+                $conditions['Partners.name LIKE'] = "%".trim($_GET['name'])."%";
+            }
+            if (isset($_GET['phone']) && $_GET['phone'] != '') {
+                $conditions['Partners.phone'] = trim($_GET['phone']);
+            }
+            if (isset($_GET['device_name']) && $_GET['device_name'] != '') {
+                $conditions['Devices.name LIKE'] = "%".trim($_GET['device_name'])."%";
+            }
+            if (isset($_GET['client_mac']) && $_GET['client_mac'] != '') {
+                $conditions['Partners.client_mac LIKE'] = "%".trim($_GET['client_mac'])."%";
+            }
+            if (isset($_GET['partners.numclientsconnect>=']) && $_GET['partners.numclientsconnect>='] != '') {
+                $conditions['Partners.num_clients_connect >='] = $_GET['partners.numclientsconnect>='];
+            }
+            if (isset($_GET['partners.numclientsconnect<=']) && $_GET['partners.numclientsconnect<='] != '') {
+                $conditions['Partners.num_clients_connect <='] = $_GET['partners.numclientsconnect<='];
+            }
+            if (isset($_GET['deviceid']) && $_GET['deviceid'] != '') {
+                $conditions['device_id'] = $_GET['deviceid'];
+            }
+            if (isset($_GET['deviceidlist']) && $_GET['deviceidlist'] != '') {
+                $conditions['device_id IN'] = $_GET['deviceidlist'];
+            }
+            if (isset($_GET['partners.flagface']) && $_GET['partners.flagface'] == 0) {
+                $conditions['Partners.flag_face !='] = $_GET['partners.flagface'];
+            }
+            if (isset($_GET['devices.deleteflag']) && $_GET['devices.deleteflag'] != '') {
+                $conditions['Devices.delete_flag !='] = $_GET['devices.deleteflag'];
+            }
+        }
+        $label = [
+            1 => array('label' => 'No'),
+            2 => array('label' => 'Họ và Tên'),
+            3 => array('label' => 'Số điện thoại'),
+            4 => array('label' => 'Địa chỉ email'),
+            5 => array('label' => 'Ngày sinh'),
+            6 => array('label' => 'Địa chỉ'),
+            7 => array('label' => 'Số lần kết nối'),
+            8 => array('label' => 'Địa chỉ mac'),
+            9 => array('label' => 'Tên thiết bị'),
+            10 => array('label' => 'Ngày truy cập')
+        ];
+        $headerStyle = array(
+            'font' => array(
+                'bold' => true
+            )
+        );
+        $objPHPExcel->addTableHeader($label, array('bold' => true, 'headerStyle' => $headerStyle));
+        $objPHPExcel->addTableFooter();
+        $data = $this->Partners->getOdersDownload($conditions)->toArray();
+        $new_data = array();
+        foreach ($data as $index => $datum) {
+            $new_data[$index] = $datum;
+            $new_data[$index]['device_name'] = $datum['Devices']['name'];
+            $new_data[$index]['create'] = date('d/m/Y', strtotime($datum['created']));
+            unset($new_data[$index]['Devices']);
+            unset($new_data[$index]['created']);
+        }
+        foreach ($new_data as $index => $new_datum) {
+            $objPHPExcel->addTableRow($index, $new_datum);
+        }
+        $fileName = 'data' . '_' . date('Ymd-His').'.xlsx';
+        $objPHPExcel->save($fileName, 'Excel2007');
+        $objPHPExcel->output($fileName, 'Excel2007');
+
     }
 }

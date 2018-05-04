@@ -300,3 +300,7 @@ th>a {
 .storke_4{
     border: 2px solid #32c861;
 }
+
+.sel1 {
+    cursor: pointer;
+}

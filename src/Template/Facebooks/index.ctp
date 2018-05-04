@@ -10,6 +10,8 @@
  * @var $count_phone_partner
  * @var $count_new_partner
  * @var $get_date
+ * @var $new_condition
+ * @var $count_email_partner
  * @var \App\Model\Entity\Users[]|\Cake\Collection\CollectionInterface $users
  */
 ?>
@@ -25,7 +27,8 @@
                         <div class="demo-masked-input">
                             <div class="row clearfix">
                                 <div class="col-md-6" style="margin-bottom: 0 !important;">
-                                    <div class="col-md-12">
+                                    <div class="card-box">
+                                    <div class="row">
                                         <b>Tên khách hàng</b>
                                         <div class="input-group">
                                             <span class="input-group-addon">
@@ -51,7 +54,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="row">
                                         <b>Số điện thoại di động</b>
                                         <div class="input-group">
                                             <span class="input-group-addon">
@@ -70,27 +73,7 @@
                                             </div>
                                         </div>
                                     </div>
-
-                                    <div class="col-md-12">
-                                        <b>Thiết bị quản lý </b>
-                                        <div class="input-group">
-                                            <span class="input-group-addon">
-                                                <i class="material-icons">devices</i>
-                                            </span>
-                                            <div class="form-line">
-                                                <?php
-                                                $device_name = isset($data_get['device_name']) ? ($data_get['device_name']):'';
-                                                echo $this->Form->control('device_name', array(
-                                                    'label' => false,
-                                                    'class' => 'form-control',
-                                                    'value' => $device_name,
-                                                    'required' => false,
-                                                ));
-                                                ?>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12">
+                                    <div class="row">
                                         <b>Địa chỉ mac </b>
                                         <div class="input-group">
                                             <span class="input-group-addon">
@@ -109,7 +92,54 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="sel1">Chọn thiết bị</label>
+                                                <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="material-icons">devices</i>
+                                                </span>
+                                                    <div class="form-line">
+                                                        <?php
+                                                        echo $this->Form->select('device',
+                                                            $device, [
+                                                                'empty' => '-----',
+                                                                'value' => isset($data_get['device']) ? $data_get['device']: '',
+                                                                'class' => 'form-control sel1'
+                                                            ]
+                                                        );
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="form-group">
+                                                <label for="sel1">Số lần kết nối</label>
+                                                <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="material-icons">confirmation_number</i>
+                                                </span>
+                                                    <div class="form-line">
+                                                        <?php
+                                                        echo $this->Form->select('number_connect',
+                                                            [
+                                                                1 => 'Từ 1 đến 5',
+                                                                2 => 'Từ 6 đến 10',
+                                                                3 => 'Từ 11 đến 15',
+                                                                4 => 'Lớn hơn 15'
+                                                            ], [
+                                                                'empty' => '-----',
+                                                                'value' => isset($data_get['number_connect']) ? $data_get['number_connect']: '',
+                                                                'class' => 'form-control sel1'
+                                                            ]
+                                                        );
+                                                        ?>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    <div class="row">
                                         <b>Khoảng thời gian</b>
                                         <div class="input-group">
                                             <span class="input-group-addon">
@@ -129,10 +159,11 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-12">
+                                    <div class="row">
                                         <div class=""><button class="btn btn-primary waves-effect" id="submit" type="submit">Tìm kiếm</button> </div>
                                     </div>
                                     <?php echo $this->Form->end(); ?>
+                                    </div>
                                 </div>
                                 <div class="col-md-6" style="margin-bottom: 0 !important;">
                                     <div class="card-box">
@@ -174,17 +205,17 @@
                                         <div class="m-t-10">
                                             <div id="line-chart-tooltips" class="ct-chart ct-golden-section"></div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-12 pull-right">
-                                        <div class="">
-                                            <?php
-                                            if (!empty($list_id_partner_email)) {
-                                                $list_id_partner_email = json_decode($list_id_partner_email);
-                                            }
-                                            if (!empty($list_id_partner)) {
-                                                $list_id_partner_email = json_encode($list_id_partner_email); ?>
-                                                <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'downloadExcelFace/'.$list_id_partner_email]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có email</a>
-                                            <?php } ?>
+                                        <div class="m-t-10 row">
+                                            <div class="">
+                                                <?php
+                                                if (!empty($list_id_partner_email)) {
+                                                    $list_id_partner_email = json_decode($list_id_partner_email);
+                                                }
+                                                if (!empty($list_id_partner)) {
+                                                    $list_id_partner_email = json_encode($list_id_partner_email); ?>
+                                                    <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'downloadExcelFace/'.$list_id_partner_email]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có email</a>
+                                                <?php } ?>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -193,6 +224,9 @@
                             <div class="row"></div>
                         </div>
                         <?php if (!empty($partners)) { ?>
+                            <?php $data = json_encode($new_condition); ?>
+                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'download/'.$data]);?>" class="btn bg-orange waves-effect">Tải về danh sách</a>
+                        <?php } ?>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable">
                                     <thead>
@@ -205,8 +239,7 @@
                                         <th scope="col">Địa chỉ</th>
                                         <th scope="col">Email</th>
                                         <th scope="col">Thời gian truy cập
-                                        </th><th scope="col">Số lần ghé thăm
-                                        </th>
+                                        </th><th scope="col">Số lần kết nối</th>
                                         <th scope="col">Thiết bị quản lý</th>
                                     </tr>
                                     </thead>
@@ -246,41 +279,12 @@
                                     <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
                                 </div>
                             </div>
-                        <?php } else { ?>
-                            <div class="text-left">Chưa có khách hàng sử dụng thiết bị này</div>
-                        <?php } ?>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </section>
-<style>
-    .pagination > .disabled > a, .pagination > .disabled > a:focus, .pagination > .disabled > a:hover, .pagination > .disabled > span, .pagination > .disabled > span:focus, .pagination > .disabled > span:hover {
-        color: #777;
-        cursor: not-allowed;
-        background-color: #fff !important;
-        border-color: #ddd;
-    }
-    .desc {
-        float: right;
-    }
-    th>a {
-        float: right;
-    }
-    .storke_1{
-        border: 2px solid #4489e4;
-    }
-    .storke_2{
-        border: 2px solid #f96a74;
-    }
-    .storke_3 {
-        border: 2px solid #ffa91c;
-    }
-    .storke_4{
-        border: 2px solid #32c861;
-    }
-</style>
 <?php
 echo $this->Html->script([
     'chartist/js/chartist.min',

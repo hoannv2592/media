@@ -639,6 +639,7 @@ class DevicesController extends AppController
                 $chap_id = isset($this->request->data['chap_id']) ? $this->request->data['chap_id'] : '';
                 $auth_target = isset($this->request->data['auth_target']) ? $this->request->data['auth_target'] : '';
                 $client_mac = isset($this->request->data['client_mac']) ? $this->request->data['client_mac'] : '';
+                // todo test data
                 if (isset($flag_id) && $flag_id == Device::TB_MIRKOTIC) {
                     $client_mac = isset($this->request->data['mac']) ? $this->request->data['mac'] : '';
                     $conn = ConnectionManager::get('default');
@@ -676,6 +677,7 @@ class DevicesController extends AppController
                                 $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d H:i:s")));
                             }
                             $device_campaign = array();
+                            $campaign_id_only = '';
                             if (!empty($interval)) {
                                 asort($interval);
                                 $campaign_id_only = key($interval);
@@ -686,16 +688,9 @@ class DevicesController extends AppController
                             if (!empty($device_campaign)) {
                                 $campaign_id = false;
                                 // todo kiem tra partner da ton tai trong partner_voucher.
-                                $pa_voucher = $this->PartnerVouchers->find()->where(
-                                    array(
-                                        'device_id' => $id_device,
-                                        'client_mac' => $client_mac,
-                                        'campaign_group_id' => $campaign_id_only,
-                                    ))->first();
+                                $pa_voucher = $this->PartnerVouchers->find()->where(array('device_id' => $id_device, 'client_mac' => $client_mac, 'campaign_group_id' => $campaign_id_only))->first();
                                 // todo dem so luong voucher phat ra.
-//                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
                                 $number_voucher_userd = $this->PartnerVouchers->find()->where(['campaign_group_id' => $campaign_id_only])->count();
-                                // test
                                 if (!empty($pa_voucher)) {
                                     if ($pa_voucher->confirm == 1) {
                                         $flag_normal = false;
@@ -790,7 +785,7 @@ class DevicesController extends AppController
                                     }
                                 } else {
                                     $flag_return = Device::NO_RETURN;
-                                    if ($number_voucher_userd <= $device_campaign->number_voucher) {
+                                    if ($number_voucher_userd < $device_campaign->number_voucher) {
                                         if ($device_campaign->random == 2) {
                                             $flag_normal = true;
                                         } else {
@@ -1060,7 +1055,6 @@ class DevicesController extends AppController
                             foreach ($device_campaign as $k => $vl) {
                                 $vl = explode(' - ', $vl);
                                 $my_date = Datetime::createFromFormat('d/m/Y', $vl[1])->format('Y-m-d');
-                                //$my_date = date('Y-m-d', strtotime($vl[1]));
                                 if ($my_date >= $current_date) {
                                     $campaing_id[$k] = $my_date;
                                 }
@@ -1070,6 +1064,7 @@ class DevicesController extends AppController
                                 $interval[$k] = abs(strtotime($vl) - strtotime(date("Y-m-d")));
                             }
                             $device_campaign = array();
+                            $campaign_id_only = '';
                             if (!empty($interval)) {
                                 asort($interval);
                                 $campaign_id_only = key($interval);
@@ -1080,13 +1075,8 @@ class DevicesController extends AppController
                             }
                             if (!empty($device_campaign)) {
                                 // todo kiem tra partner da ton tai trong partner_voucher.
-                                $pa_voucher = $this->PartnerVouchers->find()->where(array(
-                                    'device_id' => $id_device,
-                                    'client_mac' => $client_mac,
-                                    'campaign_group_id' => $campaign_id_only,
-                                ))->first();
+                                $pa_voucher = $this->PartnerVouchers->find()->where(array('device_id' => $id_device, 'client_mac' => $client_mac, 'campaign_group_id' => $campaign_id_only))->first();
                                 // todo dem so luong voucher phat ra.
-//                                $number_voucher_userd = $this->PartnerVouchers->find()->where(['confirm ' => '1', 'campaign_group_id' => $campaign_id_only])->count();
                                 $number_voucher_userd = $this->PartnerVouchers->find()->where(['campaign_group_id' => $campaign_id_only])->count();
                                 $campaign_id = false;
                                 if (!empty($pa_voucher)) {
@@ -1182,7 +1172,7 @@ class DevicesController extends AppController
                                     }
                                 } else {
                                     $flag_return = Device::NO_RETURN;
-                                    if ($number_voucher_userd <= $device_campaign->number_voucher) {
+                                    if ($number_voucher_userd < $device_campaign->number_voucher) {
                                         if ($device_campaign->random == 2) {
                                             $flag_normal = true;
                                         } else {
@@ -1230,7 +1220,7 @@ class DevicesController extends AppController
                                             'num_clients_connect' => 1,
                                             'name' => 'user_online',
                                             'apt_device_pass' => $this->radompassWord(),
-                                            'campaign_group_id' => $campaign_id_only,
+                                            'campaign_group_id' => $campaign_id_only
                                         );
                                         $new_partner = $this->Partners->newEntity();
                                         $new_partner = $this->Partners->patchEntity($new_partner, $save_new_pa_vou_v);
@@ -1770,6 +1760,13 @@ class DevicesController extends AppController
         }
     }
 
+    /**
+     * ************************************************
+     * @param $device_id
+     * @return \Cake\Http\Response|null
+     *
+     * ************************************************
+     */
     public function viewQcVoucher($device_id)
     {
         if (isset($device_id)) {
@@ -1829,6 +1826,14 @@ class DevicesController extends AppController
         }
     }
 
+    /**
+     * ************************************************
+     * @param int $length
+     *
+     * @return string
+     *
+     * ************************************************
+     */
     public function generateRandomString($length = 12)
     {
 

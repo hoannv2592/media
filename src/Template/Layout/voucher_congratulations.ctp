@@ -29,6 +29,7 @@ $cakeDescription = 'Media ';
         'scrolloverflow.min',
         'jquery.fullpage',
         'md5',
+        'md5/md5',
         'examples',
         'bootstrap-datetimepicker',
         'jquery.validate.min',

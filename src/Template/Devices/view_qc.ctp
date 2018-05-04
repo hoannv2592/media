@@ -6,6 +6,7 @@
  * @var \App\View\AppView $this
  * @var \App\View\AppView auth_target
  * @var $partner_id
+ * @var $flag_client_mac
  *
  */
 $this->layout = 'landing';

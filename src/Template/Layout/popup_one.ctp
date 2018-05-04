@@ -2,13 +2,7 @@
 /**
  * @var \App\View\AppView $apt_key_check
  * @var \App\View\AppView $this
- */
-$cakeDescription = 'Media ';
-?>
-<?php
-/**
- * @var \App\View\AppView $apt_key_check
- * @var \App\View\AppView $this
+ * @var \App\View\AppView $infor_devices
  */
 $cakeDescription = 'Media ';
 ?>
