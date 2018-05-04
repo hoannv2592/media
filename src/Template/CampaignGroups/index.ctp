@@ -22,13 +22,12 @@
                                    class="btn btn-primary waves-effect m-r-20">THÊM MỚI CHIẾN DỊCH</a>
                             </div>
                         </div>
-                        <?php
-                        if (!empty($campaignGroups)) { ?>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover js-exportable_c dataTable">
+                        <?php if (!empty($campaignGroups)) { ?>
+                            <div class="table-responsive m-t-10">
+                                <table class="table table-bordered table-striped table-hover">
                                     <thead>
                                     <tr class="bg-blue-grey">
-                                        <th>STT</th>
+                                        <th class="text-center">STT</th>
                                         <th>Tên chiến dịch</th>
                                         <th>Thời gian</th>
                                         <th>Địa chỉ</th>
@@ -38,22 +37,22 @@
                                         <th>Mô tả chiến dịch</th>
                                         <th>User quản lý</th>
                                         <th>Ngày tạo</th>
-                                        <th>Điều hướng</th>
+                                        <th class="text-center">Điều hướng</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <?php
+                                    $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                     $count = 0;
-                                    foreach ($campaignGroups as $key => $campaignGroup) {
-                                        $count++; ?>
+                                    $count = ($page - 1) * 10;
+                                    foreach ($campaignGroups as $key => $campaignGroup) { $count++;  $device = json_decode($campaignGroup->device_name);?>
                                         <tr>
-                                            <td><?php echo $count; ?></td>
+                                            <td class="align-center"><?php echo $count; ?></td>
                                             <td class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'detail_campaig' . '/' . UrlUtil::_encodeUrl($campaignGroup->id)]) ?>">
                                                     <?php echo $campaignGroup->name; ?>
                                                 </a>
                                             </td>
-
                                             <td><?php echo $campaignGroup->time; ?></td>
                                             <td><?php echo $campaignGroup->address; ?></td>
                                             <td>
@@ -79,7 +78,7 @@
                                                 </a>
                                             </td>
                                             <td><?php echo date('d/m/Y H:i', strtotime($campaignGroup->created)); ?></td>
-                                            <td class="delete_advertise" value="<?php echo h($campaignGroup->id); ?>">
+                                            <td class="delete_advertise text-center" value="<?php echo h($campaignGroup->id); ?>">
                                                 <button type="button" class="btn btn-danger waves-effect"
                                                         data-toggle="modal" data-target="#modal-03">Xóa chiến dịch
                                                 </button>
@@ -88,6 +87,16 @@
                                     <?php } ?>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="paginator">
+                                <ul class="pagination pull-right">
+                                    <?= $this->Paginator->first(__('First')) ?>
+                                    <?= $this->Paginator->prev(__('Previous')) ?>
+                                    <?= $this->Paginator->numbers() ?>
+                                    <?= $this->Paginator->next(__('Next')) ?>
+                                    <?= $this->Paginator->last(__('Last')) ?>
+                                </ul>
+                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
                             </div>
                         <?php } ?>
                     </div>

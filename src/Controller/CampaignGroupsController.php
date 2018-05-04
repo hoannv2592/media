@@ -53,15 +53,6 @@ class CampaignGroupsController extends AppController
         if ($login['role'] == User::ROLE_ONE) {
             $campaignGroups = $this->CampaignGroups->find('all',[
                 'contain'  => [
-                    'PartnerVouchers' => function ($q) {
-                    return $q
-                        ->where([
-                            'PartnerVouchers.confirm ' => 1
-                        ])
-                        ->select([
-                            'campaign_group_id','id'
-                        ]);
-                },
                     'Users' => function ($q) {
                         return $q
                         ->select([
@@ -72,19 +63,10 @@ class CampaignGroupsController extends AppController
                 'conditions' => [
                     'CampaignGroups.delete_flag !=' => 1,
                 ]
-            ])->toArray();
+            ]);
         } else {
             $campaignGroups = $this->CampaignGroups->find('all',[
                 'contain'  => [
-                    'PartnerVouchers' => function ($q) {
-                        return $q
-                            ->where([
-                                'PartnerVouchers.confirm ' => 1
-                            ])
-                            ->select([
-                                'campaign_group_id','id'
-                            ]);
-                    },
                     'Users' => function ($q) {
                         return $q
                             ->select([
@@ -96,8 +78,12 @@ class CampaignGroupsController extends AppController
                     'CampaignGroups.delete_flag !=' => 1,
                     'CampaignGroups.user_id_campaign_group' => $user_login_id
                 ]
-            ])->toArray();
+            ]);
         }
+        $campaignGroups = $this->paginate($campaignGroups, ['limit' => 10, 'order' => [
+            'CampaignGroups.created' => 'DESC']
+        ])
+            ->toArray();
         $this->set(compact('campaignGroups'));
         $this->set('_serialize', ['campaignGroups']);
     }

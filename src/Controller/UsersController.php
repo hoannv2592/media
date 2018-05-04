@@ -61,7 +61,7 @@ class UsersController extends AppController
                 'conditions' => [
                     'Users.delete_flag !=' => 1
                 ]
-            ])->toArray();
+            ]);
         } else {
             $users = $this->Users->find('all', [
                 'contain' => ['Devices' => function ($q) {
@@ -77,8 +77,12 @@ class UsersController extends AppController
                     'Users.id' => $login['id'],
                     'Users.delete_flag !=' => 1,
                 ]
-            ])->toArray();
+            ]);
         }
+        $users = $this->paginate($users, ['limit' => 10, 'order' => [
+            'Users.created' => 'DESC']
+        ])
+            ->toArray();
         $this->set(compact('users'));
 
     }

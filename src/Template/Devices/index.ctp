@@ -67,10 +67,7 @@ $this->assign('title', 'Quản lý thiết bị');
                                             $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                             $count = 0;
                                             $count = ($page - 1) * 10;
-
-                                            foreach ($devices as $key => $device) {
-                                                $count++;
-                                                ?>
+                                            foreach ($devices as $key => $device) { $count++; ?>
                                                 <tr valign="middle">
                                                     <td style="text-align: center"><?php echo $count; ?></td>
                                                     <td class="advertise font-bold col-cyan"><a href="#" onclick="view_log_partner_histories(<?php echo $device->id; ?>)" data-toggle="modal" data-target="#defaultModal"><?php echo h($device->name); ?></a></td>

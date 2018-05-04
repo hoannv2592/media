@@ -28,8 +28,8 @@ $this->assign('title', 'Quản lý người dùng');
                         <?php } ?>
                         <?php
                         if (!empty($users)) { ?>
-                            <div class="table-responsive">
-                                <table class="table table-bordered table-striped table-hover js-exportable dataTable">
+                            <div class="table-responsive m-t-10">
+                                <table class="table table-bordered table-striped table-hover ">
                                     <thead>
                                     <tr class="bg-blue-grey">
                                         <th>STT</th>
@@ -66,7 +66,7 @@ $this->assign('title', 'Quản lý người dùng');
                                             <td><?php echo nl2br($user->address); ?></td>
                                             <td><?php echo nl2br($user->phone); ?></td>
                                             <td><?php echo date('d/m/Y H:i', strtotime($user->created)); ?></td>
-                                            <td class="delete_advertise" value="<?php echo h($user->id); ?>">
+                                            <td class="delete_advertise text-center" value="<?php echo h($user->id); ?>">
                                                 <button type="button" class="btn btn-danger waves-effect"
                                                         data-toggle="modal" data-target="#modal-03">Xóa
                                                 </button>
@@ -75,6 +75,16 @@ $this->assign('title', 'Quản lý người dùng');
                                     <?php } ?>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="paginator">
+                                <ul class="pagination pull-right">
+                                    <?= $this->Paginator->first(__('First')) ?>
+                                    <?= $this->Paginator->prev(__('Previous')) ?>
+                                    <?= $this->Paginator->numbers() ?>
+                                    <?= $this->Paginator->next(__('Next')) ?>
+                                    <?= $this->Paginator->last(__('Last')) ?>
+                                </ul>
+                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
                             </div>
                         <?php } ?>
                     </div>

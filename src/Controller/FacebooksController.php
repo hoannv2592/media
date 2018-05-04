@@ -107,7 +107,7 @@ class FacebooksController extends AppController
             $query = $this->Partners->getOders($conditions);
             $device = $this->Devices->find()->where(['Devices.delete_flag !=' => 1])->select(['id', 'name'])->combine('id', 'name')->toArray();
         } else {
-            $device = $this->Devices->find()->where(['user_id' => $user['id'], 'Devices.delete_flag !=' => 1])->select(['id'])->combine('id', 'id')->toArray();
+            $device = $this->Devices->find()->where(['user_id' => $user['id'], 'Devices.delete_flag !=' => 1])->select(['id', 'name'])->combine('id', 'name')->toArray();
             if (!empty($device)) {
                 if (!isset($conditions['device_id'])) {
                     $conditions['device_id IN'] = array_keys($device);

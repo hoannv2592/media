@@ -304,3 +304,7 @@ th>a {
 .sel1 {
     cursor: pointer;
 }
+
+table td {
+    vertical-align: middle !important;
+}
