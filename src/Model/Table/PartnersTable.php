@@ -108,7 +108,10 @@ class PartnersTable extends Table
                     'type' => 'LEFT',
                     'conditions' => 'Devices.id = Partners.device_id',
                 ]
-            ])
+            ])->order([
+                'Partners.created' => 'DESC',
+                'Partners.num_clients_connect' => 'DESC'
+            ]);
         ;
         if (!empty($conditions)) {
             $result->where($conditions);
@@ -142,7 +145,10 @@ class PartnersTable extends Table
                     'type' => 'LEFT',
                     'conditions' => 'Devices.id = Partners.device_id',
                 ]
-            ])->order(['Partners.created' => 'DESC', 'Partners.num_clients_connect' => 'DESC']);
+            ])->order([
+                'Partners.created' => 'DESC',
+                'Partners.num_clients_connect' => 'DESC'
+            ]);
         ;
         if (!empty($conditions)) {
             $result->where($conditions);

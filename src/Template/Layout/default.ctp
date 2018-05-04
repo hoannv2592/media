@@ -227,7 +227,7 @@ $cakeDescription = 'Media ';
                 <li class="left_menu">
                     <?php } ?>
                     <a href="<?php echo $this->Url->build(["controller" => "Facebooks", "action" => "index"]); ?>">
-                        <i class="material-icons">account_box</i>
+                        <i class="material-icons">record_voice_over</i>
                         <span>Báo cáo facebook</span>
                     </a>
                 </li>

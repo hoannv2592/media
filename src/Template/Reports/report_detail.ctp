@@ -9,6 +9,7 @@
  * @var \App\View\AppView $count_phone_partner
  * @var \App\View\AppView $get_date
  * @var \App\View\AppView $data_get
+ * @var \App\View\AppView $new_condition
  */
 ?>
 <section class="content" xmlns="">
@@ -34,31 +35,7 @@
                     </div>
                     <div class="body">
                         <div class="col-md-6">
-                            <div class="card-box">
-                                <div class="table-responsive">
-                                    <div class="table-responsive">
-                                        <table class="table table-primary mb30 table-bordered detail">
-                                            <tbody>
-                                            <tr>
-                                                <th width="25%" class="middle">Tên chiến dịch</th>
-                                                <td width="75%" colspan="1" class="middle">
-                                                    <?= h($campaignGroups_title->name) ?>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="middle">Số lượng voucher</th>
-                                                <td colspan="1" class="middle" id="name"><?= h($this->Paginator->counter(['format' => __('{{count}}')]) . '/' . $campaignGroups_title->number_voucher) ?> </td>
-                                            </tr>
-                                            <tr>
-                                                <th class="middle">Thời gian</th>
-                                                <td colspan="1" class="middle">
-                                                    <?= h($campaignGroups_title->time) ?>
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                                <div class="card-box">
                                 <div class="row m-t-10">
                                     <b>Tên khách hàng</b>
                                     <div class="input-group">
@@ -198,6 +175,32 @@
                         </div>
                         <div class="col-md-6">
                             <div class="card-box">
+                                <div class="table-responsive">
+                                    <div class="table-responsive">
+                                        <table class="table table-primary mb30 table-bordered detail header bg-grey">
+                                            <tbody>
+                                            <tr>
+                                                <th width="25%" class="middle">Tên chiến dịch</th>
+                                                <td width="75%" colspan="1" class="middle">
+                                                    <?= h($campaignGroups_title->name) ?>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="middle">Số lượng voucher</th>
+                                                <td colspan="1" class="middle" id="name"><?= h($count . '/' . $campaignGroups_title->number_voucher) ?> </td>
+                                            </tr>
+                                            <tr>
+                                                <th class="middle">Thời gian</th>
+                                                <td colspan="1" class="middle">
+                                                    <?= h($campaignGroups_title->time) ?>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-box">
                                 <div class="text-center">
                                     <div class="row">
                                         <div class="col-xs-3">
@@ -209,15 +212,13 @@
                                         </div>
                                         <div class="col-xs-3">
                                             <div class="m-t-20 m-b-20 storke_2">
-                                                <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">khách đã
-                                                    confirm</p>
+                                                <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">khách đã confirm</p>
                                                 <h4 class="m-b-10"><?= isset($sum_new_partner) ? $sum_new_partner : ''; ?></h4>
                                             </div>
                                         </div>
                                         <div class="col-xs-3">
                                             <div class="m-t-20 m-b-20 storke_3">
-                                                <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">khách chưa
-                                                    confirm</p>
+                                                <p class="text-uppercase m-b-5 font-13 font-600 m-t-10">khách chưa confirm</p>
                                                 <h4 class="m-b-10"><?= isset($sum_old_partner) ? $sum_old_partner : ''; ?></h4>
                                             </div>
                                         </div>
@@ -238,8 +239,25 @@
                         <div class="row"></div>
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane fade in active" id="home">
+
                                 <?php if (!empty($campaigns)) { ?>
-                                    <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'downloadExcelVoucher/'.$list_id_partner]);?>" class="btn bg-orange waves-effect">Tải về danh sách</a>
+                                    <?php
+                                        echo $this->Form->create('Users', array(
+                                            'id' => 'form_advanced_validation_x',
+                                            'type' => 'post',
+                                            'url' => array('controller' => 'Users', 'action' => 'downloadExcelVoucher'),
+                                        ));
+                                    ?>
+                                    <input type="hidden" name="name" value="<?= isset($data_get['name']) ? $data_get['name'] :'';?>" />
+                                    <input type="hidden" name="phone" value="<?= isset($data_get['phone']) ? $data_get['phone'] :'';?>" />
+                                    <input type="hidden" name="client_mac" value="<?= isset($data_get['client_mac']) ? $data_get['client_mac'] :'';?>" />
+                                    <input type="hidden" name="device" value="<?= isset($data_get['device']) ? $data_get['device'] :'';?>" />
+                                    <input type="hidden" name="number_connect" value="<?= isset($data_get['number_connect']) ? $data_get['number_connect'] :'';?>" />
+                                    <input type="hidden" name="date" value="<?= isset($data_get['date']) ? $data_get['date'] :'';?>" />
+                                    <input type="hidden" name="campaign_group_id" value="<?= isset($campaign_id) ? $campaign_id :'';?>" />
+                                    <input type="hidden" name="date_begin" value="<?= isset($campaignGroups_title['time']) ? $campaignGroups_title['time'] :'';?>" />
+                                    <button type="submit" class="btn bg-orange waves-effect">Tải về danh sách</button>
+                                    <?php echo $this->Form->end(); ?>
                                 <?php } ?>
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-striped table-hover dataTable">
@@ -257,7 +275,9 @@
                                             </thead>
                                             <tbody>
                                             <?php
+                                            $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                             $count = 0;
+                                            $count = ($page - 1) * 10;
                                             foreach ($campaigns as $partner_voucher_log) {
                                                 $count++; ?>
                                                 <tr valign="middle">
@@ -373,11 +393,11 @@ echo $this->Html->script([
                     data: chart_number_partner
                 },
                 {
-                    name: 'khách hàng mới',
+                    name: 'khách đã confirm',
                     data: count_new_partner
                 },
                 {
-                    name: 'khách hàng quay lại',
+                    name: 'khách chưa confirm',
                     data: count_old_partner
                 },
                 {

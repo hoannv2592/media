@@ -224,8 +224,24 @@
                             <div class="row"></div>
                         </div>
                         <?php if (!empty($partners)) { ?>
-                            <?php $data = json_encode($new_condition); ?>
-                            <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'download/'.$data]);?>" class="btn bg-orange waves-effect">Tải về danh sách</a>
+                            <?php
+                            echo $this->Form->create('Users', array(
+                                'id' => 'form_advanced_validation_x',
+                                'type' => 'post',
+                                'url' => array('controller' => 'Users', 'action' => 'download'),
+                            ));
+                            ?>
+                            <input type="hidden" name="name" value="<?= isset($data_get['name']) ? $data_get['name'] :'';?>" />
+                            <input type="hidden" name="phone" value="<?= isset($data_get['phone']) ? $data_get['phone'] :'';?>" />
+                            <input type="hidden" name="client_mac" value="<?= isset($data_get['client_mac']) ? $data_get['client_mac'] :'';?>" />
+                            <input type="hidden" name="device" value="<?= isset($data_get['device']) ? $data_get['device'] :'';?>" />
+                            <input type="hidden" name="number_connect" value="<?= isset($data_get['number_connect']) ? $data_get['number_connect'] :'';?>" />
+                            <input type="hidden" name="date" value="<?= isset($data_get['date']) ? $data_get['date'] :'';?>" />
+                            <input type="hidden" name="date_begin" value="<?= isset($get_date) ? $get_date :'';?>" />
+                            <input type="hidden" name="flag_face" value="1" />
+                            <input type="hidden" name="delete_flag" value="0" />
+                            <button type="submit" class="btn bg-orange waves-effect">Tải về danh sách</button>
+                            <?php echo $this->Form->end(); ?>
                         <?php } ?>
                             <div class="table-responsive">
                                 <table class="table table-bordered table-striped table-hover dataTable">

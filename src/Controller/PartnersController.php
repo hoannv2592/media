@@ -33,7 +33,8 @@ class PartnersController extends AppController
             'Devices.name'
         ],
         'order' => [
-            'Partners.created' => 'desc',
+            'Partners.created' => 'DESC',
+            'Partners.num_clients_connect' => 'DESC'
         ]
     ];
 
@@ -222,7 +223,10 @@ class PartnersController extends AppController
         $count_new_partner      = json_encode($new_p);
         $count_phone_partner    = json_encode($phone_p);
         $chart_number_partner   = json_encode($chart_n);
-        $partners = $this->paginate($query, ['limit' => $limit_value])->toArray();
+        $partners = $this->paginate($query, ['limit' => $limit_value, 'order' => [
+            'Partners.created' => 'DESC',
+            'Partners.num_clients_connect' => 'DESC']])
+            ->toArray();
         $this->set(compact(
             'partners',
             'conditions',
@@ -244,6 +248,12 @@ class PartnersController extends AppController
         $this->set('_serialize', ['partners']);
     }
 
+    /**
+     *
+     * @param array $date
+     * @return string
+     *
+     */
     public function get_label ($date = array())
     {
         if ($this->verifyDate($date[0])) {

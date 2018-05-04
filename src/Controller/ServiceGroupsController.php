@@ -374,6 +374,7 @@ class ServiceGroupsController extends AppController
             }
             $data_get = $_GET;
         }
+        $list_id_devices = json_encode($list_id_devices);
         $query = $this->Partners->getOders($conditions);
         $new_condition = array();
         foreach ($conditions as $index => $condition) {
@@ -468,7 +469,9 @@ class ServiceGroupsController extends AppController
         $count_old_partner      = json_encode($old_p);
         $count_new_partner      = json_encode($new_p);
         $count_phone_partner    = json_encode($phone_p);
-        $partners = $this->paginate($query, ['limit' => $limit_value])->toArray();
+        $partners = $this->paginate($query, ['limit' => $limit_value, 'order' => [
+            'Partners.created' => 'DESC',
+            'Partners.num_clients_connect' => 'DESC']])->toArray();
         $this->set(compact(
             'partners',
             'conditions',
@@ -485,6 +488,7 @@ class ServiceGroupsController extends AppController
             'count_new_partner',
             'count_phone_partner',
             'chart_number_partner',
+            'list_id_devices',
             'list_devices'
         ));
         $this->set('_serialize', ['partners']);

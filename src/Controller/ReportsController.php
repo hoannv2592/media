@@ -215,9 +215,6 @@ class ReportsController extends AppController
             if (isset($_GET['phone']) && $_GET['phone'] != '') {
                 $conditions['PartnerVouchers.phone'] = trim($_GET['phone']);
             }
-            if (isset($_GET['device_name']) && $_GET['device_name'] != '') {
-                $conditions['Devices.name LIKE'] = "%".trim($_GET['device_name'])."%";
-            }
             if (isset($_GET['client_mac']) && $_GET['client_mac'] != '') {
                 $conditions['PartnerVouchers.client_mac LIKE'] = "%".trim($_GET['client_mac'])."%";
             }
@@ -249,19 +246,33 @@ class ReportsController extends AppController
         $conditions['PartnerVouchers.campaign_group_id'] = $campaign_id;
         $new_condition = array();
         foreach ($conditions as $index => $condition) {
-            if ($index == 'device_id IN') {
-                $index = 'deviceidlist';
+            if ($index == 'PartnerVouchers.name LIKE') {
+                $index = 'name';
+                //$condition = json_encode($_GET['name']);
             } else if ($index == 'device_id') {
                 $index = 'deviceid';
-            } else if ($index == 'Partners.num_clients_connect >=') {
-                $index = 'Partners.numclientsconnect>=';
-            } else if ($index == 'Partners.num_clients_connect <=') {
-                $index = 'Partners.numclientsconnect<=';
+            } else if ($index == 'PartnerVouchers.num_clients_connect >=') {
+                $index = 'numclientsconnect>=';
+            } else if ($index == 'PartnerVouchers.num_clients_connect <=') {
+                $index = 'numclientsconnect<=';
+            } else if ($index == 'PartnerVouchers.campaign_group_id') {
+                $index = 'campaigngroupid';
+            } else if ($index == 'PartnerVouchers.created <=') {
+                $index = 'created<=';
+            } else if ($index == 'PartnerVouchers.created >=') {
+                $index = 'created>=';
             }
             $new_condition[$index] = $condition;
         }
+        $new_condition = json_encode($new_condition);
         $data = array();
-        $all_campaigns = $this->PartnerVouchers->find()->where($conditions)->toArray();
+        $count = $this->PartnerVouchers->find()->where(['PartnerVouchers.campaign_group_id' => $campaign_id])->select()->count();
+        $all_campaigns = $this->PartnerVouchers->find()->where($conditions)->order([
+            'PartnerVouchers.created' => 'DESC',
+            'PartnerVouchers.num_clients_connect' => 'DESC'
+        ])
+            ->toArray();
+
         foreach ($all_campaigns as $k => $vl) {
             $vl['created'] = date('Y-m-d', strtotime($vl['created']));
             $data[$k] = $vl;
@@ -347,6 +358,7 @@ class ReportsController extends AppController
             'conditions',
             'new_condition',
             'device',
+            'count',
             'list_day',
             'get_date',
             'data_get',
@@ -360,57 +372,14 @@ class ReportsController extends AppController
             'count_phone_partner',
             'chart_number_partner'
         ));
-
-
-//        $partners = Hash::combine($data, '{n}.id', '{n}.confirm', '{n}.created');
-//        $count_confirm_partner = array();
-//        $count_no_confirm_partner = array();
-//        $chart_number_partner = array();
-//        foreach ($partners as  $k => $partner) {
-//            $chart_number_partner[] = count($partner);
-//            $old_partner = array();
-//            $new_partner = array();
-//            foreach ($partner as $key => $val) {
-//                if ($val == 0) {
-//                    $old_partner[] = $val;
-//                } else {
-//                    $new_partner[] = $val;
-//                }
-//            }
-//            $count_no_confirm_partner[] = count($old_partner);
-//            $count_confirm_partner[] = count($new_partner);
-//        }
-//        $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
-//        $count_phone_partner = array();
-//        $list_id_partner = array();
-//        foreach ($partner_phone as  $k => $partner) {
-//            $phone_partner = array();
-//            $id_partner = array();
-//            foreach ($partner as $key => $val) {
-//                if ($val != '') {
-//                    $phone_partner[] = $val;
-//                    $id_partner[] = $key;
-//                }
-//            }
-//            $count_phone_partner[] = count($phone_partner);
-//            $list_id_partner[] = $id_partner;
-//        }
-//        if (!empty($list_id_partner)) {
-//            $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
-//        }
-//        $sum_no_confirm_partner     = array_sum($count_no_confirm_partner);
-//        $sum_confirm_partner        = array_sum($count_confirm_partner);
-//        $sum_phone_partner          = array_sum($count_phone_partner);
-//        $chart_number_partner       = json_encode($chart_number_partner);
-//        $count_no_confirm_partner   = json_encode($count_no_confirm_partner);
-//        $count_confirm_partner      = json_encode($count_confirm_partner);
-//        $count_phone_partner        = json_encode($count_phone_partner);
-//        $list_id_partner            = json_encode($list_id_partner);
         $this->paginate = array('PartnerVouchers' => array(
             'conditions' => $conditions,
+            'order' => [
+                'PartnerVouchers.created' => 'DESC',
+                'PartnerVouchers.num_clients_connect' => 'DESC'
+            ],
             'limit' => 10
         ));
-
 
         $campaigns = $this->paginate('PartnerVouchers', ['limit' => '10'])->toArray();
 
@@ -418,15 +387,8 @@ class ReportsController extends AppController
             'campaigns',
             'campaign_id',
             'campaignGroups_title',
-            'list_day',
-            'sum_confirm_partner',
-            'sum_no_confirm_partner',
-            'chart_number_partner',
-            'sum_phone_partner',
-            'list_id_partner',
             'count_no_confirm_partner',
-            'count_confirm_partner',
-            'count_phone_partner'
+            'count_confirm_partner'
 
         ));
     }
