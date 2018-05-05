@@ -46,43 +46,48 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                 $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                 $count = 0;
                                 $count = ($page - 1) * 10;
-                                foreach ($adgroups as $key => $adgroup) { $count++;?>
+                                foreach ($adgroups as $key => $adgroup) { $count++;
+                                    $array =  (array) json_decode($adgroup->device_name);
+                                    $array = array_values($array);
+                                    $rowspan = count($array);
+                                    ?>
                                     <tr>
-                                        <td class="text-center"> <?php echo $count; ?></td>
-                                        <td class="advertise font-bold col-cyan">
+                                        <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="text-center"> <?php echo $count; ?></td>
+                                        <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="advertise font-bold col-cyan">
                                             <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'detail_group' . '/' . UrlUtil::_encodeUrl($adgroup->id)]) ?>"><?php echo h($adgroup->name); ?></a>
                                         </td>
 
                                         <td>
-                                            <table style="width: 100%;">
-                                                <tbody>
-                                                <?php if (!empty($adgroup->device_name)) {
-                                                    $array =  (array) json_decode($adgroup->device_name);
-                                                    foreach ($array as $item) {?>
-                                                        <tr>
-                                                            <td><?php echo $item;?></td>
-                                                        </tr>
-                                                    <?php }
-                                                    } ?>
-                                                </tbody>
-                                            </table>
+                                            <a class="font-bold col-pink" href="javascript:void(0)"><?= $array[0]?></a>
                                         </td>
-                                        <td class="advertise font-bold col-cyan">
+                                        <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="advertise font-bold col-cyan">
                                             <a href="<?php echo $this->Url->build(['controller' => 'users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($adgroup['user']['id'])]) ?>">
                                                 <?php echo $adgroup['user']['username']; ?>
                                             </a>
                                         </td>
-                                        <td>
+                                        <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>">
                                             <?php echo  nl2br($adgroup->address);?>
                                         </td>
-                                        <td>
+                                        <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>">
                                             <?php echo isset(\App\Model\Entity\Device::$langding_page[$adgroup->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$adgroup->langdingpage_id]:''; ?>
                                         </td>
-                                        <td><?php echo nl2br($adgroup->description); ?></td>
-                                        <td><?php echo date('d/m/Y H:i', strtotime($adgroup->created));?></td>
-                                        <td class="delete_advertise text-center" value="<?php echo h($adgroup->id); ?>">
+                                        <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>"><?php echo nl2br($adgroup->description); ?></td>
+                                        <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>"><?php echo date('d/m/Y H:i', strtotime($adgroup->created));?></td>
+                                        <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="delete_advertise text-center" value="<?php echo h($adgroup->id); ?>">
                                             <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa nhóm</button></td>
                                     </tr>
+                                    <?php
+                                    if ($rowspan > 1) {
+                                        for ($i = 1; $i < $rowspan; $i++) { ?>
+                                            <tr>
+                                                <td>
+                                                    <a class="font-bold col-pink" href="javascript:void(0)"><?= $array[$i]?></a>
+                                                </td>
+                                            </tr>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
                                 <?php } ?>
                                 </tbody>
                             </table>
@@ -95,7 +100,7 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                     <?= $this->Paginator->next(__('Next')) ?>
                                     <?= $this->Paginator->last(__('Last')) ?>
                                 </ul>
-                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}} showing {{current}} record(s) out of {{count}} total')]) ?></p>
                             </div>
                         <?php } ?>
                     </div>
