@@ -34,4 +34,3 @@ nbproject/* # NetBeans
 .sass-cache/ # Sass preprocessor
 .idea/workspace.xml
 .idea/*
-.idea/*
