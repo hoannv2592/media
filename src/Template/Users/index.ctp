@@ -29,49 +29,59 @@ $this->assign('title', 'Quản lý người dùng');
                         <?php
                         if (!empty($users)) { ?>
                             <div class="table-responsive m-t-10">
-                                <table class="table table-bordered table-striped table-hover ">
+                                <table class="table table-bordered table-striped table-hover">
                                     <thead>
                                     <tr class="bg-blue-grey">
-                                        <th>STT</th>
+                                        <th class="">STT</th>
                                         <th>Tên người dùng</th>
                                         <th>Email</th>
                                         <th>Thiết bị</th>
                                         <th>Địa chỉ</th>
                                         <th>Số điện thoại</th>
                                         <th>Ngày tạo</th>
-                                        <th>Điều hướng</th>
+                                        <th class="text-center">Điều hướng</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <?php
+                                    $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                     $count = 0;
-                                    foreach ($users as $key => $user) { $count ++;?>
+                                    $count = ($page - 1) * 10;
+                                    foreach ($users as $key => $user) { $count ++;
+                                        $devices = $user->devices;
+                                        $rowspan = count($devices);
+                                        ?>
                                         <tr>
-                                            <td><?php echo $count;?></td>
-                                            <td class="advertise font-bold col-cyan">
+                                            <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="text-center"><?php echo $count;?></td>
+                                            <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($user->id)]) ?>"><?php echo h($user->username); ?></a>
                                             </td>
-                                            <td><?php echo nl2br($user->email); ?></td>
-                                            <td>
-                                                <table class="table">
-                                                    <?php foreach ($user->devices as $device) { ?>
-                                                        <tr>
-                                                            <td><a class="font-bold"
-                                                                   href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($device->id)]) ?>"> <?php echo $device->name; ?></a>
-                                                            </td>
-                                                        </tr>
-                                                    <?php } ?>
-                                                </table>
+                                            <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>"><?php echo nl2br($user->email); ?></td>
+                                            <td><?php if (isset($devices[0]['id'])) { ?>
+                                                    <a class="font-bold col-pink" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($devices[0]['id'])]) ?>"> <?= isset($devices[0]['name']) ? $devices[0]['name']:''; ?></a>
+                                                <?php } ?>
                                             </td>
-                                            <td><?php echo nl2br($user->address); ?></td>
-                                            <td><?php echo nl2br($user->phone); ?></td>
-                                            <td><?php echo date('d/m/Y H:i', strtotime($user->created)); ?></td>
-                                            <td class="delete_advertise text-center" value="<?php echo h($user->id); ?>">
+                                            <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>"><?php echo nl2br($user->address); ?></td>
+                                            <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>"><?php echo nl2br($user->phone); ?></td>
+                                            <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>"><?php echo date('d/m/Y', strtotime($user->created)); ?></td>
+                                            <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="delete_advertise text-center" value="<?php echo h($user->id); ?>">
                                                 <button type="button" class="btn btn-danger waves-effect"
                                                         data-toggle="modal" data-target="#modal-03">Xóa
                                                 </button>
                                             </td>
                                         </tr>
+                                        <?php
+                                        if ($rowspan > 1) {
+                                            for ($i = 1; $i < $rowspan; $i++) { ?>
+                                                <tr>
+                                                    <td>
+                                                        <a class="font-bold col-pink" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($devices[$i]['id'])]) ?>"> <?= isset($devices[$i]['name']) ? $devices[$i]['name']:''; ?></a>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
                                     <?php } ?>
                                     </tbody>
                                 </table>
@@ -84,7 +94,7 @@ $this->assign('title', 'Quản lý người dùng');
                                     <?= $this->Paginator->next(__('Next')) ?>
                                     <?= $this->Paginator->last(__('Last')) ?>
                                 </ul>
-                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}} showing {{current}} record(s) out of {{count}} total')]) ?></p>
                             </div>
                         <?php } ?>
                     </div>

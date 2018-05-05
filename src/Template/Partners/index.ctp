@@ -295,7 +295,7 @@
                                     <?= $this->Paginator->next(__('Next')) ?>
                                     <?= $this->Paginator->last(__('Last')) ?>
                                 </ul>
-                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}} showing {{current}} record(s) out of {{count}} total')]) ?></p>
                             </div>
                         </div>
                     </div>

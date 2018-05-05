@@ -139,7 +139,8 @@
     }
 .table-bordered tbody tr td, .table-bordered tbody tr th {
     padding: 10px;
-    border: 1px solid rgba(86,61,124,.2);
+    /*border: 1px solid rgba(86,61,124,.2);*/
+    border: 1px solid #DEDED5;
 }
 .table {
     width: 100%;

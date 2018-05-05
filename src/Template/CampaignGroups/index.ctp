@@ -30,12 +30,11 @@
                                         <th class="text-center">STT</th>
                                         <th>Tên chiến dịch</th>
                                         <th>Thời gian</th>
-                                        <th>Địa chỉ</th>
                                         <th>Thiết bị</th>
                                         <th>Số lượng voucher</th>
-                                        <th>Loại random</th>
-                                        <th>Mô tả chiến dịch</th>
-                                        <th>User quản lý</th>
+                                        <th>Random</th>
+                                        <th>Địa chỉ</th>
+                                        <th>User</th>
                                         <th>Ngày tạo</th>
                                         <th class="text-center">Điều hướng</th>
                                     </tr>
@@ -45,45 +44,49 @@
                                     $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                     $count = 0;
                                     $count = ($page - 1) * 10;
-                                    foreach ($campaignGroups as $key => $campaignGroup) { $count++;  $device = json_decode($campaignGroup->device_name);?>
+                                    foreach ($campaignGroups as $key => $campaignGroup) { $count++;  $device = json_decode($campaignGroup->device_name);
+                                        $device = (array) $device;
+                                        $name_device = array_values($device);
+                                        $rowspan = count($device);
+                                        ?>
                                         <tr>
-                                            <td class="align-center"><?php echo $count; ?></td>
-                                            <td class="advertise font-bold col-cyan">
+                                            <td rowspan="<?=  $rowspan ?>" class="align-center"><?php echo $count; ?></td>
+                                            <td rowspan="<?=  $rowspan ?>" class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'detail_campaig' . '/' . UrlUtil::_encodeUrl($campaignGroup->id)]) ?>">
                                                     <?php echo $campaignGroup->name; ?>
                                                 </a>
                                             </td>
-                                            <td><?php echo $campaignGroup->time; ?></td>
-                                            <td><?php echo $campaignGroup->address; ?></td>
-                                            <td>
-                                                <table class="table">
-                                                    <?php foreach (json_decode($campaignGroup->device_name) as $k => $vl) { ?>
-                                                        <tr>
-                                                            <td><?php echo $vl; ?></td>
-                                                        </tr>
-                                                    <?php } ?>
-
-                                                </table>
-                                            </td>
-                                            <td>
+                                            <td rowspan="<?=  $rowspan ?>"><?php echo $campaignGroup->time; ?></td>
+                                            <td > <a class="font-bold col-pink" href="javascript:void(0);"><?= $name_device[0];?></a></td>
+                                            <td rowspan="<?=  $rowspan ?>">
                                                 <?php
                                                 $number = count($campaignGroup->partner_vouchers);
                                                 echo $number.'/'.$campaignGroup->number_voucher; ?>
                                             </td>
-                                            <td><?php echo isset(\App\Model\Entity\CampaignGroup::$random[$campaignGroup->random]) ? \App\Model\Entity\CampaignGroup::$random[$campaignGroup->random] : '' ?></td>
-                                            <td><?php echo nl2br($campaignGroup->description); ?></td>
-                                            <td class="advertise font-bold col-cyan">
+                                            <td rowspan="<?=  $rowspan ?>"><?php echo isset(\App\Model\Entity\CampaignGroup::$random[$campaignGroup->random]) ? \App\Model\Entity\CampaignGroup::$random[$campaignGroup->random] : '' ?></td>
+                                            <td rowspan="<?=  $rowspan ?>"><?php echo $campaignGroup->address; ?></td>
+                                            <td rowspan="<?=  $rowspan ?>" class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($campaignGroup['user']['id'])]) ?>">
                                                     <?php echo $campaignGroup['user']['username']; ?>
                                                 </a>
                                             </td>
-                                            <td><?php echo date('d/m/Y H:i', strtotime($campaignGroup->created)); ?></td>
-                                            <td class="delete_advertise text-center" value="<?php echo h($campaignGroup->id); ?>">
+                                            <td rowspan="<?=  $rowspan ?>"><?php echo date('d/m/Y', strtotime($campaignGroup->created)); ?></td>
+                                            <td rowspan="<?=  $rowspan ?>" class="delete_advertise text-center" value="<?php echo h($campaignGroup->id); ?>">
                                                 <button type="button" class="btn btn-danger waves-effect"
-                                                        data-toggle="modal" data-target="#modal-03">Xóa chiến dịch
+                                                        data-toggle="modal" data-target="#modal-03">Xóa
                                                 </button>
                                             </td>
                                         </tr>
+                                        <?php
+                                            if ($rowspan > 1) {
+                                                for ($i = 1; $i < $rowspan; $i++) { ?>
+                                                    <tr>
+                                                        <td><a class="font-bold col-pink" href="javascript:void(0);"><?= $name_device[$i];?></a></td>
+                                                    </tr>
+                                                    <?php
+                                                }
+                                            }
+                                        ?>
                                     <?php } ?>
                                     </tbody>
                                 </table>
@@ -96,7 +99,7 @@
                                     <?= $this->Paginator->next(__('Next')) ?>
                                     <?= $this->Paginator->last(__('Last')) ?>
                                 </ul>
-                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+                                <p style="padding-top: 25px;"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}} showing {{current}} record(s) out of {{count}} total')]) ?></p>
                             </div>
                         <?php } ?>
                     </div>
