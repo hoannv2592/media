@@ -50,7 +50,7 @@ $this->assign('title', 'Quản lý thiết bị');
                             <div role="tabpanel" class="tab-pane fade in active" id="home">
                                 <?php if (!empty($devices)) { ?>
                                     <div class="table-responsive">
-                                        <table class="table table-bordered table-striped table-hover ">
+                                        <table class="table table-bordered table-striped table-hover tablesorter" id="myTable">
                                             <thead>
                                             <tr class="bg-blue-grey">
                                                 <th style="text-align: center">No</th>
@@ -67,8 +67,9 @@ $this->assign('title', 'Quản lý thiết bị');
                                             $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                             $count = 0;
                                             $count = ($page - 1) * 10;
-                                            foreach ($devices as $key => $device) { $count++; ?>
-                                                <tr valign="middle">
+                                            foreach ($devices as $key => $device) { $count++;
+                                                if ($count % 2 == 0) $class = "odd"; else $class = "even"; ?>
+                                                <tr valign="middle" class="<?= $class ?>">
                                                     <td style="text-align: center"><?php echo $count; ?></td>
                                                     <td class="advertise font-bold col-cyan"><a href="#" onclick="view_log_partner_histories(<?php echo $device->id; ?>)" data-toggle="modal" data-target="#defaultModal"><?php echo h($device->name); ?></a></td>
                                                     <td><?php echo nl2br($device->apt_key); ?></td>

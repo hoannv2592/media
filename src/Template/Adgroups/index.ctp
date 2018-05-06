@@ -50,8 +50,9 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                     $array =  (array) json_decode($adgroup->device_name);
                                     $array = array_values($array);
                                     $rowspan = count($array);
+                                    if ($count % 2 == 0) $class = "odd"; else $class = "even";
                                     ?>
-                                    <tr>
+                                    <tr class="<?= $class ?>">
                                         <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="text-center"> <?php echo $count; ?></td>
                                         <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="advertise font-bold col-cyan">
                                             <a href="<?php echo $this->Url->build(['controller' => 'Adgroups', 'action' => 'detail_group' . '/' . UrlUtil::_encodeUrl($adgroup->id)]) ?>"><?php echo h($adgroup->name); ?></a>
@@ -72,14 +73,14 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                             <?php echo isset(\App\Model\Entity\Device::$langding_page[$adgroup->langdingpage_id]) ? \App\Model\Entity\Device::$langding_page[$adgroup->langdingpage_id]:''; ?>
                                         </td>
                                         <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>"><?php echo nl2br($adgroup->description); ?></td>
-                                        <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>"><?php echo date('d/m/Y H:i', strtotime($adgroup->created));?></td>
+                                        <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>"><?php echo date('d/m/Y', strtotime($adgroup->created));?></td>
                                         <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="delete_advertise text-center" value="<?php echo h($adgroup->id); ?>">
-                                            <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa nhóm</button></td>
+                                            <button type="button" class="btn btn-danger waves-effect" data-toggle="modal" data-target="#modal-03">Xóa</button></td>
                                     </tr>
                                     <?php
                                     if ($rowspan > 1) {
                                         for ($i = 1; $i < $rowspan; $i++) { ?>
-                                            <tr>
+                                            <tr class="<?= $class ?>">
                                                 <td>
                                                     <a class="font-bold col-pink" href="javascript:void(0)"><?= $array[$i]?></a>
                                                 </td>

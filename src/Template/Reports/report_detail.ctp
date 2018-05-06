@@ -279,8 +279,10 @@
                                             $count = 0;
                                             $count = ($page - 1) * 10;
                                             foreach ($campaigns as $partner_voucher_log) {
-                                                $count++; ?>
-                                                <tr valign="middle">
+                                                $count++;
+                                                if ($count % 2 == 0) $class = "odd"; else $class = "even";
+                                                ?>
+                                                <tr valign="middle" class="<?= $class ?>">
                                                     <td><?php echo $count; ?></td>
                                                     <td class="advertise font-bold col-cyan">
                                                         <a href="<?php echo $this->Url->build(['controller' => 'Reports', 'action' => 'detail_partner_voucher' . '/' . UrlUtil::_encodeUrl($partner_voucher_log->id) . '/' . UrlUtil::_encodeUrl($campaign_id)]) ?>">

@@ -11,6 +11,7 @@
  * @var $count_phone_partner
  * @var $new_condition
  * @var $device
+ * @var $partners
  * @var \App\Model\Entity\Users[]|\Cake\Collection\CollectionInterface $users
  */
 ?>
@@ -268,8 +269,10 @@
                                 $page = $this->Paginator->counter(['format' => __('{{page}}')]);
                                 $count = 0;
                                 $count = ($page - 1) * 10;
-                                foreach ($partners as $k => $vl) { $count++;?>
-                                    <tr>
+                                foreach ($partners as $k => $vl) { $count++;
+                                    if ($count % 2 == 0) $class = "odd"; else $class = "even";
+                                    ?>
+                                    <tr class="<?= $class ?>">
                                         <td style="text-align: center"><?php echo h($count); ?></td>
                                         <td class="advertise font-bold col-cyan">
                                             <a href="<?php echo $this->Url->build(['controller' => 'Partners', 'action' => 'detail_partner' . '/' . UrlUtil::_encodeUrl($vl['id'])]) ?>">

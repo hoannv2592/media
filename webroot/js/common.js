@@ -10,6 +10,8 @@ $(document).ready(function () {
     //bindUnload();
     //setLocalStorage();
     $("div.form-line").removeClass("focused");
+    $("table.table").addClass('tablesorter');
+    // $("table.table").tablesorter();
 });
 function bindUnload()
 {

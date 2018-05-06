@@ -92,6 +92,7 @@ $cakeDescription = 'Media ';
         'jquery.simplePagination',
 
     )) ?>
+    <?= $this->Html->script('sorter/jquery.tablesorter') ?>
     <?= $this->fetch('meta') ?>
     <?= $this->fetch('css') ?>
     <?= $this->fetch('script') ?>

@@ -48,8 +48,9 @@
                                         $device = (array) $device;
                                         $name_device = array_values($device);
                                         $rowspan = count($device);
+                                        if ($count % 2 == 0) $class = "odd"; else $class = "even";
                                         ?>
-                                        <tr>
+                                        <tr class="<?= $class ?>">
                                             <td rowspan="<?=  $rowspan ?>" class="align-center"><?php echo $count; ?></td>
                                             <td rowspan="<?=  $rowspan ?>" class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'CampaignGroups', 'action' => 'detail_campaig' . '/' . UrlUtil::_encodeUrl($campaignGroup->id)]) ?>">
@@ -80,7 +81,7 @@
                                         <?php
                                             if ($rowspan > 1) {
                                                 for ($i = 1; $i < $rowspan; $i++) { ?>
-                                                    <tr>
+                                                    <tr class="<?= $class ?>">
                                                         <td><a class="font-bold col-pink" href="javascript:void(0);"><?= $name_device[$i];?></a></td>
                                                     </tr>
                                                     <?php

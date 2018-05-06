@@ -50,8 +50,9 @@ $this->assign('title', 'Quản lý người dùng');
                                     foreach ($users as $key => $user) { $count ++;
                                         $devices = $user->devices;
                                         $rowspan = count($devices);
+                                        if ($count % 2 == 0) $class = "odd"; else $class = "even";
                                         ?>
-                                        <tr>
+                                        <tr class="<?= $class ?>">
                                             <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="text-center"><?php echo $count;?></td>
                                             <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="advertise font-bold col-cyan">
                                                 <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($user->id)]) ?>"><?php echo h($user->username); ?></a>
@@ -73,7 +74,7 @@ $this->assign('title', 'Quản lý người dùng');
                                         <?php
                                         if ($rowspan > 1) {
                                             for ($i = 1; $i < $rowspan; $i++) { ?>
-                                                <tr>
+                                                <tr class="<?= $class ?>">
                                                     <td>
                                                         <a class="font-bold col-pink" href="<?php echo $this->Url->build(['controller' => 'Devices', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($devices[$i]['id'])]) ?>"> <?= isset($devices[$i]['name']) ? $devices[$i]['name']:''; ?></a>
                                                     </td>
