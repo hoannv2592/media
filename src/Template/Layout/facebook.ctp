@@ -135,7 +135,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                             </div>
                         </div>
                         <div class="c-spacer--x-large c-spacer"></div>
-                        <div class="c-text--heading c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name; ?></div>
+                        <div class="c-text--heading c-text--parent c-text--center c-text"><?php echo isset($infor_devices->tile_name) ? $infor_devices->tile_name: ''; ?></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>

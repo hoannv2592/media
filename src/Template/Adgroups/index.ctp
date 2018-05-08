@@ -32,7 +32,7 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                 <tr class="bg-blue-grey">
                                     <th class="text-center">STT</th>
                                     <th>Tên quảng cáo</th>
-                                    <th>Số lượng thiết bị</th>
+                                    <th>Thiết bị</th>
                                     <th>User quản lý</th>
                                     <th>Địa chỉ</th>
                                     <th>Loại quảng cáo</th>

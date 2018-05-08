@@ -12,6 +12,7 @@ use Cake\Utility\Hash;
  *
  * @property \App\Model\Table\AdgroupsTable $Adgroups
  * @property \App\Model\Table\DevicesTable $Devices
+ * @property \App\Model\Table\AdvsTable $Advs
  * @property \App\Model\Table\DeviceGroupsTable $DeviceGroups
  * @property \App\Model\Table\AdgroupChangeHistoriesTable $AdgroupChangeHistories
  * @property \App\Model\Table\AdgroupChangeHistory $AdgroupChangeHistory
@@ -31,6 +32,7 @@ class AdgroupsController extends AppController
         $this->loadComponent('UploadImage');
 
         // Load Files model
+        $this->loadModel('Advs');
         $this->loadModel('Logs');
         $this->loadModel('DeviceGroups');
         $this->loadModel('FileAttachments');
@@ -180,14 +182,61 @@ class AdgroupsController extends AppController
         }
         $adgroup = $this->Adgroups->newEntity();
         if ($this->request->is('post')) {
+
+            $image_adv = $this->request->getData('image_adv');
+            $list_file = array();
+            foreach ($image_adv as $k => $vl) {
+                if ($vl['error'] != 4) {
+                    $list_file[$k] = $vl;
+                }
+            }
+            $list_link = $this->request->getData('link_adv');
+            $data_file = array();
+            if (!empty($list_file)) {
+                // upload the file to the server
+                $new_arr = array();
+                //$list_file = $this->request->getData('image_adv');
+                foreach ($list_file as $k => $vl) {
+                    $new_arr[]['file'] = $vl;
+                }
+                $fileOK = array();
+                foreach ($new_arr as $k => $vl) {
+                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                }
+                $result = Hash::extract($fileOK, '{n}.urls');
+                $path = call_user_func_array('array_merge', $result);
+                $image_up_load = Hash::extract($list_file, '{n}.name');
+                foreach ($image_up_load as $k => $vl) {
+                    $data_file[] = array(
+                        'path' => $path[$k],
+                        'name' => $vl,
+                        'url_link' => isset($list_link[$k]) ? $list_link[$k] : '',
+                        'active_flag' => 0
+                    );
+                }
+                unset($this->request->data['image_adv']);
+            } else {
+                unset($this->request->data['image_adv']);
+            }
+
             if ($this->request->data['tile_congratulations_return'] != '') {
                 $packages = array_values($this->request->data['tile_congratulations_return']);
-                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+                $packages = (array_filter($packages));
+                if (!empty($packages)) {
+                    $this->request->data['tile_congratulations_return'] = json_encode($packages);
+                } else {
+                    $this->request->data['tile_congratulations_return'] = '';
+                }
             }
 
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
-                $this->request->data['packages'] = json_encode($packages);
+                $packages = (array_filter($packages));
+                if (!empty($packages)) {
+                    $this->request->data['packages'] = json_encode($packages);
+                } else {
+                    $this->request->data['packages'] = '';
+                }
             }
             $listNameDevice = ($this->getNameDevice($this->request->getData()['device_id']));
             $devices = $this->Devices->find()
@@ -257,7 +306,11 @@ class AdgroupsController extends AppController
                 'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
                 'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
-                'type_adv' => 1
+                'type_adv' => isset($this->request->data['type_adv']) ? $this->request->data['type_adv']:'',
+                'fb_fanpage' => isset($this->request->data['fb_fanpage']) ? $this->request->data['fb_fanpage']: '',
+                'fb_checkin_msg' => isset($this->request->data['fb_checkin_msg']) ? $this->request->data['fb_checkin_msg']: '',
+                'fb_latitude' => isset($this->request->data['packages']) ? $this->request->data['fb_latitude']: '',
+                'fb_longtitude' => isset($this->request->data['packages']) ? $this->request->data['fb_longtitude']: '',
             );
 
             $device_group = $this->DeviceGroups->newEntity();
@@ -280,7 +333,11 @@ class AdgroupsController extends AppController
                 'image_logo' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
                 'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
-                'type_adv' => 1
+                'type_adv' => isset($this->request->data['type_adv']) ? $this->request->data['type_adv']:'',
+                'fb_fanpage' => isset($this->request->data['fb_fanpage']) ? $this->request->data['fb_fanpage']: '',
+                'fb_checkin_msg' => isset($this->request->data['fb_checkin_msg']) ? $this->request->data['fb_checkin_msg']: '',
+                'fb_latitude' => isset($this->request->data['packages']) ? $this->request->data['fb_latitude']: '',
+                'fb_longtitude' => isset($this->request->data['packages']) ? $this->request->data['fb_longtitude']: '',
             );
             $adgroup = $this->Adgroups->patchEntity($adgroup, $data_group);
             $adgroup->delete_flag = UN_DELETED;
@@ -288,10 +345,17 @@ class AdgroupsController extends AppController
                 $save_ad = $this->Adgroups->save($adgroup);
                 if ($save_ad) {
                     $group_id = $save_ad->id;
+                    foreach ($data_file as $k => $item) {
+                        $new_back_group = $this->Advs->newEntity();
+                        $new_back_group = $this->Advs->patchEntity($new_back_group, $item);
+                        $new_back_group->adgroup_id = $group_id;
+                        if (!$this->Advs->save($new_back_group)) {
+                            $conn->rollback();
+                        }
+                    }
                     //todo update data devices add to group
                     $device_adgroup = array(
                         'adgroup_id' => $group_id,
-//                        'user_id' => $data_group['user_id_group']
                     );
                     $this->publishall($result_id_devices, $device_adgroup);
                     $device_group->adgroup_id = $group_id;
@@ -512,11 +576,15 @@ class AdgroupsController extends AppController
     }
 
     /**
+      *
+     * ****************************************
      * update for group ...
      * @author hoannv
      *
      * @param null $id
      * @return \Cake\Http\Response|null
+     *
+     * * ****************************************
      */
     public function detailGroup($id = null)
     {
@@ -556,7 +624,6 @@ class AdgroupsController extends AppController
                     );
                 } else {
                     $conditions = array(
-//                        'id NOT IN' => $merged,
                         'delete_flag !=' => DELETED,
                         'id IN' => $device_list_id
                     );
@@ -607,13 +674,67 @@ class AdgroupsController extends AppController
             ->select(['id'])->first()->toArray();
         $before_device = json_decode($adgroup->device_id);
         if ($this->request->is('post')) {
+            $image_adv = $this->request->getData('image_adv');
+            $list_file = array();
+            foreach ($image_adv as $k => $vl) {
+                if ($vl['error'] != 4) {
+                    $list_file[$k] = $vl;
+                }
+            }
+            $list_link = $this->request->getData('link_adv');
+            if (!empty($list_file)) {
+                // upload the file to the server
+                $new_arr = array();
+                //$list_file = $this->request->getData('image_adv');
+                foreach ($list_file as $k => $vl) {
+                    $new_arr[]['file'] = $vl;
+                }
+                $fileOK = array();
+                foreach ($new_arr as $k => $vl) {
+                    $fileOK[$k] = $this->UploadImage->uploadFiles('upload/files', $vl);
+                }
+                $result = Hash::extract($fileOK, '{n}.urls');
+                $path = call_user_func_array('array_merge', $result);
+                $image_up_load = Hash::extract($list_file, '{n}.name');
+                $data_file = array();
+                foreach ($image_up_load as $k => $vl) {
+                    $data_file[] = array(
+                        'adgroup_id' => $id,
+                        'path' => $path[$k],
+                        'name' => $vl,
+                        'url_link' => isset($list_link[$k]) ? $list_link[$k] : '',
+                        'active_flag' => 0
+                    );
+                }
+                foreach ($data_file as $k => $item) {
+                    $new_back_group = $this->Advs->newEntity();
+                    $new_back_group = $this->Advs->patchEntity($new_back_group, $item);
+                    if (!$this->Advs->save($new_back_group)) {
+                        $conn->rollback();
+                    }
+                }
+                unset($this->request->data['image_adv']);
+            } else {
+                unset($this->request->data['image_adv']);
+            }
+
             if ($this->request->data['tile_congratulations_return'] != '') {
                 $packages = array_values($this->request->data['tile_congratulations_return']);
-                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+                $packages = (array_filter($packages));
+                if (!empty($packages)) {
+                    $this->request->data['tile_congratulations_return'] = json_encode($packages);
+                } else {
+                    $this->request->data['tile_congratulations_return'] = '';
+                }
             }
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
-                $this->request->data['packages'] = json_encode($packages);
+                $packages = (array_filter($packages));
+                if (!empty($packages)) {
+                    $this->request->data['packages'] = json_encode($packages);
+                } else {
+                    $this->request->data['packages'] = '';
+                }
             }
             $listUserid = $this->getNameDevice($this->request->getData()['device_id']);
             $data_group = array(
@@ -630,24 +751,30 @@ class AdgroupsController extends AppController
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
                 'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
-                'type_adv' => 1
+                'type_adv' => isset($this->request->data['type_adv']) ? $this->request->data['type_adv']:'',
+                'fb_fanpage' => isset($this->request->data['fb_fanpage']) ? $this->request->data['fb_fanpage']: '',
+                'fb_checkin_msg' => isset($this->request->data['fb_checkin_msg']) ? $this->request->data['fb_checkin_msg']: '',
+                'fb_latitude' => isset($this->request->data['packages']) ? $this->request->data['fb_latitude']: '',
+                'fb_longtitude' => isset($this->request->data['packages']) ? $this->request->data['fb_longtitude']: '',
             );
             $image_logo = '';
             $path_logo = '';
-            if (!empty($this->request->data['logo_image']['error'] != 4)) {
-                $list_file['file'] = $this->request->getData('logo_image');
-                $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
-                $path = $fileOK['urls'][0];
-                $image_up_load = $list_file['file']['name'];
-                if ($path != '') {
-                    $path_logo = $path;
+            if (isset($this->request->data['logo_image'])) {
+                if (!empty($this->request->data['logo_image']['error'] != 4)) {
+                    $list_file['file'] = $this->request->getData('logo_image');
+                    $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
+                    $path = $fileOK['urls'][0];
+                    $image_up_load = $list_file['file']['name'];
+                    if ($path != '') {
+                        $path_logo = $path;
+                    }
+                    if ($image_up_load != '') {
+                        $image_logo = $image_up_load;
+                    }
+                    unset($this->request->data['logo_image']);
+                } else {
+                    unset($this->request->data['logo_image']);
                 }
-                if ($image_up_load != '') {
-                    $image_logo = $image_up_load;
-                }
-                unset($this->request->data['logo_image']);
-            } else {
-                unset($this->request->data['logo_image']);
             }
 
             if (isset($path_logo) && $path_logo != '') {
@@ -697,20 +824,20 @@ class AdgroupsController extends AppController
                 'adgroup_id' => $id,
                 'device_id' => json_encode($this->request->getData()['device_id']),
                 'langdingpage_id' => $this->request->getData()['langdingpage_id'],
-//                'back_ground' => isset($data_group['image_backgroup']) ? $data_group['image_backgroup'] : $adgroup->image_backgroup ,
-//                'path' => isset($data_group['path']) ? $data_group['path']: $adgroup->path ,
                 'number_pass' => $this->request->getData()['apt_device_number'],
                 'tile_name' => $this->request->getData()['tile_name'],
                 'device_name' => $listUserid,
                 'address' => $this->request->getData()['address'],
                 'hidden_connect' => isset($this->request->data['hidden_connect']) ? $this->request->data['hidden_connect']:'',
                 'title_connect' => isset($this->request->data['title_connect']) ? $this->request->data['title_connect']:'',
-//                'path_logo' => isset($this->request->data['path_logo']) ? $this->request->data['path_logo']:'',
-//                'image_logo' => isset($this->request->data['image_logo']) ? $this->request->data['image_logo']:'',
                 'title_campaign' => isset($this->request->data['title_campaign']) ? $this->request->data['title_campaign']:'',
                 'tile_congratulations_return' => isset($this->request->data['tile_congratulations_return']) ? $this->request->data['tile_congratulations_return']:'',
                 'packages' => isset($this->request->data['packages']) ? $this->request->data['packages']:'',
-                'type_adv' => 1
+                'type_adv' => isset($this->request->data['type_adv']) ? $this->request->data['type_adv']:'',
+                'fb_fanpage' => isset($this->request->data['fb_fanpage']) ? $this->request->data['fb_fanpage']: '',
+                'fb_checkin_msg' => isset($this->request->data['fb_checkin_msg']) ? $this->request->data['fb_checkin_msg']: '',
+                'fb_latitude' => isset($this->request->data['packages']) ? $this->request->data['fb_latitude']: '',
+                'fb_longtitude' => isset($this->request->data['packages']) ? $this->request->data['fb_longtitude']: '',
             );
             if ($user['role'] == User::ROLE_ONE) {
                 $data_group['user_id_group'] = isset($this->request->getData()['user_id_group']) ? $this->request->getData()['user_id_group']:'';
@@ -789,7 +916,8 @@ class AdgroupsController extends AppController
             }
         }
         $apt_device_number = $this->radompassWord();
-        $this->set(compact('adgroup','apt_device_number', 'devices', 'list_users'));
+        $adv = $this->Advs->find()->where(['adgroup_id' => $id, 'active_flag !=' => 1])->select(['id', 'adgroup_id', 'path', 'url_link'])->toArray();
+        $this->set(compact('adgroup','apt_device_number', 'devices', 'list_users', 'adv'));
     }
 
     /**

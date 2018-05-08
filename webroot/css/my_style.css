@@ -378,3 +378,12 @@ table.tablesorter thead tr .headerSortDown, table.tablesorter thead tr .headerSo
     background-color: #8dbdd8;
 }
 
+.kv-file-upload, .kv-file-remove {
+    color: #fff !important;
+    visibility: hidden !important;
+
+}
+
+select {
+    cursor: pointer;
+}

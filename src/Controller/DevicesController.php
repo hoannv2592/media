@@ -385,7 +385,7 @@ class DevicesController extends AppController
                 $result = Hash::extract($fileOK, '{n}.urls');
                 $path = call_user_func_array('array_merge', $result);
                 $image_up_load = Hash::extract($list_file, '{n}.name');
-
+                $data_file = array();
                 foreach ($image_up_load as $k => $vl) {
                     $data_file[] = array(
                         'device_id' => $device_id,
@@ -421,7 +421,7 @@ class DevicesController extends AppController
                 $result = Hash::extract($fileOK, '{n}.urls');
                 $path = call_user_func_array('array_merge', $result);
                 $image_up_load = Hash::extract($list_file, '{n}.name');
-
+                $data_file = array();
                 foreach ($image_up_load as $k => $vl) {
                     $data_file[] = array(
                         'device_id' => $device_id,
@@ -484,12 +484,16 @@ class DevicesController extends AppController
     }
 
     /**
+     * *****************************************************
+     *
      * @param null $device_id
      * @param null $voucher_flag
      * @param null $partner_id
      * @param null $flag_check_isexit_partner
      * @param null $flag_client_mac
      * @return \Cake\Http\Response|null
+     *
+     *  * **************************************************
      */
     public function viewQc(
         $device_id = null,
@@ -512,8 +516,17 @@ class DevicesController extends AppController
             }
             $this->loadModel('Partners');
             $infor_devices = $this->Devices->get($device_id);
-            $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select(['id', 'device_id', 'path'])->combine('id', 'path')->toArray();
-            $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select(['id', 'device_id', 'path'])->combine('id', 'path')->toArray();
+            $logo = $this->DeviceFiles->find()->where([
+                'device_id' => $device_id,
+                'type' => 2, 'active_flag !=' => 1
+            ])->select(['id', 'device_id', 'path'])
+                ->combine('id', 'path')->toArray();
+            $back_group = $this->DeviceFiles->find()->where([
+                'device_id' => $device_id,
+                'type' => 1,
+                'active_flag !=' => 1
+            ])->select(['id', 'device_id', 'path'])
+                ->combine('id', 'path')->toArray();
             $back_group = implode(',', $back_group);
             $logo = implode(',', $logo);
             $infor_devices->path = $back_group;
@@ -596,6 +609,10 @@ class DevicesController extends AppController
                         $infor_devices->title_campaign = $device_group->title_campaign;
                         $infor_devices->tile_congratulations_return = $device_group->tile_congratulations_return;
                         $infor_devices->packages = $device_group->packages;
+                        $infor_devices->fb_fanpage = $device_group->fb_fanpage;
+                        $infor_devices->fb_checkin_msg = $device_group->fb_checkin_msg;
+                        $infor_devices->fb_latitude = $device_group->fb_latitude;
+                        $infor_devices->fb_longtitude = $device_group->fb_longtitude;
                     }
                 }
                 if (isset($infor_devices->type_adv) && $infor_devices->type_adv == 2) {
@@ -1490,6 +1507,18 @@ class DevicesController extends AppController
         }
     }
 
+    /**
+     * *******************************************************
+     *
+     * setQcMirkotic mrethod for tb Mirkotic
+     * @param null $device_id
+     *
+     * @param null $user_id
+     *
+     * @see ********
+     *
+     * * *******************************************************
+     */
     public function setQcMirkotic($device_id = null, $user_id = null)
     {
         $device_id = \UrlUtil::_decodeUrl($device_id);
@@ -1643,21 +1672,27 @@ class DevicesController extends AppController
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
+                        $this->redirect(['Controller' => 'Devices',
+                            'action' => 'setQcMirkotic'
+                            . '/' . \UrlUtil::_encodeUrl($device_id)
+                            . '/' . \UrlUtil::_encodeUrl($user_id)]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
+                    $this->redirect(['Controller' => 'Devices',
+                        'action' => 'setQcMirkotic'
+                            . '/' . \UrlUtil::_encodeUrl($device_id)
+                            . '/' . \UrlUtil::_encodeUrl($user_id)]);
                 }
             }
         }
-        $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
+//        $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
         $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select(['id', 'device_id', 'path'])->combine('id', 'path')->toArray();
         $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select(['id', 'device_id', 'path'])->combine('id', 'path')->toArray();
         $adv = $this->Advs->find()->where(['device_id' => $device_id, 'active_flag !=' => 1])->select(['id', 'device_id', 'path', 'url_link'])->toArray();
-        $filesRowNum = $files->count();
-        $this->set('files', $files);
-        $this->set('filesRowNum', $filesRowNum);
+//        $filesRowNum = $files->count();
+//        $this->set('files', $files);
+//        $this->set('filesRowNum', $filesRowNum);
         $apt = $this->radompassWord();
         $this->set(compact('logo', 'back_group', 'device', 'device_id', 'user_id', 'apt', 'adv'));
     }

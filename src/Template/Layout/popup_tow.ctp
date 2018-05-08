@@ -137,7 +137,7 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                             </div>
                         </div>
                         <div class="c-spacer--xx-large c-spacer"></div>
-                        <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name; ?></div>
+                        <div class="c-text--name c-text--parent c-text--center c-text"><?php echo isset($infor_devices->tile_name) ? $infor_devices->tile_name: ''; ?></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="discount">
                             <div class="c-spacer--x-large c-spacer"></div>
@@ -199,7 +199,7 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                            <h4 class="modal-title"><?php echo $title_campaign; ?></h4>
+                            <h4 class="modal-title"><?php echo ($title_campaign && $title_campaign !== '') ? $title_campaign: 'Vui lòng điền thông tin khảo sát'; ?></h4>
                         </div>
                         <div class="modal-body">
                             <div class="c-spacer--x-large c-spacer"></div>
@@ -249,7 +249,7 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                                 &times;
                             </button>
-                            <h4 class="modal-title"><?php echo $title_campaign ;?></h4>
+                            <h4 class="modal-title"><?php echo ($title_campaign && $title_campaign !== '') ? $title_campaign: 'Vui lòng điền thông tin khảo sát'; ?></h4>
                         </div>
                         <div class="modal-body">
                             <div class="c-spacer--x-large c-spacer"></div>
