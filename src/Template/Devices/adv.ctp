@@ -6,6 +6,7 @@
  * @var \App\View\AppView $this
  * @var \App\View\AppView device
  * @var $partner_id
+ * @var $urls
  *
  */
 $this->layout = 'landing';
@@ -40,13 +41,16 @@ $this->layout = 'landing';
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="/assets/ico/apple-touch-icon-72-precomposed.png">
     <link rel="apple-touch-icon-precomposed" href="/assets/ico/apple-touch-icon-57-precomposed.png">
 </head>
-
-    <?php if (count($paths) > 1) {
-        $value = reset($paths); ?>
-            <body background="<?php echo '/'.$value ?>">
-    <?php } else { ?>
-        <body background="/img/1.jpg">
-    <?php } ?>
+<?php if (count($paths) == 0) {
+    $paths[] = 'webroot/images/bg4.jpg';
+    $urls[] = 'https://www.google.com.vn/';
+}?>
+<?php if (count($paths) > 1) {
+$value = reset($paths); ?>
+<body background="<?php echo '/' . $value ?>">
+<?php } else { ?>
+<body background="/img/1.jpg">
+<?php } ?>
 <!-- Content -->
 <div class="top-content">
     <div class="inner-bg">
@@ -59,7 +63,7 @@ $this->layout = 'landing';
                         </p>
                     </div>
                     <div class="top-big-link">
-                        <?php if (count($paths) > 1) { ?>
+                        <?php if (count($paths) >= 1) { ?>
                             <a class="btn btn-link-1 launch-modal" href="#" data-modal-id="modal-register">Click here to show</a>
                         <?php } ?>
                     </div>
@@ -67,7 +71,6 @@ $this->layout = 'landing';
             </div>
         </div>
     </div>
-
 </div>
 
 <!-- MODAL -->
@@ -77,51 +80,49 @@ $this->layout = 'landing';
         <div class="modal-content">
             <div class="modal-body">
                 <div class="row">
-                <button type="button" class="close" data-dismiss="modal">
-                    <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
-                </button>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span aria-hidden="true">&times;</span><span class="sr-only">Close</span>
+                    </button>
                 </div>
-                    <div class="row">
-                <div class="example">
-                    <?php
-                    $value = reset($paths);
-                    $count = count($paths);
-                    if ($count >= 4) {
-                        foreach ($paths as $k => $path) {
-                            if ($path != $value) {?>
-                                <div class="col-md-4">
-                                    <a href="<?php echo $urls[$k];?>"><img src="<?php echo '/'.$path?>"></a>
-                                </div>
-                            <?php }
-                        }
-                    } else if ($count == 3 ) {
-                        foreach ($paths as $k => $path) {
-                            if ($path != $value) {?>
-                                <div class="col-md-6">
-                                    <a href="<?php echo $urls[$k];?>"><img src="<?php echo '/'.$path?>"></a>
-                                </div>
-                            <?php }
-                        }
-                    } else if ($count == 2) {
-                        foreach ($paths as $k => $path) {
-                            if ($path != $value) {?>
+                <div class="row">
+                    <div class="example">
+                        <?php
+                        $value = reset($paths);
+                        $count = count($paths);
+                        if ($count >= 4) {
+                            foreach ($paths as $k => $path) {
+                                if ($path != $value) { ?>
+                                    <div class="col-md-4">
+                                        <a href="<?php echo $urls[$k]; ?>"><img src="<?php echo '/' . $path ?>"></a>
+                                    </div>
+                                <?php }
+                            }
+                        } else if ($count == 3) {
+                            foreach ($paths as $k => $path) {
+                                if ($path != $value) { ?>
+                                    <div class="col-md-6">
+                                        <a href="<?php echo $urls[$k]; ?>"><img src="<?php echo '/' . $path ?>"></a>
+                                    </div>
+                                <?php }
+                            }
+                        } else if ($count == 2) {
+                            foreach ($paths as $k => $path) {
+                                if ($path != $value) { ?>
+                                    <div class="col-md-12">
+                                        <a href="<?php echo $urls[$k]; ?>"><img src="<?php echo '/' . $path ?>"></a>
+                                    </div>
+                                <?php }
+                            } ?>
+                        <?php } else {
+                            foreach ($paths as $k => $path) { ?>
                                 <div class="col-md-12">
-                                    <a href="<?php echo $urls[$k];?>"><img src="<?php echo '/'.$path?>"></a>
+                                    <a href="<?php echo $urls[$k]; ?>"><img src="<?php echo '/' . $path ?>"></a>
                                 </div>
                             <?php }
                         } ?>
-                    <?php } else {
-                    foreach ($paths as $k => $path) { ?>
-                            <div class="col-md-12">
-                                <a href="<?php echo $urls[$k];?>"><img src="<?php echo '/'.$path?>"></a>
-                            </div>
-                        <?php }
-                    }  ?>
                     </div>
                 </div>
-<!--                <a href="--><?php //echo $device['link_adv']?><!--" id="submit_adv" class="btn btn-success" >Click here to close</a>-->
             </div>
-
         </div>
     </div>
 </div>
@@ -132,7 +133,6 @@ $this->layout = 'landing';
 <script src="/assets/bootstrap/js/bootstrap.min.js"></script>
 <script src="/assets/js/jquery.backstretch.min.js"></script>
 <script src="/assets/js/scripts.js"></script>
-
 <!--[if lt IE 10]>
 <script src="/assets/js/placeholder.js"></script>
 <![endif]-->
@@ -141,9 +141,9 @@ $this->layout = 'landing';
 
 </html>
 <script>
-    var val = '<?php echo  count($paths) ;?>';
+    var val = '<?php echo count($paths);?>';
     $(window).on('load', function () {
-        if (val > 1) {
+        if (val >= 1) {
             $('#modal-register').modal('show');
         }
     });
@@ -153,7 +153,7 @@ $this->layout = 'landing';
     .example [class^="col-"] {
         padding: 10px 15px;
         margin-bottom: 10px;
-         background-color: transparent !important;
-         border-right: none !important;
+        background-color: transparent !important;
+        border-right: none !important;
     }
 </style>

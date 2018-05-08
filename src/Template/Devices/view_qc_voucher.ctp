@@ -78,7 +78,7 @@ foreach ($list_path_old as $k =>  $item) {
                         </div>
                     </div>
                     <div class="c-spacer--xx-large c-spacer"></div>
-                    <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name; ?></div>
+                    <div class="c-text--name c-text--parent c-text--center c-text"><?php echo isset($infor_devices->tile_name) ?  $infor_devices->tile_name: ''; ?></div>
                     <div class="redirect">
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="c-spacer--xx-large c-spacer"></div>
@@ -132,7 +132,7 @@ foreach ($list_path_old as $k =>  $item) {
                         </div>
                     </div>
                     <div class="c-spacer--xx-large c-spacer"></div>
-                    <div class="c-text--name c-text--parent c-text--center c-text"><?php echo $infor_devices->tile_name; ?></div>
+                    <div class="c-text--name c-text--parent c-text--center c-text"><?php echo isset($infor_devices->tile_name) ? $infor_devices->tile_name: ''; ?></div>
                     <div class="redirect">
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <div class="c-spacer--xx-large c-spacer"></div>

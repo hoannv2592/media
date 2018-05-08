@@ -93,30 +93,28 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                     "></div>
         <?php } else {
         foreach ($list_path as $k => $vl) {
-//            if ($vl != '') {
-                if ($k == 0) { ?>
-                    <div class="item active"
-                         style="
-                            background: url('/<?php echo $vl; ?>');
-                            -webkit-background-size: cover;
-                            -moz-background-size: cover;
-                            -o-background-size: cover;
-                            background-size: cover;
-                         ">
+            if ($k == 0) { ?>
+                <div class="item active"
+                     style="
+                        background: url('/<?php echo $vl; ?>');
+                        -webkit-background-size: cover;
+                        -moz-background-size: cover;
+                        -o-background-size: cover;
+                        background-size: cover;
+                     ">
 
-                    </div>
-                <?php } else { ?>
-                    <div class="item" style="
-                            background: url('/<?php echo $vl; ?>');
-                            -webkit-background-size: cover;
-                            -moz-background-size: cover;
-                            -o-background-size: cover;
-                            background-size: cover;
-                            ">
+                </div>
+            <?php } else { ?>
+                <div class="item" style="
+                        background: url('/<?php echo $vl; ?>');
+                        -webkit-background-size: cover;
+                        -moz-background-size: cover;
+                        -o-background-size: cover;
+                        background-size: cover;
+                        ">
 
-                    </div>
-                <?php }
-//            }
+                </div>
+            <?php }
         }
         }?>
     </div>
@@ -132,7 +130,7 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                 <?php } ?>
             </div>
         </h1>
-        <p><?php echo $infor_devices->tile_name; ?></p>
+        <p><?php echo isset($infor_devices->tile_name) ? $infor_devices->tile_name: ''; ?></p>
     </header>
     <div class="container">
         <div class="col-md-6 col-md-offset-3">
