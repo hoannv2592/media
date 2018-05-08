@@ -224,7 +224,9 @@ class CampaignGroupsController extends AppController
             }
         }
         $apt_device_number = $this->radompassWord();
-        $this->set(compact('adgroup', 'apt_device_number', 'devices'));
+        $date = date('d/m/Y');
+        $begin = $date.' - '.$date;
+        $this->set(compact('adgroup', 'apt_device_number', 'devices', 'begin'));
         $this->set(compact('campaignGroup'));
         $this->set('_serialize', ['campaignGroup']);
     }

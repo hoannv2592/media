@@ -35,259 +35,252 @@
                         </ul>
                     </div>
                     <div class="body">
-                        <?php
-                        echo $this->Form->create('CampaignGroups', array(
-                            'id' => 'form_advanced',
-                            'type' => 'file',
-                            'url' => array('controller' => 'CampaignGroups', 'action' => 'add'),
-                            'inputDefaults' => array(
-                                'label' => false,
-                                'div' => false,
-                            ),
-                        ));
-                        ?>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php echo $this->Form->control('name', array(
-                                            'class' => 'form-control',
-                                            'id' => 'name_address',
-                                            'label' => 'Tên chiến dịch',
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php
-                                        echo $this->Form->control('time', array(
-                                            'label' => 'Thời gian bắt đầu và kết thúc chiến dịch',
-                                            'class' => 'form-control',
-                                            'id' => 'config-demo'
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php
-                                        echo $this->Form->control('number_voucher', array(
-                                            'label' => 'Số lượng voucher phát ra',
-                                            'class' => 'form-control',
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <label for="name">Mô tả</label>
-                                        <textarea name="description" cols="30" rows="2" class="form-control no-resize"></textarea>
-                                    </div>
-                                </div>
-                                <h2 class="card-inside-title">Chọn thiết bị cho nhóm</h2>
-                                <div class="form-group" id="end_show">
-                                    <div class="form-line">
-                                        <select data-placeholder="Chọn thiết bị"
-                                                id="select_device" class="chosen-select" multiple tabindex="8" name="device_id[]">
-                                            <?php $user_de_id = json_decode($adgroup->device_name);
-                                            foreach ($devices as $key => $device) { ?>
-                                                <option value="<?php echo $key; ?>"><?php echo $device ?></option>
-                                            <?php } ?>
-                                        </select>
-                                    </div>
-                                </div>
-                                <?php if ($user_login['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
-                                    <h2 class="card-inside-title" >User quản lý nhóm thiết bị</h2>
-                                    <div class="form-group form-float">
+                        <div class="card-box">
+                            <?php echo $this->Form->create('CampaignGroups', array(
+                                'id' => 'form_advanced',
+                                'type' => 'file',
+                                'url' => array('controller' => 'CampaignGroups', 'action' => 'add'),
+                                'inputDefaults' => array(
+                                    'label' => false,
+                                    'div' => false,
+                                ),
+                            ));?>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
                                         <div class="form-line">
-                                            <select  class="form-control required" name="user_id_campaign_group" id="user_id_group">
-                                                <option disabled selected value> --- Chọn user --- </option>
-                                                <?php foreach ($users as $key => $item) {
-                                                    if (isset($adgroup->user_id_group) && $adgroup->user_id_group ) { ?>
-                                                        <option selected="selected" value="<?php echo $key; ?>"><?php echo $item ?></option>
-                                                    <?php } else { ?>
-                                                        <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
-                                                    <?php }?>
-                                                <?php  } ?>
+                                            <?php echo $this->Form->control('name', array(
+                                                'class' => 'form-control',
+                                                'id' => 'name_address',
+                                                'label' => 'Tên chiến dịch',
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            echo $this->Form->control('time', array(
+                                                'label' => 'Thời gian bắt đầu và kết thúc chiến dịch',
+                                                'class' => 'form-control',
+                                                'id' => 'config-demo',
+                                                'value' => $begin
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            echo $this->Form->control('number_voucher', array(
+                                                'label' => 'Số lượng voucher phát ra',
+                                                'class' => 'form-control',
+                                                'value' => 5
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <label for="name">Mô tả</label>
+                                            <textarea name="description" cols="30" rows="2" class="form-control no-resize"></textarea>
+                                        </div>
+                                    </div>
+                                    <h2 class="card-inside-title">Chọn thiết bị cho nhóm</h2>
+                                    <div class="form-group" id="end_show">
+                                        <div class="form-line">
+                                            <select data-placeholder="Chọn thiết bị"
+                                                    id="select_device" class="chosen-select" multiple tabindex="8" name="device_id[]">
+                                                <?php $user_de_id = json_decode($adgroup->device_name);
+                                                foreach ($devices as $key => $device) { ?>
+                                                    <option value="<?php echo $key; ?>"><?php echo $device ?></option>
+                                                <?php } ?>
                                             </select>
                                         </div>
                                     </div>
-                                <?php } else { ?>
-                                    <input type="hidden" name="user_id_campaign_group"  value="<?php echo $user_login['id'];?>" class="form-control"/>
-                                <?php } ?>
-                                <div class="row clearfix">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <h2 class="card-inside-title">Loại quảng cáo</h2>
-                                        <div class="demo-radio-button">
-                                            <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" checked />
-                                            <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
+                                    <?php if ($user_login['role'] == \App\Model\Entity\User::ROLE_ONE) { ?>
+                                        <h2 class="card-inside-title" >User quản lý nhóm thiết bị</h2>
+                                        <div class="form-group form-float">
+                                            <div class="form-line">
+                                                <select  class="form-control required" name="user_id_campaign_group" id="user_id_group">
+                                                    <option disabled selected value> --- Chọn user --- </option>
+                                                    <?php foreach ($users as $key => $item) {
+                                                        if (isset($adgroup->user_id_group) && $adgroup->user_id_group ) { ?>
+                                                            <option selected="selected" value="<?php echo $key; ?>"><?php echo $item ?></option>
+                                                        <?php } else { ?>
+                                                            <option  value="<?php echo $key; ?>" ><?php echo $item;?></option>
+                                                        <?php }?>
+                                                    <?php  } ?>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    <?php } else { ?>
+                                        <input type="hidden" name="user_id_campaign_group"  value="<?php echo $user_login['id'];?>" class="form-control"/>
+                                    <?php } ?>
+                                    <div class="row clearfix">
+                                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <h2 class="card-inside-title">Loại quảng cáo</h2>
+                                            <div class="demo-radio-button">
+                                                <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" checked />
+                                                <label style="font-weight: bold" for="radio_32">Quảng cáo lấy thông tin khách hàng</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $packages = isset($campaign_group->packages) ? json_decode($campaign_group->packages):'';
+                                            echo $this->Form->control('packages', [
+                                                'type' => 'select',
+                                                'multiple' => 'checkbox',
+                                                'label' => false,
+                                                'options' => [
+                                                    ['value' => 1, 'text' => __('Họ và tên')],
+                                                    ['value' => 2, 'text' => __('Số điện thoại')],
+                                                    ['value' => 3, 'text' => __('Ngày sinh')],
+                                                    ['value' => 4, 'text' => __('Địa chỉ')],
+                                                    ['value' => 5, 'text' => __('Địa chỉ email')]
+                                                ],
+                                                'templates' => [
+                                                    'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                                    'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                                ],
+                                                'value' => $packages
+                                            ]);
+                                            ?>
+                                            <div id="check_error"></div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label> Logo Image </label>
+                                        <div class="form-group">
+                                            <div class="file-loading">
+                                                <input id="file-2" type="file" class="file" name="logo_image" data-overwrite-initial="false" data-min-file-count="2">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php
-                                        $packages = isset($campaign_group->packages) ? json_decode($campaign_group->packages):'';
-                                        echo $this->Form->control('packages', [
-                                            'type' => 'select',
-                                            'multiple' => 'checkbox',
-                                            'label' => false,
-                                            'options' => [
-                                                ['value' => 1, 'text' => __('Họ và tên')],
-                                                ['value' => 2, 'text' => __('Số điện thoại')],
-                                                ['value' => 3, 'text' => __('Ngày sinh')],
-                                                ['value' => 4, 'text' => __('Địa chỉ')],
-                                                ['value' => 5, 'text' => __('Địa chỉ email')]
-                                            ],
-                                            'templates' => [
-                                                'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
-                                                'radioWrapper' => '<div class="radio">{{label}}</div>'
-                                            ],
-                                            'value' => $packages
-                                        ]);
-                                        ?>
-                                        <div id="check_error"></div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $random = isset($campaign_group->random) ? $campaign_group->random: '2';
+                                            echo  $this->Form->input('random', array(
+                                                'type' => 'select',
+                                                'options' => [
+                                                    '1' => 'Random thông thường',
+                                                    '2' => 'Random Fix cứng'
+                                                ],
+                                                'empty'=>'--- Chọn loại Random ---',
+                                                'label'=> 'Chọn loại Random',
+                                                'value' => $random,
+                                                'escape' => false,
+                                                'error' => false,
+                                                'class' => 'form-control required input_select_medium'
+                                            ));
+                                            ?>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <label> Logo Image </label>
-<!--                                    <div class="form-line">-->
-<!--                                        --><?php //$logo_image = isset($campaign_group->path_logo) ? ($campaign_group->path_logo):''; ?>
-<!--                                        <input type="file" name="logo_image" id="file" value="" class="form-control"/>-->
-<!--                                    </div>-->
+                                    <div class="form-group" id="end_show">
+                                        <div class="form-line">
+                                            <?php echo $this->Form->control('tile_name', array(
+                                                'label' => 'Tên cơ sở dịch vụ',
+                                                'class' => 'form-control',
+                                                'id' => 'tile_name'
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line"
+                                        <?php echo $this->Form->control('tile_congratulations', array(
+                                            'label' => 'Nội dung tin nhắn chúc mừng',
+                                            'class' => 'form-control'
+                                        ));
+                                        ?>
+                                    </div>
+                                    <div class="form-group" id="end_show">
+                                        <div class="form-line">
+                                            <?php $address = isset($campaign_group->address) ? ($campaign_group->address):'' ?>
+                                            <?php echo $this->Form->control('address', array(
+                                                'label' => 'Địa chỉ nhóm thiết bị',
+                                                'class' => 'form-control',
+                                                'id' => 'slogan',
+                                                'value' => $address
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <?php $tile_congratulations_return = isset($campaign_group->tile_congratulations_return) ? ($campaign_group->tile_congratulations_return):'' ?>
+                                    <div class="form-group" style="margin-bottom: 10px !important;">
+                                        <div class="form-line">
+                                            <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                            <input name="tile_congratulations_return[]"
+                                                   class="form-control valid" id="tile-congratulations-return"
+                                                   value="<?= $tile_congratulations_return ?>" aria-invalid="false" type="text" />
+                                        </div>
+                                        <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                    </div>
+                                    <div class="add"></div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
+                                            <?php echo $this->Form->control('title_connect', array(
+                                                'label' => 'Title button kết nối',
+                                                'class' => 'form-control',
+                                                'value' => $title_connect,
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $title_campaign = isset($campaign_group->title_campaign) ? ($campaign_group->title_campaign):'' ?>
+                                            <?php echo $this->Form->control('title_campaign', array(
+                                                'label' => 'Title button khảo sát',
+                                                'class' => 'form-control',
+                                                'value' => $title_campaign,
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $hidden_connect = isset($campaign_group->hidden_connect) ? $campaign_group->hidden_connect: '1';
+                                            echo  $this->Form->input('hidden_connect', array(
+                                                'type' => 'select',
+                                                'options' => [
+                                                    '1' => 'Hiển thị button connect-snow',
+                                                    '2' => 'Không hiển thị'
+                                                ],
+                                                'empty' => '--- Chọn hiển thị ---',
+                                                'label'=> 'Setting hidden button connect-snow',
+                                                'value' => $hidden_connect,
+                                                'escape' => false,
+                                                'error' => false,
+                                                'class' => 'form-control required input_select_medium'
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+
+                                    <h2 class="card-inside-title"> Chọn ảnh nền </h2>
                                     <div class="form-group">
                                         <div class="file-loading">
-                                            <input id="file-2" type="file" class="file" name="logo_image" data-overwrite-initial="false" data-min-file-count="2">
+                                            <input id="file-1" type="file" multiple class="file" name="file[]" data-overwrite-initial="false" data-min-file-count="2">
                                         </div>
                                     </div>
+                                    <!-- #END# Multi Select -->
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php
-                                        $random = isset($campaign_group->random) ? $campaign_group->random: '2';
-                                        echo  $this->Form->input('random', array(
-                                            'type' => 'select',
-                                            'options' => [
-                                                '1' => 'Random thông thường',
-                                                '2' => 'Random Fix cứng'
-                                            ],
-                                            'empty'=>'--- Chọn loại Random ---',
-                                            'label'=> 'Chọn loại Random',
-                                            'value' => $random,
-                                            'escape' => false,
-                                            'error' => false,
-                                            'class' => 'form-control required input_select_medium'
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                                <div class="form-group" id="end_show">
-                                    <div class="form-line">
-                                        <?php echo $this->Form->control('tile_name', array(
-                                            'label' => 'Tên cơ sở dịch vụ',
-                                            'class' => 'form-control',
-                                            'id' => 'tile_name'
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-line"
-                                    <?php echo $this->Form->control('tile_congratulations', array(
-                                        'label' => 'Nội dung tin nhắn chúc mừng',
-                                        'class' => 'form-control'
-                                    ));
-                                    ?>
-                                </div>
-                                <div class="form-group" id="end_show">
-                                    <div class="form-line">
-                                        <?php $address = isset($campaign_group->address) ? ($campaign_group->address):'' ?>
-                                        <?php echo $this->Form->control('address', array(
-                                            'label' => 'Địa chỉ nhóm thiết bị',
-                                            'class' => 'form-control',
-                                            'id' => 'slogan',
-                                            'value' => $address
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                                <?php $tile_congratulations_return = isset($campaign_group->tile_congratulations_return) ? ($campaign_group->tile_congratulations_return):'' ?>
-                                <div class="form-group" style="margin-bottom: 10px !important;">
-                                    <div class="form-line">
-                                        <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
-                                        <input name="tile_congratulations_return[]"
-                                               class="form-control valid" id="tile-congratulations-return"
-                                               value="<?= $tile_congratulations_return ?>" aria-invalid="false" type="text" />
-                                    </div>
-                                    <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
-                                </div>
-                                <div class="add"></div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
-                                        <?php echo $this->Form->control('title_connect', array(
-                                            'label' => 'Title button kết nối',
-                                            'class' => 'form-control',
-                                            'value' => $title_connect,
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php
-                                        $title_campaign = isset($campaign_group->title_campaign) ? ($campaign_group->title_campaign):'' ?>
-                                        <?php echo $this->Form->control('title_campaign', array(
-                                            'label' => 'Title button khảo sát',
-                                            'class' => 'form-control',
-                                            'value' => $title_campaign,
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php
-                                        $hidden_connect = isset($campaign_group->hidden_connect) ? $campaign_group->hidden_connect: '1';
-                                        echo  $this->Form->input('hidden_connect', array(
-                                            'type' => 'select',
-                                            'options' => [
-                                                '1' => 'Hiển thị button connect-snow',
-                                                '2' => 'Không hiển thị'
-                                            ],
-                                            'empty' => '--- Chọn hiển thị ---',
-                                            'label'=> 'Setting hidden button connect-snow',
-                                            'value' => $hidden_connect,
-                                            'escape' => false,
-                                            'error' => false,
-                                            'class' => 'form-control required input_select_medium'
-                                        ));
-                                        ?>
-                                    </div>
-                                </div>
-
-                                <h2 class="card-inside-title"> Chọn ảnh nền </h2>
-<!--                                <div class="form-group">-->
-<!--                                    <div class="form-line">-->
-<!--                                        <input type="file" name="file[]" multiple = multiple id="file" value="--><?php //echo isset($device->path) ? '/'.$device->path: '';?><!--" class="form-control">-->
-<!--                                    </div>-->
-<!--                                </div>-->
-                                <div class="form-group">
-                                    <div class="file-loading">
-                                        <input id="file-1" type="file" multiple class="file" name="file[]" data-overwrite-initial="false" data-min-file-count="2">
-                                    </div>
-                                </div>
-                                <!-- #END# Multi Select -->
+                            <div class="row">
+                                <button class="btn btn-primary waves-effect" id = "submit" type="submit">THÊM MỚI</button>
+                                <?php echo $this->Form->end(); ?>
                             </div>
                         </div>
-
-
-                        <button class="btn btn-primary waves-effect" id = "submit" type="submit">THÊM MỚI</button>
-                        <?php echo $this->Form->end(); ?>
                     </div>
                 </div>
             </div>
@@ -414,7 +407,6 @@
                 'next-days': [3,5,7],
                 'next': ['week','month','year']
             },
-
         format: 'DD/MM/YYYY',
         separator: ' - '
     });
