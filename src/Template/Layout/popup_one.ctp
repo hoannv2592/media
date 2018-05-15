@@ -4,7 +4,7 @@
  * @var \App\View\AppView $this
  * @var \App\View\AppView $infor_devices
  */
-$cakeDescription = 'Media ';
+$cakeDescription = 'Hệ thống wifi-Maketting';
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6 no-js" lang="en"><![endif]-->
@@ -13,6 +13,7 @@ $cakeDescription = 'Media ';
 <!--[if IE 9 ]><html class="ie ie9 no-js" lang="en"><![endif]-->
 <!--[if gt IE 9]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
+    <title><?= $cakeDescription ?></title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

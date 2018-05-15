@@ -6,7 +6,7 @@
  * @var $infor_devices
  * @var $list_path
  */
-$cakeDescription = 'Media ';
+$cakeDescription = 'Hệ thống wifi-Maketting';
 ?>
 <!DOCTYPE html>
 <!--[if lt IE 7 ]><html class="ie ie6 no-js" lang="en"><![endif]-->
@@ -15,6 +15,9 @@ $cakeDescription = 'Media ';
 <!--[if IE 9 ]><html class="ie ie9 no-js" lang="en"><![endif]-->
 <!--[if gt IE 9]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
+    <title>
+        <?= $cakeDescription ?>
+    </title>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -36,6 +39,7 @@ $cakeDescription = 'Media ';
             'bootstrap.min',
             'back_end/md5',
             'md5/md5',
+            'sdk.js',
         ]
     );
     echo $this->Html->css('back_end/page3');
@@ -160,9 +164,9 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                     <input name="username" type="hidden" value="wifimedia" />
                                     <input name="password" type="hidden" value="wifimedia" />
                                     <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
-                                    <button class="btn btn-primary btn-success mb-10 br-2 _goog"><i class="fa fa-google-plus"></i>Login with Google </button>
-                                    <div class="c-spacer"></div>
                                 </form>
+                                    <button onclick="smsLogin()" href="#" class="btn btn-primary btn-success mb-10 br-2 _goog"><i class="fa fa-expeditedssl"></i>Login with Sms </button>
+                                    <div class="c-spacer"></div>
                                 <form class="form-validation" style="width: 100%" name="login_slow" id="" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLoginSlow()">
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="false"/>
@@ -179,6 +183,71 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
 </div>
 </body>
 </html>
+<script>
+    // initialize Account Kit with CSRF protection
+    AccountKit_OnInteractive = function(){
+        AccountKit.init(
+            {
+                appId:"2145627442340504",
+                state:"e99f0348b8ae26b6b5a32f0ea8ade6dc",
+                version:"v1.0",
+                fbAppEventsEnabled:true,
+                debug:true,
+                Redirect:"https://www.24h.com.vn/"
+            }
+        );
+    };
+
+    // login callback
+    function loginCallback(response) {
+        console.log(response);
+        if (response.status === "PARTIALLY_AUTHENTICATED") {
+            var code = response.code;
+            var csrf = response.state;
+            // Send code to server to exchange for access token
+            // $.ajax({
+            //     url: "/Devices/add_log_voucher",
+            //     type: "POST",
+            //     data: $("#info_mirkotic").serialize(),
+            //     cache: false,
+            //     processData: false,
+            //     success: function (data) {
+            //         window.location.href = X_url;
+            //     }
+            // });
+        }
+        else if (response.status === "NOT_AUTHENTICATED") {
+            // handle authentication failure
+        }
+        else if (response.status === "BAD_PARAMS") {
+            // handle bad parameters
+        }
+    }
+
+    // phone form submission handler
+    function smsLogin() {
+        //var countryCode = document.getElementById("country_code").value;
+        var countryCode = "+84";
+        var phoneNumber = "985644301";
+        //var phoneNumber = document.getElementById("phone_number").value;
+        AccountKit.login(
+            'PHONE',
+            {countryCode: countryCode, phoneNumber: phoneNumber}, // will use default values if not specified
+            loginCallback
+        );
+    }
+
+
+    // email form submission handler
+    function emailLogin() {
+        var emailAddress = document.getElementById("email").value;
+        AccountKit.login(
+            'EMAIL',
+            {emailAddress: emailAddress},
+            loginCallback
+        );
+    }
+</script>
 <script type="text/javascript">
     function handleLoginStatus(response){
         if (response.status === 'connected') {
