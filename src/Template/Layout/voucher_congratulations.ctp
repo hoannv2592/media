@@ -3,7 +3,7 @@
  * @var \App\View\AppView $apt_key_check
  * @var \App\View\AppView $this
  */
-$cakeDescription = 'Media ';
+$cakeDescription = 'Hệ thống wifi-Maketting';
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -11,7 +11,7 @@ $cakeDescription = 'Media ';
 <head id="Head1" prefix="og: http://ogp.me/ns# fb:http://ogp.me/ns/fb# article:http://ogp.me/ns/article#">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <meta http-equiv="Cache-control" content="public">
-    <title>Media : view cáo thiết bị</title>
+    <title><?= $cakeDescription ?></title>
     <link rel="author" href="hoannv"/>
     <meta name="viewport" content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0, width=device-width"/>
     <link rel="canonical" href="http://wifimedia.vn/"/>
@@ -58,20 +58,6 @@ $cakeDescription = 'Media ';
     <?php echo $this->fetch('content'); ?>
 </div>
 </body>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#fullpage').fullpage({
-            verticalCentered: false,
-            loopBottom: false,
-            afterRender: function () {
-                setInterval(function () {
-                    $.fn.fullpage.moveSlideRight();
-                }, 10000);
-            }
-        });
-    });
-</script>
-
 </html>
 <style>
     html {
