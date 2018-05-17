@@ -259,6 +259,7 @@
                                     <th scope="col">Số điện thoại</th>
                                     <th scope="col">Ngày sinh</th>
                                     <th scope="col">Địa chỉ</th>
+                                    <th scope="col">Email</th>
                                     <th scope="col">Thời gian truy cập</th>
                                     <th scope="col">Số lần ghé thăm</th>
                                     <th scope="col">Thiết bị quản lý</th>
@@ -283,6 +284,7 @@
                                         <td><?php echo h($vl['phone']); ?></td>
                                         <td><?php echo h($vl['birthday']); ?></td>
                                         <td><?php echo h($vl['address']); ?></td>
+                                        <td><?php echo h($vl['email']); ?></td>
                                         <td><?php echo date('d/m/Y', strtotime($vl['created'])); ?></td>
                                         <td><?php echo h($vl['num_clients_connect']); ?></td>
                                         <td><?php echo isset($vl['Devices']['name']) ? $vl['Devices']['name'] : ''; ?></td>

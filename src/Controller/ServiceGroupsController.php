@@ -341,7 +341,7 @@ class ServiceGroupsController extends AppController
                 $conditions['Partners.name LIKE'] = "%".trim($_GET['name'])."%";
             }
             if (isset($_GET['phone']) && $_GET['phone'] != '') {
-                $conditions['Partners.phone'] = trim($_GET['phone']);
+                $conditions['Partners.phone LIKE'] = "%".trim($_GET['phone'])."%";
             }
             if (isset($_GET['device_name']) && $_GET['device_name'] != '') {
                 $conditions['Devices.name LIKE'] = "%".trim($_GET['device_name'])."%";

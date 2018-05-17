@@ -890,7 +890,7 @@ class UsersController extends AppController
                 $conditions['Partners.name LIKE'] = "%".trim($_POST['name'])."%";
             }
             if (isset($_POST['phone']) && $_POST['phone'] != '') {
-                $conditions['Partners.phone'] = trim($_POST['phone']);
+                $conditions['Partners.phone LIKE'] = "%".trim($_GET['phone'])."%";
             }
             if (isset($_POST['client_mac']) && $_POST['client_mac'] != '') {
                 $conditions['Partners.client_mac LIKE'] = "%".trim($_POST['client_mac'])."%";
