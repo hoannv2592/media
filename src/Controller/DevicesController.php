@@ -1487,7 +1487,10 @@ class DevicesController extends AppController
                                         $this->redirect([
                                             'plugin' => null,
                                             'controller' => 'Devices',
-                                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id) . '/' . \UrlUtil::_encodeUrl(2) . '/' . \UrlUtil::_encodeUrl($partner_id) . '/' . \UrlUtil::_decodeUrl(2) . '/4'
+                                            'action' => 'view_qc' . '/' . \UrlUtil::_encodeUrl($data_device->id)
+                                                . '/' . \UrlUtil::_encodeUrl(2)
+                                                . '/' . \UrlUtil::_encodeUrl($partner_id)
+                                                . '/' . \UrlUtil::_decodeUrl(2) . '/4'
                                         ]);
                                     }
                                 }
@@ -1657,11 +1660,15 @@ class DevicesController extends AppController
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic'
+                            . '/' . \UrlUtil::_encodeUrl($device_id)
+                            . '/' . \UrlUtil::_encodeUrl($user_id)]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQcMirkotic'
+                        . '/' . \UrlUtil::_encodeUrl($device_id)
+                        . '/' . \UrlUtil::_encodeUrl($user_id)]);
                 }
             } else {
                 unset($this->request->data['file_upload']);
@@ -1686,13 +1693,9 @@ class DevicesController extends AppController
                 }
             }
         }
-//        $files = $this->Devices->find('all', ['order' => ['Devices.created' => 'DESC']]);
         $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select(['id', 'device_id', 'path'])->combine('id', 'path')->toArray();
         $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select(['id', 'device_id', 'path'])->combine('id', 'path')->toArray();
         $adv = $this->Advs->find()->where(['device_id' => $device_id, 'active_flag !=' => 1])->select(['id', 'device_id', 'path', 'url_link'])->toArray();
-//        $filesRowNum = $files->count();
-//        $this->set('files', $files);
-//        $this->set('filesRowNum', $filesRowNum);
         $apt = $this->radompassWord();
         $this->set(compact('logo', 'back_group', 'device', 'device_id', 'user_id', 'apt', 'adv'));
     }
@@ -1916,6 +1919,14 @@ class DevicesController extends AppController
         }
     }
 
+    /**
+     *  * *  * *  **  **  **  **  **  **  **  **  **
+     *
+     * @param null $id
+     * @return \Cake\Http\Response|null
+     *
+     * *  * *  * *  **  **  **  **  **  **  **  **  **
+     */
     public function edit($id = null)
     {
         $id = \UrlUtil::_decodeUrl($id);
@@ -1976,6 +1987,9 @@ class DevicesController extends AppController
         $this->set('_serialize', ['device']);
     }
 
+    /**
+     * @return \Cake\Http\Response|null
+     */
     public function loadLogPartnerHistories()
     {
         ob_start();
@@ -2035,7 +2049,11 @@ class DevicesController extends AppController
         echo $view->render();
     }
 
-
+    /**
+     * @param null $ladingpage_id
+     * @param null $id_device
+     * @return int
+     */
     private function getFlagInAdgroup($ladingpage_id = null, $id_device = null)
     {
         $ad_group = $this->Adgroups->find()
@@ -2071,6 +2089,9 @@ class DevicesController extends AppController
         return $flag_check_isexit_partner;
     }
 
+    /**
+     * @return bool
+     */
     public function updateLogoDevice()
     {
         $this->autoRender = false;
@@ -2097,6 +2118,9 @@ class DevicesController extends AppController
         }
     }
 
+    /**
+     * @return bool
+     */
     public function updateBakDevice()
     {
         $this->autoRender = false;
@@ -2123,6 +2147,9 @@ class DevicesController extends AppController
         }
     }
 
+    /**
+     *
+     */
     public function deleteBackgroud()
     {
         $this->autoRender = false;
@@ -2151,6 +2178,9 @@ class DevicesController extends AppController
         die(json_encode(true));
     }
 
+    /**
+     * @param null $id
+     */
     public function adv($id = null)
     {
         $apt = explode('&tok=', $id);
@@ -2201,6 +2231,55 @@ class DevicesController extends AppController
                 }
             } else {
                 die(json_encode(false));
+            }
+        }
+    }
+
+    /**
+     *
+     */
+    public function accountKitFace()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('post')) {
+            $_POST = $this->request->getData();
+            $partner_id = $_POST['partner_id'];
+            $ch = curl_init();
+            // Set url elements
+            $fb_app_id = '2145627442340504';
+            $ak_secret = 'e99f0348b8ae26b6b5a32f0ea8ade6dc';
+            $token = 'AA|' . $fb_app_id . '|' . $ak_secret;
+            // Get access token
+            $url = 'https://graph.accountkit.com/v1.0/access_token?grant_type=authorization_code&code=' . $_POST["code"] . '&access_token=' . $token;
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            $result = curl_exec($ch);
+            $info = json_decode($result);
+            // Get account information
+            $url = 'https://graph.accountkit.com/v1.0/me/?access_token=' . $info->access_token;
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_URL, $url);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            $final = json_decode($result);
+            $info_p = $this->Partners->find()->where(['id' => $partner_id])->first();
+            if (!isset($final->error)) {
+                $update['account'] = $final->id;
+                $update['application'] = $final->application->id;
+                if (isset($final->email)) {
+                    $update['email'] = $final->email->address;
+                } else {
+                    $update['phone'] = $final->phone->number;
+                    $update['country_code'] = $final->phone->country_prefix;
+                }
+                $info_p = $this->Partners->patchEntity($info_p, $update);
+                if ($this->Partners->save($info_p)) {
+                    die(json_encode(true));
+                } else {
+                    die(json_encode(false));
+                }
             }
         }
     }
