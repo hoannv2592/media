@@ -118,12 +118,39 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                                             <label class=""> Chọn loại quảng cáo </label>
                                             <div class="demo-radio-button">
-                                                <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 1 || $adgroup->langdingpage_id == '') { echo 'checked'; } ?> />
-                                                <label style="font-weight: bold" for="radio_30">Password</label>
-                                                <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 2) { echo 'checked'; }?> />
-                                                <label style="font-weight: bold" for="radio_31">Facebook-Login</label>
                                                 <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 3) { echo 'checked'; }?> />
                                                 <label style="font-weight: bold" for="radio_32">Thông tin khách hàng</label>
+                                                <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 2) { echo 'checked'; }?> />
+                                                <label style="font-weight: bold" for="radio_31">Facebook-SMS-Email</label>
+                                                <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($adgroup->langdingpage_id == 1 || $adgroup->langdingpage_id == '') { echo 'checked'; } ?> />
+                                                <label style="font-weight: bold" for="radio_30">Password</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="hidden_face">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php
+                                                $option_tow = isset($adgroup->option_tow) ? json_decode($adgroup->option_tow):'';
+                                                echo $this->Form->control('option_tow', [
+                                                    'type' => 'select',
+                                                    'multiple' => 'checkbox',
+                                                    'label' => false,
+                                                    'class' => 'option_tow',
+                                                    'options' => [
+                                                        ['value' => 1, 'text' => __('Login với Facebook')],
+                                                        ['value' => 2, 'text' => __('Login với SMS')],
+                                                        ['value' => 3, 'text' => __('Login với Email')],
+                                                        ['value' => 4, 'text' => __('Connect Snow')],
+                                                    ],
+                                                    'templates' => [
+                                                        'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                                        'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                                    ],
+                                                    'value' => $option_tow
+                                                ]);
+                                                ?>
+                                                <div id="check_error"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -607,19 +634,35 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
 
 
     $(document).ready(function () {
+        if(document.getElementById('option-tow-1').checked) {
+            $('.face').css('display', '');
+        } else {
+            $('.face').css('display', 'none');
+        }
+        $('#option-tow-1').click(function() {
+            if (!$(this).is(':checked')) {
+                $('.face').css('display', 'none');
+            } else {
+                $('.face').css('display', '');
+            }
+        });
+
         var langding = "<?php echo $adgroup->langdingpage_id; ?>";
         if (langding == 1) {
             $('.check_pass_device').css('display', '');
             $('.hiddenccc').css('display', 'none');
-            $('.face').css('display', 'none');
+            $('.hidden_face').css('display', 'none');
+            //$('.face').css('display', 'none');
         } else if (langding == 3) {
             $('.check_pass_device').css('display', 'none');
             $('.hiddenccc').css('display', '');
-            $('.face').css('display', 'none');
+            $('.hidden_face').css('display', 'none');
+            //$('.face').css('display', 'none');
         } else {
             $('.check_pass_device').css('display', 'none');
             $('.hiddenccc').css('display', 'none');
-            $('.face').css('display', '');
+            $('.hidden_face').css('display', '');
+            //$('.face').css('display', '');
         }
     });
     $('.radio-col-grey').change(function () {
@@ -627,15 +670,18 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         if (__val == 1) {
             $('.check_pass_device').css('display', '');
             $('.hiddenccc').css('display', 'none');
-            $('.face').css('display', 'none');
+            $('.hidden_face').css('display', 'none');
+            //$('.face').css('display', 'none');
         } else if (__val == 3) {
             $('.check_pass_device').css('display', 'none');
             $('.hiddenccc').css('display', '');
-            $('.face').css('display', 'none');
+            $('.hidden_face').css('display', 'none');
+            //$('.face').css('display', 'none');
         } else {
             $('.check_pass_device').css('display', 'none');
             $('.hiddenccc').css('display', 'none');
-            $('.face').css('display', '');
+            $('.hidden_face').css('display', '');
+            //$('.face').css('display', '');
         }
         if ($(this).is(':checked')){
             $(this).prop('checked', true).attr('checked', 'checked');

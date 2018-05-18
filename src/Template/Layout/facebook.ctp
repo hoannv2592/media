@@ -98,6 +98,10 @@ $langdingpage_id = isset($infor_devices->langdingpage_id) ? $infor_devices->lang
 $title_connect_normal = isset($infor_devices->title_connect) ? $infor_devices->title_connect : 'Đăng ký nhận voucher';
 $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_isexit_partner : '2';
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
+$option_tow = isset($infor_devices->option_tow) ?  $infor_devices->option_tow : array();
+if (!empty($option_tow)) {
+    $option_tow = json_decode($option_tow);
+}
 if (isset($infor_devices->tile_congratulations_return)) {
     function isJSON($string){
         return is_string($string) && is_array(json_decode($string, true)) && (json_last_error() == JSON_ERROR_NONE) ? true : false;
@@ -187,13 +191,32 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                         <div class="c-spacer--xx-large c-spacer"></div>
                         <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
                             <div class="redirect">
-                                <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button>
-                                <div class="c-spacer"></div>
-                                <a class="btn _goog" id="normal_sms" onclick="phone_btn_onclick();"><i class="fa fa-expeditedssl"></i>Login with Sms</a>
-                                <div class="c-spacer"></div>
-                                <a onclick="email_btn_onclick();" class="btn btn-primary btn-success mb-10 br-2 email"><i class="fa fa-envelope"></i>Login with Email </a>
-                                <div class="c-spacer"></div>
-                                <a class="btn _wifi" href="<?php echo $infor_devices->auth_target; ?>"><i class="fa fa-wifi"></i>Connect now - Slow</a>
+                                <?php
+                                 if (!empty($option_tow)) {
+                                     foreach ($option_tow as $index => $item) {
+                                         if ($item == 1) { ?>
+                                            <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button>
+                                         <?php } elseif ($item == 2) {?>
+                                            <div class="c-spacer"></div>
+                                            <a class="btn _goog" id="normal_sms" onclick="phone_btn_onclick();"><i class="fa fa-expeditedssl"></i>Login with Sms</a>
+                                         <?php } elseif ($item == 3) { ?>
+                                            <div class="c-spacer"></div>
+                                            <a onclick="email_btn_onclick();" class="btn btn-primary btn-success mb-10 br-2 email"><i class="fa fa-envelope"></i>Login with Email </a>
+                                         <?php } else { ?>
+                                            <div class="c-spacer"></div>
+                                            <a class="btn _wifi" href="<?php echo $infor_devices->auth_target; ?>"><i class="fa fa-wifi"></i>Connect now - Slow</a>
+                                         <?php }
+                                     }
+                                 } else {?>
+                                     <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button>
+                                     <div class="c-spacer"></div>
+                                     <a class="btn _goog" id="normal_sms" onclick="phone_btn_onclick();"><i class="fa fa-expeditedssl"></i>Login with Sms</a>
+                                     <div class="c-spacer"></div>
+                                     <a onclick="email_btn_onclick();" class="btn btn-primary btn-success mb-10 br-2 email"><i class="fa fa-envelope"></i>Login with Email </a>
+                                     <div class="c-spacer"></div>
+                                     <a class="btn _wifi" href="<?php echo $infor_devices->auth_target; ?>"><i class="fa fa-wifi"></i>Connect now - Slow</a>
+                                 <?php }
+                                ?>
                             </div>
                         <?php } else { ?>
                             <div class="redirect">
@@ -203,24 +226,54 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
                                     <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                                     <input type="hidden" name="popup" value="false"/>
                                 </form>
-                                <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
-                                    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                    <input type="hidden" name="popup" value="true"/>
-                                    <input name="username" type="hidden" value="wifimedia" />
-                                    <input name="password" type="hidden" value="wifimedia" />
-                                    <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
-                                </form>
-                                <button onclick="phone_btn_onclick();" class="btn btn-primary btn-success mb-10 br-2 _goog"><i class="fa fa-expeditedssl"></i>Login with Sms </button>
-                                <div class="c-spacer"></div>
-                                <button onclick="email_btn_onclick();" class="btn btn-primary btn-success mb-10 br-2 email"><i class="fa fa-envelope"></i>Login with Email </button>
-                                <div class="c-spacer"></div>
-                                <form class="form-validation" style="width: 100%" name="login_slow" id="" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLoginSlow()">
-                                    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                    <input type="hidden" name="popup" value="false"/>
-                                    <input style="display: none;" name="username" type="text" value="wifimedia"/>
-                                    <input style="display: none;" name="password" type="password" value="wifimedia"/>
-                                    <button class="btn btn-primary btn-success mb-10 br-2 _wifi"><i class="fa fa-wifi"></i>Connect now - Slow </button>
-                                </form>
+                                <?php
+                                if (!empty($option_tow)) {
+                                    foreach ($option_tow as $index => $item) {
+                                        if ($item == 1) { ?>
+                                            <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                                                <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                                <input type="hidden" name="popup" value="true"/>
+                                                <input name="username" type="hidden" value="wifimedia" />
+                                                <input name="password" type="hidden" value="wifimedia" />
+                                                <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
+                                            </form>
+                                        <?php } else if ($item == 2) { ?>
+                                            <button onclick="phone_btn_onclick();" class="btn btn-primary btn-success mb-10 br-2 _goog"><i class="fa fa-expeditedssl"></i>Login with Sms </button>
+                                            <div class="c-spacer"></div>
+                                        <?php } elseif ($item == 3) { ?>
+                                            <button onclick="email_btn_onclick();" class="btn btn-primary btn-success mb-10 br-2 email"><i class="fa fa-envelope"></i>Login with Email </button>
+                                            <div class="c-spacer"></div>
+                                        <?php } else { ?>
+                                            <form class="form-validation" style="width: 100%" name="login_slow" id="" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLoginSlow()">
+                                                <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                                <input type="hidden" name="popup" value="false"/>
+                                                <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                                <input style="display: none;" name="password" type="password" value="wifimedia"/>
+                                                <button class="btn btn-primary btn-success mb-10 br-2 _wifi"><i class="fa fa-wifi"></i>Connect now - Slow </button>
+                                            </form>
+                                        <?php } ?>
+                                    <?php } ?>
+                                <?php } else { ?>
+                                    <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                                        <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                        <input type="hidden" name="popup" value="true"/>
+                                        <input name="username" type="hidden" value="wifimedia" />
+                                        <input name="password" type="hidden" value="wifimedia" />
+                                        <button type="button" onclick="FBLogin()" class="btn btn-primary btn-success mb-10 br-2 _face"><i class="fa fa-facebook"></i>Login with Facebook </button><div class="c-spacer"></div>
+                                    </form>
+
+                                    <button onclick="phone_btn_onclick();" class="btn btn-primary btn-success mb-10 br-2 _goog"><i class="fa fa-expeditedssl"></i>Login with Sms </button>
+                                    <div class="c-spacer"></div>
+                                    <button onclick="email_btn_onclick();" class="btn btn-primary btn-success mb-10 br-2 email"><i class="fa fa-envelope"></i>Login with Email </button>
+                                    <div class="c-spacer"></div>
+                                    <form class="form-validation" style="width: 100%" name="login_slow" id="" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLoginSlow()">
+                                        <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                                        <input type="hidden" name="popup" value="false"/>
+                                        <input style="display: none;" name="username" type="text" value="wifimedia"/>
+                                        <input style="display: none;" name="password" type="password" value="wifimedia"/>
+                                        <button class="btn btn-primary btn-success mb-10 br-2 _wifi"><i class="fa fa-wifi"></i>Connect now - Slow </button>
+                                    </form>
+                                <?php } ?>
                             </div>
                         <?php } ?>
                     </div>

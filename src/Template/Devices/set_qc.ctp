@@ -292,9 +292,36 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                             <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($device->langdingpage_id == 3) { echo 'checked'; }?> />
                                             <label style="font-weight: bold" for="radio_32">Thông tin khách hàng</label>
                                             <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" <?php if ($device->langdingpage_id == 2) { echo 'checked'; }?> />
-                                            <label style="font-weight: bold" for="radio_31">Facebook-Login</label>
+                                            <label style="font-weight: bold" for="radio_31">Facebook-SMS-Email</label>
                                             <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($device->langdingpage_id == 1 || $device->langdingpage_id == '') { echo 'checked'; } ?> />
                                             <label style="font-weight: bold" for="radio_30">Password</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="hidden_face">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $option_tow = isset($device->option_tow) ? json_decode($device->option_tow):'';
+                                            echo $this->Form->control('option_tow', [
+                                                'type' => 'select',
+                                                'multiple' => 'checkbox',
+                                                'label' => false,
+                                                'class' => 'option_tow',
+                                                'options' => [
+                                                    ['value' => 1, 'text' => __('Login với Facebook')],
+                                                    ['value' => 2, 'text' => __('Login với SMS')],
+                                                    ['value' => 3, 'text' => __('Login với Email')],
+                                                    ['value' => 4, 'text' => __('Connect Snow')],
+                                                ],
+                                                'templates' => [
+                                                    'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                                    'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                                ],
+                                                'value' => $option_tow
+                                            ]);
+                                            ?>
+                                            <div id="check_error"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -436,13 +463,12 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
     </div>
 </section>
 <script type="application/javascript">
-    function delete_title(id) {
-        $('#title_'+id).remove();
-    }
     var max_fields = 10; //maximum input boxes allowed
     var wrapper_file = $("div.file-add"); //Fields wrapper
     var add_button_file = $(".plus-file"); //Add button class
     var y = 1; //initlal text box count
+    var wrapper_title = $("div.add"); //Fields wrapper
+    var add_button_title = $("#add_title"); //Add button class
     $(add_button_file).click(function (e) { //on add file button click
         e.preventDefault();
         if (y < max_fields) { //max input file allowed
@@ -468,8 +494,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         $(this).parent('div').remove();
         y--;
     });
-    var wrapper_title = $("div.add"); //Fields wrapper
-    var add_button_title = $("#add_title"); //Add button class
     $(add_button_title).click(function (e) { //on add file button click
         e.preventDefault();
         if (y < max_fields) { //max input file allowed
@@ -525,6 +549,9 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             }
         });
     }
+    function delete_title(id) {
+        $('#title_'+id).remove();
+    }
     $("#file-1").fileinput({
         theme: 'fa',
         uploadUrl: '/Devices/upload', // you must set a valid URL here else you will get an error
@@ -557,38 +584,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         dropZoneEnabled : false,
         showUpload : false
     });
-    $(document).ready(function () {
-        var langding = "<?php echo $device->langdingpage_id; ?>";
-        if (langding == 1 || langding == '') {
-            $('.check_pass_device').css('display', '');
-            $('.hiddenccc').css('display', 'none');
-            $('.face').css('display', 'none');
-        } else if (langding == 3) {
-            $('.check_pass_device').css('display', 'none');
-            $('.hiddenccc').css('display', '');
-            $('.face').css('display', 'none');
-        } else {
-            $('.check_pass_device').css('display', 'none');
-            $('.hiddenccc').css('display', 'none');
-            $('.face').css('display', '');
-        }
-    });
-    $('.radio-col-grey').change(function () {
-        var __val = $(this).val();
-        if (__val == 1) {
-            $('.check_pass_device').css('display', '');
-            $('.hiddenccc').css('display', 'none');
-            $('.face').css('display', 'none');
-        } else if (__val == 3) {
-            $('.check_pass_device').css('display', 'none');
-            $('.hiddenccc').css('display', '');
-            $('.face').css('display', 'none');
-        } else {
-            $('.check_pass_device').css('display', 'none');
-            $('.hiddenccc').css('display', 'none');
-            $('.face').css('display', '');
-        }
-    });
     $('#uploadForm').validate({
         rules: {
             'apt_device_number': { required: true }
@@ -618,6 +613,58 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             $(this).prop('checked', true).attr('checked', 'checked');
         } else {
             $(this).prop('checked', false).removeAttr('checked');
+        }
+    });
+
+    $(document).ready(function () {
+        if (document.getElementById('option-tow-1').checked) {
+            $('.face').css('display', '');
+        } else {
+            $('.face').css('display', 'none');
+        }
+        $('#option-tow-1').click(function() {
+            if (!$(this).is(':checked')) {
+                $('.face').css('display', 'none');
+            } else {
+                $('.face').css('display', '');
+            }
+        });
+
+        var langding = "<?php echo $device->langdingpage_id; ?>";
+        if (langding == 1 || langding == '') {
+            $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
+            $('.hidden_face').css('display', 'none');
+            // $('.face').css('display', 'none');
+        } else if (langding == 3) {
+            $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
+            $('.hidden_face').css('display', 'none');
+            // $('.face').css('display', 'none');
+        } else {
+            $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
+            $('.hidden_face').css('display', '');
+            // $('.face').css('display', '');
+        }
+    });
+    $('.radio-col-grey').change(function () {
+        var __val = $(this).val();
+        if (__val == 1) {
+            $('.check_pass_device').css('display', '');
+            $('.hiddenccc').css('display', 'none');
+            $('.hidden_face').css('display', 'none');
+            // $('.face').css('display', 'none');
+        } else if (__val == 3) {
+            $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', '');
+            $('.hidden_face').css('display', 'none');
+            // $('.face').css('display', 'none');
+        } else {
+            $('.check_pass_device').css('display', 'none');
+            $('.hiddenccc').css('display', 'none');
+            $('.hidden_face').css('display', '');
+            // $('.face').css('display', '');
         }
     });
 </script>

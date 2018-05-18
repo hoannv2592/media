@@ -330,9 +330,15 @@ class DevicesController extends AppController
                 $packages = array_values($this->request->data['tile_congratulations_return']);
                 $this->request->data['tile_congratulations_return'] = json_encode($packages);
             }
+            // todo option_three thon tin khach hang
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
                 $this->request->data['packages'] = json_encode($packages);
+            }
+            // todo option_tow setting
+            if ($this->request->data['option_tow'] != '') {
+                $option_tow = array_values($this->request->data['option_tow']);
+                $this->request->data['option_tow'] = json_encode($option_tow);
             }
             if (!empty($this->request->data['logo_image']['error'] != 4)) {
                 $list_file['file'] = $this->request->getData('logo_image');
@@ -395,11 +401,13 @@ class DevicesController extends AppController
                         'active_flag' => 0
                     );
                 }
-                foreach ($data_file as $k => $item) {
-                    $new_back_group = $this->Advs->newEntity();
-                    $new_back_group = $this->Advs->patchEntity($new_back_group, $item);
-                    if (!$this->Advs->save($new_back_group)) {
-                        $conn->rollback();
+                if (!empty($data_file)) {
+                    foreach ($data_file as $k => $item) {
+                        $new_back_group = $this->Advs->newEntity();
+                        $new_back_group = $this->Advs->patchEntity($new_back_group, $item);
+                        if (!$this->Advs->save($new_back_group)) {
+                            $conn->rollback();
+                        }
                     }
                 }
                 unset($this->request->data['image_adv']);
@@ -449,11 +457,15 @@ class DevicesController extends AppController
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc'
+                            . '/' . \UrlUtil::_encodeUrl($device_id)
+                            . '/' . \UrlUtil::_encodeUrl($user_id)]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc'
+                        . '/' . \UrlUtil::_encodeUrl($device_id)
+                        . '/' . \UrlUtil::_encodeUrl($user_id)]);
                 }
             } else {
                 unset($this->request->data['file_upload']);
@@ -464,11 +476,15 @@ class DevicesController extends AppController
                         $this->redirect(['action' => 'index']);
                     } else {
                         $conn->rollback();
-                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
+                        $this->redirect(['Controller' => 'Devices', 'action' => 'setQc'
+                            . '/' . \UrlUtil::_encodeUrl($device_id)
+                            . '/' . \UrlUtil::_encodeUrl($user_id)]);
                     }
                 } else {
                     $conn->rollback();
-                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc' . '/' . \UrlUtil::_encodeUrl($device_id) . '/' . \UrlUtil::_encodeUrl($user_id)]);
+                    $this->redirect(['Controller' => 'Devices', 'action' => 'setQc'
+                        . '/' . \UrlUtil::_encodeUrl($device_id)
+                        . '/' . \UrlUtil::_encodeUrl($user_id)]);
                 }
             }
         }
@@ -477,9 +493,33 @@ class DevicesController extends AppController
         $this->set('files', $files);
         $this->set('filesRowNum', $filesRowNum);
         $apt = $this->radompassWord();
-        $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select(['id', 'device_id', 'path'])->combine('id', 'path')->toArray();
-        $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select(['id', 'device_id', 'path'])->combine('id', 'path')->toArray();
-        $adv = $this->Advs->find()->where(['device_id' => $device_id, 'active_flag !=' => 1])->select(['id', 'device_id', 'path', 'url_link'])->toArray();
+        $back_group = $this->DeviceFiles->find()->where([
+            'device_id' => $device_id,
+            'type' => 1,
+            'active_flag !=' => 1
+        ])->select([
+            'id',
+            'device_id',
+            'path'
+        ])->combine('id', 'path')->toArray();
+        $logo = $this->DeviceFiles->find()->where([
+            'device_id' => $device_id,
+            'type' => 2,
+            'active_flag !=' => 1
+        ])->select([
+            'id',
+            'device_id',
+            'path'
+        ])->combine('id', 'path')->toArray();
+        $adv = $this->Advs->find()->where([
+            'device_id' => $device_id,
+            'active_flag !=' => 1
+        ])->select([
+            'id',
+            'device_id',
+            'path',
+            'url_link'
+        ])->toArray();
         $this->set(compact('logo', 'back_group', 'device', 'device_id', 'user_id', 'apt', 'adv'));
     }
 
@@ -579,40 +619,42 @@ class DevicesController extends AppController
                             ->first();
                     }
                     if (!empty($device_campaign)) {
-                        $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
                         $infor_devices->path = $device_campaign->path;
-                        $infor_devices->tile_name = $device_campaign->tile_name;
-                        $infor_devices->apt_device_number = $device_campaign->number_pass;
-                        $infor_devices->message = $device_campaign->message;
                         $infor_devices->slogan = $device_campaign->slogan;
+                        $infor_devices->message = $device_campaign->message;
+                        $infor_devices->packages = $device_campaign->packages;
+                        $infor_devices->path_logo = $device_campaign->path_logo;
+                        $infor_devices->tile_name = $device_campaign->tile_name;
+                        //$infor_devices->option_tow = $device_campaign->option_tow;
                         $infor_devices->title_connect = $device_campaign->title_connect;
                         $infor_devices->hidden_connect = $device_campaign->hidden_connect;
-                        $infor_devices->path_logo = $device_campaign->path_logo;
                         $infor_devices->title_campaign = $device_campaign->title_campaign;
+                        $infor_devices->langdingpage_id = $device_campaign->langdingpage_id;
+                        $infor_devices->apt_device_number = $device_campaign->number_pass;
                         $infor_devices->tile_congratulations_return = $device_campaign->tile_congratulations_return;
-                        $infor_devices->packages = $device_campaign->packages;
                     }
                 } elseif (isset($infor_devices->adgroup_id) && $infor_devices->adgroup_id != '') {
                     $device_group = $this->DeviceGroups->find()
                         ->where(['adgroup_id' => $infor_devices->adgroup_id, 'delete_flag !=' => DELETED])
                         ->first();
                     if (!empty($device_group)) {
-                        $infor_devices->langdingpage_id = $device_group->langdingpage_id;
                         $infor_devices->path = $device_group->path;
-                        $infor_devices->tile_name = $device_group->tile_name;
-                        $infor_devices->apt_device_number = $device_group->number_pass;
-                        $infor_devices->message = $device_group->message;
                         $infor_devices->slogan = $device_group->slogan;
-                        $infor_devices->title_connect = $device_group->title_connect;
-                        $infor_devices->hidden_connect = $device_group->hidden_connect;
-                        $infor_devices->path_logo = $device_group->path_logo;
-                        $infor_devices->title_campaign = $device_group->title_campaign;
-                        $infor_devices->tile_congratulations_return = $device_group->tile_congratulations_return;
+                        $infor_devices->message = $device_group->message;
                         $infor_devices->packages = $device_group->packages;
+                        $infor_devices->path_logo = $device_group->path_logo;
+                        $infor_devices->tile_name = $device_group->tile_name;
                         $infor_devices->fb_fanpage = $device_group->fb_fanpage;
-                        $infor_devices->fb_checkin_msg = $device_group->fb_checkin_msg;
+                        $infor_devices->option_tow = $device_group->option_tow;
                         $infor_devices->fb_latitude = $device_group->fb_latitude;
+                        $infor_devices->title_connect = $device_group->title_connect;
                         $infor_devices->fb_longtitude = $device_group->fb_longtitude;
+                        $infor_devices->hidden_connect = $device_group->hidden_connect;
+                        $infor_devices->title_campaign = $device_group->title_campaign;
+                        $infor_devices->fb_checkin_msg = $device_group->fb_checkin_msg;
+                        $infor_devices->langdingpage_id = $device_group->langdingpage_id;
+                        $infor_devices->apt_device_number = $device_group->number_pass;
+                        $infor_devices->tile_congratulations_return = $device_group->tile_congratulations_return;
                     }
                 }
                 if (isset($infor_devices->type_adv) && $infor_devices->type_adv == 2) {
@@ -625,7 +667,14 @@ class DevicesController extends AppController
                     }
                 }
             }
-            $this->set(compact('infor_devices', 'voucher_flag', 'campaign_id', 'partner_id', 'flag_check_isexit_partner', 'flag_client_mac'));
+            $this->set(compact(
+                'partner_id',
+                'voucher_flag',
+                'campaign_id',
+                'infor_devices',
+                'flag_client_mac',
+                'flag_check_isexit_partner'
+            ));
         } else {
             return $this->redirect(['action' => 'index']);
         }
@@ -1543,10 +1592,17 @@ class DevicesController extends AppController
                 $packages = array_values($this->request->data['tile_congratulations_return']);
                 $this->request->data['tile_congratulations_return'] = json_encode($packages);
             }
+            // todo option_three thong tin khach hang
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
                 $this->request->data['packages'] = json_encode($packages);
             }
+            // todo option_tow setting
+            if ($this->request->data['option_tow'] != '') {
+                $option_tow = array_values($this->request->data['option_tow']);
+                $this->request->data['option_tow'] = json_encode($option_tow);
+            }
+
             if (!empty($this->request->data['logo_image']['error'] != 4)) {
                 $list_file['file'] = $this->request->getData('logo_image');
                 $fileOK = $this->UploadImage->uploadFiles('upload/files', $list_file);
@@ -1598,7 +1654,7 @@ class DevicesController extends AppController
                 $result = Hash::extract($fileOK, '{n}.urls');
                 $path = call_user_func_array('array_merge', $result);
                 $image_up_load = Hash::extract($list_file, '{n}.name');
-
+                $data_file = array();
                 foreach ($image_up_load as $k => $vl) {
                     $data_file[] = array(
                         'device_id' => $device_id,
@@ -1608,11 +1664,13 @@ class DevicesController extends AppController
                         'active_flag' => 0
                     );
                 }
-                foreach ($data_file as $k => $item) {
-                    $new_back_group = $this->Advs->newEntity();
-                    $new_back_group = $this->Advs->patchEntity($new_back_group, $item);
-                    if (!$this->Advs->save($new_back_group)) {
-                        $conn->rollback();
+                if (!empty($data_file)) {
+                    foreach ($data_file as $k => $item) {
+                        $new_back_group = $this->Advs->newEntity();
+                        $new_back_group = $this->Advs->patchEntity($new_back_group, $item);
+                        if (!$this->Advs->save($new_back_group)) {
+                            $conn->rollback();
+                        }
                     }
                 }
                 unset($this->request->data['image_adv']);
@@ -1634,6 +1692,7 @@ class DevicesController extends AppController
                 $result = Hash::extract($fileOK, '{n}.urls');
                 $path = call_user_func_array('array_merge', $result);
                 $image_up_load = Hash::extract($list_file, '{n}.name');
+                $data_file = array();
                 foreach ($image_up_load as $k => $vl) {
                     $data_file[] = array(
                         'device_id' => $device_id,
@@ -1643,11 +1702,13 @@ class DevicesController extends AppController
                         'type' => 1
                     );
                 }
-                foreach ($data_file as $k => $item) {
-                    $new_back_group = $this->DeviceFiles->newEntity();
-                    $new_back_group = $this->DeviceFiles->patchEntity($new_back_group, $item);
-                    if (!$this->DeviceFiles->save($new_back_group)) {
-                        $conn->rollback();
+                if (!empty($data_file)) {
+                    foreach ($data_file as $k => $item) {
+                        $new_back_group = $this->DeviceFiles->newEntity();
+                        $new_back_group = $this->DeviceFiles->patchEntity($new_back_group, $item);
+                        if (!$this->DeviceFiles->save($new_back_group)) {
+                            $conn->rollback();
+                        }
                     }
                 }
                 unset($this->request->data['file_upload']);
@@ -1693,9 +1754,33 @@ class DevicesController extends AppController
                 }
             }
         }
-        $back_group = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 1, 'active_flag !=' => 1])->select(['id', 'device_id', 'path'])->combine('id', 'path')->toArray();
-        $logo = $this->DeviceFiles->find()->where(['device_id' => $device_id, 'type' => 2, 'active_flag !=' => 1])->select(['id', 'device_id', 'path'])->combine('id', 'path')->toArray();
-        $adv = $this->Advs->find()->where(['device_id' => $device_id, 'active_flag !=' => 1])->select(['id', 'device_id', 'path', 'url_link'])->toArray();
+        $back_group = $this->DeviceFiles->find()->where([
+            'device_id' => $device_id,
+            'type' => 1,
+            'active_flag !=' => 1
+        ])->select([
+            'id',
+            'device_id',
+            'path'
+        ])->combine('id', 'path')->toArray();
+        $logo = $this->DeviceFiles->find()->where([
+            'device_id' => $device_id,
+            'type' => 2,
+            'active_flag !=' => 1
+        ])->select([
+            'id',
+            'device_id',
+            'path'
+        ])->combine('id', 'path')->toArray();
+        $adv = $this->Advs->find()->where([
+            'device_id' => $device_id,
+            'active_flag !=' => 1
+        ])->select([
+            'id',
+            'device_id',
+            'path',
+            'url_link'
+        ])->toArray();
         $apt = $this->radompassWord();
         $this->set(compact('logo', 'back_group', 'device', 'device_id', 'user_id', 'apt', 'adv'));
     }
@@ -2212,6 +2297,14 @@ class DevicesController extends AppController
         $this->set(compact('device', 'adv', 'urls', 'paths'));
     }
 
+    /**
+     * ** * **** * **** * **** * **** * **** * **
+     * deleteAdv metod
+     *
+     * @return void
+     *
+     * ** * **** * **** * **** * **** * **** * ****
+     */
     public function deleteAdv()
     {
         $this->autoRender = false;
