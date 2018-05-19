@@ -222,6 +222,7 @@ class AppController extends Controller
                     'detailCampaig',
                     'addLogVoucher',
                     'addLogPartner',
+                    'accountKitFace',
                     'adv'
                 ]);
                 break;
