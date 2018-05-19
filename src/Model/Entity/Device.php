@@ -49,7 +49,7 @@ class Device extends Entity
 
     public static $langding_page = array(
         Device::LANDING_ONE => 'Password',
-        Device::LANDING_TOW => 'Facebook-Login, Google',
+        Device::LANDING_TOW => 'Facebook-Sms, Email - Login',
         Device::LANDING_THREE => 'Thông tin khách hàng',
     );
 
