@@ -1,45 +1,3 @@
-
-<?php
-// function to verify session status
-function is_session_started()
-{
-    if (php_sapi_name() !== 'cli') {
-        if (version_compare(phpversion(), '5.4.0', '>=')) {
-            return session_status() === PHP_SESSION_ACTIVE ? TRUE : FALSE;
-        } else {
-            return session_id() === '' ? FALSE : TRUE;
-        }
-    }
-    return FALSE;
-}
-
-// verifying POST data and adding the values to session variables
-if (isset($_POST["code"])) {
-    session_start();
-    $_SESSION["code"] = $_POST["code"];
-    $_SESSION["csrf_nonce"] = $_POST["csrf_nonce"];
-    $ch = curl_init();
-    // Set url elements
-    $fb_app_id = '2145627442340504';
-    $ak_secret = 'e99f0348b8ae26b6b5a32f0ea8ade6dc';
-    $token = 'AA|' . $fb_app_id . '|' . $ak_secret;
-    // Get access token
-    $url = 'https://graph.accountkit.com/v1.0/access_token?grant_type=authorization_code&code=' . $_POST["code"] . '&access_token=' . $token;
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $result = curl_exec($ch);
-    $info = json_decode($result);
-    // Get account information
-    $url = 'https://graph.accountkit.com/v1.0/me/?access_token=' . $info->access_token;
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-    curl_setopt($ch, CURLOPT_URL, $url);
-    $result = curl_exec($ch);
-    curl_close($ch);
-    $final = json_decode($result);
-}
-?>
 <?php
 /**
  * @var \App\View\AppView $apt_key_check
@@ -80,8 +38,7 @@ $cakeDescription = 'Hệ thống wifi-Maketting';
             'back_end/commom',
             'bootstrap.min',
             'back_end/md5',
-            'md5/md5',
-//            'sdk.js',
+            'md5/md5'
         ]
     );
     echo $this->Html->css('back_end/page3');

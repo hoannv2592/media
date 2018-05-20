@@ -2337,42 +2337,46 @@ class DevicesController extends AppController
         if ($this->request->is('post')) {
             $_POST = $this->request->getData();
             $partner_id = $_POST['partner_id'];
-            $ch = curl_init();
-            // Set url elements
-            $fb_app_id = '2145627442340504';
-            $ak_secret = 'e99f0348b8ae26b6b5a32f0ea8ade6dc';
-            $token = 'AA|' . $fb_app_id . '|' . $ak_secret;
-            // Get access token
-            $url = 'https://graph.accountkit.com/v1.0/access_token?grant_type=authorization_code&code=' . $_POST["code"] . '&access_token=' . $token;
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_URL, $url);
-            $result = curl_exec($ch);
-            $info = json_decode($result);
-            // Get account information
-            $url = 'https://graph.accountkit.com/v1.0/me/?access_token=' . $info->access_token;
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_URL, $url);
-            $result = curl_exec($ch);
-            curl_close($ch);
-            $final = json_decode($result);
-            $info_p = $this->Partners->find()->where(['id' => $partner_id])->first();
-            if (!isset($final->error)) {
-                $update['account'] = $final->id;
-                $update['application'] = $final->application->id;
-                if (isset($final->email)) {
-                    $update['email'] = $final->email->address;
-                } else {
-                    $update['phone'] = $final->phone->number;
-                    $update['country_code'] = $final->phone->country_prefix;
+            if ($partner_id != '') {
+                $ch = curl_init();
+                // Set url elements
+                $fb_app_id = '2145627442340504';
+                $ak_secret = 'e99f0348b8ae26b6b5a32f0ea8ade6dc';
+                $token = 'AA|' . $fb_app_id . '|' . $ak_secret;
+                // Get access token
+                $url = 'https://graph.accountkit.com/v1.0/access_token?grant_type=authorization_code&code=' . $_POST["code"] . '&access_token=' . $token;
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_URL, $url);
+                $result = curl_exec($ch);
+                $info = json_decode($result);
+                // Get account information
+                $url = 'https://graph.accountkit.com/v1.0/me/?access_token=' . $info->access_token;
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_URL, $url);
+                $result = curl_exec($ch);
+                curl_close($ch);
+                $final = json_decode($result);
+                $info_p = $this->Partners->find()->where(['id' => $partner_id])->first();
+                if (!isset($final->error)) {
+                    $update['account'] = $final->id;
+                    $update['application'] = $final->application->id;
+                    if (isset($final->email)) {
+                        $update['email'] = $final->email->address;
+                    } else {
+                        $update['phone'] = $final->phone->number;
+                        $update['country_code'] = $final->phone->country_prefix;
+                    }
+                    $info_p = $this->Partners->patchEntity($info_p, $update);
+                    if ($this->Partners->save($info_p)) {
+                        die(json_encode(true));
+                    } else {
+                        die(json_encode(false));
+                    }
                 }
-                $info_p = $this->Partners->patchEntity($info_p, $update);
-                if ($this->Partners->save($info_p)) {
-                    die(json_encode(true));
-                } else {
-                    die(json_encode(false));
-                }
+            } else {
+                die(json_encode(true));
             }
         }
     }
