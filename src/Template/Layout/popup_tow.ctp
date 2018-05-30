@@ -21,12 +21,12 @@ $cakeDescription = 'Hệ thống wifi-Maketting';
     <meta name="description" content="Fullscreen Background Image Slideshow with CSS3 - A Css-only fullscreen background image slideshow" />
     <meta name="keywords" content="css3, css-only, fullscreen, background, slideshow, images, content" />
     <meta name="author" content="Codrops" />
-    <?php echo $this->Html->css(['back_end/font-awesome.min']); ?>
+<!--    --><?php //echo $this->Html->css(['back_end/font-awesome.min']); ?>
     <?php echo $this->Html->css([
-            'password/bootstrap.min',
-            'back_end/my_style',
+//            'password/bootstrap.min',
+//            'back_end/my_style',
             'page1',
-            'bootstrap-datetimepicker'
+//            'bootstrap-datetimepicker'
         ]
     );
     echo $this->Html->script([
@@ -39,7 +39,13 @@ $cakeDescription = 'Hệ thống wifi-Maketting';
         ]
     );
     ?>
-
+    <link href="/new/assets/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="/new/assets/css/font-awesome.min.css" rel="stylesheet" />
+    <link href="/new/assets/css/custom.css" rel="stylesheet" />
+    <link href="/new/assets/css/open-iconic-bootstrap.min.css" rel="stylesheet" />
+    <link href="/new/assets/css/styles.css" rel="stylesheet" />
+    <link href="/new/assets/css/pikaday.css" rel="stylesheet" />
+    <link href="/new/assets/css/site.css" rel="stylesheet" />
 </head>
 <?php
 $slogan = isset($infor_devices->slogan) ? $infor_devices->slogan : 'Welcome to our <br/> free WiFi!';
@@ -155,7 +161,7 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                                                     <button class="redirect__discount">Connect now - Fast</button>
                                                 </form>
                                         <?php } ?>
-                                <?php } else {?>
+                                <?php } else { ?>
                                     <a class="redirect__discount" href="#modal_discount" data-toggle="modal">
                                         <?php if (isset($infor_devices->title_connect) && $infor_devices->title_connect != '') {
                                             echo $infor_devices->title_connect;
@@ -243,7 +249,7 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                 <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                 <input type="hidden" name="popup" value="false"/>
             </form>
-            <div id="modal_discount" class="modal fade">
+            <div id="modal_discountccc" class="modal fade">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
@@ -337,11 +343,77 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                     </div>
                 </div>
             </div>
+            <div class="modal fade" id="modal_discount" tabindex="-1" role="dialog">
+                <div class="modal-dialog" role="document">
+                    <form id="modal_form_login" novalidate="novalidate">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title mg-0-at">
+                                    LOGIN
+                                </h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-user" aria-hidden="true"></i>
+                                </span>
+                                        <input type="text" id="name" name="name" class="form-control" placeholder="Điền họ, tên" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                <span class="input-group-addon">
+                                   <i class="fa fa-phone" aria-hidden="true"></i>
+                                </span>
+                                        <input type="number" id="phone" name="phone" class="form-control" placeholder="Điền số điện thoại" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-birthday-cake" aria-hidden="true"></i>
+                                </span>
+                                        <input type="text" id="birthday" name="birthday" class="form-control" placeholder="Ngày sinh" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-location-arrow" aria-hidden="true"></i>
+                                </span>
+                                        <input type="text" id="address" name="address" class="form-control" placeholder="Địa chỉ" />
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="fa fa-envelope"></i>
+                                </span>
+                                        <input type="email" id="email" name="email" class="form-control" placeholder="Email" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary font-weight-bold " data-dismiss="modal">CANCEL</button>
+                                <button type="submit" class="btn btn-primary font-weight-bold">ĐĂNG KÝ</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
         <?php } ?>
     </div>
 </body>
 </html>
-<?= $this->Html->script(['bootstrap-datetimepicker'])?>
+<?//= $this->Html->script(['bootstrap-datetimepicker'])?>
+<script src="/new/assets/js/jquery-3.2.1.min.js"></script>
+<script src="/new/assets/js/popper.min.js"></script>
+<script src="/new/assets/js/bootstrap.min.js"></script>
+<script src="/new/assets/js/plugins/jquery-validation/jquery.validate.min.js"></script>
+<script src="/new/assets/js/app.js"></script>
+<script src="/new/assets/js/pikaday.js"></script>
 <script type="text/javascript">
     function doLogin() {
         <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
@@ -443,16 +515,16 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
         }
     });
     $(document).ready(function () {
-        $('.datetime_birthday').datetimepicker({
-            weekStart: 1,
-            todayBtn: 1,
-            autoclose: 1,
-            todayHighlight: 1,
-            startView: 2,
-            minView: 2,
-            forceParse: 0,
-            format: "dd / mm / yyyy"
-        });
+        // $('.datetime_birthday').datetimepicker({
+        //     weekStart: 1,
+        //     todayBtn: 1,
+        //     autoclose: 1,
+        //     todayHighlight: 1,
+        //     startView: 2,
+        //     minView: 2,
+        //     forceParse: 0,
+        //     format: "dd / mm / yyyy"
+        // });
     })
 </script>
 <style>
@@ -514,5 +586,190 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
         text-align: center;
         padding: 10px;
         color: #FFF;
+    }
+
+    .redirect__discount {
+        color: #fff !important;
+        background-color: #007bff;
+        border-color: #007bff;
+        border-radius: 4px;
+        line-height: 40px;
+    }
+    .redirect__normal {
+        border-radius: 4px;
+        line-height: 40px;
+    }
+</style>
+
+<script type="application/javascript">
+    new Pikaday({
+        field: document.getElementById( 'birthday' ),
+        format: 'D/M/YYYY',
+        toString(date, format) {
+            const day = date.getDate();
+            const month = date.getMonth() + 1;
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        },
+        parse(dateString, format) {
+            const parts = dateString.split('/');
+            const day = parseInt(parts[0], 10);
+            const month = parseInt(parts[1] - 1, 10);
+            const year = parseInt(parts[1], 10);
+            return new Date(year, month, day);
+        },
+        onSelect: function() {
+            startDate = this.getDate();
+            updateStartDate();
+        }
+    });
+    jQuery(document).ready(function ($) {
+        'use strict';
+        // CENTERED MODALS
+        // phase one - store every dialog's height
+        $('.modal').each(function () {
+            var t = $(this),
+                d = t.find('.modal-dialog'),
+                fadeClass = (t.is('.fade') ? 'fade' : '');
+            // render dialog
+            t.removeClass('fade')
+                .addClass('invisible')
+                .css('display', 'block');
+            // read and store dialog height
+            d.data('height', d.height());
+            // hide dialog again
+            t.css('display', '')
+                .removeClass('invisible')
+                .addClass(fadeClass);
+        });
+        // phase two - set margin-top on every dialog show
+        $('.modal').on('show.bs.modal', function () {
+            var t = $(this),
+                d = t.find('.modal-dialog'),
+                dh = d.data('height'),
+                w = $(window).width(),
+                h = $(window).height();
+            d.css('margin-top', Math.round(0.96 * (h - dh) / 2));
+        });
+
+    });
+</script>
+<style>
+    .modal-dialog {
+        transform: translate(0, -0%) !important;
+        -ms-transform: translate(0, -0%) !important;
+        -webkit-transform: translate(0, -0%) !important;
+    }
+    .modal-header {
+        /*background: url(img/hd-bg.png);*/
+        background: #DEF5E1;
+        border-bottom: 1px solid #CCC;
+        border-top-left-radius: 5px;
+        -moz-border-radius-topleft: 5px;
+        -webkit-border-top-left-radius: 5px;
+        border-top-right-radius: 5px;
+        -moz-border-radius-topright: 5px;
+        -webkit-border-top-right-radius: 5px;
+    }
+    .close {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        display: block;
+        width: 14px;
+        height: 14px;
+        background: url(img/modal_close.png) !important;
+        z-index: 2;
+    }
+    button:link, button:visited {
+        color: #D0E4EF;
+        text-decoration: underline;
+    }
+    .modal-header h5 {
+        color: #444;
+        font-size:1.5em;
+        font-weight: 700;
+        margin-bottom: 3px;
+        text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.5);
+    }
+    .mg-0-at {
+        margin: 0 auto;
+    }
+    input {
+        border: 1px solid #ccc;
+        box-shadow: 0px 3px 7px 0 rgba(0,0,0,0.15);
+    }
+    .pika-single.top-aligned {
+        transform: translateY( -22px );
+    }
+    .pika-single.bottom-aligned {
+        transform: translateY( 22px );
+    }
+    .pika-single:before,
+    .pika-single:after {
+        content: '';
+        display: block;
+        position: absolute;
+        border-color: transparent;
+        border-style: solid;
+        border-width: 18px 22px;
+        width: 0;
+        height: 0;
+        animation-duration: 1200ms;
+        animation-direction: alternate;
+        animation-iteration-count: infinite;
+        animation-timing-function: ease-in-out;
+    }
+    .pika-single:after {
+        border-width: 16px 19px;
+        margin: 0 1px;
+    }
+    .pika-single.top-aligned:before,
+    .pika-single.top-aligned:after {
+        top: 100%;
+        border-bottom: none;
+        animation-name: pulsate-top-border;
+    }
+    .pika-single.top-aligned:before {
+        border-top-color: inherit;
+    }
+    .pika-single.top-aligned:after {
+        border-top-color: white;
+    }
+    .pika-single.bottom-aligned:before,
+    .pika-single.bottom-aligned:after {
+        bottom: 100%;
+        border-top: none;
+        animation-name: pulsate-bottom-border;
+    }
+    .pika-single.bottom-aligned:before {
+        border-bottom-color: inherit;
+    }
+    .pika-single.bottom-aligned:after {
+        border-bottom-color: white;
+    }
+    .pika-single.left-aligned:before,
+    .pika-single.left-aligned:after {
+        border-left: none;
+        left: 18px;
+    }
+    .pika-single.right-aligned:before,
+    .pika-single.right-aligned:after {
+        border-right: none;
+        right: 18px;
+    }
+    @keyframes pulsate-top-border    { to { border-top-color: #e33; }}
+    @keyframes pulsate-bottom-border { to { border-bottom-color: #e33; }}
+    .button_connect {
+        font-weight: 500;
+        width: 100%;
+    }
+
+    .modal-title {
+        line-height: 1.1;
+    }
+    .font-weight-bold {
+        font-weight: 500 !important;
+        margin-bottom: 3px;
     }
 </style>
