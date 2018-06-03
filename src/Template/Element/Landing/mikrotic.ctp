@@ -32,7 +32,7 @@ $title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_
             </h5>
         </div>
         <div class="col-md-3 col-sm-8 text-center align-self-center button">
-            <form class="form-validation" name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+            <form name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
                 <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
                 <input type="hidden" name="popup" value="false"/>
                 <input type="text" name="username" value="wifimedia" class="hidden"/>

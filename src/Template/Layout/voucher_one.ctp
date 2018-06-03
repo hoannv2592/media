@@ -81,8 +81,8 @@ $apt_device_number = isset($infor_devices->apt_device_number) ? $infor_devices->
     <!-- Wrapper for slides -->
     <div class="carousel-inner" role="listbox"><?php
         if (empty($list_path)) { ?>
-            <div class="item active"style="
-                    background: url('/images/bg4.jpg');
+            <div class="item active" style="
+                    background: url('/webroot/images/bg4.jpg');
                     -webkit-background-size: cover;
                     -moz-background-size: cover;
                     -o-background-size: cover;

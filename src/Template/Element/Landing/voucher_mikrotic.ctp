@@ -2,12 +2,13 @@
 /**
  * @var $infor_devices
  */
+
 $title_connect_normal = 'Đăng ký nhận voucher';
 if (isset($infor_devices->title_connect) && $infor_devices->title_connect != '') {
     $title_connect_normal = $infor_devices->title_connect;
 }
 $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packages) : array();
-$title_campaign = isset($infor_devices->title_campaign) && $infor_devices->title_campaign != '' ? $infor_devices->title_campaign : 'Vui lòng điền thông tin khảo sát';
+$title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_campaign : 'Vui lòng điền thông tin khảo sát';
 ?>
 <div class="container">
     <div class="row justify-content-center">
@@ -25,16 +26,32 @@ $title_campaign = isset($infor_devices->title_campaign) && $infor_devices->title
                 </a>
             <?php } ?>
         </div>
-        <div class="col-md-3 col-sm-8 text-center align-self-center card-title"
+        <div class="col-md-4 col-sm-8 text-center align-self-center card-title"
              style="visibility: visible; animation-name: fadeInLeft;">
             <h5 class="title text-white">
                 <?php echo isset($infor_devices->tile_name) ? $infor_devices->tile_name : ''; ?>
             </h5>
         </div>
-        <div class="col-md-4 col-sm-8 text-center align-self-center button">
+        <div class="col-md-3 col-sm-8 text-center align-self-center button">
+            <form name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+                <input type="hidden"    name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+                <input type="hidden"    name="popup" value="false"/>
+                <input type="text"      name="username" value="wifimedia" class="hidden"/>
+                <input type="password"  name="password" value="wifimedia" class="hidden"/>
+            </form>
             <?php
             if (empty($packages)) { ?>
-                <a class="btn btn-primary button_connect form-group upercase" href="<?php echo $infor_devices->auth_target; ?>">Connect now - Fast</a>
+                <?php echo $this->Form->create('login', array(
+                    'type' => 'post',
+                    'name' => 'login_fast',
+                    'class' => 'form-validation',
+                    'url' => $infor_devices->link_login_only,
+                    'onsubmit' => "return doLogin()"
+                ));
+                ?>
+                <button type="submit" class="btn btn-primary button_connect form-group upercase">Connect now - Fast
+                </button>
+                <?php echo $this->Form->end(); ?>
             <?php } else { ?>
                 <a href="#_" class="btn btn-primary button_connect form-group upercase" data-toggle="modal"
                    data-target="#modal_login">
@@ -45,10 +62,31 @@ $title_campaign = isset($infor_devices->title_campaign) && $infor_devices->title
                     } ?>
                 </a>
             <?php } ?>
-            <a class="btn btn-primary button_connect subscribe upercase" href="<?php echo $infor_devices->auth_target; ?>"><span>Connect now - Slow</span></a>
+            <?php echo $this->Form->create('login', array(
+                'type' => 'post',
+                'name' => 'login_slow',
+                'class' => 'form-validation',
+                'url' => $infor_devices->link_login_only,
+                'onsubmit' => "return doLogin()"
+            ));
+            ?>
+            <button type="submit" class="btn btn-primary button_connect subscribe upercase">CONNECT NOW - SLOW</button>
+            <?php echo $this->Form->end(); ?>
         </div>
     </div>
 </div>
+<?php echo $this->Form->create('sendin', array(
+    'type' => 'post',
+    'name' => 'sendin',
+    'url' => $infor_devices->link_login_only
+));
+?>
+<input type="hidden" class="need_push_username" name="username"/>
+<input type="hidden" name="password"/>
+<input type="hidden" class="need_push_password" name="password"/>
+<input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+<input type="hidden" name="popup" value="false"/>
+<?php echo $this->Form->end(); ?>
 <div class="modal fade" id="modal_login" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <?php
@@ -80,8 +118,7 @@ $title_campaign = isset($infor_devices->title_campaign) && $infor_devices->title
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title mg-0-at text-center">
-                    <?php
-                    echo ($title_campaign && $title_campaign !== '') ? $title_campaign : 'Vui lòng điền thông tin khảo sát'; ?>
+                    <?php echo ($title_campaign && $title_campaign !== '') ? $title_campaign : 'Vui lòng điền thông tin khảo sát'; ?>
                 </h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -187,7 +224,15 @@ $title_campaign = isset($infor_devices->title_campaign) && $infor_devices->title
     </div>
 </div>
 <script type="application/javascript">
-    var url = "<?php echo $infor_devices->auth_target;?>";
+    function doLogin() {
+
+        <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
+        document.sendin.username.value = document.login.username.value;
+        document.sendin.password.value = md5('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.submit();
+        return false;
+    }
+
     new Pikaday({
         field: document.getElementById('birthday'),
         format: 'D/M/YYYY',
@@ -205,104 +250,5 @@ $title_campaign = isset($infor_devices->title_campaign) && $infor_devices->title
             return new Date(year, month, day);
         },
     });
-
-    // initialize validation messages variable
-    $.validation = {
-        messages: {}
-    };
-
-    // add validation templates to show fancy icons with message text
-    $.extend($.validation.messages, {
-        required: '<i class="fa fa-exclamation-circle"></i> Hãy nhập.',
-        email: '<i class="fa fa-exclamation-circle"></i> Nhập đúng định dạng email.',
-        number: '<i class="fa fa-exclamation-circle"></i> Nhập số.',
-    });
-
-    // call our 'validateLoginForm' function when page is ready
-    $(document).ready(function () {
-        validateLoginForm();
-    });
-
-    // bind jQuery validation event and form 'submit' event
-    var validateLoginForm = function () {
-        var modal_login = $('#modal_login');
-        var modal_form_login = $('#modal_form_login');
-
-        // bind jQuery validation event
-        modal_form_login.validate({
-            rules: {
-                email: {
-                    required: true,     // email field is required
-                    email: true         // validate email address
-                },
-                name: {required: true},
-                phone: {
-                    required: true,
-                    number: true
-                },
-                birthday: {required: true}
-            },
-            messages: {
-                email: {
-                    required: $.validation.messages.required,
-                    email: $.validation.messages.email
-                },
-                name: {
-                    required: $.validation.messages.required,
-                },
-                phone: {
-                    required: $.validation.messages.required,
-                    number: $.validation.messages.number
-                },
-                birthday: {required: $.validation.messages.required}
-            },
-            errorPlacement: function (error, element) {
-                // insert error message after invalid element
-                error.insertAfter(element);
-                // hide error message on window resize event
-                $(window).resize(function () {
-                    error.remove();
-                });
-            },
-            invalidHandler: function (event, validator) {
-                var errors = validator.numberOfInvalids();
-                if (errors) {} else {}
-            }
-        });
-
-        // bind form submit event
-        modal_form_login.on('submit', function (e) {
-            // if form is valid then call AJAX script
-            if (modal_form_login.valid()) {
-                var ajaxRequest = $.ajax({
-                    url: '/Devices/add_log_partner',
-                    type: "POST",
-                    data:modal_form_login.serialize(),
-                    beforeSend: function () {
-                    }
-                });
-                ajaxRequest.fail(function (data, status, errorThrown) {
-                    // error
-                    modal_login.modal('hide');
-                });
-
-                ajaxRequest.done(function (response) {
-                    // done
-                    modal_login.modal('hide');
-                    window.location.href = url;
-                });
-            }
-
-            // stop default submit event of form
-            e.preventDefault();
-            e.stopPropagation();
-        });
-
-        modal_login.on('hide.bs.modal', function (e) {
-            // reset form fields and validation errors
-            modal_form_login.validate().resetForm();
-            modal_form_login.trigger('reset');
-        });
-    };
 
 </script>

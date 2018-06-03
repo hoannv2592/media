@@ -22,7 +22,8 @@ $title_connect_normal = isset($infor_devices->title_connect) ? $infor_devices->t
 $flag_check_isexit_partner = isset($flag_check_isexit_partner) ? $flag_check_isexit_partner : '2';
 $tile_congratulations_return = isset($infor_devices->tile_congratulations_return) ? $infor_devices->tile_congratulations_return : 'Cảm ơn quý khách đã quay lại.!';
     if ($voucher_flag == 1) {
-        $this->layout = 'voucher_tow';
+        //$this->layout = 'voucher_tow';
+        $this->layout = 'voucher_modal';
     } else {
         if ($flag_client_mac == 1) {
             $this->layout = 'voucher_one';
