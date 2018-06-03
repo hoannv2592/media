@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Controller\Component;
 
@@ -35,6 +35,8 @@ use Cake\Utility\Security;
  * This component integrates with the FormHelper automatically and when
  * used together your forms will have CSRF tokens automatically added
  * when `$this->Form->create(...)` is used in a view.
+ *
+ * @deprecated 3.5.0 Use Cake\Http\Middleware\CsrfProtectionMiddleware instead.
  */
 class CsrfComponent extends Component
 {
@@ -76,12 +78,12 @@ class CsrfComponent extends Component
      */
     public function startup(Event $event)
     {
+        /** @var \Cake\Controller\Controller $controller */
         $controller = $event->getSubject();
         $request = $controller->request;
         $response = $controller->response;
         $cookieName = $this->_config['cookieName'];
 
-        /* @var \Cake\Http\ServerRequest $request */
         $cookieData = $request->getCookie($cookieName);
         if ($cookieData) {
             $request->params['_csrfToken'] = $cookieData;
@@ -155,7 +157,7 @@ class CsrfComponent extends Component
             throw new InvalidCsrfTokenException(__d('cake', 'Missing CSRF token cookie'));
         }
 
-        if ($post !== $cookie && $header !== $cookie) {
+        if (!Security::constantEquals($post, $cookie) && !Security::constantEquals($header, $cookie)) {
             throw new InvalidCsrfTokenException(__d('cake', 'CSRF token mismatch.'));
         }
     }

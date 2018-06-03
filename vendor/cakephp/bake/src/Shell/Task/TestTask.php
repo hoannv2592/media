@@ -20,8 +20,8 @@ use Cake\Core\Configure;
 use Cake\Core\Exception\Exception;
 use Cake\Core\Plugin;
 use Cake\Filesystem\Folder;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest as Request;
 use Cake\ORM\Association;
 use Cake\ORM\Table;
 use Cake\ORM\TableRegistry;
@@ -31,6 +31,7 @@ use ReflectionClass;
 /**
  * Task class for creating and updating test files.
  *
+ * @property \Bake\Shell\Task\BakeTemplateTask $BakeTemplate
  */
 class TestTask extends BakeTask
 {
@@ -141,12 +142,12 @@ class TestTask extends BakeTask
     /**
      * Output a list of possible classnames you might want to generate a test for.
      *
-     * @param string $type The typename to get classes for.
+     * @param string $typeName The typename to get classes for.
      * @return array
      */
-    public function outputClassChoices($type)
+    public function outputClassChoices($typeName)
     {
-        $type = $this->mapType($type);
+        $type = $this->mapType($typeName);
         $this->out(
             'You must provide a class to bake a test for. Some possible options are:',
             2
@@ -157,7 +158,7 @@ class TestTask extends BakeTask
             $this->out(++$i . '. ' . $option);
         }
         $this->out('');
-        $this->out('Re-run your command as `cake bake ' . $type . ' <classname>`');
+        $this->out('Re-run your command as `cake bake ' . $typeName . ' <classname>`');
 
         return $options;
     }
@@ -348,8 +349,9 @@ class TestTask extends BakeTask
         if ($suffix && strpos($class, $suffix) === false) {
             $class .= $suffix;
         }
-        if ($type === 'controller' && $this->param('prefix')) {
-            $subSpace .= '\\' . Inflector::camelize($this->param('prefix'));
+        $prefix = $this->_getPrefix();
+        if (in_array(strtolower($type), ['controller', 'cell']) && $prefix) {
+            $subSpace .= '\\' . str_replace('/', '\\', $prefix);
         }
 
         return $namespace . '\\' . $subSpace . '\\' . $class;
@@ -429,8 +431,7 @@ class TestTask extends BakeTask
     }
 
     /**
-     * Process a model recursively and pull out all the
-     * model names converting them to fixture names.
+     * Process a model, pull out model name + associations converted to fixture names.
      *
      * @param \Cake\ORM\Table $subject A Model class to scan for associations and pull fixtures off of.
      * @return void
@@ -450,15 +451,8 @@ class TestTask extends BakeTask
             if ($subjectClass !== 'Cake\ORM\Table' && $subjectClass === get_class($target)) {
                 continue;
             }
-
             if (!isset($this->_fixtures[$name])) {
-                $this->_processModel($target);
-            }
-            if ($assoc->type() === Association::MANY_TO_MANY) {
-                $junction = $assoc->junction();
-                if (!isset($this->_fixtures[$junction->getAlias()])) {
-                    $this->_processModel($junction);
-                }
+                $this->_addFixture($target->getAlias());
             }
         }
     }
@@ -524,9 +518,9 @@ class TestTask extends BakeTask
         $type = strtolower($type);
         $pre = $construct = $post = '';
         if ($type === 'table') {
-            $className = str_replace('Table', '', $className);
-            $pre = "\$config = TableRegistry::exists('{$className}') ? [] : ['className' => '{$fullClassName}'];";
-            $construct = "TableRegistry::get('{$className}', \$config);";
+            $tableName = str_replace('Table', '', $className);
+            $pre = "\$config = TableRegistry::exists('{$tableName}') ? [] : ['className' => {$className}::class];";
+            $construct = "TableRegistry::get('{$tableName}', \$config);";
         }
         if ($type === 'behavior' || $type === 'entity' || $type === 'form') {
             $construct = "new {$className}();";
@@ -550,8 +544,8 @@ class TestTask extends BakeTask
             $construct .= "            ->getMock();";
         }
         if ($type === 'cell') {
-            $pre = "\$this->request = \$this->getMockBuilder('Cake\Network\Request')->getMock();\n";
-            $pre .= "        \$this->response = \$this->getMockBuilder('Cake\Network\Response')->getMock();";
+            $pre = "\$this->request = \$this->getMockBuilder('Cake\Http\ServerRequest')->getMock();\n";
+            $pre .= "        \$this->response = \$this->getMockBuilder('Cake\Http\Response')->getMock();";
             $construct = "new {$className}(\$this->request, \$this->response);";
         }
         if ($type === 'shell_helper') {
@@ -587,12 +581,12 @@ class TestTask extends BakeTask
             case 'cell':
                 $properties[] = [
                     'description' => 'Request mock',
-                    'type' => '\Cake\Network\Request|\PHPUnit_Framework_MockObject_MockObject',
+                    'type' => '\Cake\Http\ServerRequest|\PHPUnit_Framework_MockObject_MockObject',
                     'name' => 'request'
                 ];
                 $properties[] = [
                     'description' => 'Response mock',
-                    'type' => '\Cake\Network\Response|\PHPUnit_Framework_MockObject_MockObject',
+                    'type' => '\Cake\Http\Response|\PHPUnit_Framework_MockObject_MockObject',
                     'name' => 'response'
                 ];
                 break;
@@ -707,24 +701,15 @@ class TestTask extends BakeTask
     {
         $parser = parent::getOptionParser();
 
+        $types = array_keys($this->classTypes);
+        $types = array_merge($types, array_map('strtolower', $types));
+
         $parser->setDescription(
             'Bake test case skeletons for classes.'
         )->addArgument('type', [
             'help' => 'Type of class to bake, can be any of the following:' .
                 ' controller, model, helper, component or behavior.',
-            'choices' => [
-                'Controller', 'controller',
-                'Table', 'table',
-                'Entity', 'entity',
-                'Helper', 'helper',
-                'Component', 'component',
-                'Behavior', 'behavior',
-                'Shell', 'shell',
-                'shell_helper',
-                'Cell', 'cell',
-                'Form', 'form',
-                'Mailer', 'mailer',
-            ]
+            'choices' => $types,
         ])->addArgument('name', [
             'help' => 'An existing class to bake tests for.'
         ])->addOption('fixtures', [

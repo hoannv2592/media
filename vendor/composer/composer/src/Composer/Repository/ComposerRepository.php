@@ -497,7 +497,10 @@ class ComposerRepository extends ArrayRepository implements ConfigurableReposito
                     $this->sourceMirrors['hg'][] = array('url' => $mirror['hg-url'], 'preferred' => !empty($mirror['preferred']));
                 }
                 if (!empty($mirror['dist-url'])) {
-                    $this->distMirrors[] = array('url' => $mirror['dist-url'], 'preferred' => !empty($mirror['preferred']));
+                    $this->distMirrors[] = array(
+                        'url' => $this->canonicalizeUrl($mirror['dist-url']),
+                        'preferred' => !empty($mirror['preferred']),
+                    );
                 }
             }
         }
@@ -674,7 +677,7 @@ class ComposerRepository extends ArrayRepository implements ConfigurableReposito
                     }
 
                     // TODO use scarier wording once we know for sure it doesn't do false positives anymore
-                    throw new RepositorySecurityException('The contents of '.$filename.' do not match its signature. This should indicate a man-in-the-middle attack. Try running composer again and report this if you think it is a mistake.');
+                    throw new RepositorySecurityException('The contents of '.$filename.' do not match its signature. This could indicate a man-in-the-middle attack or e.g. antivirus software corrupting files. Try running composer again and report this if you think it is a mistake.');
                 }
 
                 $data = JsonFile::parseJson($json, $filename);

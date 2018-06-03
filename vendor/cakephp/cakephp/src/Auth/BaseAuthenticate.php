@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Auth;
 
@@ -22,6 +22,8 @@ use Cake\ORM\TableRegistry;
 
 /**
  * Base Authentication class with common methods and properties.
+ *
+ * @mixin \Cake\Core\InstanceConfigTrait
  */
 abstract class BaseAuthenticate implements EventListenerInterface
 {
@@ -107,18 +109,28 @@ abstract class BaseAuthenticate implements EventListenerInterface
         $result = $this->_query($username)->first();
 
         if (empty($result)) {
+            $hasher = $this->passwordHasher();
+            $hasher->hash((string)$password);
+
             return false;
         }
 
+        $passwordField = $this->_config['fields']['password'];
         if ($password !== null) {
             $hasher = $this->passwordHasher();
-            $hashedPassword = $result->get($this->_config['fields']['password']);
+            $hashedPassword = $result->get($passwordField);
             if (!$hasher->check($password, $hashedPassword)) {
                 return false;
             }
 
             $this->_needsPasswordRehash = $hasher->needsRehash($hashedPassword);
-            $result->unsetProperty($this->_config['fields']['password']);
+            $result->unsetProperty($passwordField);
+        }
+        $hidden = $result->getHidden();
+        if ($password === null && in_array($passwordField, $hidden)) {
+            $key = array_search($passwordField, $hidden);
+            unset($hidden[$key]);
+            $result->setHidden($hidden);
         }
 
         return $result->toArray();
@@ -156,9 +168,7 @@ abstract class BaseAuthenticate implements EventListenerInterface
             $options['username'] = $username;
         }
 
-        $query = $table->find($finder, $options);
-
-        return $query;
+        return $table->find($finder, $options);
     }
 
     /**

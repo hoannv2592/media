@@ -1,20 +1,20 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Cache\Engine;
 
-use APCUIterator;
+use APCuIterator;
 use Cake\Cache\CacheEngine;
 
 /**
@@ -144,8 +144,8 @@ class ApcEngine extends CacheEngine
         if ($check) {
             return true;
         }
-        if (class_exists('APCUIterator', false)) {
-            $iterator = new APCUIterator(
+        if (class_exists('APCuIterator', false)) {
+            $iterator = new APCuIterator(
                 '/^' . preg_quote($this->_config['prefix'], '/') . '/',
                 APC_ITER_NONE
             );
@@ -170,7 +170,7 @@ class ApcEngine extends CacheEngine
      * @param string $key Identifier for the data.
      * @param mixed $value Data to be cached.
      * @return bool True if the data was successfully cached, false on failure.
-     * @link http://php.net/manual/en/function.apc-add.php
+     * @link https://secure.php.net/manual/en/function.apc-add.php
      */
     public function add($key, $value)
     {
@@ -230,6 +230,7 @@ class ApcEngine extends CacheEngine
      */
     public function clearGroup($group)
     {
+        $success = false;
         apcu_inc($this->_config['prefix'] . $group, 1, $success);
 
         return $success;

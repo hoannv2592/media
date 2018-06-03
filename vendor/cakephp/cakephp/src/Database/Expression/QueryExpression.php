@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Database\Expression;
 
@@ -122,7 +122,7 @@ class QueryExpression implements ExpressionInterface, Countable
      */
     public function type($conjunction = null)
     {
-        return $this->setConjunction($conjunction);
+        return $this->tieWith($conjunction);
     }
 
     /**
@@ -559,7 +559,7 @@ class QueryExpression implements ExpressionInterface, Countable
      * Useful for compiling the final expression, or doing
      * introspection in the structure.
      *
-     * Callback function receives as only argument an instance of a QueryExpression
+     * Callback function receives as only argument an instance of ExpressionInterface
      *
      * @param callable $callable The callable to apply to all sub-expressions.
      * @return void

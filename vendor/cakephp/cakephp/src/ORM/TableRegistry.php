@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\ORM;
 
@@ -69,18 +69,40 @@ class TableRegistry
      *
      * @param \Cake\ORM\Locator\LocatorInterface|null $locator Instance of a locator to use.
      * @return \Cake\ORM\Locator\LocatorInterface
+     * @deprecated 3.5.0 Use getTableLocator()/setTableLocator() instead.
      */
     public static function locator(LocatorInterface $locator = null)
     {
         if ($locator) {
-            static::$_locator = $locator;
+            static::setTableLocator($locator);
         }
 
+        return static::getTableLocator();
+    }
+
+    /**
+     * Returns a singleton instance of LocatorInterface implementation.
+     *
+     * @return \Cake\ORM\Locator\LocatorInterface
+     */
+    public static function getTableLocator()
+    {
         if (!static::$_locator) {
-            static::$_locator = new static::$_defaultLocatorClass;
+            static::$_locator = new static::$_defaultLocatorClass();
         }
 
         return static::$_locator;
+    }
+
+    /**
+     * Sets singleton instance of LocatorInterface implementation.
+     *
+     * @param \Cake\ORM\Locator\LocatorInterface $tableLocator Instance of a locator to use.
+     * @return void
+     */
+    public static function setTableLocator(LocatorInterface $tableLocator)
+    {
+        static::$_locator = $tableLocator;
     }
 
     /**
@@ -93,7 +115,7 @@ class TableRegistry
      */
     public static function config($alias = null, $options = null)
     {
-        return static::locator()->config($alias, $options);
+        return static::getTableLocator()->config($alias, $options);
     }
 
     /**
@@ -107,7 +129,7 @@ class TableRegistry
      */
     public static function get($alias, array $options = [])
     {
-        return static::locator()->get($alias, $options);
+        return static::getTableLocator()->get($alias, $options);
     }
 
     /**
@@ -118,7 +140,7 @@ class TableRegistry
      */
     public static function exists($alias)
     {
-        return static::locator()->exists($alias);
+        return static::getTableLocator()->exists($alias);
     }
 
     /**
@@ -130,7 +152,7 @@ class TableRegistry
      */
     public static function set($alias, Table $object)
     {
-        return static::locator()->set($alias, $object);
+        return static::getTableLocator()->set($alias, $object);
     }
 
     /**
@@ -141,7 +163,7 @@ class TableRegistry
      */
     public static function remove($alias)
     {
-        static::locator()->remove($alias);
+        static::getTableLocator()->remove($alias);
     }
 
     /**
@@ -151,7 +173,7 @@ class TableRegistry
      */
     public static function clear()
     {
-        static::locator()->clear();
+        static::getTableLocator()->clear();
     }
 
     /**
@@ -163,6 +185,6 @@ class TableRegistry
      */
     public static function __callStatic($name, $arguments)
     {
-        return static::locator()->$name(...$arguments);
+        return static::getTableLocator()->$name(...$arguments);
     }
 }

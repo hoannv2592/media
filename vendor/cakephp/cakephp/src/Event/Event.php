@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         2.1.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Event;
 
@@ -32,7 +32,7 @@ class Event
      *
      * @var string
      */
-    protected $_name = null;
+    protected $_name;
 
     /**
      * The object this event applies to (usually the same object that generates the event)
@@ -53,7 +53,7 @@ class Event
      *
      * @var mixed
      */
-    public $result = null;
+    public $result;
 
     /**
      * Flags an event as stopped or not, default is false
@@ -88,7 +88,7 @@ class Event
      *
      * @param string $attribute Attribute name.
      * @return mixed
-     * @deprecated Public properties will be removed.
+     * @deprecated 3.4.0 Public properties will be removed.
      */
     public function __get($attribute)
     {
@@ -109,7 +109,7 @@ class Event
      * @param string $attribute Attribute name.
      * @param mixed $value The value to set.
      * @return void
-     * @deprecated Public properties will be removed.
+     * @deprecated 3.4.0 Public properties will be removed.
      */
     public function __set($attribute, $value)
     {

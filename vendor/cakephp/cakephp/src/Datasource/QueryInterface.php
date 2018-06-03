@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.1
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 namespace Cake\Datasource;
@@ -18,10 +18,15 @@ namespace Cake\Datasource;
 /**
  * The basis for every query object
  *
- * @package Cake\Datasource
+ * @method $this andWhere($conditions, $types = [])
+ * @method $this select($fields = [], $overwrite = false)
  */
 interface QueryInterface
 {
+
+    const JOIN_TYPE_INNER = 'INNER';
+    const JOIN_TYPE_LEFT = 'LEFT';
+    const JOIN_TYPE_RIGHT = 'RIGHT';
 
     /**
      * Returns a key => value array representing a single aliased field
@@ -33,7 +38,7 @@ interface QueryInterface
      *
      * @param string $field The field to alias
      * @param string|null $alias the alias used to prefix the field
-     * @return array
+     * @return string
      */
     public function aliasField($field, $alias = null);
 
@@ -43,7 +48,7 @@ interface QueryInterface
      *
      * @param array $fields The fields to alias
      * @param string|null $defaultAlias The default alias
-     * @return array
+     * @return string[]
      */
     public function aliasFields($fields, $defaultAlias = null);
 

@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Log;
 
@@ -131,7 +131,7 @@ class Log
      *
      * @var \Cake\Log\LogEngineRegistry|null
      */
-    protected static $_registry = null;
+    protected static $_registry;
 
     /**
      * Handled log levels
@@ -151,7 +151,7 @@ class Log
 
     /**
      * Log levels as detailed in RFC 5424
-     * http://tools.ietf.org/html/rfc5424
+     * https://tools.ietf.org/html/rfc5424
      *
      * @var array
      */
@@ -402,7 +402,7 @@ class Log
      */
     public static function emergency($message, $context = [])
     {
-        return static::write('emergency', $message, $context);
+        return static::write(__FUNCTION__, $message, $context);
     }
 
     /**
@@ -418,7 +418,7 @@ class Log
      */
     public static function alert($message, $context = [])
     {
-        return static::write('alert', $message, $context);
+        return static::write(__FUNCTION__, $message, $context);
     }
 
     /**
@@ -434,7 +434,7 @@ class Log
      */
     public static function critical($message, $context = [])
     {
-        return static::write('critical', $message, $context);
+        return static::write(__FUNCTION__, $message, $context);
     }
 
     /**
@@ -450,7 +450,7 @@ class Log
      */
     public static function error($message, $context = [])
     {
-        return static::write('error', $message, $context);
+        return static::write(__FUNCTION__, $message, $context);
     }
 
     /**
@@ -466,7 +466,7 @@ class Log
      */
     public static function warning($message, $context = [])
     {
-        return static::write('warning', $message, $context);
+        return static::write(__FUNCTION__, $message, $context);
     }
 
     /**
@@ -482,7 +482,7 @@ class Log
      */
     public static function notice($message, $context = [])
     {
-        return static::write('notice', $message, $context);
+        return static::write(__FUNCTION__, $message, $context);
     }
 
     /**
@@ -498,7 +498,7 @@ class Log
      */
     public static function debug($message, $context = [])
     {
-        return static::write('debug', $message, $context);
+        return static::write(__FUNCTION__, $message, $context);
     }
 
     /**
@@ -514,6 +514,6 @@ class Log
      */
     public static function info($message, $context = [])
     {
-        return static::write('info', $message, $context);
+        return static::write(__FUNCTION__, $message, $context);
     }
 }

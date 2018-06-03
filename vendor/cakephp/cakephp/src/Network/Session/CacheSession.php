@@ -2,17 +2,17 @@
 /**
  * Cache Session save handler. Allows saving session information into Cache.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         2.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Network\Session;
 
@@ -77,8 +77,8 @@ class CacheSession implements SessionHandlerInterface
     /**
      * Method used to read from a cache session.
      *
-     * @param string $id The key of the value to read
-     * @return string The value of the key or empty if it does not exist
+     * @param string|int $id ID that uniquely identifies session in cache.
+     * @return string Session data or empty string if it does not exist.
      */
     public function read($id)
     {
@@ -94,8 +94,8 @@ class CacheSession implements SessionHandlerInterface
     /**
      * Helper function called on write for cache sessions.
      *
-     * @param int $id ID that uniquely identifies session in database
-     * @param mixed $data The value of the data to be saved.
+     * @param string|int $id ID that uniquely identifies session in cache.
+     * @param mixed $data The data to be saved.
      * @return bool True for successful write, false otherwise.
      */
     public function write($id, $data)
@@ -110,7 +110,7 @@ class CacheSession implements SessionHandlerInterface
     /**
      * Method called on the destruction of a cache session.
      *
-     * @param int $id ID that uniquely identifies session in cache
+     * @param string|int $id ID that uniquely identifies session in cache.
      * @return bool Always true.
      */
     public function destroy($id)
@@ -123,7 +123,7 @@ class CacheSession implements SessionHandlerInterface
     /**
      * Helper function called on gc for cache sessions.
      *
-     * @param string $maxlifetime Sessions that have not updated for the last maxlifetime seconds will be removed.
+     * @param int $maxlifetime Sessions that have not updated for the last maxlifetime seconds will be removed.
      * @return bool Always true.
      */
     public function gc($maxlifetime)

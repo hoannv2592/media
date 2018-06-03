@@ -13,13 +13,15 @@ namespace DebugKit;
 
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
+use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use DebugKit\Panel\PanelRegistry;
+use Psr\Http\Message\ResponseInterface;
 
 /**
  * Used to create the panels and inject a toolbar into
@@ -154,21 +156,25 @@ class ToolbarService
     /**
      * Save the toolbar state.
      *
-     * @param \Cake\Network\Request $request The request
-     * @param \Cake\Network\Response $response The response
+     * @param \Cake\Http\ServerRequest $request The request
+     * @param \Psr\Http\Message\ResponseInterface $response The response
      * @return null|\DebugKit\Model\Entity\Request Saved request data.
      */
-    public function saveData(Request $request, Response $response)
+    public function saveData(ServerRequest $request, ResponseInterface $response)
     {
         // Skip debugkit requests and requestAction()
-        if ($request->param('plugin') === 'DebugKit' || $request->is('requested')) {
+        $path = $request->getUri()->getPath();
+        if (strpos($path, 'debug_kit') !== false ||
+            strpos($path, 'debug-kit') !== false ||
+            $request->is('requested')
+        ) {
             return null;
         }
         $data = [
-            'url' => $request->here(),
-            'content_type' => $response->type(),
-            'method' => $request->method(),
-            'status_code' => $response->statusCode(),
+            'url' => $request->getUri()->getPath(),
+            'content_type' => $response->getHeaderLine('Content-Type'),
+            'method' => $request->getMethod(),
+            'status_code' => $response->getStatusCode(),
             'requested_at' => $request->env('REQUEST_TIME'),
             'panels' => []
         ];
@@ -201,48 +207,66 @@ class ToolbarService
     }
 
     /**
+     * Reads the modified date of a file in the webroot, and returns the integer
+     *
+     * @return string
+     */
+    public function getToolbarUrl()
+    {
+        $url = 'js/toolbar.js';
+        $filePaths = [
+            str_replace('/', DIRECTORY_SEPARATOR, WWW_ROOT . 'debug_kit/' . $url),
+            str_replace('/', DIRECTORY_SEPARATOR, Plugin::path('DebugKit') . 'webroot/' . $url)
+        ];
+        $url = '/debug_kit/' . $url;
+        foreach ($filePaths as $filePath) {
+            if (file_exists($filePath)) {
+                return $url . '?' . filemtime($filePath);
+            }
+        }
+
+        return $url;
+    }
+
+    /**
      * Injects the JS to build the toolbar.
      *
      * The toolbar will only be injected if the response's content type
      * contains HTML and there is a </body> tag.
      *
      * @param \DebugKit\Model\Entity\Request $row The request data to inject.
-     * @param \Cake\Network\Response $response The response to augment.
-     * @return \Cake\Network\Response The modified response
+     * @param \Psr\Http\Message\ResponseInterface $response The response to augment.
+     * @return \Psr\Http\Message\ResponseInterface The modified response
      */
-    public function injectScripts($row, $response)
+    public function injectScripts($row, ResponseInterface $response)
     {
-        if (strpos($response->type(), 'html') === false) {
+        $response = $response->withHeader('X-DEBUGKIT-ID', $row->id);
+        if (strpos($response->getHeaderLine('Content-Type'), 'html') === false) {
             return $response;
         }
-        if (method_exists($response, 'getBody')) {
-            $body = $response->getBody();
-            if (!$body->isSeekable()) {
-                return $response;
-            }
-        } else {
-            $body = $response->body();
-            if (!is_string($body)) {
-                return $response;
-            }
+        $body = $response->getBody();
+        if (!$body->isSeekable() || !$body->isWritable()) {
+            return $response;
         }
-        $pos = strrpos($body, '</body>');
+        $body->rewind();
+        $contents = $body->getContents();
+
+        $pos = strrpos($contents, '</body>');
         if ($pos === false) {
             return $response;
         }
-        $response->header(['X-DEBUGKIT-ID' => $row->id]);
 
         $url = Router::url('/', true);
         $script = sprintf(
             '<script id="__debug_kit" data-id="%s" data-url="%s" src="%s"></script>',
             $row->id,
             $url,
-            Router::url('/debug_kit/js/toolbar.js')
+            Router::url($this->getToolbarUrl())
         );
+        $contents = substr($contents, 0, $pos) . $script . substr($contents, $pos);
+        $body->rewind();
+        $body->write($contents);
 
-        $body = substr($body, 0, $pos) . $script . substr($body, $pos);
-        $response->body($body);
-
-        return $response;
+        return $response->withBody($body);
     }
 }

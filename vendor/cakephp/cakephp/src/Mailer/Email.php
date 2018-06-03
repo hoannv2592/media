@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         2.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Mailer;
 
@@ -33,13 +33,13 @@ use LogicException;
 use PDO;
 use RuntimeException;
 use Serializable;
-use SimpleXmlElement;
+use SimpleXMLElement;
 
 /**
  * CakePHP Email class.
  *
  * This class is used for sending Internet Message Format based
- * on the standard outlined in http://www.rfc-editor.org/rfc/rfc2822.txt
+ * on the standard outlined in https://www.rfc-editor.org/rfc/rfc2822.txt
  *
  * ### Configuration
  *
@@ -87,7 +87,7 @@ class Email implements JsonSerializable, Serializable
      *
      * @var string
      */
-    const EMAIL_PATTERN = '/^((?:[\p{L}0-9.!#$%&\'*+\/=?^_`{|}~-]+)*@[\p{L}0-9-.]+)$/ui';
+    const EMAIL_PATTERN = '/^((?:[\p{L}0-9.!#$%&\'*+\/=?^_`{|}~-]+)*@[\p{L}0-9-._]+)$/ui';
 
     /**
      * Recipient of the email
@@ -167,7 +167,7 @@ class Email implements JsonSerializable, Serializable
      *
      * @var string
      */
-    protected $_domain = null;
+    protected $_domain;
 
     /**
      * The subject of the email
@@ -224,7 +224,7 @@ class Email implements JsonSerializable, Serializable
      *
      * @var \Cake\Mailer\AbstractTransport|null
      */
-    protected $_transport = null;
+    protected $_transport;
 
     /**
      * Charset the email body is sent in
@@ -239,14 +239,35 @@ class Email implements JsonSerializable, Serializable
      *
      * @var string|null
      */
-    public $headerCharset = null;
+    public $headerCharset;
+
+    /**
+     * The email transfer encoding used.
+     * If null, the $charset property is used for determined the transfer encoding.
+     *
+     * @var string|null
+     */
+    protected $transferEncoding;
+
+    /**
+     * Available encoding to be set for transfer.
+     *
+     * @var array
+     */
+    protected $_transferEncodingAvailable = [
+        '7bit',
+        '8bit',
+        'base64',
+        'binary',
+        'quoted-printable'
+    ];
 
     /**
      * The application wide charset, used to encode headers and body
      *
      * @var string|null
      */
-    protected $_appCharset = null;
+    protected $_appCharset;
 
     /**
      * List of files that should be attached to the email.
@@ -262,14 +283,14 @@ class Email implements JsonSerializable, Serializable
      *
      * @var string|null
      */
-    protected $_boundary = null;
+    protected $_boundary;
 
     /**
      * Contains the optional priority of the email.
      *
      * @var int|null
      */
-    protected $_priority = null;
+    protected $_priority;
 
     /**
      * An array mapping url schemes to fully qualified Transport class names
@@ -643,7 +664,7 @@ class Email implements JsonSerializable, Serializable
      * @param string|null $name Name
      * @return $this
      */
-    public function setCc($email = null, $name = null)
+    public function setCc($email, $name = null)
     {
         return $this->_setEmail('_cc', $email, $name);
     }
@@ -828,6 +849,38 @@ class Email implements JsonSerializable, Serializable
     }
 
     /**
+     * TransferEncoding setter.
+     *
+     * @param string|null $encoding Encoding set.
+     * @return $this
+     */
+    public function setTransferEncoding($encoding)
+    {
+        $encoding = strtolower($encoding);
+        if (!in_array($encoding, $this->_transferEncodingAvailable)) {
+            throw new InvalidArgumentException(
+                sprintf(
+                    'Transfer encoding not available. Can be : %s.',
+                    implode(', ', $this->_transferEncodingAvailable)
+                )
+            );
+        }
+        $this->transferEncoding = $encoding;
+
+        return $this;
+    }
+
+    /**
+     * TransferEncoding getter.
+     *
+     * @return string|null Encoding
+     */
+    public function getTransferEncoding()
+    {
+        return $this->transferEncoding;
+    }
+
+    /**
      * EmailPattern setter/getter
      *
      * @param string|null $regex The pattern to use for email address validation,
@@ -882,7 +935,7 @@ class Email implements JsonSerializable, Serializable
     protected function _setEmail($varName, $email, $name)
     {
         if (!is_array($email)) {
-            $this->_validateEmail($email);
+            $this->_validateEmail($email, $varName);
             if ($name === null) {
                 $name = $email;
             }
@@ -895,7 +948,7 @@ class Email implements JsonSerializable, Serializable
             if (is_int($key)) {
                 $key = $value;
             }
-            $this->_validateEmail($key);
+            $this->_validateEmail($key, $varName);
             $list[$key] = $value;
         }
         $this->{$varName} = $list;
@@ -907,10 +960,11 @@ class Email implements JsonSerializable, Serializable
      * Validate email address
      *
      * @param string $email Email address to validate
+     * @param string $context Which property was set
      * @return void
      * @throws \InvalidArgumentException If email address does not validate
      */
-    protected function _validateEmail($email)
+    protected function _validateEmail($email, $context)
     {
         if ($this->_emailPattern === null) {
             if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
@@ -919,7 +973,12 @@ class Email implements JsonSerializable, Serializable
         } elseif (preg_match($this->_emailPattern, $email)) {
             return;
         }
-        throw new InvalidArgumentException(sprintf('Invalid email: "%s"', $email));
+
+        $context = ltrim($context, '_');
+        if ($email == '') {
+            throw new InvalidArgumentException(sprintf('The email set for "%s" is empty.', $context));
+        }
+        throw new InvalidArgumentException(sprintf('Invalid email set for "%s". You passed "%s".', $context, $email));
     }
 
     /**
@@ -958,7 +1017,7 @@ class Email implements JsonSerializable, Serializable
     protected function _addEmail($varName, $email, $name)
     {
         if (!is_array($email)) {
-            $this->_validateEmail($email);
+            $this->_validateEmail($email, $varName);
             if ($name === null) {
                 $name = $email;
             }
@@ -971,7 +1030,7 @@ class Email implements JsonSerializable, Serializable
             if (is_int($key)) {
                 $key = $value;
             }
-            $this->_validateEmail($key);
+            $this->_validateEmail($key, $varName);
             $list[$key] = $value;
         }
         $this->{$varName} = array_merge($this->{$varName}, $list);
@@ -1532,6 +1591,13 @@ class Email implements JsonSerializable, Serializable
         $config = static::$_transportConfig[$name];
 
         if (is_object($config['className'])) {
+            if (!$config['className'] instanceof AbstractTransport) {
+                throw new InvalidArgumentException(sprintf(
+                    'Transport object must be of type "AbstractTransport". Found invalid type: "%s".',
+                    get_class($config['className'])
+                ));
+            }
+
             return $config['className'];
         }
 
@@ -1548,7 +1614,8 @@ class Email implements JsonSerializable, Serializable
 
         if (!$className) {
             throw new InvalidArgumentException(sprintf('Transport class "%s" not found.', $config['className']));
-        } elseif (!method_exists($className, 'send')) {
+        }
+        if (!method_exists($className, 'send')) {
             throw new InvalidArgumentException(sprintf('The "%s" does not have a send() method.', $className));
         }
 
@@ -1823,7 +1890,7 @@ class Email implements JsonSerializable, Serializable
      * Get generated message (used by transport classes)
      *
      * @param string|null $type Use MESSAGE_* constants or null to return the full message as array
-     * @return string|array String if have type, array if type is null
+     * @return string|array String if type is given, array if type is null
      */
     public function message($type = null)
     {
@@ -2077,9 +2144,20 @@ class Email implements JsonSerializable, Serializable
         }
         Log::write(
             $config['level'],
-            PHP_EOL . $contents['headers'] . PHP_EOL . PHP_EOL . $contents['message'],
+            PHP_EOL . $this->flatten($contents['headers']) . PHP_EOL . PHP_EOL . $this->flatten($contents['message']),
             $config['scope']
         );
+    }
+
+    /**
+     * Converts given value to string
+     *
+     * @param string|array $value The value to convert
+     * @return string
+     */
+    protected function flatten($value)
+    {
+        return is_array($value) ? implode(';', $value) : (string)$value;
     }
 
     /**
@@ -2200,12 +2278,13 @@ class Email implements JsonSerializable, Serializable
         $this->_headers = [];
         $this->_textMessage = '';
         $this->_htmlMessage = '';
-        $this->_message = '';
+        $this->_message = [];
         $this->_emailFormat = 'text';
         $this->_transport = null;
         $this->_priority = null;
         $this->charset = 'utf-8';
         $this->headerCharset = null;
+        $this->transferEncoding = null;
         $this->_attachments = [];
         $this->_profile = [];
         $this->_emailPattern = self::EMAIL_PATTERN;
@@ -2605,8 +2684,8 @@ class Email implements JsonSerializable, Serializable
 
         $View = $this->createView();
 
-        list($templatePlugin) = pluginSplit($View->template());
-        list($layoutPlugin) = pluginSplit($View->layout());
+        list($templatePlugin) = pluginSplit($View->getTemplate());
+        list($layoutPlugin) = pluginSplit($View->getLayout());
         if ($templatePlugin) {
             $View->plugin = $templatePlugin;
         } elseif ($layoutPlugin) {
@@ -2619,8 +2698,8 @@ class Email implements JsonSerializable, Serializable
 
         foreach ($types as $type) {
             $View->hasRendered = false;
-            $View->templatePath('Email' . DIRECTORY_SEPARATOR . $type);
-            $View->layoutPath('Email' . DIRECTORY_SEPARATOR . $type);
+            $View->setTemplatePath('Email' . DIRECTORY_SEPARATOR . $type);
+            $View->setLayoutPath('Email' . DIRECTORY_SEPARATOR . $type);
 
             $render = $View->render();
             $render = str_replace(["\r\n", "\r"], "\n", $render);
@@ -2637,12 +2716,17 @@ class Email implements JsonSerializable, Serializable
     }
 
     /**
-     * Return the Content-Transfer Encoding value based on the set charset
+     * Return the Content-Transfer Encoding value based
+     * on the set transferEncoding or set charset.
      *
      * @return string
      */
     protected function _getContentTransferEncoding()
     {
+        if ($this->transferEncoding) {
+            return $this->transferEncoding;
+        }
+
         $charset = strtoupper($this->charset);
         if (in_array($charset, $this->_charset8bit)) {
             return '8bit';
@@ -2676,7 +2760,7 @@ class Email implements JsonSerializable, Serializable
      * It has certain limitations for viewVars that are good to know:
      *
      *    - ORM\Query executed and stored as resultset
-     *    - SimpleXmlElements stored as associative array
+     *    - SimpleXMLElements stored as associative array
      *    - Exceptions stored as strings
      *    - Resources, \Closure and \PDO are not supported.
      *
@@ -2766,7 +2850,7 @@ class Email implements JsonSerializable, Serializable
     {
         $array = $this->jsonSerialize();
         array_walk_recursive($array, function (&$item, $key) {
-            if ($item instanceof SimpleXmlElement) {
+            if ($item instanceof SimpleXMLElement) {
                 $item = json_decode(json_encode((array)$item), true);
             }
         });

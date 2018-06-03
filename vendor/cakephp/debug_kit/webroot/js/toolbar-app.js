@@ -1,5 +1,5 @@
 function Toolbar(options) {
-  this.button = options.button;
+  this.toolbar = options.toolbar;
   this.panelButtons = options.panelButtons;
   this.content = options.content;
   this.panelClose = options.panelClose;
@@ -87,10 +87,10 @@ Toolbar.prototype = {
 
   updateToolbarState: function(state) {
     if (state === 'toolbar') {
-      this.button.addClass('open');
+      this.toolbar.addClass('open');
     }
     if (state === 'collapse') {
-      this.button.removeClass('open');
+      this.toolbar.removeClass('open');
     }
   },
 
@@ -122,7 +122,7 @@ Toolbar.prototype = {
   },
 
   loadPanel: function(id) {
-    var url = this.baseUrl + 'debug_kit/panels/view/' + id;
+    var url = this.baseUrl + 'debug-kit/panels/view/' + id;
     var contentArea = this.content.find('#panel-content');
     var _this = this;
     var timer;
@@ -180,7 +180,7 @@ Toolbar.prototype = {
   },
 
   currentPanelButton: function() {
-    return this.button.find("[data-id='" + this.currentPanel() + "']");
+    return this.toolbar.find("[data-id='" + this.currentPanel() + "']");
   },
 
   keyboardListener: function() {
@@ -220,6 +220,15 @@ Toolbar.prototype = {
 
   mouseListener: function() {
     var _this = this;
+    this.toolbar.find('.panel-button-left').on('click', function(e) {
+      _this.scroll('left');
+      return false;
+    });
+    this.toolbar.find('.panel-button-right').on('click', function(e) {
+      _this.scroll('right');
+      return false;
+    });
+
     this.panelButtons.on('click', function(e) {
       _this.panelButtons.removeClass('panel-active');
       e.preventDefault();
@@ -237,11 +246,12 @@ Toolbar.prototype = {
       _this.loadPanel(id);
     });
 
-    this.button.on('click', function(e) {
+    this.toolbar.on('click', function(e) {
       _this.toggle();
+      return false;
     });
 
-    toolbar.panelClose.on('click', function(e) {
+    this.panelClose.on('click', function(e) {
       _this.hideContent();
       return false;
     });
@@ -257,7 +267,7 @@ Toolbar.prototype = {
   },
 
   onMessage: function(event) {
-    if (event.data.indexOf('ajax-completed$$') === 0) {
+    if (typeof(event.data) === 'string' && event.data.indexOf('ajax-completed$$') === 0) {
       this.onRequest(JSON.parse(event.data.split('$$')[1]));
     }
   },
@@ -265,6 +275,28 @@ Toolbar.prototype = {
   onRequest: function(request) {
     this.ajaxRequests.push(request);
     $('.panel-summary:contains(xhr)').text("" + this.ajaxRequests.length + ' xhr');
+  },
+
+  scroll: function(direction) {
+    var scrollValue = 300;
+    var operator = direction === 'left' ? '-=' : '+=';
+    var buttons = this.toolbar.find('.toolbar-inner li');
+    var cakeButton = this.toolbar.find('#panel-button');
+    var firstButton = buttons.first();
+    var lastButton = buttons.last();
+
+    // If the toolbar is scrolled to the left, don't go farther.
+    if (direction === 'right' && firstButton.position().left == 0) {
+      return;
+    }
+
+    var buttonWidth = lastButton.width();
+    // If the last button's right side is left of the cake button, don't scroll further.
+    if (direction === 'left' && lastButton.offset().left + buttonWidth < cakeButton.offset().left) {
+      return;
+    }
+    var css = {left: operator + scrollValue};
+    $('.toolbar-inner li', this.button).animate(css)
   },
 
   initialize: function() {

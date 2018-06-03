@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Database;
 
@@ -18,8 +18,10 @@ use InvalidArgumentException;
 use PDO;
 
 /**
- * Represents a database diver containing all specificities for
- * a database engine including its SQL dialect
+ * Represents a database driver containing all specificities for
+ * a database engine including its SQL dialect.
+ *
+ * @property \PDO|null $_connection
  */
 abstract class Driver
 {
@@ -70,7 +72,7 @@ abstract class Driver
     /**
      * Establishes a connection to the database server
      *
-     * @return bool true con success
+     * @return bool true on success
      */
     abstract public function connect();
 
@@ -86,7 +88,7 @@ abstract class Driver
      * If first argument is passed,
      *
      * @param null|\PDO $connection The connection object
-     * @return \Cake\Database\Connection
+     * @return \PDO
      */
     abstract public function connection($connection = null);
 
@@ -386,7 +388,7 @@ abstract class Driver
     public function __debugInfo()
     {
         return [
-            'connected' => $this->isConnected()
+            'connected' => $this->_connection !== null
         ];
     }
 }

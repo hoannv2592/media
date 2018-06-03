@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         2.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Auth;
 
@@ -73,8 +73,8 @@ class BasicAuthenticate extends BaseAuthenticate
      */
     public function getUser(ServerRequest $request)
     {
-        $username = $request->env('PHP_AUTH_USER');
-        $pass = $request->env('PHP_AUTH_PW');
+        $username = $request->getEnv('PHP_AUTH_USER');
+        $pass = $request->getEnv('PHP_AUTH_PW');
 
         if (!is_string($username) || $username === '' || !is_string($pass) || $pass === '') {
             return false;
@@ -106,7 +106,7 @@ class BasicAuthenticate extends BaseAuthenticate
      */
     public function loginHeaders(ServerRequest $request)
     {
-        $realm = $this->getConfig('realm') ?: $request->env('SERVER_NAME');
+        $realm = $this->getConfig('realm') ?: $request->getEnv('SERVER_NAME');
 
         return sprintf('WWW-Authenticate: Basic realm="%s"', $realm);
     }

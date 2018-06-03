@@ -1,19 +1,20 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.3.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Http;
 
+use Cake\Core\HttpApplicationInterface;
 use Cake\Event\EventDispatcherTrait;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -29,7 +30,7 @@ class Server
     use EventDispatcherTrait;
 
     /**
-     * @var \Cake\Http\BaseApplication
+     * @var \Cake\Core\HttpApplicationInterface
      */
     protected $app;
 
@@ -41,9 +42,9 @@ class Server
     /**
      * Constructor
      *
-     * @param \Cake\Http\BaseApplication $app The application to use.
+     * @param \Cake\Core\HttpApplicationInterface $app The application to use.
      */
-    public function __construct(BaseApplication $app)
+    public function __construct(HttpApplicationInterface $app)
     {
         $this->setApp($app);
         $this->setRunner(new Runner());
@@ -99,7 +100,6 @@ class Server
      */
     public function emit(ResponseInterface $response, EmitterInterface $emitter = null)
     {
-        $stream = $response->getBody();
         if (!$emitter) {
             $emitter = new ResponseEmitter();
         }
@@ -109,10 +109,10 @@ class Server
     /**
      * Set the application.
      *
-     * @param BaseApplication $app The application to set.
+     * @param \Cake\Core\HttpApplicationInterface $app The application to set.
      * @return $this
      */
-    public function setApp(BaseApplication $app)
+    public function setApp(HttpApplicationInterface $app)
     {
         $this->app = $app;
 
@@ -122,7 +122,7 @@ class Server
     /**
      * Get the current application.
      *
-     * @return \Cake\Http\BaseApplication The application that will be run.
+     * @return \Cake\Core\HttpApplicationInterface The application that will be run.
      */
     public function getApp()
     {

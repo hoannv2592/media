@@ -1,19 +1,20 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Form;
 
+use Cake\Form\Schema;
 use Cake\Validation\Validator;
 
 /**
@@ -35,6 +36,12 @@ use Cake\Validation\Validator;
  */
 class Form
 {
+    /**
+     * Schema class.
+     *
+     * @var string
+     */
+    protected $_schemaClass = Schema::class;
 
     /**
      * The schema used by this form.
@@ -70,7 +77,7 @@ class Form
     public function schema(Schema $schema = null)
     {
         if ($schema === null && empty($this->_schema)) {
-            $schema = $this->_buildSchema(new Schema());
+            $schema = $this->_buildSchema(new $this->_schemaClass);
         }
         if ($schema) {
             $this->_schema = $schema;
@@ -156,6 +163,28 @@ class Form
     public function errors()
     {
         return $this->_errors;
+    }
+
+    /**
+     * Set the errors in the form.
+     *
+     * ```
+     * $errors = [
+     *      'field_name' => ['rule_name' => 'message']
+     * ];
+     *
+     * $form->setErrors($errors);
+     * ```
+     *
+     * @since 3.5.1
+     * @param array $errors Errors list.
+     * @return $this
+     */
+    public function setErrors(array $errors)
+    {
+        $this->_errors = $errors;
+
+        return $this;
     }
 
     /**

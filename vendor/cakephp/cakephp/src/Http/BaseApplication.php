@@ -1,20 +1,23 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.3.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Http;
 
+use Cake\Core\ConsoleApplicationInterface;
+use Cake\Core\HttpApplicationInterface;
 use Cake\Routing\DispatcherFactory;
+use Cake\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -25,7 +28,7 @@ use Psr\Http\Message\ServerRequestInterface;
  * and ensuring that middleware is attached. It is also invoked as the last piece
  * of middleware, and delegates request/response handling to the correct controller.
  */
-abstract class BaseApplication
+abstract class BaseApplication implements ConsoleApplicationInterface, HttpApplicationInterface
 {
 
     /**
@@ -50,15 +53,43 @@ abstract class BaseApplication
     abstract public function middleware($middleware);
 
     /**
-     * Load all the application configuration and bootstrap logic.
-     *
-     * Override this method to add additional bootstrap logic for your application.
-     *
-     * @return void
+     * {@inheritDoc}
      */
     public function bootstrap()
     {
         require_once $this->configDir . '/bootstrap.php';
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * By default this will load `config/routes.php` for ease of use and backwards compatibility.
+     *
+     * @param \Cake\Routing\RouteBuilder $routes A route builder to add routes into.
+     * @return void
+     */
+    public function routes($routes)
+    {
+        if (!Router::$initialized) {
+            // Prevent routes from being loaded again
+            Router::$initialized = true;
+
+            require $this->configDir . '/routes.php';
+        }
+    }
+
+    /**
+     * Define the console commands for an application.
+     *
+     * By default all commands in CakePHP, plugins and the application will be
+     * loaded using conventions based names.
+     *
+     * @param \Cake\Console\CommandCollection $commands The CommandCollection to add commands into.
+     * @return \Cake\Console\CommandCollection The updated collection.
+     */
+    public function console($commands)
+    {
+        return $commands->addMany($commands->autoDiscover());
     }
 
     /**

@@ -26,6 +26,9 @@ use DateTimeInterface;
 
 /**
  * Task class for creating and updating fixtures files.
+ *
+ * @property \Bake\Shell\Task\BakeTemplateTask $BakeTemplate
+ * @property \Bake\Shell\Task\ModelTask $Model
  */
 class FixtureTask extends BakeTask
 {
@@ -130,7 +133,7 @@ class FixtureTask extends BakeTask
      */
     public function all()
     {
-        $tables = $this->Model->listUnskipped($this->connection, false);
+        $tables = $this->Model->listUnskipped();
 
         foreach ($tables as $table) {
             $this->main($table);
@@ -167,19 +170,13 @@ class FixtureTask extends BakeTask
             $import = sprintf("[%s]", implode(', ', $importBits));
         }
 
-        $connection = ConnectionManager::get($this->connection);
-        if (!method_exists($connection, 'schemaCollection')) {
-            throw new \RuntimeException(
-                'Cannot generate fixtures for connections that do not implement schemaCollection()'
-            );
-        }
-        $schemaCollection = $connection->schemaCollection();
         try {
-            $data = $schemaCollection->describe($useTable);
+            $data = $this->readSchema($model, $useTable);
         } catch (Exception $e) {
+            TableRegistry::remove($model);
             $useTable = Inflector::underscore($model);
             $table = $useTable;
-            $data = $schemaCollection->describe($useTable);
+            $data = $this->readSchema($model, $useTable);
         }
 
         if ($modelImport === null) {
@@ -198,6 +195,29 @@ class FixtureTask extends BakeTask
         }
 
         return $this->generateFixtureFile($model, compact('records', 'table', 'schema', 'import'));
+    }
+
+    /**
+     * Get schema metadata for the current table mapping.
+     *
+     * @param string $name The model alias to use
+     * @param string $table The table name to get schema metadata for.
+     * @return \Cake\Database\Schema\TableSchema
+     */
+    public function readSchema($name, $table)
+    {
+        $connection = ConnectionManager::get($this->connection);
+
+        if (TableRegistry::exists($name)) {
+            $model = TableRegistry::get($name);
+        } else {
+            $model = TableRegistry::get($name, [
+                'table' => $table,
+                'connection' => $connection
+            ]);
+        }
+
+        return $model->getSchema();
     }
 
     /**
@@ -334,6 +354,8 @@ class FixtureTask extends BakeTask
                     case 'biginteger':
                     case 'integer':
                     case 'float':
+                    case 'smallinteger':
+                    case 'tinyinteger':
                         $insert = $i + 1;
                         break;
                     case 'string':
@@ -403,13 +425,13 @@ class FixtureTask extends BakeTask
                 if ($val === 'NULL') {
                     $val = 'null';
                 }
-                $values[] = "            '$field' => $val";
+                $values[] = "                '$field' => $val";
             }
-            $out .= "        [\n";
+            $out .= "            [\n";
             $out .= implode(",\n", $values);
-            $out .= "\n        ],\n";
+            $out .= "\n            ],\n";
         }
-        $out .= "    ]";
+        $out .= "        ]";
 
         return $out;
     }

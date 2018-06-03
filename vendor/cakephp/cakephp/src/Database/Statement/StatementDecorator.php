@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Database\Statement;
 
@@ -39,14 +39,14 @@ class StatementDecorator implements StatementInterface, Countable, IteratorAggre
      * Statement instance implementation, such as PDOStatement
      * or any other custom implementation.
      *
-     * @var \Cake\Database\StatementInterface
+     * @var \Cake\Database\StatementInterface|\PDOStatement|null
      */
     protected $_statement;
 
     /**
      * Reference to the driver object associated to this statement.
      *
-     * @var \Cake\Database\Driver
+     * @var \Cake\Database\Driver|null
      */
     protected $_driver;
 
@@ -60,7 +60,7 @@ class StatementDecorator implements StatementInterface, Countable, IteratorAggre
     /**
      * Constructor
      *
-     * @param \Cake\Database\StatementInterface|null $statement Statement implementation such as PDOStatement
+     * @param \Cake\Database\StatementInterface|\PDOStatement|null $statement Statement implementation such as PDOStatement
      * @param \Cake\Database\Driver|null $driver Driver instance
      */
     public function __construct($statement = null, $driver = null)
@@ -246,7 +246,7 @@ class StatementDecorator implements StatementInterface, Countable, IteratorAggre
      * }
      * ```
      *
-     * @return \Iterator
+     * @return \Cake\Database\StatementInterface|\PDOStatement
      */
     public function getIterator()
     {
@@ -318,7 +318,7 @@ class StatementDecorator implements StatementInterface, Countable, IteratorAggre
     /**
      * Returns the statement object that was decorated by this class.
      *
-     * @return \Cake\Database\StatementInterface
+     * @return \Cake\Database\StatementInterface|\PDOStatement
      */
     public function getInnerStatement()
     {

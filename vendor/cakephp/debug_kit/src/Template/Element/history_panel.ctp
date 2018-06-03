@@ -13,9 +13,9 @@
  */
 
 /**
- * @type \DebugKit\View\AjaxView $this
- * @type \DebugKit\Model\Entity\Panel $panel
- * @type array $requests
+ * @var \DebugKit\View\AjaxView $this
+ * @var \DebugKit\Model\Entity\Panel $panel
+ * @var array $requests
  */
 ?>
 <div id="request-history">
@@ -123,7 +123,8 @@ $(document).ready(function() {
 
             for (var i = 0, len = response.panels.length; i < len; i++) {
                 var panel = response.panels[i];
-                var button = panelButtons.eq(i);
+                // Offset by two for scroll buttons
+                var button = panelButtons.eq(i + 2);
                 var summary = button.find('.panel-summary');
 
                 // Don't overwrite the history panel.

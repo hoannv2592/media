@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         0.2.9
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Controller;
 
@@ -81,7 +81,8 @@ use RuntimeException;
  * @property \Cake\Controller\Component\PaginatorComponent $Paginator
  * @property \Cake\Controller\Component\RequestHandlerComponent $RequestHandler
  * @property \Cake\Controller\Component\SecurityComponent $Security
- * @link http://book.cakephp.org/3.0/en/controllers.html
+ * @method bool isAuthorized($user)
+ * @link https://book.cakephp.org/3.0/en/controllers.html
  */
 class Controller implements EventListenerInterface, EventDispatcherInterface
 {
@@ -101,7 +102,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      *
      * @var string
      */
-    public $name = null;
+    public $name;
 
     /**
      * An array containing the names of helpers this controller uses. The array elements should
@@ -113,7 +114,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      * ```
      *
      * @var array
-     * @link http://book.cakephp.org/3.0/en/controllers.html#configuring-helpers-to-load
+     * @link https://book.cakephp.org/3.0/en/controllers.html#configuring-helpers-to-load
      */
     public $helpers = [];
 
@@ -122,16 +123,16 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      * This object contains all the information about a request and several methods for reading
      * additional information about the request.
      *
-     * @var \Cake\Http\ServerRequest
-     * @link http://book.cakephp.org/3.0/en/controllers/request-response.html#request
+     * @var \Cake\Http\ServerRequest|null
+     * @link https://book.cakephp.org/3.0/en/controllers/request-response.html#request
      */
     public $request;
 
     /**
      * An instance of a Response object that contains information about the impending response
      *
-     * @var \Cake\Http\Response
-     * @link http://book.cakephp.org/3.0/en/controllers/request-response.html#response
+     * @var \Cake\Http\Response|null
+     * @link https://book.cakephp.org/3.0/en/controllers/request-response.html#response
      */
     public $response;
 
@@ -166,7 +167,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      *
      * @var \Cake\Controller\ComponentRegistry
      */
-    protected $_components = null;
+    protected $_components;
 
     /**
      * Array containing the names of components this controller uses. Component names
@@ -178,7 +179,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      * ```
      *
      * @var array
-     * @link http://book.cakephp.org/3.0/en/controllers/components.html
+     * @link https://book.cakephp.org/3.0/en/controllers/components.html
      */
     public $components = [];
 
@@ -204,9 +205,9 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
     /**
      * Automatically set to the name of a plugin.
      *
-     * @var string
+     * @var string|null
      */
-    public $plugin = null;
+    public $plugin;
 
     /**
      * Holds all passed params.
@@ -248,10 +249,10 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
         $this->response = $response !== null ? $response : new Response();
 
         if ($eventManager !== null) {
-            $this->eventManager($eventManager);
+            $this->setEventManager($eventManager);
         }
 
-        $this->modelFactory('Table', [$this->tableLocator(), 'get']);
+        $this->modelFactory('Table', [$this->getTableLocator(), 'get']);
         $modelClass = ($this->plugin ? $this->plugin . '.' : '') . $this->name;
         $this->_setModelClass($modelClass);
 
@@ -263,7 +264,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
 
         $this->_mergeControllerVars();
         $this->_loadComponents();
-        $this->eventManager()->on($this);
+        $this->getEventManager()->on($this);
     }
 
     /**
@@ -319,9 +320,8 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
     public function loadComponent($name, array $config = [])
     {
         list(, $prop) = pluginSplit($name);
-        $this->{$prop} = $this->components()->load($name, $config);
 
-        return $this->{$prop};
+        return $this->{$prop} = $this->components()->load($name, $config);
     }
 
     /**
@@ -428,7 +428,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
         }
         if (!$this->isAction($request->getParam('action'))) {
             throw new MissingActionException([
-                'controller' => $this->name . "Controller",
+                'controller' => $this->name . 'Controller',
                 'action' => $request->getParam('action'),
                 'prefix' => $request->getParam('prefix') ?: '',
                 'plugin' => $request->getParam('plugin'),
@@ -537,7 +537,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      *     or an absolute URL
      * @param int $status HTTP status code (eg: 301)
      * @return \Cake\Http\Response|null
-     * @link http://book.cakephp.org/3.0/en/controllers.html#Controller::redirect
+     * @link https://book.cakephp.org/3.0/en/controllers.html#Controller::redirect
      */
     public function redirect($url, $status = 302)
     {
@@ -591,7 +591,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      * @param string|null $view View to use for rendering
      * @param string|null $layout Layout to use
      * @return \Cake\Http\Response A response object containing the rendered view.
-     * @link http://book.cakephp.org/3.0/en/controllers.html#rendering-a-view
+     * @link https://book.cakephp.org/3.0/en/controllers.html#rendering-a-view
      */
     public function render($view = null, $layout = null)
     {
@@ -620,7 +620,8 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
         }
 
         $this->View = $this->createView();
-        $this->response->body($this->View->render($view, $layout));
+        $contents = $this->View->render($view, $layout);
+        $this->response = $this->View->response->withStringBody($contents);
 
         return $this->response;
     }
@@ -687,8 +688,8 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      * @param \Cake\ORM\Table|string|\Cake\ORM\Query|null $object Table to paginate
      * (e.g: Table instance, 'TableName' or a Query object)
      * @param array $settings The settings/configuration used for pagination.
-     * @return \Cake\ORM\ResultSet Query results
-     * @link http://book.cakephp.org/3.0/en/controllers.html#paginating-a-model
+     * @return \Cake\ORM\ResultSet|\Cake\Datasource\ResultSetInterface Query results
+     * @link https://book.cakephp.org/3.0/en/controllers.html#paginating-a-model
      * @throws \RuntimeException When no compatible table object can be found.
      */
     public function paginate($object = null, array $settings = [])
@@ -712,7 +713,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
         if (empty($table)) {
             throw new RuntimeException('Unable to locate an object compatible with paginate.');
         }
-        $settings = $settings + $this->paginate;
+        $settings += $this->paginate;
 
         return $this->Paginator->paginate($table, $settings);
     }
@@ -748,7 +749,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      *
      * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
-     * @link http://book.cakephp.org/3.0/en/controllers.html#request-life-cycle-callbacks
+     * @link https://book.cakephp.org/3.0/en/controllers.html#request-life-cycle-callbacks
      */
     public function beforeFilter(Event $event)
     {
@@ -761,7 +762,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      *
      * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
-     * @link http://book.cakephp.org/3.0/en/controllers.html#request-life-cycle-callbacks
+     * @link https://book.cakephp.org/3.0/en/controllers.html#request-life-cycle-callbacks
      */
     public function beforeRender(Event $event)
     {
@@ -782,7 +783,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      *     or an absolute URL
      * @param \Cake\Http\Response $response The response object.
      * @return \Cake\Http\Response|null
-     * @link http://book.cakephp.org/3.0/en/controllers.html#request-life-cycle-callbacks
+     * @link https://book.cakephp.org/3.0/en/controllers.html#request-life-cycle-callbacks
      */
     public function beforeRedirect(Event $event, $url, Response $response)
     {
@@ -794,7 +795,7 @@ class Controller implements EventListenerInterface, EventDispatcherInterface
      *
      * @param \Cake\Event\Event $event An Event instance
      * @return \Cake\Http\Response|null
-     * @link http://book.cakephp.org/3.0/en/controllers.html#request-life-cycle-callbacks
+     * @link https://book.cakephp.org/3.0/en/controllers.html#request-life-cycle-callbacks
      */
     public function afterFilter(Event $event)
     {

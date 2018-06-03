@@ -1,21 +1,23 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\View\Form;
 
+use ArrayAccess;
 use Cake\Collection\Collection;
 use Cake\Datasource\EntityInterface;
+use Cake\Datasource\RepositoryInterface;
 use Cake\Http\ServerRequest;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Inflector;
@@ -146,7 +148,7 @@ class EntityContext implements ContextInterface
             $table = TableRegistry::get($table);
         }
 
-        if (!is_object($table)) {
+        if (!($table instanceof RepositoryInterface)) {
             throw new RuntimeException(
                 'Unable to find table class for current entity'
             );
@@ -155,6 +157,7 @@ class EntityContext implements ContextInterface
             is_array($entity) ||
             $entity instanceof Traversable
         );
+
         $alias = $this->_rootName = $table->getAlias();
         $this->_tables[$alias] = $table;
     }
@@ -259,10 +262,10 @@ class EntityContext implements ContextInterface
 
             return $this->_schemaDefault($part, $entity);
         }
-        if (is_array($entity)) {
+        if (is_array($entity) || $entity instanceof ArrayAccess) {
             $key = array_pop($parts);
 
-            return isset($entity[$key]) ? $entity[$key] : null;
+            return isset($entity[$key]) ? $entity[$key] : $options['default'];
         }
 
         return null;
@@ -364,7 +367,7 @@ class EntityContext implements ContextInterface
         }
         throw new RuntimeException(sprintf(
             'Unable to fetch property "%s"',
-            implode(".", $path)
+            implode('.', $path)
         ));
     }
 
@@ -467,7 +470,7 @@ class EntityContext implements ContextInterface
             $method = $this->_context['validator'][$alias];
         }
 
-        $validator = $table->validator($method);
+        $validator = $table->getValidator($method);
         $validator->setProvider('entity', $entity);
 
         return $this->_validator[$key] = $validator;
@@ -477,12 +480,13 @@ class EntityContext implements ContextInterface
      * Get the table instance from a property path
      *
      * @param array $parts Each one of the parts in a path for a field name
-     * @param bool $rootFallback Whether or not to fallback to the root entity.
+     * @param bool $fallback Whether or not to fallback to the last found table
+     *  when a non-existent field/property is being encountered.
      * @return \Cake\ORM\Table|bool Table instance or false
      */
-    protected function _getTable($parts, $rootFallback = true)
+    protected function _getTable($parts, $fallback = true)
     {
-        if (count($parts) === 1) {
+        if (!is_array($parts) || count($parts) === 1) {
             return $this->_tables[$this->_rootName];
         }
 
@@ -500,12 +504,22 @@ class EntityContext implements ContextInterface
         }
 
         $table = $this->_tables[$this->_rootName];
+        $assoc = null;
         foreach ($normalized as $part) {
-            $assoc = $table->associations()->getByProperty($part);
-            if (!$assoc && $rootFallback) {
+            if ($part === '_joinData') {
+                if ($assoc) {
+                    $table = $assoc->junction();
+                    $assoc = null;
+                    continue;
+                }
+            } else {
+                $assoc = $table->associations()->getByProperty($part);
+            }
+
+            if (!$assoc && $fallback) {
                 break;
             }
-            if (!$assoc && !$rootFallback) {
+            if (!$assoc && !$fallback) {
                 return false;
             }
 
@@ -540,7 +554,7 @@ class EntityContext implements ContextInterface
     {
         $parts = explode('.', $field);
         $table = $this->_getTable($parts);
-        $column = (array)$table->getSchema()->column(array_pop($parts));
+        $column = (array)$table->getSchema()->getColumn(array_pop($parts));
         $whitelist = ['length' => null, 'precision' => null];
 
         return array_intersect_key($column, $whitelist);
