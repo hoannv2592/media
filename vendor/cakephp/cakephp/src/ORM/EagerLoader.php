@@ -1,21 +1,22 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\ORM;
 
 use Cake\Database\Statement\BufferedStatement;
 use Cake\Database\Statement\CallbackStatement;
+use Cake\Datasource\QueryInterface;
 use Closure;
 use InvalidArgumentException;
 
@@ -42,7 +43,7 @@ class EagerLoader
      *
      * @var \Cake\ORM\EagerLoadable[]|\Cake\ORM\EagerLoadable|null
      */
-    protected $_normalized = null;
+    protected $_normalized;
 
     /**
      * List of options accepted by associations in contain()
@@ -126,12 +127,28 @@ class EagerLoader
      * @param array|string $associations list of table aliases to be queried.
      * When this method is called multiple times it will merge previous list with
      * the new one.
+     * @param callable|null $queryBuilder The query builder callable
      * @return array Containments.
+     * @throws \InvalidArgumentException When using $queryBuilder with an array of $associations
      */
-    public function contain($associations = [])
+    public function contain($associations = [], callable $queryBuilder = null)
     {
         if (empty($associations)) {
             return $this->_containments;
+        }
+
+        if ($queryBuilder) {
+            if (!is_string($associations)) {
+                throw new InvalidArgumentException(
+                    sprintf('Cannot set containments. To use $queryBuilder, $associations must be a string')
+                );
+            }
+
+            $associations = [
+                $associations => [
+                    'queryBuilder' => $queryBuilder
+                ]
+            ];
         }
 
         $associations = (array)$associations;
@@ -222,7 +239,7 @@ class EagerLoader
         }
 
         if (!isset($options['joinType'])) {
-            $options['joinType'] = 'INNER';
+            $options['joinType'] = QueryInterface::JOIN_TYPE_INNER;
         }
 
         $assocs = explode('.', $assoc);
@@ -381,7 +398,7 @@ class EagerLoader
 
             $pointer += [$table => []];
 
-            if (isset($options['queryBuilder']) && isset($pointer[$table]['queryBuilder'])) {
+            if (isset($options['queryBuilder'], $pointer[$table]['queryBuilder'])) {
                 $first = $pointer[$table]['queryBuilder'];
                 $second = $options['queryBuilder'];
                 $options['queryBuilder'] = function ($query) use ($first, $second) {
@@ -631,7 +648,7 @@ class EagerLoader
             return $statement;
         }
 
-        $driver = $query->getConnection()->driver();
+        $driver = $query->getConnection()->getDriver();
         list($collected, $statement) = $this->_collectKeys($external, $query, $statement);
 
         foreach ($external as $meta) {
@@ -787,7 +804,7 @@ class EagerLoader
         }
 
         if (!($statement instanceof BufferedStatement)) {
-            $statement = new BufferedStatement($statement, $query->getConnection()->driver());
+            $statement = new BufferedStatement($statement, $query->getConnection()->getDriver());
         }
 
         return [$this->_groupKeys($statement, $collectKeys), $statement];
@@ -797,7 +814,7 @@ class EagerLoader
      * Helper function used to iterate a statement and extract the columns
      * defined in $collectKeys
      *
-     * @param \Cake\Database\StatementInterface $statement The statement to read from.
+     * @param \Cake\Database\Statement\BufferedStatement $statement The statement to read from.
      * @param array $collectKeys The keys to collect
      * @return array
      */
@@ -828,5 +845,19 @@ class EagerLoader
         $statement->rewind();
 
         return $keys;
+    }
+
+    /**
+     * Clone hook implementation
+     *
+     * Clone the _matching eager loader as well.
+     *
+     * @return void
+     */
+    public function __clone()
+    {
+        if ($this->_matching) {
+            $this->_matching = clone $this->_matching;
+        }
     }
 }

@@ -19,8 +19,8 @@ use Cake\Console\Shell;
 use Cake\Core\ConventionsTrait;
 use Cake\Event\Event;
 use Cake\Event\EventManager;
-use Cake\Network\Request;
-use Cake\Network\Response;
+use Cake\Http\Response;
+use Cake\Http\ServerRequest as Request;
 use Cake\View\Exception\MissingTemplateException;
 use Cake\View\ViewVarsTrait;
 
@@ -61,6 +61,7 @@ class BakeTemplateTask extends Shell
             ],
             'theme' => $theme
         ];
+
         $view = new BakeView(new Request(), new Response(), null, $viewOptions);
         $event = new Event('Bake.initialize', $view);
         EventManager::instance()->dispatch($event);

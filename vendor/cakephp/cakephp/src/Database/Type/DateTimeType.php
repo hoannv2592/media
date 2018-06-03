@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Database\Type;
 
@@ -37,7 +37,7 @@ class DateTimeType extends Type implements TypeInterface
      *
      * @var string|null
      */
-    protected $_name = null;
+    protected $_name;
 
     /**
      * The class to use for representing date objects
@@ -46,16 +46,19 @@ class DateTimeType extends Type implements TypeInterface
      * class is constructed. After that use `useMutable()` or `useImmutable()` instead.
      *
      * @var string
-     * @deprecated Use DateTimeType::useMutable() or DateTimeType::useImmutable() instead.
+     * @deprecated 3.2.0 Use DateTimeType::useMutable() or DateTimeType::useImmutable() instead.
      */
     public static $dateTimeClass = 'Cake\I18n\Time';
 
     /**
      * String format to use for DateTime parsing
      *
-     * @var string
+     * @var string|array
      */
-    protected $_format = 'Y-m-d H:i:s';
+    protected $_format = [
+        'Y-m-d H:i:s',
+        'Y-m-d\TH:i:sP',
+    ];
 
     /**
      * Whether dates should be parsed using a locale aware parser
@@ -102,7 +105,7 @@ class DateTimeType extends Type implements TypeInterface
      *
      * @param string|int|\DateTime $value The value to convert.
      * @param \Cake\Database\Driver $driver The driver instance to convert with.
-     * @return string
+     * @return string|null
      */
     public function toDatabase($value, Driver $driver)
     {
@@ -114,7 +117,9 @@ class DateTimeType extends Type implements TypeInterface
             $value = new $class('@' . $value);
         }
 
-        return $value->format($this->_format);
+        $format = (array)$this->_format;
+
+        return $value->format(array_shift($format));
     }
 
     /**
@@ -122,7 +127,7 @@ class DateTimeType extends Type implements TypeInterface
      *
      * @param string $value The value to convert.
      * @param \Cake\Database\Driver $driver The driver instance to convert with.
-     * @return \Cake\I18n\Time|\DateTime
+     * @return \Cake\I18n\Time|\DateTime|null
      */
     public function toPHP($value, Driver $driver)
     {
@@ -143,7 +148,7 @@ class DateTimeType extends Type implements TypeInterface
      * Convert request data into a datetime object.
      *
      * @param mixed $value Request data
-     * @return \Cake\I18n\Time|\DateTime
+     * @return \DateTimeInterface
      */
     public function marshal($value)
     {
@@ -156,15 +161,17 @@ class DateTimeType extends Type implements TypeInterface
             $compare = $date = false;
             if ($value === '' || $value === null || $value === false || $value === true) {
                 return null;
-            } elseif (is_numeric($value)) {
+            }
+            $isString = is_string($value);
+            if (ctype_digit($value)) {
                 $date = new $class('@' . $value);
-            } elseif (is_string($value) && $this->_useLocaleParser) {
+            } elseif ($isString && $this->_useLocaleParser) {
                 return $this->_parseValue($value);
-            } elseif (is_string($value)) {
+            } elseif ($isString) {
                 $date = new $class($value);
                 $compare = true;
             }
-            if ($compare && $date && $date->format($this->_format) !== $value) {
+            if ($compare && $date && !$this->_compare($date, $value)) {
                 return $value;
             }
             if ($date) {
@@ -202,6 +209,22 @@ class DateTimeType extends Type implements TypeInterface
         $tz = isset($value['timezone']) ? $value['timezone'] : null;
 
         return new $class($format, $tz);
+    }
+
+    /**
+     * @param \Cake\I18n\Time|\DateTime $date DateTime object
+     * @param mixed $value Request data
+     * @return bool
+     */
+    protected function _compare($date, $value)
+    {
+        foreach ((array)$this->_format as $format) {
+            if ($date->format($format) === $value) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -2,17 +2,17 @@
 /**
  * Database Session save handler. Allows saving session information into a model.
  *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         2.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 
 namespace Cake\Network\Session;
@@ -50,7 +50,7 @@ class DatabaseSession implements SessionHandlerInterface
      */
     public function __construct(array $config = [])
     {
-        $tableLocator = isset($config['tableLocator']) ? $config['tableLocator'] : TableRegistry::locator();
+        $tableLocator = isset($config['tableLocator']) ? $config['tableLocator'] : TableRegistry::getTableLocator();
 
         if (empty($config['model'])) {
             $config = $tableLocator->exists('Sessions') ? [] : ['table' => 'sessions'];
@@ -60,6 +60,21 @@ class DatabaseSession implements SessionHandlerInterface
         }
 
         $this->_timeout = ini_get('session.gc_maxlifetime');
+    }
+
+    /**
+     * Set the timeout value for sessions.
+     *
+     * Primarily used in testing.
+     *
+     * @param int $timeout The timeout duration.
+     * @return $this
+     */
+    public function setTimeout($timeout)
+    {
+        $this->_timeout = $timeout;
+
+        return $this;
     }
 
     /**
@@ -87,8 +102,8 @@ class DatabaseSession implements SessionHandlerInterface
     /**
      * Method used to read from a database session.
      *
-     * @param int|string $id The key of the value to read
-     * @return string The value of the key or empty if it does not exist
+     * @param string|int $id ID that uniquely identifies session in database.
+     * @return string Session data or empty string if it does not exist.
      */
     public function read($id)
     {
@@ -119,8 +134,8 @@ class DatabaseSession implements SessionHandlerInterface
     /**
      * Helper function called on write for database sessions.
      *
-     * @param int $id ID that uniquely identifies session in database
-     * @param mixed $data The value of the data to be saved.
+     * @param string|int $id ID that uniquely identifies session in database.
+     * @param mixed $data The data to be saved.
      * @return bool True for successful write, false otherwise.
      */
     public function write($id, $data)
@@ -139,7 +154,7 @@ class DatabaseSession implements SessionHandlerInterface
     /**
      * Method called on the destruction of a database session.
      *
-     * @param int $id ID that uniquely identifies session in database
+     * @param string|int $id ID that uniquely identifies session in database.
      * @return bool True for successful delete, false otherwise.
      */
     public function destroy($id)
@@ -155,12 +170,12 @@ class DatabaseSession implements SessionHandlerInterface
     /**
      * Helper function called on gc for database sessions.
      *
-     * @param string $maxlifetime Sessions that have not updated for the last maxlifetime seconds will be removed.
+     * @param int $maxlifetime Sessions that have not updated for the last maxlifetime seconds will be removed.
      * @return bool True on success, false on failure.
      */
     public function gc($maxlifetime)
     {
-        $this->_table->deleteAll(['expires <' => time()]);
+        $this->_table->deleteAll(['expires <' => time() - $maxlifetime]);
 
         return true;
     }

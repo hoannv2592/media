@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Error;
 
@@ -29,7 +29,7 @@ use ReflectionProperty;
  *
  * Debugger overrides PHP's default error handling to provide stack traces and enhanced logging
  *
- * @link http://book.cakephp.org/3.0/en/development/debugging.html#namespace-Cake\Error
+ * @link https://book.cakephp.org/3.0/en/development/debugging.html#namespace-Cake\Error
  */
 class Debugger
 {
@@ -67,7 +67,7 @@ class Debugger
     protected $_templates = [
         'log' => [
             'trace' => '{:reference} - {:path}, line {:line}',
-            'error' => "{:error} ({:code}): {:description} in [{:file}, line {:line}]"
+            'error' => '{:error} ({:code}): {:description} in [{:file}, line {:line}]'
         ],
         'js' => [
             'error' => '',
@@ -111,7 +111,7 @@ class Debugger
         $docRef = ini_get('docref_root');
 
         if (empty($docRef) && function_exists('ini_set')) {
-            ini_set('docref_root', 'http://php.net/');
+            ini_set('docref_root', 'https://secure.php.net/');
         }
         if (!defined('E_RECOVERABLE_ERROR')) {
             define('E_RECOVERABLE_ERROR', 4096);
@@ -163,7 +163,7 @@ class Debugger
      * Returns a reference to the Debugger singleton object instance.
      *
      * @param string|null $class Class name.
-     * @return object|\Cake\Error\Debugger
+     * @return \Cake\Error\Debugger
      */
     public static function getInstance($class = null)
     {
@@ -231,7 +231,7 @@ class Debugger
      * @param int $depth The depth to output to. Defaults to 3.
      * @return void
      * @see \Cake\Error\Debugger::exportVar()
-     * @link http://book.cakephp.org/3.0/en/development/debugging.html#outputting-values
+     * @link https://book.cakephp.org/3.0/en/development/debugging.html#outputting-values
      */
     public static function dump($var, $depth = 3)
     {
@@ -267,7 +267,7 @@ class Debugger
      *
      * @param array $options Format for outputting stack trace.
      * @return mixed Formatted stack trace.
-     * @link http://book.cakephp.org/3.0/en/development/debugging.html#generating-stack-traces
+     * @link https://book.cakephp.org/3.0/en/development/debugging.html#generating-stack-traces
      */
     public static function trace(array $options = [])
     {
@@ -289,7 +289,7 @@ class Debugger
      * @param array|\Exception $backtrace Trace as array or an exception object.
      * @param array $options Format for outputting stack trace.
      * @return mixed Formatted stack trace.
-     * @link http://book.cakephp.org/3.0/en/development/debugging.html#generating-stack-traces
+     * @link https://book.cakephp.org/3.0/en/development/debugging.html#generating-stack-traces
      */
     public static function formatTrace($backtrace, $options = [])
     {
@@ -405,8 +405,8 @@ class Debugger
      * @param int $line Line number to highlight.
      * @param int $context Number of lines of context to extract above and below $line.
      * @return array Set of lines highlighted
-     * @see http://php.net/highlight_string
-     * @link http://book.cakephp.org/3.0/en/development/debugging.html#getting-an-excerpt-from-a-file
+     * @see https://secure.php.net/highlight_string
+     * @link https://book.cakephp.org/3.0/en/development/debugging.html#getting-an-excerpt-from-a-file
      */
     public static function excerpt($file, $line, $context = 2)
     {
@@ -421,15 +421,15 @@ class Debugger
         if (strpos($data, "\n") !== false) {
             $data = explode("\n", $data);
         }
+        $line--;
         if (!isset($data[$line])) {
             return $lines;
         }
-        $line = $line - 1;
         for ($i = $line - $context; $i < $line + $context + 1; $i++) {
             if (!isset($data[$i])) {
                 continue;
             }
-            $string = str_replace(["\r\n", "\n"], "", static::_highlight($data[$i]));
+            $string = str_replace(["\r\n", "\n"], '', static::_highlight($data[$i]));
             if ($i == $line) {
                 $lines[] = '<span class="code-highlight">' . $string . '</span>';
             } else {
@@ -507,7 +507,7 @@ class Debugger
     {
         switch (static::getType($var)) {
             case 'boolean':
-                return ($var) ? 'true' : 'false';
+                return $var ? 'true' : 'false';
             case 'integer':
                 return '(int) ' . $var;
             case 'float':
@@ -551,7 +551,7 @@ class Debugger
      */
     protected static function _array(array $var, $depth, $indent)
     {
-        $out = "[";
+        $out = '[';
         $break = $end = null;
         if (!empty($var)) {
             $break = "\n" . str_repeat("\t", $indent);
@@ -651,8 +651,36 @@ class Debugger
     }
 
     /**
+     * Get the output format for Debugger error rendering.
+     *
+     * @return string Returns the current format when getting.
+     */
+    public static function getOutputFormat()
+    {
+        return Debugger::getInstance()->_outputFormat;
+    }
+
+    /**
+     * Set the output format for Debugger error rendering.
+     *
+     * @param string $format The format you want errors to be output as.
+     * @return void
+     * @throws \InvalidArgumentException When choosing a format that doesn't exist.
+     */
+    public static function setOutputFormat($format)
+    {
+        $self = Debugger::getInstance();
+
+        if (!isset($self->_templates[$format])) {
+            throw new InvalidArgumentException('Invalid Debugger output format.');
+        }
+        $self->_outputFormat = $format;
+    }
+
+    /**
      * Get/Set the output format for Debugger error rendering.
      *
+     * @deprecated 3.5.0 Use getOutputFormat()/setOutputFormat() instead.
      * @param string|null $format The format you want errors to be output as.
      *   Leave null to get the current format.
      * @return string|null Returns null when setting. Returns the current format when getting.
@@ -738,7 +766,7 @@ class Debugger
     /**
      * Takes a processed array of data from an error and displays it in the chosen format.
      *
-     * @param string $data Data to output.
+     * @param array $data Data to output.
      * @return void
      */
     public function outputError($data)
@@ -755,7 +783,7 @@ class Debugger
         ];
         $data += $defaults;
 
-        $files = $this->trace(['start' => $data['start'], 'format' => 'points']);
+        $files = static::trace(['start' => $data['start'], 'format' => 'points']);
         $code = '';
         $file = null;
         if (isset($files[0]['file'])) {
@@ -764,16 +792,16 @@ class Debugger
             $file = $files[1];
         }
         if ($file) {
-            $code = $this->excerpt($file['file'], $file['line'] - 1, 1);
+            $code = static::excerpt($file['file'], $file['line'], 1);
         }
-        $trace = $this->trace(['start' => $data['start'], 'depth' => '20']);
+        $trace = static::trace(['start' => $data['start'], 'depth' => '20']);
         $insertOpts = ['before' => '{:', 'after' => '}'];
         $context = [];
         $links = [];
         $info = '';
 
         foreach ((array)$data['context'] as $var => $value) {
-            $context[] = "\${$var} = " . $this->exportVar($value, 3);
+            $context[] = "\${$var} = " . static::exportVar($value, 3);
         }
 
         switch ($this->_outputFormat) {
@@ -782,7 +810,7 @@ class Debugger
 
                 return;
             case 'log':
-                $this->log(compact('context', 'trace') + $data);
+                static::log(compact('context', 'trace') + $data);
 
                 return;
         }
@@ -928,7 +956,7 @@ TEXT;
      */
     public static function checkSecurityKeys()
     {
-        if (Security::salt() === '__SALT__') {
+        if (Security::getSalt() === '__SALT__') {
             trigger_error(sprintf('Please change the value of %s in %s to a salt value specific to your application.', '\'Security.salt\'', 'ROOT/config/app.php'), E_USER_NOTICE);
         }
     }

@@ -22,6 +22,7 @@ use Composer\Plugin\PreFileDownloadEvent;
 use Composer\EventDispatcher\EventDispatcher;
 use Composer\Util\Filesystem;
 use Composer\Util\RemoteFilesystem;
+use Composer\Util\Url as UrlUtil;
 
 /**
  * Base downloader for files
@@ -90,7 +91,8 @@ class FileDownloader implements DownloaderInterface
         $urls = $package->getDistUrls();
         while ($url = array_shift($urls)) {
             try {
-                return $this->doDownload($package, $path, $url);
+                $fileName = $this->doDownload($package, $path, $url);
+                break;
             } catch (\Exception $e) {
                 if ($this->io->isDebug()) {
                     $this->io->writeError('');
@@ -109,6 +111,8 @@ class FileDownloader implements DownloaderInterface
         if ($output) {
             $this->io->writeError('');
         }
+
+        return $fileName;
     }
 
     protected function doDownload(PackageInterface $package, $path, $url)
@@ -255,6 +259,10 @@ class FileDownloader implements DownloaderInterface
     {
         if (!extension_loaded('openssl') && 0 === strpos($url, 'https:')) {
             throw new \RuntimeException('You must enable the openssl extension to download files via https');
+        }
+
+        if ($package->getDistReference()) {
+            $url = UrlUtil::updateDistReference($this->config, $url, $package->getDistReference());
         }
 
         return $url;

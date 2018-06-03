@@ -1,15 +1,15 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\TestSuite;
 
@@ -37,7 +37,7 @@ abstract class TestCase extends BaseTestCase
      *
      * @var \Cake\TestSuite\Fixture\FixtureManager|null
      */
-    public $fixtureManager = null;
+    public $fixtureManager;
 
     /**
      * By default, all fixtures attached to this class will be truncated and reloaded after each test.
@@ -127,6 +127,7 @@ abstract class TestCase extends BaseTestCase
      * Chooses which fixtures to load for a given test
      *
      * Each parameter is a model name that corresponds to a fixture, i.e. 'Posts', 'Authors', etc.
+     * Passing no parameters will cause all fixtures on the test case to load.
      *
      * @return void
      * @see \Cake\TestSuite\TestCase::$autoFixtures
@@ -140,6 +141,13 @@ abstract class TestCase extends BaseTestCase
         $args = func_get_args();
         foreach ($args as $class) {
             $this->fixtureManager->loadSingle($class, null, $this->dropTables);
+        }
+
+        if (empty($args)) {
+            $autoFixtures = $this->autoFixtures;
+            $this->autoFixtures = true;
+            $this->fixtureManager->load($this);
+            $this->autoFixtures = $autoFixtures;
         }
     }
 
@@ -574,7 +582,7 @@ abstract class TestCase extends BaseTestCase
     {
         $upper = $result + $margin;
         $lower = $result - $margin;
-        static::assertTrue((($expected <= $upper) && ($expected >= $lower)), $message);
+        static::assertTrue(($expected <= $upper) && ($expected >= $lower), $message);
     }
 
     /**
@@ -590,7 +598,7 @@ abstract class TestCase extends BaseTestCase
     {
         $upper = $result + $margin;
         $lower = $result - $margin;
-        static::assertTrue((($expected > $upper) || ($expected < $lower)), $message);
+        static::assertTrue(($expected > $upper) || ($expected < $lower), $message);
     }
 
     /**
@@ -630,7 +638,7 @@ abstract class TestCase extends BaseTestCase
      * Mock a model, maintain fixtures and table association
      *
      * @param string $alias The model to get a mock for.
-     * @param mixed $methods The list of methods to mock
+     * @param array $methods The list of methods to mock
      * @param array $options The config data for the mock's constructor.
      * @throws \Cake\ORM\Exception\MissingTableClassException
      * @return \Cake\ORM\Table|\PHPUnit_Framework_MockObject_MockObject
@@ -653,6 +661,7 @@ abstract class TestCase extends BaseTestCase
         $options += ['alias' => $baseClass, 'connection' => $connection];
         $options += TableRegistry::config($alias);
 
+        /** @var \Cake\ORM\Table|\PHPUnit_Framework_MockObject_MockObject $mock */
         $mock = $this->getMockBuilder($options['className'])
             ->setMethods($methods)
             ->setConstructorArgs([$options])
@@ -667,13 +676,24 @@ abstract class TestCase extends BaseTestCase
             }
         }
 
-        if (stripos($mock->table(), 'mock') === 0) {
-            $mock->table(Inflector::tableize($baseClass));
+        if (stripos($mock->getTable(), 'mock') === 0) {
+            $mock->setTable(Inflector::tableize($baseClass));
         }
 
         TableRegistry::set($baseClass, $mock);
         TableRegistry::set($alias, $mock);
 
         return $mock;
+    }
+
+    /**
+     * Set the app namespace
+     *
+     * @param string $appNamespace The app namespace, defaults to "TestApp".
+     * @return void
+     */
+    public static function setAppNamespace($appNamespace = 'TestApp')
+    {
+        Configure::write('App.namespace', $appNamespace);
     }
 }

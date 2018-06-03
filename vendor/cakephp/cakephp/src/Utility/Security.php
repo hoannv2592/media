@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         0.10.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Utility;
 
@@ -56,7 +56,7 @@ class Security
      * @param mixed $salt If true, automatically prepends the application's salt
      *   value to $string (Security.salt).
      * @return string Hash
-     * @link http://book.cakephp.org/3.0/en/core-libraries/security.html#hashing-data
+     * @link https://book.cakephp.org/3.0/en/core-libraries/security.html#hashing-data
      */
     public static function hash($string, $type = null, $salt = false)
     {
@@ -152,8 +152,8 @@ class Security
      *
      * You can use this method to forcibly decide between mcrypt/openssl/custom implementations.
      *
-     * @param object|null $instance The crypto instance to use.
-     * @return object Crypto instance.
+     * @param \Cake\Utility\Crypto\OpenSsl|\Cake\Utility\Crypto\Mcrypt|null $instance The crypto instance to use.
+     * @return \Cake\Utility\Crypto\OpenSsl|\Cake\Utility\Crypto\Mcrypt Crypto instance.
      * @throws \InvalidArgumentException When no compatible crypto extension is available.
      */
     public static function engine($instance = null)
@@ -277,7 +277,7 @@ class Security
         $cipher = mb_substr($cipher, $macSize, null, '8bit');
 
         $compareHmac = hash_hmac('sha256', $cipher, $key);
-        if (!static::_constantEquals($hmac, $compareHmac)) {
+        if (!static::constantEquals($hmac, $compareHmac)) {
             return false;
         }
 
@@ -289,33 +289,61 @@ class Security
     /**
      * A timing attack resistant comparison that prefers native PHP implementations.
      *
-     * @param string $hmac The hmac from the ciphertext being decrypted.
-     * @param string $compare The comparison hmac.
+     * @param string $original The original value.
+     * @param string $compare The comparison value.
      * @return bool
      * @see https://github.com/resonantcore/php-future/
+     * @since 3.6.2
      */
-    protected static function _constantEquals($hmac, $compare)
+    public static function constantEquals($original, $compare)
     {
-        if (function_exists('hash_equals')) {
-            return hash_equals($hmac, $compare);
+        if (!is_string($original) || !is_string($compare)) {
+            return false;
         }
-        $hashLength = mb_strlen($hmac, '8bit');
+        if (function_exists('hash_equals')) {
+            return hash_equals($original, $compare);
+        }
+        $originalLength = mb_strlen($original, '8bit');
         $compareLength = mb_strlen($compare, '8bit');
-        if ($hashLength !== $compareLength) {
+        if ($originalLength !== $compareLength) {
             return false;
         }
         $result = 0;
-        for ($i = 0; $i < $hashLength; $i++) {
-            $result |= (ord($hmac[$i]) ^ ord($compare[$i]));
+        for ($i = 0; $i < $originalLength; $i++) {
+            $result |= (ord($original[$i]) ^ ord($compare[$i]));
         }
 
         return $result === 0;
     }
 
     /**
+     * Gets the HMAC salt to be used for encryption/decryption
+     * routines.
+     *
+     * @return string The currently configured salt
+     */
+    public static function getSalt()
+    {
+        return static::$_salt;
+    }
+
+    /**
+     * Sets the HMAC salt to be used for encryption/decryption
+     * routines.
+     *
+     * @param string $salt The salt to use for encryption routines.
+     * @return void
+     */
+    public static function setSalt($salt)
+    {
+        static::$_salt = (string)$salt;
+    }
+
+    /**
      * Gets or sets the HMAC salt to be used for encryption/decryption
      * routines.
      *
+     * @deprecated 3.5.0 Use getSalt()/setSalt() instead.
      * @param string|null $salt The salt to use for encryption routines. If null returns current salt.
      * @return string The currently configured salt
      */

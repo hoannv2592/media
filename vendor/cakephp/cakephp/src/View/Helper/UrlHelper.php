@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\View\Helper;
 
@@ -144,7 +144,7 @@ class UrlHelper extends Helper
             return $this->build($path, !empty($options['fullBase']));
         }
         if (strpos($path, '://') !== false || preg_match('/^[a-z]+:/i', $path)) {
-            return $path;
+            return ltrim($this->build($path), '/');
         }
         if (!array_key_exists('plugin', $options) || $options['plugin'] !== false) {
             list($plugin, $path) = $this->_View->pluginSplit($path, false);
@@ -159,7 +159,7 @@ class UrlHelper extends Helper
             $path .= $options['ext'];
         }
         if (preg_match('|^([a-z0-9]+:)?//|', $path)) {
-            return $path;
+            return $this->build($path);
         }
         if (isset($plugin)) {
             $path = Inflector::underscore($plugin) . '/' . $path;
@@ -209,18 +209,16 @@ class UrlHelper extends Helper
             );
             $webrootPath = WWW_ROOT . str_replace('/', DIRECTORY_SEPARATOR, $filepath);
             if (file_exists($webrootPath)) {
-                //@codingStandardsIgnoreStart
-                return $path . '?' . @filemtime($webrootPath);
-                //@codingStandardsIgnoreEnd
+                return $path . '?' . filemtime($webrootPath);
             }
             $segments = explode('/', ltrim($filepath, '/'));
             $plugin = Inflector::camelize($segments[0]);
             if (Plugin::loaded($plugin)) {
                 unset($segments[0]);
                 $pluginPath = Plugin::path($plugin) . 'webroot' . DIRECTORY_SEPARATOR . implode(DIRECTORY_SEPARATOR, $segments);
-                //@codingStandardsIgnoreStart
-                return $path . '?' . @filemtime($pluginPath);
-                //@codingStandardsIgnoreEnd
+                if (file_exists($pluginPath)) {
+                    return $path . '?' . filemtime($pluginPath);
+                }
             }
         }
 

@@ -1,14 +1,14 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Core\Exception;
 
@@ -40,7 +40,14 @@ class Exception extends RuntimeException
      *
      * @var array|null
      */
-    protected $_responseHeaders = null;
+    protected $_responseHeaders;
+
+    /**
+     * Default exception code
+     *
+     * @var int
+     */
+    protected $_defaultCode = 500;
 
     /**
      * Constructor.
@@ -50,11 +57,15 @@ class Exception extends RuntimeException
      *
      * @param string|array $message Either the string of the error message, or an array of attributes
      *   that are made available in the view, and sprintf()'d into Exception::$_messageTemplate
-     * @param int $code The code of the error, is also the HTTP status code for the error.
+     * @param int|null $code The code of the error, is also the HTTP status code for the error.
      * @param \Exception|null $previous the previous exception.
      */
-    public function __construct($message, $code = 500, $previous = null)
+    public function __construct($message = '', $code = null, $previous = null)
     {
+        if ($code === null) {
+            $code = $this->_defaultCode;
+        }
+
         if (is_array($message)) {
             $this->_attributes = $message;
             $message = vsprintf($this->_messageTemplate, $message);

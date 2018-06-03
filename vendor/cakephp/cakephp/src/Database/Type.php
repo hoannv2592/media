@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Database;
 
@@ -29,9 +29,12 @@ class Type implements TypeInterface
      * identifier is used as key and a complete namespaced class name as value
      * representing the class that will do actual type conversions.
      *
-     * @var array
+     * @var string[]|\Cake\Database\Type[]
      */
     protected static $_types = [
+        'tinyinteger' => 'Cake\Database\Type\IntegerType',
+        'smallinteger' => 'Cake\Database\Type\IntegerType',
+        'integer' => 'Cake\Database\Type\IntegerType',
         'biginteger' => 'Cake\Database\Type\IntegerType',
         'binary' => 'Cake\Database\Type\BinaryType',
         'boolean' => 'Cake\Database\Type\BoolType',
@@ -39,7 +42,6 @@ class Type implements TypeInterface
         'datetime' => 'Cake\Database\Type\DateTimeType',
         'decimal' => 'Cake\Database\Type\DecimalType',
         'float' => 'Cake\Database\Type\FloatType',
-        'integer' => 'Cake\Database\Type\IntegerType',
         'json' => 'Cake\Database\Type\JsonType',
         'string' => 'Cake\Database\Type\StringType',
         'text' => 'Cake\Database\Type\StringType',
@@ -50,7 +52,7 @@ class Type implements TypeInterface
 
     /**
      * List of basic type mappings, used to avoid having to instantiate a class
-     * for doing conversion on these
+     * for doing conversion on these.
      *
      * @var array
      * @deprecated 3.1 All types will now use a specific class
@@ -65,18 +67,18 @@ class Type implements TypeInterface
     ];
 
     /**
-     * Contains a map of type object instances to be reused if needed
+     * Contains a map of type object instances to be reused if needed.
      *
-     * @var array
+     * @var \Cake\Database\Type[]
      */
     protected static $_builtTypes = [];
 
     /**
      * Identifier name for this type
      *
-     * @var string
+     * @var string|null
      */
-    protected $_name = null;
+    protected $_name;
 
     /**
      * Constructor
@@ -89,7 +91,7 @@ class Type implements TypeInterface
     }
 
     /**
-     * Returns a Type object capable of converting a type identified by $name
+     * Returns a Type object capable of converting a type identified by name.
      *
      * @param string $name type identifier
      * @throws \InvalidArgumentException If type identifier is unknown
@@ -111,14 +113,14 @@ class Type implements TypeInterface
     }
 
     /**
-     * Returns an arrays with all the mapped type objects, indexed by name
+     * Returns an arrays with all the mapped type objects, indexed by name.
      *
      * @return array
      */
     public static function buildAll()
     {
         $result = [];
-        foreach (self::$_types as $name => $type) {
+        foreach (static::$_types as $name => $type) {
             $result[$name] = isset(static::$_builtTypes[$name]) ? static::$_builtTypes[$name] : static::build($name);
         }
 
@@ -142,25 +144,30 @@ class Type implements TypeInterface
      * If called with no arguments it will return current types map array
      * If $className is omitted it will return mapped class for $type
      *
-     * @param string|array|\Cake\Database\Type|null $type if string name of type to map, if array list of arrays to be mapped
-     * @param string|null $className The classname to register.
-     * @return array|string|null if $type is null then array with current map, if $className is null string
+     * Deprecated: The usage of $type as \Cake\Database\Type[] is deprecated. Please always use string[] if you pass an array
+     * as first argument.
+     *
+     * @param string|string[]|\Cake\Database\Type[]|null $type If string name of type to map, if array list of arrays to be mapped
+     * @param string|\Cake\Database\Type|null $className The classname or object instance of it to register.
+     * @return array|string|null If $type is null then array with current map, if $className is null string
      * configured class name for give $type, null otherwise
      */
     public static function map($type = null, $className = null)
     {
         if ($type === null) {
-            return self::$_types;
+            return static::$_types;
         }
         if (is_array($type)) {
-            self::$_types = $type;
+            static::$_types = $type;
 
             return null;
         }
         if ($className === null) {
-            return isset(self::$_types[$type]) ? self::$_types[$type] : null;
+            return isset(static::$_types[$type]) ? static::$_types[$type] : null;
         }
-        self::$_types[$type] = $className;
+
+        static::$_types[$type] = $className;
+        unset(static::$_builtTypes[$type]);
     }
 
     /**
@@ -170,8 +177,8 @@ class Type implements TypeInterface
      */
     public static function clear()
     {
-        self::$_types = [];
-        self::$_builtTypes = [];
+        static::$_types = [];
+        static::$_builtTypes = [];
     }
 
     /**
@@ -201,8 +208,8 @@ class Type implements TypeInterface
     /**
      * Casts given value from a database type to PHP equivalent
      *
-     * @param mixed $value value to be converted to PHP equivalent
-     * @param \Cake\Database\Driver $driver object from which database preferences and configuration will be extracted
+     * @param mixed $value Value to be converted to PHP equivalent
+     * @param \Cake\Database\Driver $driver Object from which database preferences and configuration will be extracted
      * @return mixed
      */
     public function toPHP($value, Driver $driver)
@@ -214,7 +221,7 @@ class Type implements TypeInterface
      * Checks whether this type is a basic one and can be converted using a callback
      * If it is, returns converted value
      *
-     * @param mixed $value value to be converted to PHP equivalent
+     * @param mixed $value Value to be converted to PHP equivalent
      * @return mixed
      * @deprecated 3.1 All types should now be a specific class
      */
@@ -223,8 +230,8 @@ class Type implements TypeInterface
         if ($value === null) {
             return null;
         }
-        if (!empty(self::$_basicTypes[$this->_name])) {
-            $typeInfo = self::$_basicTypes[$this->_name];
+        if (!empty(static::$_basicTypes[$this->_name])) {
+            $typeInfo = static::$_basicTypes[$this->_name];
             if (isset($typeInfo['callback'])) {
                 return $typeInfo['callback']($value);
             }
@@ -257,7 +264,7 @@ class Type implements TypeInterface
     public static function boolval($value)
     {
         if (is_string($value) && !is_numeric($value)) {
-            return strtolower($value) === 'true' ? true : false;
+            return strtolower($value) === 'true';
         }
 
         return !empty($value);
@@ -295,5 +302,18 @@ class Type implements TypeInterface
     public function marshal($value)
     {
         return $this->_basicTypeCast($value);
+    }
+
+    /**
+     * Returns an array that can be used to describe the internal state of this
+     * object.
+     *
+     * @return array
+     */
+    public function __debugInfo()
+    {
+        return [
+            'name' => $this->_name,
+        ];
     }
 }

@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Database;
 
@@ -25,6 +25,8 @@ use Cake\Database\Log\QueryLogger;
 use Cake\Database\Schema\CachedCollection;
 use Cake\Database\Schema\Collection as SchemaCollection;
 use Cake\Datasource\ConnectionInterface;
+use Cake\Log\Log;
+use Exception;
 
 /**
  * Represents a connection with a database server.
@@ -83,14 +85,14 @@ class Connection implements ConnectionInterface
      *
      * @var \Cake\Database\Log\QueryLogger|null
      */
-    protected $_logger = null;
+    protected $_logger;
 
     /**
      * The schema collection object
      *
      * @var \Cake\Database\Schema\Collection|null
      */
-    protected $_schemaCollection = null;
+    protected $_schemaCollection;
 
     /**
      * NestedTransactionRollbackException object instance, will be stored if
@@ -98,7 +100,7 @@ class Connection implements ConnectionInterface
      *
      * @var \Cake\Database\Exception\NestedTransactionRollbackException|null
      */
-    protected $nestedTransactionRollbackException = null;
+    protected $nestedTransactionRollbackException;
 
     /**
      * Constructor.
@@ -127,7 +129,9 @@ class Connection implements ConnectionInterface
      */
     public function __destruct()
     {
-        unset($this->_driver);
+        if ($this->_transactionStarted && class_exists('Cake\Log\Log')) {
+            Log::warning('The connection is going to be closed but there is an active transaction.');
+        }
     }
 
     /**
@@ -213,16 +217,14 @@ class Connection implements ConnectionInterface
     /**
      * Connects to the configured database.
      *
-     * @throws \Cake\Database\Exception\MissingConnectionException if credentials are invalid
-     * @return bool true on success or false if already connected.
+     * @throws \Cake\Database\Exception\MissingConnectionException if credentials are invalid.
+     * @return bool true, if the connection was already established or the attempt was successful.
      */
     public function connect()
     {
         try {
-            $this->_driver->connect();
-
-            return true;
-        } catch (\Exception $e) {
+            return $this->_driver->connect();
+        } catch (Exception $e) {
             throw new MissingConnectionException(['reason' => $e->getMessage()]);
         }
     }
@@ -309,7 +311,7 @@ class Connection implements ConnectionInterface
     public function run(Query $query)
     {
         $statement = $this->prepare($query);
-        $query->valueBinder()->attachTo($statement);
+        $query->getValueBinder()->attachTo($statement);
         $statement->execute();
 
         return $statement;
@@ -457,7 +459,7 @@ class Connection implements ConnectionInterface
 
         $this->_transactionLevel++;
         if ($this->isSavePointsEnabled()) {
-            $this->createSavePoint($this->_transactionLevel);
+            $this->createSavePoint((string)$this->_transactionLevel);
         }
     }
 
@@ -488,7 +490,7 @@ class Connection implements ConnectionInterface
             return $this->_driver->commitTransaction();
         }
         if ($this->isSavePointsEnabled()) {
-            $this->releaseSavePoint($this->_transactionLevel);
+            $this->releaseSavePoint((string)$this->_transactionLevel);
         }
 
         $this->_transactionLevel--;
@@ -678,7 +680,7 @@ class Connection implements ConnectionInterface
 
         try {
             $result = $callback($this);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->rollback(false);
             throw $e;
         }
@@ -726,7 +728,7 @@ class Connection implements ConnectionInterface
 
         try {
             $result = $callback($this);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->enableForeignKeys();
             throw $e;
         }
@@ -810,17 +812,43 @@ class Connection implements ConnectionInterface
 
     /**
      * {@inheritDoc}
+     *
+     * @deprecated 3.5.0 Use getLogger() and setLogger() instead.
      */
     public function logger($instance = null)
     {
         if ($instance === null) {
-            if ($this->_logger === null) {
-                $this->_logger = new QueryLogger();
-            }
-
-            return $this->_logger;
+            return $this->getLogger();
         }
-        $this->_logger = $instance;
+
+        $this->setLogger($instance);
+    }
+
+    /**
+     * Sets a logger
+     *
+     * @param \Cake\Database\Log\QueryLogger $logger Logger object
+     * @return $this
+     */
+    public function setLogger($logger)
+    {
+        $this->_logger = $logger;
+
+        return $this;
+    }
+
+    /**
+     * Gets the logger object
+     *
+     * @return \Cake\Database\Log\QueryLogger logger instance
+     */
+    public function getLogger()
+    {
+        if ($this->_logger === null) {
+            $this->_logger = new QueryLogger();
+        }
+
+        return $this->_logger;
     }
 
     /**
@@ -833,7 +861,7 @@ class Connection implements ConnectionInterface
     {
         $query = new LoggedQuery();
         $query->query = $sql;
-        $this->logger()->log($query);
+        $this->getLogger()->log($query);
     }
 
     /**
@@ -845,8 +873,8 @@ class Connection implements ConnectionInterface
      */
     protected function _newLogger(StatementInterface $statement)
     {
-        $log = new LoggingStatement($statement, $this->getDriver());
-        $log->logger($this->logger());
+        $log = new LoggingStatement($statement, $this->_driver);
+        $log->setLogger($this->getLogger());
 
         return $log;
     }

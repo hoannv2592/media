@@ -1,21 +1,20 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         1.2.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Controller\Component;
 
 use Cake\Controller\Component;
-use Cake\Http\Response;
 use Cake\Http\ServerRequest;
 use Cake\I18n\Time;
 use Cake\Utility\CookieCryptTrait;
@@ -32,7 +31,8 @@ use Cake\Utility\Security;
  * - Store non-scalar data.
  * - Use hash compatible syntax to read/write/delete values.
  *
- * @link http://book.cakephp.org/3.0/en/controllers/components/cookie.html
+ * @link https://book.cakephp.org/3.0/en/controllers/components/cookie.html
+ * @deprecated 3.5.0 Use Cake\Http\Middleware\EncryptedCookieMiddleware and Cake\Http\Cookie\Cookie methods instead.
  */
 class CookieComponent extends Component
 {
@@ -107,7 +107,7 @@ class CookieComponent extends Component
      * @var \Cake\Http\Response|null
      * @deprecated 3.4.0 Will be removed in 4.0.0
      */
-    protected $_response = null;
+    protected $_response;
 
     /**
      * Initialize config data and properties.
@@ -118,7 +118,7 @@ class CookieComponent extends Component
     public function initialize(array $config)
     {
         if (!$this->_config['key']) {
-            $this->setConfig('key', Security::salt());
+            $this->setConfig('key', Security::getSalt());
         }
 
         $controller = $this->_registry->getController();
@@ -316,8 +316,8 @@ class CookieComponent extends Component
             'expire' => $expires->format('U'),
             'path' => $config['path'],
             'domain' => $config['domain'],
-            'secure' => $config['secure'],
-            'httpOnly' => $config['httpOnly']
+            'secure' => (bool)$config['secure'],
+            'httpOnly' => (bool)$config['httpOnly']
         ]);
     }
 

@@ -1,19 +1,19 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  * @since         3.0.0
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\TestSuite;
 
-if (class_exists('PHPUnit_Runner_Version') && !interface_exists('PHPUnit\Exception')) {
+if (class_exists('PHPUnit_Runner_Version', false) && !interface_exists('PHPUnit\Exception', false)) {
     if (version_compare(\PHPUnit_Runner_Version::id(), '5.7', '<')) {
         trigger_error(sprintf('Your PHPUnit Version must be at least 5.7.0 to use CakePHP Testsuite, found %s', \PHPUnit_Runner_Version::id()), E_USER_ERROR);
     }
@@ -24,6 +24,7 @@ use Cake\Core\Configure;
 use Cake\Database\Exception as DatabaseException;
 use Cake\Network\Session;
 use Cake\Routing\Router;
+use Cake\TestSuite\Stub\TestExceptionRenderer;
 use Cake\Utility\CookieCryptTrait;
 use Cake\Utility\Hash;
 use Cake\Utility\Security;
@@ -31,6 +32,7 @@ use Cake\Utility\Text;
 use Cake\View\Helper\SecureFieldTokenTrait;
 use Exception;
 use LogicException;
+use PHPUnit\Exception as PhpunitException;
 
 /**
  * A test case class intended to make integration tests of
@@ -60,14 +62,14 @@ abstract class IntegrationTestCase extends TestCase
      *
      * @var string|null
      */
-    protected $_appClass = null;
+    protected $_appClass;
 
     /**
      * The customized application constructor arguments.
      *
      * @var array|null
      */
-    protected $_appArgs = null;
+    protected $_appArgs;
 
     /**
      * The data used to build the next request.
@@ -81,14 +83,14 @@ abstract class IntegrationTestCase extends TestCase
      *
      * @var \Cake\Http\Response|null
      */
-    protected $_response = null;
+    protected $_response;
 
     /**
      * The exception being thrown if the case.
      *
      * @var \Exception|null
      */
-    protected $_exception = null;
+    protected $_exception;
 
     /**
      * Session data to use in the next request.
@@ -109,28 +111,28 @@ abstract class IntegrationTestCase extends TestCase
      *
      * @var \Cake\Controller\Controller|null
      */
-    protected $_controller = null;
+    protected $_controller;
 
     /**
      * The last rendered view
      *
      * @var string|null
      */
-    protected $_viewName = null;
+    protected $_viewName;
 
     /**
      * The last rendered layout
      *
      * @var string|null
      */
-    protected $_layoutName = null;
+    protected $_layoutName;
 
     /**
      * The session instance from the last request
      *
      * @var \Cake\Network\Session|null
      */
-    protected $_requestSession = null;
+    protected $_requestSession;
 
     /**
      * Boolean flag for whether or not the request should have
@@ -149,10 +151,25 @@ abstract class IntegrationTestCase extends TestCase
     protected $_csrfToken = false;
 
     /**
+     * Boolean flag for whether or not the request should re-store
+     * flash messages
+     *
+     * @var bool
+     */
+    protected $_retainFlashMessages = false;
+
+    /**
+     * Stored flash messages before render
+     *
+     * @var null|array
+     */
+    protected $_flashMessages;
+
+    /**
      *
      * @var null|string
      */
-    protected $_cookieEncryptionKey = null;
+    protected $_cookieEncryptionKey;
 
     /**
      * Auto-detect if the HTTP middleware stack should be used.
@@ -187,6 +204,7 @@ abstract class IntegrationTestCase extends TestCase
         $this->_appArgs = null;
         $this->_securityToken = false;
         $this->_csrfToken = false;
+        $this->_retainFlashMessages = false;
         $this->_useHttpServer = false;
     }
 
@@ -240,6 +258,17 @@ abstract class IntegrationTestCase extends TestCase
     public function enableCsrfToken()
     {
         $this->_csrfToken = true;
+    }
+
+    /**
+     * Calling this method will re-store flash messages into the test session
+     * after being removed by the FlashHelper
+     *
+     * @return void
+     */
+    public function enableRetainFlashMessages()
+    {
+        $this->_retainFlashMessages = true;
     }
 
     /**
@@ -306,7 +335,7 @@ abstract class IntegrationTestCase extends TestCase
             return $this->_cookieEncryptionKey;
         }
 
-        return Security::salt();
+        return Security::getSalt();
     }
 
     /**
@@ -408,6 +437,36 @@ abstract class IntegrationTestCase extends TestCase
     }
 
     /**
+     * Performs a HEAD request using the current request data.
+     *
+     * The response of the dispatched request will be stored as
+     * a property. You can use various assert methods to check the
+     * response.
+     *
+     * @param string|array $url The URL to request.
+     * @return void
+     */
+    public function head($url)
+    {
+        $this->_sendRequest($url, 'HEAD');
+    }
+
+    /**
+     * Performs an OPTIONS request using the current request data.
+     *
+     * The response of the dispatched request will be stored as
+     * a property. You can use various assert methods to check the
+     * response.
+     *
+     * @param string|array $url The URL to request.
+     * @return void
+     */
+    public function options($url)
+    {
+        $this->_sendRequest($url, 'OPTIONS');
+    }
+
+    /**
      * Creates and send the request into a Dispatcher instance.
      *
      * Receives and stores the response for future inspection.
@@ -425,8 +484,11 @@ abstract class IntegrationTestCase extends TestCase
             $request = $this->_buildRequest($url, $method, $data);
             $response = $dispatcher->execute($request);
             $this->_requestSession = $request['session'];
+            if ($this->_retainFlashMessages && $this->_flashMessages) {
+                $this->_requestSession->write('Flash', $this->_flashMessages);
+            }
             $this->_response = $response;
-        } catch (\PHPUnit\Exception $e) {
+        } catch (PhpUnitException $e) {
             throw $e;
         } catch (DatabaseException $e) {
             throw $e;
@@ -462,13 +524,17 @@ abstract class IntegrationTestCase extends TestCase
     public function controllerSpy($event, $controller = null)
     {
         if (!$controller) {
+            /** @var \Cake\Controller\Controller $controller */
             $controller = $event->getSubject();
         }
         $this->_controller = $controller;
-        $events = $controller->eventManager();
-        $events->on('View.beforeRender', function ($event, $viewFile) {
+        $events = $controller->getEventManager();
+        $events->on('View.beforeRender', function ($event, $viewFile) use ($controller) {
             if (!$this->_viewName) {
                 $this->_viewName = $viewFile;
+            }
+            if ($this->_retainFlashMessages) {
+                $this->_flashMessages = $controller->request->session()->read('Flash');
             }
         });
         $events->on('View.beforeLayout', function ($event, $viewFile) {
@@ -492,6 +558,7 @@ abstract class IntegrationTestCase extends TestCase
         if (empty($class) || !class_exists($class)) {
             $class = 'Cake\Error\ExceptionRenderer';
         }
+        /** @var \Cake\Error\ExceptionRenderer $instance */
         $instance = new $class($exception);
         $this->_response = $instance->render();
     }
@@ -514,21 +581,30 @@ abstract class IntegrationTestCase extends TestCase
         list ($url, $query) = $this->_url($url);
         $tokenUrl = $url;
 
+        parse_str($query, $queryData);
+
         if ($query) {
-            $tokenUrl .= '?' . http_build_query($query);
+            $tokenUrl .= '?' . http_build_query($queryData);
         }
 
         $props = [
             'url' => $url,
-            'post' => $this->_addTokens($tokenUrl, $data),
-            'cookies' => $this->_cookie,
             'session' => $session,
-            'query' => $query
+            'query' => $queryData
         ];
         if (is_string($data)) {
             $props['input'] = $data;
         }
-        $env = [];
+        if (!isset($props['input'])) {
+            $props['post'] = $this->_addTokens($tokenUrl, $data);
+        }
+        $props['cookies'] = $this->_cookie;
+
+        $env = [
+            'REQUEST_METHOD' => $method,
+            'QUERY_STRING' => $query,
+            'REQUEST_URI' => $url,
+        ];
         if (isset($this->_request['headers'])) {
             foreach ($this->_request['headers'] as $k => $v) {
                 $name = strtoupper(str_replace('-', '_', $k));
@@ -539,7 +615,6 @@ abstract class IntegrationTestCase extends TestCase
             }
             unset($this->_request['headers']);
         }
-        $env['REQUEST_METHOD'] = $method;
         $props['environment'] = $env;
         $props = Hash::merge($props, $this->_request);
 
@@ -585,11 +660,10 @@ abstract class IntegrationTestCase extends TestCase
     protected function _url($url)
     {
         $url = Router::url($url);
-        $query = [];
+        $query = '';
 
         if (strpos($url, '?') !== false) {
-            list($url, $parameters) = explode('?', $url, 2);
-            parse_str($parameters, $query);
+            list($url, $query) = explode('?', $url, 2);
         }
 
         return [$url, $query];
@@ -628,53 +702,75 @@ abstract class IntegrationTestCase extends TestCase
     /**
      * Asserts that the response status code is in the 2xx range.
      *
+     * @param string $message Custom message for failure.
      * @return void
      */
-    public function assertResponseOk()
+    public function assertResponseOk($message = null)
     {
-        $this->_assertStatus(200, 204, 'Status code is not between 200 and 204');
+        if (empty($message)) {
+            $message = 'Status code is not between 200 and 204';
+        }
+        $this->_assertStatus(200, 204, $message);
     }
 
     /**
      * Asserts that the response status code is in the 2xx/3xx range.
      *
+     * @param string $message Custom message for failure.
      * @return void
      */
-    public function assertResponseSuccess()
+    public function assertResponseSuccess($message = null)
     {
-        $this->_assertStatus(200, 308, 'Status code is not between 200 and 308');
+        if (empty($message)) {
+            $message = 'Status code is not between 200 and 308';
+        }
+        $this->_assertStatus(200, 308, $message);
     }
 
     /**
      * Asserts that the response status code is in the 4xx range.
      *
+     * @param string $message Custom message for failure.
      * @return void
      */
-    public function assertResponseError()
+    public function assertResponseError($message = null)
     {
-        $this->_assertStatus(400, 429, 'Status code is not between 400 and 429');
+        if (empty($message)) {
+            $message = 'Status code is not between 400 and 429';
+        }
+        $this->_assertStatus(400, 429, $message);
     }
 
     /**
      * Asserts that the response status code is in the 5xx range.
      *
+     * @param string $message Custom message for failure.
      * @return void
      */
-    public function assertResponseFailure()
+    public function assertResponseFailure($message = null)
     {
-        $this->_assertStatus(500, 505, 'Status code is not between 500 and 505');
+        if (empty($message)) {
+            $message = 'Status code is not between 500 and 505';
+        }
+        $this->_assertStatus(500, 505, $message);
     }
 
     /**
      * Asserts a specific response status code.
      *
      * @param int $code Status code to assert.
+     * @param string $message Custom message for failure.
      * @return void
      */
-    public function assertResponseCode($code)
+    public function assertResponseCode($code, $message = null)
     {
         $actual = $this->_response->getStatusCode();
-        $this->_assertStatus($code, $code, 'Status code is not ' . $code . ' but ' . $actual);
+
+        if (empty($message)) {
+            $message = 'Status code is not ' . $code . ' but ' . $actual;
+        }
+
+        $this->_assertStatus($code, $code, $message);
     }
 
     /**
@@ -693,7 +789,7 @@ abstract class IntegrationTestCase extends TestCase
         $status = $this->_response->getStatusCode();
 
         if ($this->_exception && ($status < $min || $status > $max)) {
-            $this->fail($this->_exception);
+            $this->fail($this->_exception->getMessage());
         }
 
         $this->assertGreaterThanOrEqual($min, $status, $message);
@@ -763,7 +859,7 @@ abstract class IntegrationTestCase extends TestCase
         if (!empty($result)) {
             $message .= ': ' . $result;
         }
-        $this->assertTrue(empty($result), $message);
+        $this->assertEmpty($result, $message);
     }
 
     /**
@@ -846,14 +942,15 @@ abstract class IntegrationTestCase extends TestCase
      *
      * @param string $content The content to check for.
      * @param string $message The failure message that will be appended to the generated message.
+     * @param bool   $ignoreCase A flag to check whether we should ignore case or not.
      * @return void
      */
-    public function assertResponseContains($content, $message = '')
+    public function assertResponseContains($content, $message = '', $ignoreCase = false)
     {
         if (!$this->_response) {
             $this->fail('No response set, cannot assert content. ' . $message);
         }
-        $this->assertContains($content, $this->_getBodyAsString(), $message);
+        $this->assertContains($content, $this->_getBodyAsString(), $message, $ignoreCase);
     }
 
     /**
@@ -1014,6 +1111,20 @@ abstract class IntegrationTestCase extends TestCase
         }
 
         $this->assertCookie(null, $cookie, "Cookie '{$cookie}' has been set. " . $message);
+    }
+
+    /**
+     * Disable the error handler middleware.
+     *
+     * By using this function, exceptions are no longer caught by the ErrorHandlerMiddleware
+     * and are instead re-thrown by the TestExceptionRenderer. This can be helpful
+     * when trying to diagnose/debug unexpected failures in test cases.
+     *
+     * @return void
+     */
+    public function disableErrorHandlerMiddleware()
+    {
+        Configure::write('Error.exceptionRenderer', TestExceptionRenderer::class);
     }
 
     /**

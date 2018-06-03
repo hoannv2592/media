@@ -1,16 +1,16 @@
 <?php
 /**
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
+ * CakePHP(tm) : Rapid Development Framework (https://cakephp.org)
+ * Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
  *
  * Licensed under The MIT License
  * For full copyright and license information, please see the LICENSE.txt
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
+ * @copyright     Copyright (c) Cake Software Foundation, Inc. (https://cakefoundation.org)
+ * @link          https://cakephp.org CakePHP(tm) Project
  * @since         0.10.4
- * @license       http://www.opensource.org/licenses/mit-license.php MIT License
+ * @license       https://opensource.org/licenses/mit-license.php MIT License
  */
 namespace Cake\Controller\Component;
 
@@ -35,7 +35,7 @@ use RuntimeException;
  * and the like. These units have no use for AJAX requests, and this Component can tell how Cake
  * should respond to the different needs of a handheld computer and a desktop machine.
  *
- * @link http://book.cakephp.org/3.0/en/controllers/components/request-handling.html
+ * @link https://book.cakephp.org/3.0/en/controllers/components/request-handling.html
  */
 class RequestHandlerComponent extends Component
 {
@@ -52,14 +52,14 @@ class RequestHandlerComponent extends Component
      * @var string|null
      * @see \Cake\Routing\Router::extensions()
      */
-    public $ext = null;
+    public $ext;
 
     /**
      * The template to use when rendering the given content type.
      *
      * @var string|null
      */
-    protected $_renderType = null;
+    protected $_renderType;
 
     /**
      * Default config
@@ -189,6 +189,7 @@ class RequestHandlerComponent extends Component
      */
     public function startup(Event $event)
     {
+        /** @var \Cake\Controller\Controller $controller */
         $controller = $event->getSubject();
         $request = $controller->request;
         $response = $controller->response;
@@ -231,12 +232,13 @@ class RequestHandlerComponent extends Component
     public function convertXml($xml)
     {
         try {
-            $xml = Xml::build($xml, ['readFile' => false]);
-            if (isset($xml->data)) {
-                return Xml::toArray($xml->data);
+            $xml = Xml::build($xml, ['return' => 'domdocument', 'readFile' => false]);
+            // We might not get child nodes if there are nested inline entities.
+            if ($xml->childNodes->length > 0) {
+                return Xml::toArray($xml);
             }
 
-            return Xml::toArray($xml);
+            return [];
         } catch (XmlException $e) {
             return [];
         }
@@ -272,7 +274,7 @@ class RequestHandlerComponent extends Component
             list($url, $querystr) = explode('?', $url, 2);
             parse_str($querystr, $query);
         }
-        /* @var \Cake\Controller\Controller $controller */
+        /** @var \Cake\Controller\Controller $controller */
         $controller = $event->getSubject();
         $response->body($controller->requestAction($url, [
             'return',
@@ -312,7 +314,7 @@ class RequestHandlerComponent extends Component
      */
     public function beforeRender(Event $event)
     {
-        /* @var \Cake\Controller\Controller $controller */
+        /** @var \Cake\Controller\Controller $controller */
         $controller = $event->getSubject();
         $response = $controller->response;
         $request = $controller->request;
@@ -505,7 +507,7 @@ class RequestHandlerComponent extends Component
         $acceptRaw = $request->parseAccept();
 
         if (empty($acceptRaw)) {
-            return $this->ext;
+            return $type ? $type === $this->ext : $this->ext;
         }
         $accepts = $response->mapType(array_shift($acceptRaw));
 

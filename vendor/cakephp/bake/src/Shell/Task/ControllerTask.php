@@ -21,6 +21,9 @@ use Cake\ORM\TableRegistry;
 /**
  * Task class for creating and updating controller files.
  *
+ * @property \Bake\Shell\Task\ModelTask $Model
+ * @property \Bake\Shell\Task\BakeTemplateTask $BakeTemplate
+ * @property \Bake\Shell\Task\TestTask $Test
  */
 class ControllerTask extends BakeTask
 {
@@ -131,11 +134,19 @@ class ControllerTask extends BakeTask
         $singularHumanName = $this->_singularHumanName($controllerName);
         $pluralHumanName = $this->_variableName($controllerName);
 
+        $defaultModel = sprintf('%s\Model\Table\%sTable', $namespace, $controllerName);
+        if (!class_exists($defaultModel)) {
+            $defaultModel = null;
+        }
+        $entityClassName = $this->_entityName($modelObj->getAlias());
+
         $data = compact(
             'actions',
             'admin',
             'components',
             'currentModelName',
+            'defaultModel',
+            'entityClassName',
             'helpers',
             'modelObj',
             'namespace',
@@ -198,10 +209,7 @@ class ControllerTask extends BakeTask
         }
         $this->Test->plugin = $this->plugin;
         $this->Test->connection = $this->connection;
-        $prefix = $this->_getPrefix();
-        if ($prefix) {
-            $className = str_replace('/', '\\', $prefix) . '\\' . $className;
-        }
+        $this->Test->interactive = $this->interactive;
 
         return $this->Test->bake('Controller', $className);
     }
