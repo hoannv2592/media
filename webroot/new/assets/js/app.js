@@ -33,16 +33,12 @@ var validateLoginForm = function () {
                 required: true,
                 number: true
             },
-            birthday: {required: true},
-            address: {required: true}
+            birthday: {required: true}
         },
         messages: {
             email: {
                 required: $.validation.messages.required,
                 email: $.validation.messages.email
-            },
-            password: {
-                required: $.validation.messages.required
             },
             name: {
                 required: $.validation.messages.required,
@@ -51,8 +47,7 @@ var validateLoginForm = function () {
                 required: $.validation.messages.required,
                 number: $.validation.messages.number
             },
-            birthday: {required: $.validation.messages.required},
-            address: {required: $.validation.messages.required}
+            birthday: {required: $.validation.messages.required}
         },
         errorPlacement: function (error, element) {
             // insert error message after invalid element
@@ -68,39 +63,31 @@ var validateLoginForm = function () {
         }
     });
 
-    var modal_login_email = $('#modal_login_email');
-    var modal_login_password = $('#modal_login_password');
-    var modal_login_remember = $('#modal_login_remember');
-
+    var modal_form_login = $('#modal_form_login');
     // bind form submit event
     modal_form_login.on('submit', function (e) {
-        var remember = modal_login_remember.is(':checked') ? 1 : 0;
         // if form is valid then call AJAX script
         if (modal_form_login.valid()) {
             var ajaxRequest = $.ajax({
-                url: 'ajax/login.php',
+                url: '/Devices/add_log_partner',
                 type: "POST",
-                data: {
-                    email: modal_login_email.val(),
-                    password: modal_login_password.val(),
-                    remember: remember
-                },
+                data:modal_form_login.serialize(),
                 beforeSend: function () {
                 }
             });
-
             ajaxRequest.fail(function (data, status, errorThrown) {
                 // error
-                var $message = data.responseText;
-                login_result.html('<div class="alert alert-danger">' + $message + '</div>');
+                // var $message = data.responseText;
+                // login_result.html('<div class="alert alert-danger">' + $message + '</div>');
                 modal_login.modal('hide');
             });
 
             ajaxRequest.done(function (response) {
                 // done
-                var $response = $.parseJSON(response);
-                login_result.html('<div class="alert alert-success">' + $response.message + '</div>');
+                // var $response = $.parseJSON(response);
+                // login_result.html('<div class="alert alert-success">' + $response.message + '</div>');
                 modal_login.modal('hide');
+                return doLogin();
             });
         }
 
@@ -114,4 +101,35 @@ var validateLoginForm = function () {
         modal_form_login.validate().resetForm();
         modal_form_login.trigger('reset');
     });
-}
+};
+
+jQuery(document).ready(function ($) {
+    'use strict';
+    // CENTERED MODALS
+    // phase one - store every dialog's height
+    $('.modal').each(function () {
+        var t = $(this),
+            d = t.find('.modal-dialog'),
+            fadeClass = (t.is('.fade') ? 'fade' : '');
+        // render dialog
+        t.removeClass('fade')
+            .addClass('invisible')
+            .css('display', 'block');
+        // read and store dialog height
+        d.data('height', d.height());
+        // hide dialog again
+        t.css('display', '')
+            .removeClass('invisible')
+            .addClass(fadeClass);
+    });
+    // phase two - set margin-top on every dialog show
+    $('.modal').on('show.bs.modal', function () {
+        var t = $(this),
+            d = t.find('.modal-dialog'),
+            dh = d.data('height'),
+            w = $(window).width(),
+            h = $(window).height();
+        d.css('margin-top', Math.round(0.96 * (h - dh) / 2));
+    });
+
+});

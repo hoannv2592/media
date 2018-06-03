@@ -32,7 +32,9 @@ $tile_congratulations_return = isset($infor_devices->tile_congratulations_return
                     if ($flag_check_isexit_partner == 1) {
                         $this->layout = 'popup_one';
                     } else {
-                        $this->layout = 'popup_tow';
+
+                        //$this->layout = 'popup_tow';
+                        $this->layout = 'popup_modal';
                     }
                 } else if ($langdingpage_id == \App\Model\Entity\Device::LANDING_ONE) {
                     $this->layout = 'password';
@@ -81,7 +83,8 @@ $tile_congratulations_return = isset($infor_devices->tile_congratulations_return
                     if ($flag_check_isexit_partner == 1) {
                         $this->layout = 'popup_one';
                     } else {
-                        $this->layout = 'popup_tow';
+                        //$this->layout = 'popup_tow';
+                        $this->layout = 'popup_modal';
                     }
                 } else { ?>
                 <?php $this->layout = 'demo'; ?>
