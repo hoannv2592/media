@@ -212,226 +212,242 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                <div class="show_tite">
-                                    <?php if (isset($device->tile_congratulations_return) && $device->tile_congratulations_return != '') {
-                                        $tile_congratulations_return = json_decode($device->tile_congratulations_return) ;
-                                        $count = count($tile_congratulations_return);
-                                        if ($count > 0) {
-                                            foreach ($tile_congratulations_return as $k => $item) {
-                                                if ($k == 0) {?>
-                                                    <div class="form-group">
-                                                        <div class="form-line">
-                                                            <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
-                                                            <input name="tile_congratulations_return[]"
-                                                                   class="form-control valid" id="tile-congratulations-return"
-                                                                   value="<?= $item ?>" aria-invalid="false" type="text" />
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $hidden_connect = isset($device->hidden_connect) ? $device->hidden_connect: '1';
+                                            echo  $this->Form->input('hidden_connect', array(
+                                                'type' => 'select',
+                                                'options' => [
+                                                    '1' => 'Hiển thị button connect-snow',
+                                                    '2' => 'Không hiển thị'
+                                                ],
+                                                'empty' => '--- Chọn hiển thị ---',
+                                                'label'=> 'Cài đặt hiển thị button connect-snow',
+                                                'value' => $hidden_connect,
+                                                'escape' => false,
+                                                'error' => false,
+                                                'id' => 'hidden_connect',
+                                                'class' => 'form-control required input_select_medium'
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="hide_snow">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php
+                                                $button_slow = isset($device->button_slow) ? $device->button_slow: '';
+                                                echo $this->Form->control('button_slow',[
+                                                    'label' => 'Đổi tên button connect-Slow',
+                                                    'id' => 'button_slow',
+                                                    'class' => 'form-control',
+                                                    'value' => $button_slow
+                                                ])
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="show_tite">
+                                        <?php if (isset($device->tile_congratulations_return) && $device->tile_congratulations_return != '') {
+                                            $tile_congratulations_return = json_decode($device->tile_congratulations_return) ;
+                                            $count = count($tile_congratulations_return);
+                                            if ($count > 0) {
+                                                foreach ($tile_congratulations_return as $k => $item) {
+                                                    if ($k == 0) {?>
+                                                        <div class="form-group">
+                                                            <div class="form-line">
+                                                                <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                                                <input name="tile_congratulations_return[]"
+                                                                       class="form-control valid" id="tile-congratulations-return"
+                                                                       value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                            </div>
+                                                            <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 10px">Thêm mới</a>
                                                         </div>
-                                                        <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 10px">Thêm mới</a>
-                                                    </div>
-                                                <?php } else {?>
-                                                    <div class="form-group" id="title_<?= $k?>">
-                                                        <div class="form-line">
-                                                            <input name="tile_congratulations_return[]"
-                                                                   class="form-control valid" id="tile-congratulations-return"
-                                                                   value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                    <?php } else {?>
+                                                        <div class="form-group" id="title_<?= $k?>">
+                                                            <div class="form-line">
+                                                                <input name="tile_congratulations_return[]"
+                                                                       class="form-control valid" id="tile-congratulations-return"
+                                                                       value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                            </div>
+                                                            <a href="javascript:void(0);" id="delete_" onclick="delete_title(<?= $k?>)" class="btn btn-danger waves-effect" style="margin-top: 10px">Xóa</a>
                                                         </div>
-                                                        <a href="javascript:void(0);" id="delete_" onclick="delete_title(<?= $k?>)" class="btn btn-danger waves-effect" style="margin-top: 10px">Xóa</a>
-                                                    </div>
-                                                <?php }
+                                                    <?php }
 
-                                            }
+                                                }
+                                            } else { ?>
+                                                <div class="form-group" style="margin-bottom: 10px !important;">
+                                                    <div class="form-line">
+                                                        <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                                        <input name="tile_congratulations_return[]"
+                                                               class="form-control valid" id="tile-congratulations-return"
+                                                               value="<?= $device->tile_congratulations_return ?>" aria-invalid="false" type="text" />
+                                                    </div>
+                                                    <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                                </div>
+                                            <?php }
                                         } else { ?>
                                             <div class="form-group" style="margin-bottom: 10px !important;">
                                                 <div class="form-line">
                                                     <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
                                                     <input name="tile_congratulations_return[]"
                                                            class="form-control valid" id="tile-congratulations-return"
-                                                           value="<?= $device->tile_congratulations_return ?>" aria-invalid="false" type="text" />
+                                                           value="" aria-invalid="false" type="text" />
                                                 </div>
                                                 <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
                                             </div>
                                         <?php }
-                                    } else { ?>
-                                        <div class="form-group" style="margin-bottom: 10px !important;">
-                                            <div class="form-line">
-                                                <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
-                                                <input name="tile_congratulations_return[]"
-                                                       class="form-control valid" id="tile-congratulations-return"
-                                                       value="" aria-invalid="false" type="text" />
-                                            </div>
-                                            <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
-                                        </div>
-                                    <?php }
-                                    ?>
-                                </div>
-                                <div class="add"></div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <?php
-                                        $hidden_connect = isset($device->hidden_connect) ? $device->hidden_connect: '1';
-                                        echo  $this->Form->input('hidden_connect', array(
-                                            'type' => 'select',
-                                            'options' => [
-                                                '1' => 'Hiển thị button connect-snow',
-                                                '2' => 'Không hiển thị'
-                                            ],
-                                            'empty' => '--- Chọn hiển thị ---',
-                                            'label'=> 'Cài đặt hiển thị button connect-snow',
-                                            'value' => $hidden_connect,
-                                            'escape' => false,
-                                            'error' => false,
-                                            'class' => 'form-control required input_select_medium'
-                                        ));
                                         ?>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="form-line">
-                                        <label class=""> Chọn loại quảng cáo </label>
-                                        <div class="demo-radio-button">
-                                            <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($device->langdingpage_id == 3) { echo 'checked'; }?> />
-                                            <label style="font-weight: bold" for="radio_32">Thông tin khách hàng</label>
-                                            <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" <?php if ($device->langdingpage_id == 2) { echo 'checked'; }?> />
-                                            <label style="font-weight: bold" for="radio_31">Facebook-SMS-Email</label>
-                                            <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($device->langdingpage_id == 1 || $device->langdingpage_id == '') { echo 'checked'; } ?> />
-                                            <label style="font-weight: bold" for="radio_30">Password</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="hidden_face">
+                                    <div class="add"></div>
                                     <div class="form-group">
                                         <div class="form-line">
-                                            <?php
-                                            $option_tow = isset($device->option_tow) ? json_decode($device->option_tow):'';
-                                            echo $this->Form->control('option_tow', [
-                                                'type' => 'select',
-                                                'multiple' => 'checkbox',
-                                                'label' => false,
-                                                'class' => 'option_tow',
-                                                'options' => [
-                                                    ['value' => 1, 'text' => __('Login với Facebook')],
-                                                    ['value' => 2, 'text' => __('Login với SMS')],
-                                                    ['value' => 3, 'text' => __('Login với Email')],
-                                                    ['value' => 4, 'text' => __('Connect Snow')],
-                                                ],
-                                                'templates' => [
-                                                    'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
-                                                    'radioWrapper' => '<div class="radio">{{label}}</div>'
-                                                ],
-                                                'value' => $option_tow
-                                            ]);
-                                            ?>
-                                            <div id="check_error"></div>
+                                            <label class=""> Chọn loại quảng cáo </label>
+                                            <div class="demo-radio-button">
+                                                <input name="langdingpage_id" type="radio" id="radio_32" value="3" class="radio-col-grey" <?php if ($device->langdingpage_id == 3) { echo 'checked'; }?> />
+                                                <label style="font-weight: bold" for="radio_32">Thông tin khách hàng</label>
+                                                <input name="langdingpage_id" type="radio" id="radio_31" value="2" class="radio-col-grey" <?php if ($device->langdingpage_id == 2) { echo 'checked'; }?> />
+                                                <label style="font-weight: bold" for="radio_31">Facebook-SMS-Email</label>
+                                                <input name="langdingpage_id" type="radio" id="radio_30" value="1" class="radio-col-grey" <?php if ($device->langdingpage_id == 1 || $device->langdingpage_id == '') { echo 'checked'; } ?> />
+                                                <label style="font-weight: bold" for="radio_30">Password</label>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <?php $fb_fanpage = isset($device->fb_fanpage) ? ($device->fb_fanpage):'' ?>
-                                            <?php echo $this->Form->control('fb_fanpage', array(
-                                                'label' => 'Facebook Fan Page',
-                                                'class' => 'form-control',
-                                                'value' => $fb_fanpage,
-                                            ));
-                                            ?>
+                                    <div class="hidden_face">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php
+                                                $option_tow = isset($device->option_tow) ? json_decode($device->option_tow):'';
+                                                echo $this->Form->control('option_tow', [
+                                                    'type' => 'select',
+                                                    'multiple' => 'checkbox',
+                                                    'label' => false,
+                                                    'class' => 'option_tow',
+                                                    'options' => [
+                                                        ['value' => 1, 'text' => __('Login với Facebook')],
+                                                        ['value' => 2, 'text' => __('Login với SMS')],
+                                                        ['value' => 3, 'text' => __('Login với Email')],
+                                                        ['value' => 4, 'text' => __('Connect Snow')],
+                                                    ],
+                                                    'templates' => [
+                                                        'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                                        'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                                    ],
+                                                    'value' => $option_tow
+                                                ]);
+                                                ?>
+                                                <div id="check_error"></div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php $fb_fanpage = isset($device->fb_fanpage) ? ($device->fb_fanpage):'' ?>
+                                                <?php echo $this->Form->control('fb_fanpage', array(
+                                                    'label' => 'Facebook Fan Page',
+                                                    'class' => 'form-control',
+                                                    'value' => $fb_fanpage,
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php $fb_latitude = isset($device->fb_latitude) ? ($device->fb_latitude):'' ?>
+                                                <?php echo $this->Form->control('fb_latitude', array(
+                                                    'label' => 'Latitude',
+                                                    'class' => 'form-control',
+                                                    'value' => $fb_latitude,
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php $fb_longtitude = isset($device->fb_longtitude) ? ($device->fb_longtitude):'' ?>
+                                                <?php echo $this->Form->control('fb_longtitude', array(
+                                                    'label' => 'Longtitude',
+                                                    'class' => 'form-control',
+                                                    'value' => $fb_longtitude,
+                                                ));
+                                                ?>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php $fb_checkin_msg = isset($device->fb_checkin_msg) ? ($device->fb_checkin_msg):'' ?>
+                                                <?php echo $this->Form->control('fb_checkin_msg', array(
+                                                    'label' => 'Check-in message',
+                                                    'class' => 'form-control',
+                                                    'value' => $fb_checkin_msg,
+                                                ));
+                                                ?>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <?php $fb_latitude = isset($device->fb_latitude) ? ($device->fb_latitude):'' ?>
-                                            <?php echo $this->Form->control('fb_latitude', array(
-                                                'label' => 'Latitude',
-                                                'class' => 'form-control',
-                                                'value' => $fb_latitude,
-                                            ));
-                                            ?>
+                                    <div class="hiddenccc">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php
+                                                $packages = isset($device->packages) ? json_decode($device->packages):'';
+                                                echo $this->Form->control('packages', [
+                                                    'type' => 'select',
+                                                    'multiple' => 'checkbox',
+                                                    'label' => false,
+                                                    'options' => [
+                                                        ['value' => 1, 'text' => __('Họ và tên')],
+                                                        ['value' => 2, 'text' => __('Số điện thoại')],
+                                                        ['value' => 3, 'text' => __('Ngày sinh')],
+                                                        ['value' => 4, 'text' => __('Địa chỉ')],
+                                                        ['value' => 5, 'text' => __('Địa chỉ email')]
+                                                    ],
+                                                    'templates' => [
+                                                        'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
+                                                        'radioWrapper' => '<div class="radio">{{label}}</div>'
+                                                    ],
+                                                    'value' => $packages
+                                                ]);
+                                                ?>
+                                                <div id="check_error"></div>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <?php $fb_longtitude = isset($device->fb_longtitude) ? ($device->fb_longtitude):'' ?>
-                                            <?php echo $this->Form->control('fb_longtitude', array(
-                                                'label' => 'Longtitude',
-                                                'class' => 'form-control',
-                                                'value' => $fb_longtitude,
-                                            ));
-                                            ?>
+                                    <div class="check_pass_device">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <label class=""> Mật khẩu thiết bị </label>
+                                                <input type="text" name="apt_device_number" id="apt_device_number" value="<?php echo isset($device->apt_device_number) ? $device->apt_device_number: $apt ?>" placeholder="Điền mật khẩu.." class="form-control">
+                                            </div>
                                         </div>
                                     </div>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered table-striped dataTable table-hover">
+                                            <thead>
+                                            <tr>
+                                                <th width="20%">Ảnh nền</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <?php if (!empty($back_group)) {
+                                                foreach ($back_group as $k => $vl) { if ($vl != '') { ?>
+                                                    <tr id="<?= $k;?>">
+                                                        <td class="image"><embed src="<?= '/'.$vl ?>" width="330" height="180"><input type="hidden" name="file_backup[]" value="<?= '/'.$vl; ?>"></td>
+                                                        <td><a href="javascript:void(0);"  id="delete_bak" onclick="delete_bak(<?php echo $k; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
+                                                    </tr>
+                                                <?php }}?>
+                                            <?php } else { ?>
+                                                <tr><td colspan="4" class="image">No file(s) found......</td></tr>
+                                            <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <label class=""> Chọn một ảnh </label>
                                     <div class="form-group">
-                                        <div class="form-line">
-                                            <?php $fb_checkin_msg = isset($device->fb_checkin_msg) ? ($device->fb_checkin_msg):'' ?>
-                                            <?php echo $this->Form->control('fb_checkin_msg', array(
-                                                'label' => 'Check-in message',
-                                                'class' => 'form-control',
-                                                'value' => $fb_checkin_msg,
-                                            ));
-                                            ?>
+                                        <div class="file-loading">
+                                            <input id="file-1" type="file" multiple class="file" name="file_upload[]" data-overwrite-initial="false" data-min-file-count="2">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="hiddenccc">
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <?php
-                                            $packages = isset($device->packages) ? json_decode($device->packages):'';
-                                            echo $this->Form->control('packages', [
-                                                'type' => 'select',
-                                                'multiple' => 'checkbox',
-                                                'label' => false,
-                                                'options' => [
-                                                    ['value' => 1, 'text' => __('Họ và tên')],
-                                                    ['value' => 2, 'text' => __('Số điện thoại')],
-                                                    ['value' => 3, 'text' => __('Ngày sinh')],
-                                                    ['value' => 4, 'text' => __('Địa chỉ')],
-                                                    ['value' => 5, 'text' => __('Địa chỉ email')]
-                                                ],
-                                                'templates' => [
-                                                    'nestingLabel' => '{{input}}<label{{attrs}}>{{text}}</label>',
-                                                    'radioWrapper' => '<div class="radio">{{label}}</div>'
-                                                ],
-                                                'value' => $packages
-                                            ]);
-                                            ?>
-                                            <div id="check_error"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="check_pass_device">
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <label class=""> Mật khẩu thiết bị </label>
-                                            <input type="text" name="apt_device_number" id="apt_device_number" value="<?php echo isset($device->apt_device_number) ? $device->apt_device_number: $apt ?>" placeholder="Điền mật khẩu.." class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="table-responsive">
-                                    <table class="table table-bordered table-striped dataTable table-hover">
-                                        <thead>
-                                        <tr>
-                                            <th width="20%">Ảnh nền</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody>
-                                        <?php if (!empty($back_group)) {
-                                            foreach ($back_group as $k => $vl) { if ($vl != '') { ?>
-                                                <tr id="<?= $k;?>">
-                                                    <td class="image"><embed src="<?= '/'.$vl ?>" width="330" height="180"><input type="hidden" name="file_backup[]" value="<?= '/'.$vl; ?>"></td>
-                                                    <td><a href="javascript:void(0);"  id="delete_bak" onclick="delete_bak(<?php echo $k; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
-                                                </tr>
-                                            <?php }}?>
-                                        <?php } else { ?>
-                                            <tr><td colspan="4" class="image">No file(s) found......</td></tr>
-                                        <?php } ?>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                <label class=""> Chọn một ảnh </label>
-                                <div class="form-group">
-                                    <div class="file-loading">
-                                        <input id="file-1" type="file" multiple class="file" name="file_upload[]" data-overwrite-initial="false" data-min-file-count="2">
-                                    </div>
-                                </div>
-                            </div>
                             </div>
                             <div class="row">
                             <?php echo $this->Form->input('device_id', [
@@ -663,6 +679,21 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             $('.hiddenccc').css('display', 'none');
             $('.hidden_face').css('display', '');
             // $('.face').css('display', '');
+        }
+    });
+    $('#hidden_connect').change(function () {
+        var check_slow = $(this).val();
+        if (check_slow == 1) {
+            $('.hide_snow').show();
+        } else {
+            $('.hide_snow').hide();
+        }
+    });
+    $(document).ready(function () {
+        var check_slow = $('#hidden_connect').val();
+        $('.hide_snow').hide();
+        if (check_slow == 1) {
+            $('.hide_snow').show();
         }
     });
 </script>

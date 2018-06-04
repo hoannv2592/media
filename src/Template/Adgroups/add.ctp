@@ -149,8 +149,6 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                                 <div id="check_error"></div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="face">
                                         <div class="form-group">
                                             <div class="form-line">
                                                 <?php $fb_fanpage = isset($adgroup->fb_fanpage) ? ($adgroup->fb_fanpage):'' ?>
@@ -241,6 +239,41 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                     </div>
                                 </div>
                                 <div class="col-md-6">
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $hidden_connect = isset($adgroup->hidden_connect) ? $adgroup->hidden_connect: '1';
+                                            echo  $this->Form->input('hidden_connect', array(
+                                                'type' => 'select',
+                                                'options' => [
+                                                    '1' => 'Hiển thị button connect-slow',
+                                                    '2' => 'Không hiển thị'
+                                                ],
+                                                'empty' => '--- Chọn hiển thị ---',
+                                                'label'=> 'Cài đặt hiển thị button connect-slow',
+                                                'value' => $hidden_connect,
+                                                'escape' => false,
+                                                'error' => false,
+                                                'id' => 'hidden_connect',
+                                                'class' => 'form-control required input_select_medium'
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="hide_snow">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php
+                                                echo $this->Form->control('button_slow',[
+                                                    'label' => 'Đổi tên button connect-Slow',
+                                                    'id' => 'button_slow',
+                                                    'class' => 'form-control',
+                                                    'value' => 'Connect now - Slow'
+                                                ])
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group" id="end_show">
                                         <div class="form-line">
                                             <?php $tile_name = isset($adgroup->tile_name) ? ($adgroup->tile_name):'' ?>
@@ -300,27 +333,6 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                             ?>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <?php
-                                            $hidden_connect = isset($adgroup->hidden_connect) ? $adgroup->hidden_connect: '1';
-                                            echo  $this->Form->input('hidden_connect', array(
-                                                'type' => 'select',
-                                                'options' => [
-                                                    '1' => 'Hiển thị button connect-snow',
-                                                    '2' => 'Không hiển thị'
-                                                ],
-                                                'empty' => '--- Chọn hiển thị ---',
-                                                'label'=> 'Cài đặt hiển thị button connect-snow',
-                                                'value' => $hidden_connect,
-                                                'escape' => false,
-                                                'error' => false,
-                                                'class' => 'form-control required input_select_medium'
-                                            ));
-                                            ?>
-                                        </div>
-                                    </div>
-
                                     <label class=""> Chọn một ảnh </label>
                                     <div class="form-group">
                                         <div class="file-loading">
@@ -575,6 +587,21 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
             $('.show_adv').hide();
         } else {
             $('.show_adv').show();
+        }
+
+        var check_slow = $('#hidden_connect').val();
+        $('.hide_snow').hide();
+        if (check_slow == 1) {
+            $('.hide_snow').show();
+        }
+    });
+
+    $('#hidden_connect').change(function () {
+        var check_slow = $(this).val();
+        if (check_slow == 1) {
+            $('.hide_snow').show();
+        } else {
+            $('.hide_snow').hide();
         }
     });
 </script>

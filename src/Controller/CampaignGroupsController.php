@@ -135,12 +135,19 @@ class CampaignGroupsController extends AppController
         if ($this->request->is('post')) {
             if ($this->request->data['tile_congratulations_return'] != '') {
                 $packages = array_values($this->request->data['tile_congratulations_return']);
-                $this->request->data['tile_congratulations_return'] = json_encode($packages);
+                if (!empty(array_filter($packages))) {
+                    $this->request->data['tile_congratulations_return'] = json_encode($packages);
+                } else {
+                    $this->request->data['tile_congratulations_return'] = '';
+                }
             }
-
             if ($this->request->data['packages'] != '') {
                 $packages = array_values($this->request->data['packages']);
-                $this->request->data['packages'] = json_encode($packages);
+                if (!empty($packages)) {
+                    $this->request->data['packages'] = json_encode($packages);
+                } else {
+                    $this->request->data['packages'] = '';
+                }
             }
             $time = $this->request->getData('time');
             $campaign_old = $this->CampaignGroups->find()->where(['time' => $time, 'delete_flag !=' => DELETED])->count();

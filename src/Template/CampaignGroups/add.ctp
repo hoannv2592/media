@@ -165,6 +165,42 @@
                                     <div class="form-group">
                                         <div class="form-line">
                                             <?php
+                                            $hidden_connect = isset($campaign_group->hidden_connect) ? $campaign_group->hidden_connect: '1';
+                                            echo  $this->Form->input('hidden_connect', array(
+                                                'type' => 'select',
+                                                'options' => [
+                                                    '1' => 'Hiển thị button connect-snow',
+                                                    '2' => 'Không hiển thị'
+                                                ],
+                                                'empty' => '--- Chọn hiển thị ---',
+                                                'label'=> 'Cài đặt hiển thị button connect-slow',
+                                                'value' => $hidden_connect,
+                                                'escape' => false,
+                                                'error' => false,
+                                                'id' => 'hidden_connect',
+                                                'class' => 'form-control required input_select_medium'
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="hide_snow">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php
+                                                $button_slow = isset($campaign_group->button_slow) ? $campaign_group->button_slow: '';
+                                                echo $this->Form->control('button_slow',[
+                                                    'label' => 'Đổi tên button connect-Slow',
+                                                    'id' => 'button_slow',
+                                                    'class' => 'form-control',
+                                                    'value' => $button_slow
+                                                ])
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
                                             $random = isset($campaign_group->random) ? $campaign_group->random: '2';
                                             echo  $this->Form->input('random', array(
                                                 'type' => 'select',
@@ -212,17 +248,6 @@
                                             ?>
                                         </div>
                                     </div>
-                                    <?php $tile_congratulations_return = isset($campaign_group->tile_congratulations_return) ? ($campaign_group->tile_congratulations_return):'' ?>
-                                    <div class="form-group" style="margin-bottom: 10px !important;">
-                                        <div class="form-line">
-                                            <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
-                                            <input name="tile_congratulations_return[]"
-                                                   class="form-control valid" id="tile-congratulations-return"
-                                                   value="<?= $tile_congratulations_return ?>" aria-invalid="false" type="text" />
-                                        </div>
-                                        <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
-                                    </div>
-                                    <div class="add"></div>
                                     <div class="form-group">
                                         <div class="form-line">
                                             <?php $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
@@ -246,27 +271,15 @@
                                             ?>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <?php $tile_congratulations_return = isset($campaign_group->tile_congratulations_return) ? ($campaign_group->tile_congratulations_return):'' ?>
+                                    <div class="form-group" style="margin-bottom: 10px !important;">
                                         <div class="form-line">
-                                            <?php
-                                            $hidden_connect = isset($campaign_group->hidden_connect) ? $campaign_group->hidden_connect: '1';
-                                            echo  $this->Form->input('hidden_connect', array(
-                                                'type' => 'select',
-                                                'options' => [
-                                                    '1' => 'Hiển thị button connect-snow',
-                                                    '2' => 'Không hiển thị'
-                                                ],
-                                                'empty' => '--- Chọn hiển thị ---',
-                                                'label'=> 'Setting hidden button connect-snow',
-                                                'value' => $hidden_connect,
-                                                'escape' => false,
-                                                'error' => false,
-                                                'class' => 'form-control required input_select_medium'
-                                            ));
-                                            ?>
+                                            <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                            <input name="tile_congratulations_return[]" class="form-control valid" id="tile-congratulations-return" value="<?= $tile_congratulations_return ?>" aria-invalid="false" type="text" />
                                         </div>
+                                        <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
                                     </div>
-
+                                    <div class="add"></div>
                                     <h2 class="card-inside-title"> Chọn ảnh nền </h2>
                                     <div class="form-group">
                                         <div class="file-loading">
@@ -410,13 +423,25 @@
         format: 'DD/MM/YYYY',
         separator: ' - '
     });
+    $('#hidden_connect').change(function () {
+        var check_slow = $(this).val();
+        if (check_slow == 1) {
+            $('.hide_snow').show();
+        } else {
+            $('.hide_snow').hide();
+        }
+    });
+    $(document).ready(function () {
+        var check_slow = $('#hidden_connect').val();
+        $('.hide_snow').hide();
+        if (check_slow == 1) {
+            $('.hide_snow').show();
+        }
+    });
 </script>
 <style>
     .chosen-container {
         width: 100% !important;
-    }
-    label {
-        color: black;
     }
     button.kv-file-upload.btn.btn-kv.btn-default.btn-outline-secondary {
         display: none;

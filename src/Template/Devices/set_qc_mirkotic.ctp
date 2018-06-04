@@ -209,59 +209,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                     </div>
                                 </div>
                                 <div class="col-md-6">
-                                    <div class="show_tite">
-                                        <?php
-                                        if (isset($device->tile_congratulations_return) && $device->tile_congratulations_return != '') {
-                                            $tile_congratulations_return = json_decode($device->tile_congratulations_return) ;
-                                            $count = count($tile_congratulations_return);
-                                            if ($count > 0) {
-                                                foreach ($tile_congratulations_return as $k => $item) {
-                                                    if ($k == 0) {?>
-                                                        <div class="form-group" style="margin-bottom: 10px !important;;">
-                                                            <div class="form-line">
-                                                                <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
-                                                                <input name="tile_congratulations_return[]"
-                                                                       class="form-control valid" id="tile-congratulations-return"
-                                                                       value="<?= $item ?>" aria-invalid="false" type="text" />
-                                                            </div>
-                                                            <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
-                                                        </div>
-                                                    <?php } else {?>
-                                                        <div class="form-group" id="title_<?= $k?>" style="margin-bottom: 10px !important;">
-                                                            <div class="form-line">
-                                                                <input name="tile_congratulations_return[]"
-                                                                       class="form-control valid" id="tile-congratulations-return"
-                                                                       value="<?= $item ?>" aria-invalid="false" type="text" />
-                                                            </div>
-                                                            <a href="javascript:void(0);" id="delete_" onclick="delete_title(<?= $k?>)" class="btn btn-danger waves-effect" style="margin-top: 10px">Xóa</a>
-                                                        </div>
-                                                    <?php }
-
-                                                }
-                                            } else { ?>
-                                                <div class="form-group" style="margin-bottom: 10px !important;">
-                                                    <div class="form-line">
-                                                        <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
-                                                        <input name="tile_congratulations_return[]"
-                                                               class="form-control valid" id="tile-congratulations-return"
-                                                               value="<?= $device->tile_congratulations_return ?>" aria-invalid="false" type="text" />
-                                                    </div>
-                                                    <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
-                                                </div>
-                                            <?php }
-                                        } else { ?>
-                                            <div class="form-group" style="margin-bottom: 10px !important;">
-                                                <div class="form-line">
-                                                    <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
-                                                    <input name="tile_congratulations_return[]"
-                                                           class="form-control valid" id="tile-congratulations-return" aria-invalid="false" type="text" />
-                                                </div>
-                                                <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
-                                            </div>
-                                        <?php }
-                                        ?>
-                                    </div>
-                                    <div class="add"></div>
                                     <div class="form-group">
                                         <div class="form-line">
                                             <?php
@@ -277,11 +224,28 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                                 'value' => $hidden_connect,
                                                 'escape' => false,
                                                 'error' => false,
+                                                'id' => 'hidden_connect',
                                                 'class' => 'form-control required input_select_medium'
                                             ));
                                             ?>
                                         </div>
                                     </div>
+                                    <div class="hide_snow">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php
+                                                $button_slow = isset($device->button_slow) ? $device->button_slow: '';
+                                                echo $this->Form->control('button_slow',[
+                                                    'label' => 'Đổi tên button connect-Slow',
+                                                    'id' => 'button_slow',
+                                                    'class' => 'form-control',
+                                                    'value' => $button_slow
+                                                ])
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                     <div class="form-group">
                                         <div class="form-line">
                                             <label class=""> Chọn loại quảng cáo </label>
@@ -407,6 +371,59 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="show_tite">
+                                        <?php
+                                        if (isset($device->tile_congratulations_return) && $device->tile_congratulations_return != '') {
+                                            $tile_congratulations_return = json_decode($device->tile_congratulations_return) ;
+                                            $count = count($tile_congratulations_return);
+                                            if ($count > 0) {
+                                                foreach ($tile_congratulations_return as $k => $item) {
+                                                    if ($k == 0) {?>
+                                                        <div class="form-group" style="margin-bottom: 10px !important;;">
+                                                            <div class="form-line">
+                                                                <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                                                <input name="tile_congratulations_return[]"
+                                                                       class="form-control valid" id="tile-congratulations-return"
+                                                                       value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                            </div>
+                                                            <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                                        </div>
+                                                    <?php } else {?>
+                                                        <div class="form-group" id="title_<?= $k?>" style="margin-bottom: 10px !important;">
+                                                            <div class="form-line">
+                                                                <input name="tile_congratulations_return[]"
+                                                                       class="form-control valid" id="tile-congratulations-return"
+                                                                       value="<?= $item ?>" aria-invalid="false" type="text" />
+                                                            </div>
+                                                            <a href="javascript:void(0);" id="delete_" onclick="delete_title(<?= $k?>)" class="btn btn-danger waves-effect" style="margin-top: 10px">Xóa</a>
+                                                        </div>
+                                                    <?php }
+
+                                                }
+                                            } else { ?>
+                                                <div class="form-group" style="margin-bottom: 10px !important;">
+                                                    <div class="form-line">
+                                                        <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                                        <input name="tile_congratulations_return[]"
+                                                               class="form-control valid" id="tile-congratulations-return"
+                                                               value="<?= $device->tile_congratulations_return ?>" aria-invalid="false" type="text" />
+                                                    </div>
+                                                    <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                                </div>
+                                            <?php }
+                                        } else { ?>
+                                            <div class="form-group" style="margin-bottom: 10px !important;">
+                                                <div class="form-line">
+                                                    <label for="tile-congratulations-return">Tiêu đề chúc mừng kết nối lại</label>
+                                                    <input name="tile_congratulations_return[]"
+                                                           class="form-control valid" id="tile-congratulations-return" aria-invalid="false" type="text" />
+                                                </div>
+                                                <a href="javascript:void(0);" id="add_title" class="btn btn-danger waves-effect" style="margin-top: 5px">Thêm mới</a>
+                                            </div>
+                                        <?php }
+                                        ?>
+                                    </div>
+                                    <div class="add"></div>
                                     <label class=""> Chọn một ảnh </label>
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-striped dataTable table-hover">
@@ -668,6 +685,22 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         },
         messages:{
             'apt_device_number': { required: 'Hãy nhập' }
+        }
+    });
+
+    $('#hidden_connect').change(function () {
+        var check_slow = $(this).val();
+        if (check_slow == 1) {
+            $('.hide_snow').show();
+        } else {
+            $('.hide_snow').hide();
+        }
+    });
+    $(document).ready(function () {
+        var check_slow = $('#hidden_connect').val();
+        $('.hide_snow').hide();
+        if (check_slow == 1) {
+            $('.hide_snow').show();
         }
     });
 </script>
