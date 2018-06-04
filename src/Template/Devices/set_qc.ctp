@@ -324,8 +324,6 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                             <div id="check_error"></div>
                                         </div>
                                     </div>
-                                </div>
-                                <div class="face">
                                     <div class="form-group">
                                         <div class="form-line">
                                             <?php $fb_fanpage = isset($device->fb_fanpage) ? ($device->fb_fanpage):'' ?>
