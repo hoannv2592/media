@@ -15,13 +15,7 @@ $title_campaign = isset($infor_devices->title_campaign) && $infor_devices->title
             <?php /** @var TYPE_NAME $infor_devices */
             if (isset($infor_devices->path_logo) && $infor_devices->path_logo != '') { ?>
                 <a class="" href="javascript:void(0)">
-                    <img src="
-					<?php echo '/' . $infor_devices->path_logo; ?>"
-                         alt="logo_image" style="height: 100px;">
-                </a>
-            <?php } else { ?>
-                <a class="" href="javascript:void(0)">
-                    <img src="/webroot/images/logo.png" alt="logo image">
+                    <img src="<?php echo '/' . $infor_devices->path_logo; ?>" alt="logo_image" style="height: 100px;">
                 </a>
             <?php } ?>
         </div>
@@ -32,20 +26,39 @@ $title_campaign = isset($infor_devices->title_campaign) && $infor_devices->title
             </h5>
         </div>
         <div class="col-md-4 col-sm-8 text-center align-self-center button">
+            <a href="#_" class="btn btn-primary button_connect form-group upercase" data-toggle="modal"
+               data-target="#modal_login">
+                <?php if (isset($infor_devices->title_connect) && $infor_devices->title_connect != '') {
+                    echo $infor_devices->title_connect;
+                } else {
+                    echo $title_connect_normal;
+                } ?>
+            </a>
             <?php
-            if (empty($packages)) { ?>
-                <a class="btn btn-primary button_connect form-group upercase" href="<?php echo $infor_devices->auth_target; ?>">Connect now - Fast</a>
-            <?php } else { ?>
-                <a href="#_" class="btn btn-primary button_connect form-group upercase" data-toggle="modal"
-                   data-target="#modal_login">
-                    <?php if (isset($infor_devices->title_connect) && $infor_devices->title_connect != '') {
-                        echo $infor_devices->title_connect;
-                    } else {
-                        echo $title_connect_normal;
-                    } ?>
+//            if (empty($packages)) { ?>
+<!--                <a class="btn btn-primary button_connect form-group upercase" href="--><?php //echo $infor_devices->auth_target; ?><!--">Connect now - Fast</a>-->
+<!--            --><?php //} else { ?>
+<!--                <a href="#_" class="btn btn-primary button_connect form-group upercase" data-toggle="modal"-->
+<!--                   data-target="#modal_login">-->
+<!--                    --><?php //if (isset($infor_devices->title_connect) && $infor_devices->title_connect != '') {
+//                        echo $infor_devices->title_connect;
+//                    } else {
+//                        echo $title_connect_normal;
+//                    } ?>
+<!--                </a>-->
+<!--            --><?php //} ?>
+            <?php if (isset($infor_devices->hidden_connect) && $infor_devices->hidden_connect == 1) { ?>
+                <a class="btn btn-primary button_connect subscribe upercase" href="<?php echo $infor_devices->auth_target; ?>">
+                    <span>
+                        <?php if (isset($infor_devices->button_slow) && $infor_devices->button_slow != '') {
+                                echo $infor_devices->button_slow;
+                            } else {
+                                echo 'CONNECT NOW - SLOW';
+                            }
+                        ?>
+                    </span>
                 </a>
             <?php } ?>
-            <a class="btn btn-primary button_connect subscribe upercase" href="<?php echo $infor_devices->auth_target; ?>"><span>Connect now - Slow</span></a>
         </div>
     </div>
 </div>

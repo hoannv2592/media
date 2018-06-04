@@ -625,7 +625,7 @@ class DevicesController extends AppController
                         $infor_devices->packages = $device_campaign->packages;
                         $infor_devices->path_logo = $device_campaign->path_logo;
                         $infor_devices->tile_name = $device_campaign->tile_name;
-                        //$infor_devices->option_tow = $device_campaign->option_tow;
+                        $infor_devices->button_slow = $device_campaign->button_slow;
                         $infor_devices->title_connect = $device_campaign->title_connect;
                         $infor_devices->hidden_connect = $device_campaign->hidden_connect;
                         $infor_devices->title_campaign = $device_campaign->title_campaign;
@@ -647,6 +647,7 @@ class DevicesController extends AppController
                         $infor_devices->fb_fanpage = $device_group->fb_fanpage;
                         $infor_devices->option_tow = $device_group->option_tow;
                         $infor_devices->fb_latitude = $device_group->fb_latitude;
+                        $infor_devices->button_slow = $device_group->button_slow;
                         $infor_devices->title_connect = $device_group->title_connect;
                         $infor_devices->fb_longtitude = $device_group->fb_longtitude;
                         $infor_devices->hidden_connect = $device_group->hidden_connect;

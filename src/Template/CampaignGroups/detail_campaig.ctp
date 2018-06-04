@@ -199,6 +199,42 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                     <div class="form-group">
                                         <div class="form-line">
                                             <?php
+                                            $hidden_connect = isset($campaign_group->hidden_connect) ? $campaign_group->hidden_connect: '1';
+                                            echo  $this->Form->input('hidden_connect', array(
+                                                'type' => 'select',
+                                                'options' => [
+                                                    '1' => 'Hiển thị button connect-snow',
+                                                    '2' => 'Không hiển thị'
+                                                ],
+                                                'empty' => '--- Chọn hiển thị ---',
+                                                'label'=> 'Setting hidden button connect-snow',
+                                                'value' => $hidden_connect,
+                                                'escape' => false,
+                                                'error' => false,
+                                                'id' => 'hidden_connect',
+                                                'class' => 'form-control required input_select_medium'
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="hide_snow">
+                                        <div class="form-group">
+                                            <div class="form-line">
+                                                <?php
+                                                $button_slow = isset($campaign_group->button_slow) ? $campaign_group->button_slow: '';
+                                                echo $this->Form->control('button_slow',[
+                                                    'label' => 'Đổi tên button connect-Slow',
+                                                    'id' => 'button_slow',
+                                                    'class' => 'form-control',
+                                                    'value' => $button_slow
+                                                ])
+                                                ?>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
                                             $random = isset($campaign_group->random) ? $campaign_group->random: '';
                                             echo  $this->Form->input('random', array(
                                                 'type' => 'select',
@@ -249,6 +285,31 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                                 'class' => 'form-control',
                                                 'escape' => false,
                                                 'value' => $address
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
+                                            <?php echo $this->Form->control('title_connect', array(
+                                                'label' => 'Title button connect',
+                                                'class' => 'form-control',
+                                                'value' => $title_connect,
+                                                'placeholder' => 'Title conect..'
+                                            ));
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $title_campaign = isset($campaign_group->title_campaign) ? ($campaign_group->title_campaign):'' ?>
+                                            <?php echo $this->Form->control('title_campaign', array(
+                                                'label' => 'Title campaign ',
+                                                'class' => 'form-control',
+                                                'value' => $title_campaign
                                             ));
                                             ?>
                                         </div>
@@ -306,52 +367,6 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                         ?>
                                     </div>
                                     <div class="add"></div>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <?php
-                                            $title_connect = isset($campaign_group->title_connect) ? ($campaign_group->title_connect):'' ?>
-                                            <?php echo $this->Form->control('title_connect', array(
-                                                'label' => 'Title button connect',
-                                                'class' => 'form-control',
-                                                'value' => $title_connect,
-                                                'placeholder' => 'Title conect..'
-                                            ));
-                                            ?>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <?php
-                                            $title_campaign = isset($campaign_group->title_campaign) ? ($campaign_group->title_campaign):'' ?>
-                                            <?php echo $this->Form->control('title_campaign', array(
-                                                'label' => 'Title campaign ',
-                                                'class' => 'form-control',
-                                                'value' => $title_campaign
-                                            ));
-                                            ?>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="form-line">
-                                            <?php
-                                            $hidden_connect = isset($campaign_group->hidden_connect) ? $campaign_group->hidden_connect: '1';
-                                            echo  $this->Form->input('hidden_connect', array(
-                                                'type' => 'select',
-                                                'options' => [
-                                                    '1' => 'Hiển thị button connect-snow',
-                                                    '2' => 'Không hiển thị'
-                                                ],
-                                                'empty' => '--- Chọn hiển thị ---',
-                                                'label'=> 'Setting hidden button connect-snow',
-                                                'value' => $hidden_connect,
-                                                'escape' => false,
-                                                'error' => false,
-                                                'class' => 'form-control required input_select_medium'
-                                            ));
-                                            ?>
-                                        </div>
-                                    </div>
-
                                     <!-- Table -->
                                     <div class="table-responsive">
                                         <table class="table table-bordered table-striped dataTable table-hover">
@@ -560,12 +575,12 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                     }
                 }
             },
-            'tile_name': { required: true },
             'langdingpage_id': { required: true },
             'apt_device_number': { required: true },
             'device_id[]': { required: true },
             'number_voucher': { required: true },
             'random': { required: true },
+            // 'tile_name': { required: true },
             // 'packages[]': { required: true }
         },
         highlight: function (input) {
@@ -595,6 +610,21 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
         separator: ' - '
     });
     // $('#config-demo').daterangepicker({}, function(start, end, label) {});
+    $('#hidden_connect').change(function () {
+        var check_slow = $(this).val();
+        if (check_slow == 1) {
+            $('.hide_snow').show();
+        } else {
+            $('.hide_snow').hide();
+        }
+    });
+    $(document).ready(function () {
+        var check_slow = $('#hidden_connect').val();
+        $('.hide_snow').hide();
+        if (check_slow == 1) {
+            $('.hide_snow').show();
+        }
+    });
 </script>
 <style>
     .chosen-container{
