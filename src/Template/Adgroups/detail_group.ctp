@@ -272,11 +272,11 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                             echo  $this->Form->input('hidden_connect', array(
                                                 'type' => 'select',
                                                 'options' => [
-                                                    '1' => 'Hiển thị button connect-snow',
+                                                    '1' => 'Hiển thị button connect-slow',
                                                     '2' => 'Không hiển thị'
                                                 ],
                                                 'empty' => '--- Chọn hiển thị ---',
-                                                'label'=> 'Cài đặt hiển thị button connect-snow',
+                                                'label'=> 'Cài đặt hiển thị button connect-slow',
                                                 'value' => $hidden_connect,
                                                 'escape' => false,
                                                 'error' => false,
@@ -299,6 +299,19 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                                 ])
                                                 ?>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $button_fast = isset($adgroup->button_fast) ? $adgroup->button_fast: '';
+                                            echo $this->Form->control('button_fast',[
+                                                'label' => 'Đổi tên button connect-Fast',
+                                                'id' => 'button_slow',
+                                                'class' => 'form-control',
+                                                'value' => $button_fast
+                                            ])
+                                            ?>
                                         </div>
                                     </div>
                                     <div class="form-group" id="end_show">
