@@ -32,46 +32,44 @@ $title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_
                 <input type="text" name="username" value="wifimedia" class="hidden"/>
                 <input type="password" name="password" value="wifimedia" class="hidden"/>
             </form>
-            <a href="#_" class="btn btn-primary button_connect form-group upercase" data-toggle="modal"
-               data-target="#modal_login">
-                <?php if (isset($infor_devices->title_connect) && $infor_devices->title_connect != '') {
-                    echo $infor_devices->title_connect;
-                } else {
-                    echo $title_connect_normal;
-                } ?>
-            </a>
             <?php
-//            if (empty($packages)) { ?>
-<!--                --><?php //echo $this->Form->create('login', array(
-//                    'type' => 'post',
-//                    'name' => 'login_fast',
-//                    'class' => 'form-validation',
-//                    'url' => $infor_devices->link_login_only,
-//                    'onsubmit' => "return doLogin()"
-//                ));
-//                ?>
-<!--                <button type="submit" class="btn btn-primary button_connect form-group upercase">Connect now - Fast-->
-<!--                </button>-->
-<!--                --><?php //echo $this->Form->end(); ?>
-<!--            --><?php //} else { ?>
-<!--                <a href="#_" class="btn btn-primary button_connect form-group upercase" data-toggle="modal"-->
-<!--                   data-target="#modal_login">-->
-<!--                    --><?php //if (isset($infor_devices->title_connect) && $infor_devices->title_connect != '') {
-//                        echo $infor_devices->title_connect;
-//                    } else {
-//                        echo $title_connect_normal;
-//                    } ?>
-<!--                </a>-->
-<!--            --><?php //} ?>
-            <?php echo $this->Form->create('login', array(
-                'type' => 'post',
-                'name' => 'login_slow',
-                'class' => 'form-validation',
-                'url' => $infor_devices->link_login_only,
-                'onsubmit' => "return doLogin()"
-            ));
-            ?>
+            if (empty($packages)) { ?>
+                <?php echo $this->Form->create('login', array(
+                    'type' => 'post',
+                    'name' => 'login_fast',
+                    'class' => 'form-validation',
+                    'url' => $infor_devices->link_login_only,
+                    'onsubmit' => "return doLogin()"
+                ));
+                ?>
+                <button type="submit" class="btn btn-primary button_connect form-group upercase">
+                    <?php if (isset($infor_devices->button_fast) && $infor_devices->button_fast != '') {
+                        echo $infor_devices->button_fast;
+                    } else {
+                        echo 'CONNECT NOW - FAST';
+                    }
+                    ?>
+                </button>
+                <?php echo $this->Form->end(); ?>
+            <?php } else { ?>
+                <a href="#_" class="btn btn-primary button_connect form-group upercase" data-toggle="modal"
+                   data-target="#modal_login">
+                    <?php if (isset($infor_devices->title_connect) && $infor_devices->title_connect != '') {
+                        echo $infor_devices->title_connect;
+                    } else {
+                        echo $title_connect_normal;
+                    } ?>
+                </a>
+            <?php } ?>
             <?php if (isset($infor_devices->hidden_connect) && $infor_devices->hidden_connect == 1) { ?>
+                <?php echo $this->Form->create('login', array(
+                    'type' => 'post',
+                    'name' => 'login_slow',
+                    'class' => 'form-validation',
+                    'url' => $infor_devices->link_login_only,
+                    'onsubmit' => "return doLogin()"
+                ));
+                ?>
                 <button type="submit" class="btn btn-primary button_connect subscribe upercase">
                     <?php if (isset($infor_devices->button_slow) && $infor_devices->button_slow != '') {
                         echo $infor_devices->button_slow;
@@ -80,8 +78,8 @@ $title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_
                     }
                     ?>
                 </button>
-            <?php } ?>
             <?php echo $this->Form->end(); ?>
+            <?php } ?>
         </div>
     </div>
 </div>
@@ -91,9 +89,8 @@ $title_campaign = isset($infor_devices->title_campaign) ? $infor_devices->title_
     'url' => $infor_devices->link_login_only
 ));
 ?>
-<input type="hidden" class="need_push_username" name="username"/>
+<input type="hidden" name="username"/>
 <input type="hidden" name="password"/>
-<input type="hidden" class="need_push_password" name="password"/>
 <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
 <input type="hidden" name="popup" value="false"/>
 <?php echo $this->Form->end(); ?>

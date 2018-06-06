@@ -274,6 +274,19 @@ $this->assign('title', 'Thêm nhóm thiết bị quảng cáo');
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $button_fast = isset($adgroup->button_fast) ? $adgroup->button_fast: '';
+                                            echo $this->Form->control('button_fast',[
+                                                'label' => 'Đổi tên button connect-Fast',
+                                                'id' => 'button_slow',
+                                                'class' => 'form-control',
+                                                'value' => $button_fast
+                                            ])
+                                            ?>
+                                        </div>
+                                    </div>
                                     <div class="form-group" id="end_show">
                                         <div class="form-line">
                                             <?php $tile_name = isset($adgroup->tile_name) ? ($adgroup->tile_name):'' ?>

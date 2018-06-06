@@ -29,38 +29,25 @@ foreach ($list_path_old as $k =>  $item) {
     <div class="carousel-inner" role="listbox">
         <?php
         if (empty($list_path)) { ?>
-            <div class="item active"style="
-                    background: url('/images/bg4.jpg');
-                    -webkit-background-size: cover;
-                    -moz-background-size: cover;
-                    -o-background-size: cover;
-                    background-size: cover;
-                    "></div>
+            <div class="item active" style="background: url('/webroot/images/bg4.jpg');-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;"></div>
         <?php } else {
             foreach ($list_path as $k => $vl) {
                 if ($k == 0) { ?>
-                    <div class="item active"style="
-                            background: url('/<?php echo $vl; ?>');
-                            -webkit-background-size: cover;
-                            -moz-background-size: cover;
-                            -o-background-size: cover;
-                            background-size: cover;
-                            "></div>
+                    <div class="item active" style="background: url('/<?php echo $vl; ?>');-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;"></div>
                 <?php } else { ?>
-                    <div class="item" style="
-                            background: url('/<?php echo $vl; ?>');
-                            -webkit-background-size: cover;
-                            -moz-background-size: cover;
-                            -o-background-size: cover;
-                            background-size: cover;
-                            "></div>
+                    <div class="item" style="background: url('/<?php echo $vl; ?>');-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;"></div>
                 <?php }
             }
         }
-
          ?>
     </div>
 </div>
+<form name="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
+    <input type="hidden"    name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+    <input type="hidden"    name="popup" value="false"/>
+    <input type="text"      name="username" value="wifimedia" class="hidden"/>
+    <input type="password"  name="password" value="wifimedia" class="hidden"/>
+</form>
 <?php if ($type == '' || $type == \App\Model\Entity\Device::TB_NORMAR) { ?>
         <div class="landing">
             <div class="landing__cover-overlay"></div>
@@ -72,8 +59,6 @@ foreach ($list_path_old as $k =>  $item) {
                         <div class="logo__inner">
                             <?php if (isset($infor_devices->path_logo) && $infor_devices->path_logo != '') { ?>
                                 <a class="" href="javascript:void(0)"><img src="<?php echo '/'.$infor_devices->path_logo;?>" alt="logo_image" style="height: 100px;"></a>
-                            <?php } else { ?>
-                                <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>
                             <?php } ?>
                         </div>
                     </div>
@@ -88,9 +73,7 @@ foreach ($list_path_old as $k =>  $item) {
                             </div>
                             <div class=" c-spacer"></div>
                             <div class="c-cell">
-                                <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->auth_target; ?>" method="post">
-                                    <input style="width: 100%" type="submit" value="Connect now" class="btn btn-success br-2 mr-5 block /">
-                                </form>
+                                <a class="btn btn-success br-2 mr-5 block" href="<?php echo $infor_devices->auth_target; ?>">Connect now</a>
                             </div>
                         </div>
                     </div>
@@ -98,24 +81,18 @@ foreach ($list_path_old as $k =>  $item) {
                 </div>
             </div>
         </div>
-
 <?php } else { ?>
-    <form name="sendin" action="<?php echo $infor_devices->link_login_only; ?>" method="post">
-        <input type="hidden" class="need_push_username" name="username"/>
-        <input type="hidden" name="password"/>
-        <input type="hidden" class="need_push_password" name="password"/>
-        <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-        <input type="hidden" name="popup" value="false"/>
-    </form>
-    <script type="text/javascript">
-        function doLogin() {
-            <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
-            document.sendin.username.value = document.login.username.value;
-            document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
-            document.sendin.submit();
-            return false;
-        }
-    </script>
+    <?php echo $this->Form->create('sendin', array(
+        'type' => 'post',
+        'name' => 'sendin',
+        'url' => $infor_devices->link_login_only
+    ));
+    ?>
+    <input type="hidden" name="username"/>
+    <input type="hidden" name="password"/>
+    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
+    <input type="hidden" name="popup" value="false"/>
+    <?php echo $this->Form->end(); ?>
         <div class="landing">
             <div class="landing__cover-overlay"></div>
             <div class="landing__cover landing__cover--main landing__cover--flexible">
@@ -142,13 +119,16 @@ foreach ($list_path_old as $k =>  $item) {
                             </div>
                             <div class=" c-spacer"></div>
                             <div class="c-cell">
-                                <form class="form-validation" style="width: 100%" name="login" id="login" action="<?php echo $infor_devices->link_login_only; ?>" method="post" onSubmit="return doLogin()">
-                                    <input type="hidden" name="dst" value="<?php echo $infor_devices->link_orig; ?>"/>
-                                    <input type="hidden" name="popup" value="true"/>
-                                    <input style="display: none;" name="username" type="text" value="wifimedia"/>
-                                    <input style="display: none;" name="password" type="password" value="wifimedia" />
-                                    <input style="width: 100%" type="submit" value="Connect now" class="btn btn-success br-2 mr-5 block /">
-                                </form>
+                                <?php echo $this->Form->create('login', array(
+                                    'type' => 'post',
+                                    'id' => 'login_fast',
+                                    'name' => 'login_fast',
+                                    'class' => 'form-validation',
+                                    'url' => $infor_devices->link_login_only
+                                ));
+                                ?>
+                                <button style="width: 100%" type="submit" class="btn btn-success br-2 mr-5 block">Connect now</button>
+                                <?php echo $this->Form->end(); ?>
                             </div>
                         </div>
                     </div>
@@ -156,6 +136,15 @@ foreach ($list_path_old as $k =>  $item) {
             </div>
         </div>
 <?php } ?>
+<script type="text/javascript">
+    function doLogin() {
+        <?php if (strlen($infor_devices->chap_id) < 1) echo "return true;\n"; ?>
+        document.sendin.username.value = document.login.username.value;
+        document.sendin.password.value = md5 ('<?php echo $infor_devices->chap_id; ?>' + document.login.password.value + '<?php echo $infor_devices->chap_challenge; ?>');
+        document.sendin.submit();
+        return false;
+    }
+</script>
 <style>
     .redirect .btn{
         display: block;

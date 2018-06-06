@@ -73,15 +73,11 @@ var validateLoginForm = function () {
             });
             ajaxRequest.fail(function (data, status, errorThrown) {
                 // error
-                // var $message = data.responseText;
-                // login_result.html('<div class="alert alert-danger">' + $message + '</div>');
                 modal_login.modal('hide');
             });
 
             ajaxRequest.done(function (response) {
                 // done
-                // var $response = $.parseJSON(response);
-                // login_result.html('<div class="alert alert-success">' + $response.message + '</div>');
                 modal_login.modal('hide');
                 window.location.href = urlredrict;
             });

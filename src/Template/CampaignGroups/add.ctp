@@ -169,7 +169,7 @@
                                             echo  $this->Form->input('hidden_connect', array(
                                                 'type' => 'select',
                                                 'options' => [
-                                                    '1' => 'Hiển thị button connect-snow',
+                                                    '1' => 'Hiển thị button connect-slow',
                                                     '2' => 'Không hiển thị'
                                                 ],
                                                 'empty' => '--- Chọn hiển thị ---',
@@ -196,6 +196,19 @@
                                                 ])
                                                 ?>
                                             </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $button_fast = isset($campaign_group->button_fast) ? $campaign_group->button_fast: '';
+                                            echo $this->Form->control('button_fast',[
+                                                'label' => 'Đổi tên button connect-Fast',
+                                                'id' => 'button_slow',
+                                                'class' => 'form-control',
+                                                'value' => $button_fast
+                                            ])
+                                            ?>
                                         </div>
                                     </div>
                                     <div class="form-group">

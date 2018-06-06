@@ -343,7 +343,7 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                 cache: false,
                 processData: false,
                 success: function (data) {
-                    window.location.href = urlredrict;
+                    window.location.href = X_url;
                     // if (data == 'true') {
                     //     window.location.href = X_url;
                     //     return false;

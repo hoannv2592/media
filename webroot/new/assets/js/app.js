@@ -19,7 +19,6 @@ $(document).ready(function () {
 var validateLoginForm = function () {
     var modal_login = $('#modal_login');
     var modal_form_login = $('#modal_form_login');
-    var login_result = $('#login_result');
 
     // bind jQuery validation event
     modal_form_login.validate({
@@ -63,7 +62,6 @@ var validateLoginForm = function () {
         }
     });
 
-    var modal_form_login = $('#modal_form_login');
     // bind form submit event
     modal_form_login.on('submit', function (e) {
         // if form is valid then call AJAX script

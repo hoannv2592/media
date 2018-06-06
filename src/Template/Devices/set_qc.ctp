@@ -248,6 +248,19 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="form-group">
+                                        <div class="form-line">
+                                            <?php
+                                            $button_fast = isset($device->button_fast) ? $device->button_fast: '';
+                                            echo $this->Form->control('button_fast',[
+                                                'label' => 'Đổi tên button connect-Fast',
+                                                'id' => 'button_slow',
+                                                'class' => 'form-control',
+                                                'value' => $button_fast
+                                            ])
+                                            ?>
+                                        </div>
+                                    </div>
                                     <div class="show_tite">
                                         <?php if (isset($device->tile_congratulations_return) && $device->tile_congratulations_return != '') {
                                             $tile_congratulations_return = json_decode($device->tile_congratulations_return) ;

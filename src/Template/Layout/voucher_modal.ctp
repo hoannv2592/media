@@ -57,26 +57,13 @@ foreach ($list_path_old as $k => $item) {
     <div class="carousel-inner" role="listbox">
         <?php
         if (empty($list_path)) { ?>
-            <div class="item active" style="
-                    background: url('/webroot/images/bg4.jpg'); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"></div>
+            <div class="item active" style=" background: url('/webroot/images/bg4.jpg'); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"></div>
         <?php } else {
             foreach ($list_path as $k => $vl) {
                 if ($k == 0) { ?>
-                    <div class="item active" style="
-                        background: url('/<?php echo $vl; ?>');
-                        -webkit-background-size: cover;
-                        -moz-background-size: cover;
-                        -o-background-size: cover;
-                        background-size: cover;
-                        "></div>
+                    <div class="item active" style=" background: url('/<?php echo $vl; ?>'); -webkit-background-size: cover; -moz-background-size: cover; -o-background-size: cover; background-size: cover;"></div>
                 <?php } else { ?>
-                    <div class="item" style="
-                        background: url('/<?php echo $vl; ?>');
-                        -webkit-background-size: cover;
-                        -moz-background-size: cover;
-                        -o-background-size: cover;
-                        background-size: cover;
-                        "></div>
+                    <div class="item" style="background: url('/<?php echo $vl; ?>');-webkit-background-size: cover;-moz-background-size: cover;-o-background-size: cover;background-size: cover;"></div>
                 <?php }
             }
         } ?>
