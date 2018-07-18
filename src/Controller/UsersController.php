@@ -608,59 +608,69 @@ class UsersController extends AppController
      * *********************************************
      * @param array $device_id
      *
+     * @return \Cake\Http\Response|null
      * @throws \PHPExcel_Exception
      *
      * *********************************************
      *
      */
-    public function downloadExcel($device_id = array())
+    public function downloadExcel()
     {
         $this->autoRender = false;
-        $device_id = json_decode($device_id);
+        $device_id = array();
+        if ($this->request->session()->check('list_id_partner')) {
+            $device_id = $this->request->session()->read('list_id_partner');
+            $this->request->session()->delete('list_id_partner');
+        }
         $objPHPExcel = $this->PhpExcel->createWorksheet();
         $objPHPExcel->setActiveSheet(0);
-        $partners = $this->Partners->find()->where(['id IN ' => $device_id])
-            ->hydrate(false)
-            ->select(['name', 'phone', 'address'])
-            ->toList();
-        if (!empty($partners)) {
-            $lable = array();
-            $k = 1;
-            $lable[0]['label'] = 'No';
-            foreach ($partners[0] as $key => $val) {
-                $lable[$k + 1]['label'] = $key;
-                $k++;
-            }
-            $headerStyle = array(
-                'font' => array(
-                    'bold' => true
-                )
-            );
-            $data_label = array();
-            foreach ($lable as $k => $vl) {
-                if ($k == 0) {
-                    $data_label[$k]['label'] = 'No';
-                } elseif ($k == 2) {
-                    $data_label[$k]['label'] = 'Họ và Tên';
-                } elseif ($k == 3) {
-                    $data_label[$k]['label'] = 'Số điện thoại';
-                } elseif ($k == 4) {
-                    $data_label[$k]['label'] = 'Địa chỉ';
-                } else {
-                    //unset($vl['label']);
+        if (!empty($device_id)) {
+            $partners = $this->Partners->find()->where(['id IN ' => $device_id])
+                ->hydrate(false)
+                ->select(['name', 'phone', 'address'])
+                ->toList();
+            if (!empty($partners)) {
+                $lable = array();
+                $k = 1;
+                $lable[0]['label'] = 'No';
+                foreach ($partners[0] as $key => $val) {
+                    $lable[$k + 1]['label'] = $key;
+                    $k++;
                 }
+                $headerStyle = array(
+                    'font' => array(
+                        'bold' => true
+                    )
+                );
+                $data_label = array();
+                foreach ($lable as $k => $vl) {
+                    if ($k == 0) {
+                        $data_label[$k]['label'] = 'No';
+                    } elseif ($k == 2) {
+                        $data_label[$k]['label'] = 'Họ và Tên';
+                    } elseif ($k == 3) {
+                        $data_label[$k]['label'] = 'Số điện thoại';
+                    } elseif ($k == 4) {
+                        $data_label[$k]['label'] = 'Địa chỉ';
+                    } else {
+                        //unset($vl['label']);
+                    }
+                }
+                $objPHPExcel->addTableHeader($data_label, array('bold' => true, 'headerStyle' => $headerStyle));
+                $objPHPExcel->addTableFooter();
+                foreach ($partners as $k => $row) {
+                    $objPHPExcel->addTableRow($k, $row);
+                }
+                $fileName = 'data' . '_' . date('Ymd-His') . '.xlsx';
+                $objPHPExcel->save($fileName, 'Excel2007');
+                $objPHPExcel->output($fileName, 'Excel2007');
+            } else {
+                $this->redirect('partners/index');
             }
-            $objPHPExcel->addTableHeader($data_label, array('bold' => true, 'headerStyle' => $headerStyle));
-            $objPHPExcel->addTableFooter();
-            foreach ($partners as $k => $row) {
-                $objPHPExcel->addTableRow($k, $row);
-            }
-            $fileName = 'data' . '_' . date('Ymd-His') . '.xlsx';
-            $objPHPExcel->save($fileName, 'Excel2007');
-            $objPHPExcel->output($fileName, 'Excel2007');
         } else {
-            $this->redirect('partners/index');
+            return $this->redirect(['controller' => 'Partner', 'action' => 'index']);
         }
+
     }
 
     /**
@@ -671,51 +681,59 @@ class UsersController extends AppController
      *
      * * *********************************************
      */
-    public function downloadExcelFace($device_id = array())
+    public function downloadExcelFace()
     {
         $this->autoRender = false;
-        $device_id = json_decode($device_id);
+        $device_id = array();
+        if ($this->request->session()->check('list_id_partner_email')) {
+            $device_id = $this->request->session()->read('list_id_partner_email');
+            $this->request->session()->delete('list_id_partner_email');
+        }
         $objPHPExcel = $this->PhpExcel->createWorksheet();
         $objPHPExcel->setActiveSheet(0);
-        $partners = $this->Partners->find()->where(['id IN ' => $device_id])
-            ->hydrate(false)
-            ->select(['name', 'phone', 'email'])
-            ->toList();
-        if (!empty($partners)) {
-            $lable = array();
-            $k = 1;
-            $lable[0]['label'] = 'No';
-            foreach ($partners[0] as $key => $val) {
-                $lable[$k + 1]['label'] = $key;
-                $k++;
-            }
-            $headerStyle = array(
-                'font' => array(
-                    'bold' => true
-                )
-            );
-            $data_label = array();
-            foreach ($lable as $k => $vl) {
-                if ($k == 0) {
-                    $data_label[$k]['label'] = 'No';
-                } elseif ($k == 2) {
-                    $data_label[$k]['label'] = 'Họ và Tên';
-                } elseif ($k == 3) {
-                    $data_label[$k]['label'] = 'Số điện thoại';
-                } elseif ($k == 4) {
-                    $data_label[$k]['label'] = 'Địa chỉ email';
+        if (!empty($device_id)) {
+            $partners = $this->Partners->find()->where(['id IN ' => $device_id])
+                ->hydrate(false)
+                ->select(['name', 'phone', 'email'])
+                ->toList();
+            if (!empty($partners)) {
+                $lable = array();
+                $k = 1;
+                $lable[0]['label'] = 'No';
+                foreach ($partners[0] as $key => $val) {
+                    $lable[$k + 1]['label'] = $key;
+                    $k++;
                 }
+                $headerStyle = array(
+                    'font' => array(
+                        'bold' => true
+                    )
+                );
+                $data_label = array();
+                foreach ($lable as $k => $vl) {
+                    if ($k == 0) {
+                        $data_label[$k]['label'] = 'No';
+                    } elseif ($k == 2) {
+                        $data_label[$k]['label'] = 'Họ và Tên';
+                    } elseif ($k == 3) {
+                        $data_label[$k]['label'] = 'Số điện thoại';
+                    } elseif ($k == 4) {
+                        $data_label[$k]['label'] = 'Địa chỉ email';
+                    }
+                }
+                $objPHPExcel->addTableHeader($data_label, array('bold' => true, 'headerStyle' => $headerStyle));
+                $objPHPExcel->addTableFooter();
+                foreach ($partners as $k => $row) {
+                    $objPHPExcel->addTableRow($k, $row);
+                }
+                $fileName = 'data' . '_' . date('Ymd-His') . '.xlsx';
+                $objPHPExcel->save($fileName, 'Excel2007');
+                $objPHPExcel->output($fileName, 'Excel2007');
+            } else {
+                $this->redirect('Facebook/index');
             }
-            $objPHPExcel->addTableHeader($data_label, array('bold' => true, 'headerStyle' => $headerStyle));
-            $objPHPExcel->addTableFooter();
-            foreach ($partners as $k => $row) {
-                $objPHPExcel->addTableRow($k, $row);
-            }
-            $fileName = 'data' . '_' . date('Ymd-His') . '.xlsx';
-            $objPHPExcel->save($fileName, 'Excel2007');
-            $objPHPExcel->output($fileName, 'Excel2007');
         } else {
-            $this->redirect('partners/index');
+            $this->redirect('Facebook/index');
         }
     }
 

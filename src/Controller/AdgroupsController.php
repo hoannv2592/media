@@ -87,8 +87,7 @@ class AdgroupsController extends AppController
         }
         $adgroups = $this->paginate($adgroups, ['limit' => 10, 'order' => [
             'Adgroups.created' => 'DESC']
-        ])
-            ->toArray();
+        ])->toArray();
         $flag = false;
         if (!empty($adgroups)) {
             $device_id = array();
@@ -100,7 +99,9 @@ class AdgroupsController extends AppController
                 $show[] = json_decode($vl);
             }
             $merged = call_user_func_array('array_merge', $show);
-            $devices = $this->Devices->find('all')->where(['id NOT IN' => $merged])->combine('id', 'name')->toArray();
+            if (!empty($merged)) {
+                $devices = $this->Devices->find('all')->where(['id NOT IN' => $merged])->combine('id', 'name')->toArray();
+            }
             if (empty($devices)) {
                 $flag = true;
             }
@@ -465,11 +466,10 @@ class AdgroupsController extends AppController
         if ($this->request->getData()) {
             $adgroups = $this->Adgroups->get($this->request->getData('id'));
             $device_group = $this->DeviceGroups->find()
-                ->where(['adgroup_id' => $this->request->getData('id'), 'device_id' => $adgroups->device_id, 'delete_flag !=' => DELETED])
-                ->select('id')
-                ->first()
-                ->toArray();
-            $this->removeAdgroupIdDevice(json_decode($adgroups->device_id));
+                ->where(['adgroup_id' => $this->request->getData('id'), 'device_id' => $adgroups->device_id, 'delete_flag !=' => DELETED])->select('id')->first();
+            if (!empty($adgroups->device_id)) {
+                $this->removeAdgroupIdDevice(json_decode($adgroups->device_id));
+            }
             $result_change[] = array(
                 'fields' => 'delete_flag',
                 'from' => 'chưa xóa',

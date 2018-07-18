@@ -59,7 +59,7 @@ $this->assign('title', 'Quản lý nhóm thiết bị quảng cáo');
                                         </td>
 
                                         <td>
-                                            <a class="font-bold col-pink" href="javascript:void(0)"><?= $array[0]?></a>
+                                            <a class="font-bold col-pink" href="javascript:void(0)"><?= isset($array[0]) ? $array[0]: ''?></a>
                                         </td>
                                         <td rowspan="<?= ($rowspan && $rowspan > 0) ? $rowspan :'' ?>" class="advertise font-bold col-cyan">
                                             <a href="<?php echo $this->Url->build(['controller' => 'users', 'action' => 'edit' . '/' . UrlUtil::_encodeUrl($adgroup['user']['id'])]) ?>">

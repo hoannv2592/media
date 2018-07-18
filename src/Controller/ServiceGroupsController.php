@@ -420,7 +420,7 @@ class ServiceGroupsController extends AppController
             }
             if (!empty($list_id_partner)) {
                 $list_id_partner = call_user_func_array('array_merge', $list_id_partner);
-                $list_id_partner = json_encode($list_id_partner);
+                //$list_id_partner = json_encode($list_id_partner);
             }
             $partners = Hash::combine($data, '{n}.id', '{n}.num_clients_connect', '{n}.created');
 
@@ -491,6 +491,7 @@ class ServiceGroupsController extends AppController
             'list_id_devices',
             'list_devices'
         ));
+        $this->request->session()->write('list_id_partner', $list_id_partner);
         $this->set('_serialize', ['partners']);
     }
 

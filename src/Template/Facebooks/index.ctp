@@ -209,14 +209,7 @@
                                         </div>
                                         <div class="m-t-10 row">
                                             <div class="">
-                                                <?php
-                                                if (!empty($list_id_partner_email)) {
-                                                    $list_id_partner_email = json_decode($list_id_partner_email);
-                                                }
-                                                if (!empty($list_id_partner)) {
-                                                    $list_id_partner_email = json_encode($list_id_partner_email); ?>
-                                                    <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'downloadExcelFace/'.$list_id_partner_email]);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có email</a>
-                                                <?php } ?>
+                                                <a href="<?php echo $this->Url->build(['controller' => 'Users', 'action' => 'downloadExcelFace']);?>" class="btn btn-primary waves-effect" style="box-shadow:none;">Export danh sách khách hàng có email</a>
                                             </div>
                                         </div>
                                     </div>

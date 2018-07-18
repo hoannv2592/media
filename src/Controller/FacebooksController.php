@@ -166,7 +166,7 @@ class FacebooksController extends AppController
             }
             if (!empty($list_id_partner_email)) {
                 $list_id_partner_email = call_user_func_array('array_merge', $list_id_partner_email);
-                $list_id_partner_email = json_encode($list_id_partner_email);
+                //$list_id_partner_email = json_encode($list_id_partner_email);
             }
             $partner_phone = Hash::combine($data, '{n}.id', '{n}.phone', '{n}.created');
             foreach ($partner_phone as  $k => $partner) {
@@ -260,6 +260,7 @@ class FacebooksController extends AppController
             'sum_email_partner',
             'list_id_partner_email'
         ));
+        $this->request->session()->write('list_id_partner_email', $list_id_partner_email);
         $this->set('_serialize', ['partners']);
     }
 
