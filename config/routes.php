@@ -52,6 +52,7 @@ Router::scope('/', function (RouteBuilder $routes) {
     $routes->connect('/', ['controller' => 'Users', 'action' => 'login']);
     $routes->connect('/users', ['controller' => 'Users', 'action' => 'index']);
     $routes->connect('/login', ['controller' => 'Users', 'action' => 'login']);
+    $routes->connect('/facebooks', ['controller' => 'Facebooks', 'action' => 'index']);
 
     /**
      * ...and connect the rest of 'Pages' controller's URLs.

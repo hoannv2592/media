@@ -668,7 +668,7 @@ class UsersController extends AppController
                 $this->redirect('partners/index');
             }
         } else {
-            return $this->redirect(['controller' => 'Partner', 'action' => 'index']);
+            return $this->redirect(['controller' => 'Partners', 'action' => 'index']);
         }
 
     }
@@ -730,10 +730,10 @@ class UsersController extends AppController
                 $objPHPExcel->save($fileName, 'Excel2007');
                 $objPHPExcel->output($fileName, 'Excel2007');
             } else {
-                $this->redirect('Facebook/index');
+                $this->redirect('/facebooks');
             }
         } else {
-            $this->redirect('Facebook/index');
+            $this->redirect('/facebooks');
         }
     }
 
@@ -967,6 +967,18 @@ class UsersController extends AppController
             );
             $objPHPExcel->addTableHeader($label, array('bold' => true, 'headerStyle' => $headerStyle));
             $objPHPExcel->addTableFooter();
+
+            $user = $this->Auth->user();
+            if ($user['role'] == User::ROLE_ONE) {
+                $device_id = $this->Devices->find()->where(['Devices.delete_flag !=' => 1])->extract('id')->toArray();
+            } else {
+                $device_id = $this->Devices->find()->where(['user_id' => $user['id'], 'Devices.delete_flag !=' => 1])->extract('id')->toArray();
+            }
+            if (!empty($device_id)) {
+                if (!isset($conditions['device_id'])) {
+                    $conditions['device_id IN'] = $device_id;
+                }
+            }
             $data = $this->Partners->getOdersDownload($conditions)->toArray();
             $new_data = array();
             foreach ($data as $index => $datum) {
