@@ -18,7 +18,7 @@ if ($apt_key_check['langdingpage_id'] == \App\Model\Entity\Device::LANDING_THREE
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="logo">
                         <div class="logo__inner">
-                            <a class="" href="#"><img src="/webroot/images/logo.png" alt="Foody.vn"></a>
+<!--                            <a class="" href="#"><img src="/webroot/images/logo.png" alt="Foody.vn"></a>-->
                         </div>
                     </div>
                     <div class="c-spacer--xx-large c-spacer"></div>
@@ -98,7 +98,7 @@ if ($apt_key_check['langdingpage_id'] == \App\Model\Entity\Device::LANDING_THREE
                     <div class="c-spacer--xx-large c-spacer"></div>
                     <div class="logo">
                         <div class="logo__inner">
-                            <a class="" href="#"><img src="/webroot/images/logo.png" alt="logo"></a>
+<!--                            <a class="" href="#"><img src="/webroot/images/logo.png" alt="logo"></a>-->
                         </div>
                     </div>
                     <div class="c-spacer--xx-large c-spacer"></div>

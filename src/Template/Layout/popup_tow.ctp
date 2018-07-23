@@ -139,7 +139,7 @@ $packages = isset($infor_devices->packages) ? json_decode($infor_devices->packag
                                 <?php if (isset($infor_devices->path_logo) && $infor_devices->path_logo != '') { ?>
                                     <a class="" href="javascript:void(0)"><img src="<?php echo '/' . $infor_devices->path_logo; ?>" alt="logo_image" style="height: 100px;"></a>
                                 <?php } else { ?>
-                                    <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>
+<!--                                    <a class="" href="javascript:void(0)"><img src="/webroot/images/logo.png" alt="logo image"></a>-->
                                 <?php } ?>
                             </div>
                         </div>

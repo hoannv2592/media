@@ -594,5 +594,31 @@ class CampaignGroupsController extends AppController
             die(json_encode(false));
         }
     }
+
+    public function deleteLogo()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('post')) {
+            $id_file = $this->request->getData('id');
+            if (isset($id_file)) {
+                $backgroud = $this->CampaignGroups->get($id_file);
+                $backgroud->path_logo = '';
+                $backgroud->image_logo = '';
+                if (!empty($backgroud)) {
+                    $backgroud->path_logo = '';
+                    if ($this->CampaignGroups->save($backgroud)) {
+                        die(json_encode(true));
+                    } else {
+                        die(json_encode(false));
+                    }
+                } else {
+                    die(json_encode(false));
+                }
+            } else {
+                die(json_encode(false));
+            }
+        }
+
+    }
 }
 

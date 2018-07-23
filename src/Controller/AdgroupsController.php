@@ -952,7 +952,8 @@ class AdgroupsController extends AppController
         }
         $apt_device_number = $this->radompassWord();
         $adv = $this->Advs->find()->where(['adgroup_id' => $id, 'active_flag !=' => 1])->select(['id', 'adgroup_id', 'path', 'url_link'])->toArray();
-        $this->set(compact('adgroup', 'apt_device_number', 'devices', 'list_users', 'adv'));
+//        pr($adgroup); die;
+        $this->set(compact('adgroup', 'apt_device_number', 'devices', 'list_users', 'adv','device_group_id'));
     }
 
     /**
@@ -1081,6 +1082,35 @@ class AdgroupsController extends AppController
                 die(json_encode(false));
             }
         }
+    }
+
+    public function deleteLogo()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('post')) {
+            $id_file = $this->request->getData('id');
+            $device_group_id = $this->request->getData('device_group_id');
+            if (isset($id_file)) {
+                $backgroud = $this->Adgroups->get($id_file);
+                $backgroud_gr = $this->DeviceGroups->get($device_group_id);
+                $backgroud_gr->path_logo = '';
+                if (!empty($backgroud)) {
+                    $backgroud->path_logo = '';
+                    if ($this->Adgroups->save($backgroud)) {
+                        if ($this->DeviceGroups->save($backgroud_gr)) {
+                            die(json_encode(true));
+                        }
+                    } else {
+                        die(json_encode(false));
+                    }
+                } else {
+                    die(json_encode(false));
+                }
+            } else {
+                die(json_encode(false));
+            }
+        }
+
     }
 }
 

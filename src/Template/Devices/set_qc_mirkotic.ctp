@@ -136,13 +136,15 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                             <thead>
                                             <tr>
                                                 <th width="20%">Ảnh logo</th>
+                                                <th width="20%"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <?php if (!empty($logo)) {
-                                                foreach ($logo as $k => $vl) {  if ($vl != '') { ?>
-                                                    <tr>
+                                                foreach ($logo as $k => $vl) {  if ($vl != '') {?>
+                                                    <tr id="<?= $k ?>">
                                                         <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="180"></td>
+                                                        <td class="image"><a href="javascript:void(0);"  id="delete_bak" onclick="delete_logo(<?php echo $k; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
                                                     </tr>
                                                 <?php }
                                                 }
@@ -568,6 +570,23 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
         $.ajax({
             type: 'POST',
             url: '/Devices/delete_adv',
+            async: true,
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function (rp) {
+                if (rp == true) {
+                    $('tr#'+id).remove()
+                }
+            }
+        });
+    }
+
+    function delete_logo(id) {
+        $.ajax({
+            type: 'POST',
+            url: '/Devices/delete_logo',
             async: true,
             data: {
                 id: id

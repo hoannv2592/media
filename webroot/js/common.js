@@ -151,3 +151,38 @@ function saveData(url, data, modal) {
         }
     });
 }
+
+function delete_logo_adgroup(id, device_group_id) {
+    $.ajax({
+        type: 'POST',
+        url: '/Adgroups/delete_logo',
+        async: true,
+        data: {
+            id: id,
+            device_group_id: device_group_id
+        },
+        dataType: 'json',
+        success: function (rp) {
+            if (rp == true) {
+                $('tr#'+id).remove()
+            }
+        }
+    });
+}
+function delete_logo_cam(id) {
+    $.ajax({
+        type: 'POST',
+        url: '/CampaignGroups/delete_logo',
+        async: true,
+        data: {
+            id: id
+        },
+        dataType: 'json',
+        success: function (rp) {
+            if (rp == true) {
+                $('tr#'+id).remove()
+            }
+        }
+    });
+}
+

@@ -2383,5 +2383,28 @@ class DevicesController extends AppController
             }
         }
     }
+
+    public function deleteLogo()
+    {
+        $this->autoRender = false;
+        if ($this->request->is('post')) {
+            $id_file = $this->request->getData('id');
+            if (isset($id_file)) {
+                $backgroud = $this->DeviceFiles->get($id_file);
+                if (!empty($backgroud)) {
+                    $backgroud->active_flag = 1;
+                    if ($this->DeviceFiles->save($backgroud)) {
+                        die(json_encode(true));
+                    } else {
+                        die(json_encode(false));
+                    }
+                } else {
+                    die(json_encode(false));
+                }
+            } else {
+                die(json_encode(false));
+            }
+        }
+    }
 }
 

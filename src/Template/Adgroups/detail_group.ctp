@@ -247,14 +247,16 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                             <thead>
                                             <tr>
                                                 <th width="25%">Ảnh logo</th>
+                                                <th width="25%"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <?php if (isset($adgroup->path_logo) && $adgroup->path_logo != '') {
                                                 $list_background = explode(',', $adgroup->path_logo);
                                                 foreach ($list_background as $k => $vl) { ?>
-                                                    <tr>
+                                                    <tr id="<?= $adgroup->id ?>">
                                                         <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="200"></td>
+                                                        <td class="image"><a href="javascript:void(0);"  id="delete_bak" onclick="delete_logo_adgroup(<?php echo $adgroup->id; ?>, <?= $device_group_id['id'];?>)" class="btn btn-danger waves-effect">Xóa</a></td>
                                                     </tr>
                                                 <?php }
                                             } else { ?>
@@ -262,7 +264,14 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                             </tbody>
                                         </table>
                                     </div>
-
+                                    <div class="form-group">
+                                        <label> Ảnh Logo  </label>
+                                        <div class="form-group">
+                                            <div class="file-loading">
+                                                <input id="file-2" type="file" class="file" name="logo_image" data-overwrite-initial="false" data-min-file-count="2">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">

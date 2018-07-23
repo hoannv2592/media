@@ -40,7 +40,7 @@ echo $this->Html->css('page1.css');
                                             <div class="c-spacer--xx-large c-spacer"></div>
                                             <div class="logo">
                                                 <div class="logo__inner">
-                                                    <a class="" href="javascript:voide(0)"><img src="/webroot/images/logo.png" alt="Foody.vn"></a>
+<!--                                                    <a class="" href="javascript:voide(0)"><img src="/webroot/images/logo.png" alt="Foody.vn"></a>-->
                                                 </div>
                                             </div>
                                             <div class="c-spacer--xx-large c-spacer"></div>

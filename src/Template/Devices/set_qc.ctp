@@ -140,13 +140,15 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                                 <thead>
                                                 <tr>
                                                     <th width="20%">Ảnh logo</th>
+                                                    <th width="20%"></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
-                                                <?php if (!empty($logo)) {
+                                                <?php if (!empty($logo)) { pr($logo);
                                                     foreach ($logo as $k => $vl) { if ($vl != '') { ?>
-                                                        <tr>
+                                                        <tr id="<?= $k ?>">
                                                             <td class="image"><embed src="<?= '/'.$vl ?>" width="330" height="180"></td>
+                                                            <td class="image"><a href="javascript:void(0);"  id="delete_bak" onclick="delete_logo(<?php echo $k; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
                                                         </tr>
                                                     <?php } }
                                                     ?>
@@ -163,6 +165,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                                 <thead>
                                                 <tr>
                                                     <th width="20%">Ảnh quảng cáo</th>
+                                                    <th width="20%"></th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -438,6 +441,7 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
                                             <thead>
                                             <tr>
                                                 <th width="20%">Ảnh nền</th>
+                                                <th width="20%"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
@@ -709,4 +713,20 @@ $this->assign('title', 'Tạo quảng cáo thiết bị');
             $('.hide_snow').show();
         }
     });
+    function delete_logo(id) {
+        $.ajax({
+            type: 'POST',
+            url: '/Devices/delete_logo',
+            async: true,
+            data: {
+                id: id
+            },
+            dataType: 'json',
+            success: function (rp) {
+                if (rp == true) {
+                    $('tr#'+id).remove()
+                }
+            }
+        });
+    }
 </script>

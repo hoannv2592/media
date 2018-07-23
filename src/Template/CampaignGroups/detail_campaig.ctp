@@ -171,14 +171,16 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                             <thead>
                                             <tr>
                                                 <th width="25%">Ảnh logo</th>
+                                                <th width="25%"></th>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <?php if (isset($campaign_group->path_logo) && $campaign_group->path_logo != '') {
                                                 $list_background = explode(',', $campaign_group->path_logo);
                                                 foreach ($list_background as $k => $vl) { ?>
-                                                    <tr>
+                                                    <tr id="<?php echo $campaign_group->id; ?>">
                                                         <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="200"></td>
+                                                        <td class="image"><a href="javascript:void(0);"  id="delete_bak" onclick="delete_logo_cam(<?php echo $campaign_group->id; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
                                                     </tr>
                                                 <?php }
                                                 ?>
