@@ -133,8 +133,7 @@ $this->assign('title', 'Quản lý người dùng');
                         ?>
                         <p>Bạn có chắc chắn muốn xóa người dùng này không? </p>
                         <div class="modal-footer">
-                            <button class="btn btn-primary waves-effect" id="submit_delete" type="submit">XÓA NGƯỜI DÙNG
-                            </button>
+                            <button class="btn btn-primary waves-effect" id="submit_delete" type="button">XÓA NGƯỜI DÙNG</button>
                             <button class="btn bg-brown waves-effect" type="button" data-dismiss="modal">ĐÓNG</button>
                         </div>
                         <?php echo $this->Form->end(); ?>
