@@ -155,7 +155,7 @@ if ($apt_key_check['langdingpage_id'] == \App\Model\Entity\Device::LANDING_THREE
                 <div class="landing__cover-content u-color-white">
                     <div class="logo">
                         <div class="logo__inner">
-                            <a class="" href="#"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt="Foody.vn"></a>
+<!--                            <a class="" href="#"><img src="/webroot/images/logo-go-wi-fi-free-fast.png" alt="Foody.vn"></a>-->
                         </div>
                     </div>
                     <div class="c-text--name c-text--parent c-text--center c-text">Cafe Trung Nguyen</div>
