@@ -180,7 +180,7 @@ $this->assign('title', 'Chỉnh sửa nhóm thiết bị quảng cáo');
                                                 foreach ($list_background as $k => $vl) { ?>
                                                     <tr id="<?php echo $campaign_group->id; ?>">
                                                         <td class="image"><embed src="<?= '/'.$vl ?>" width="350" height="200"></td>
-                                                        <td class="image"><a href="javascript:void(0);"  id="delete_bak" onclick="delete_logo_cam(<?php echo $campaign_group->id; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
+                                                        <td class="check_delete"><a href="javascript:void(0);"  id="delete_bak" onclick="delete_logo_cam(<?php echo $campaign_group->id; ?>)" class="btn btn-danger waves-effect">Xóa</a></td>
                                                     </tr>
                                                 <?php }
                                                 ?>
